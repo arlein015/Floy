@@ -1,1 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threndly - Discussion</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="profile-section">
+                <div class="avatar">T</div>
+                <div class="user-info">
+                    <span class="user-name">Mon Profil <span class="badge-bleu">✔</span></span>
+                </div>
+            </div>
+        </nav>
 
+        <main class="chat-area">
+            <header class="chat-header">
+                <h3>Messages</h3>
+            </header>
+            
+            <div class="messages-container" id="chatBox">
+                <div class="message incoming">Bienvenue sur Threndly ! 🚀</div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="msgInput" placeholder="Écrire un message...">
+                <button id="sendBtn">Envoyer</button>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
