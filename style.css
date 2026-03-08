@@ -1,1 +1,45 @@
+/* Fond tout noir et texte blanc */
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
+.login-box {
+    background-color: #0a0a0a;
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid #222;
+    text-align: center;
+    width: 320px;
+}
+
+/* Le dégradé Violet et Bleu pour le bouton */
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #8a2be2 0%, #007bff 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* Style des champs de saisie */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 5px;
+    color: white;
+    box-sizing: border-box;
+}
