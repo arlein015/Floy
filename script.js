@@ -43,3 +43,27 @@ function checkLogin() {
         window.location.href = 'chat.html';
     }
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const signupForm = document.getElementById('signupForm');
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Empêche le rechargement
+
+            // On récupère les données
+            const email = document.querySelector('input[placeholder="E-mail ou numéro"]').value;
+            
+            // Génération d'un code fictif pour le test
+            const codeTest = Math.floor(100000 + Math.random() * 900000);
+            
+            // On sauvegarde l'état pour que l'utilisateur reste connecté plus tard
+            localStorage.setItem('userEmail', email);
+            
+            // Alerte pour simuler l'envoi (en attendant un service de mail réel)
+            alert("Un code de vérification a été envoyé à " + email + "\nVotre code de test est : " + codeTest);
+
+            // Redirection vers la page de vérification
+            window.location.href = 'verify.html';
+        });
+    }
+});
