@@ -1,23 +1,16 @@
 :root {
-    --bg-black: #000000;
-    --card-bg: #0a0a0a;
-    --text-primary: #ffffff;
-    --text-muted: #888888;
-    
-    /* Tes couleurs demandées */
-    --violet-brand: #8a2be2;
-    --blue-brand: #007bff;
-    
-    /* Le dégradé Violet/Bleu */
-    --gradient-threndly: linear-gradient(135deg, #8a2be2 0%, #007bff 100%);
-    
-    --border-color: #222222;
+    --bg-color: #3e4c59; /* Le gris-bleu du fond de ton image */
+    --card-bg: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-gray: #666666;
+    --google-red: #ea4335;
+    --fb-blue: #1877f2;
+    --btn-blue: #1d75bd;
 }
 
 body {
-    background-color: var(--bg-black);
-    color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -25,90 +18,62 @@ body {
     min-height: 100vh;
 }
 
-.auth-card {
+.login-card {
     background: var(--card-bg);
     width: 90%;
     max-width: 400px;
-    padding: 35px;
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-/* Style du Logo */
-.brand-header { margin-bottom: 25px; }
-.t-icon {
-    width: 48px; height: 48px;
-    background: var(--gradient-threndly);
-    border-radius: 12px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 26px; font-weight: bold; margin-bottom: 8px;
+/* LE TITRE TRENDLY : Seul élément avec de la couleur */
+.main-title {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #2f81f7 0%, #8a2be2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
-.brand-text {
-    font-size: 20px; font-weight: bold; letter-spacing: 2px;
-    background: var(--gradient-threndly);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 0;
-}
-.auth-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
 
-/* Formulaire */
-.input-row { display: flex; gap: 10px; margin-bottom: 15px; }
-.input-group { margin-bottom: 15px; }
+.welcome-text h2 { margin: 0; font-size: 24px; color: var(--text-dark); }
+.welcome-text p { margin: 10px 0 30px; color: var(--text-gray); font-size: 14px; }
+
+.input-group { text-align: left; margin-bottom: 20px; }
+.input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; color: var(--text-dark); }
 input {
-    width: 100%; padding: 12px 15px; background: #121212;
-    border: 1px solid var(--border-color); border-radius: 8px;
-    color: white; box-sizing: border-box; font-size: 14px;
-}
-input:focus { border-color: var(--violet-brand); outline: none; }
-
-/* Bouton S'inscrire dégradé */
-.btn-register {
-    width: 100%; padding: 15px;
-    background: var(--gradient-threndly);
-    border: none; border-radius: 8px;
-    color: white; font-weight: bold; font-size: 16px;
-    cursor: pointer; transition: transform 0.1s; margin-top: 10px;
-}
-.btn-register:active { transform: scale(0.98); }
-
-/* Séparateur "OU" */
-.or-divider {
-    margin: 25px 0; color: var(--text-muted); font-size: 12px;
-    position: relative; display: flex; align-items: center; justify-content: center;
-}
-.or-divider::before, .or-divider::after {
-    content: ""; flex: 1; height: 1px; background: var(--border-color);
-}
-.or-divider span { padding: 0 10px; background: var(--card-bg); position: relative; z-index: 1; }
-
-/* Boutons sociaux */
-.social-auth button {
-    width: 100%; padding: 12px; border-radius: 8px;
-    cursor: pointer; font-size: 14px; font-weight: 500;
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px; margin-bottom: 12px; transition: background 0.2s;
+    width: 100%; padding: 12px; border: 1px solid #ddd;
+    border-radius: 8px; box-sizing: border-box; background: #fdfdfd;
 }
 
-/* Bouton Google Rouge */
-.btn-google {
-    background-color: white; color: #000000;
-    border: 1px solid #ddd;
+.btn-login {
+    width: 100%; padding: 14px; background: var(--btn-blue);
+    color: white; border: none; border-radius: 8px;
+    font-size: 16px; font-weight: bold; cursor: pointer;
 }
-.btn-google img { width: 18px; height: 18px; } /* Logo Google */
-.btn-google:hover { background-color: #f8f8f8; }
 
-/* Bouton Facebook Bleu */
-.btn-facebook {
-    background-color: #1877f2; /* Bleu Facebook officiel */
-    color: white; border: none;
+.separator { margin: 25px 0; border-bottom: 1px solid #eee; position: relative; }
+.separator span { 
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: white; padding: 0 15px; color: #999; text-transform: uppercase; font-size: 12px;
 }
-.btn-facebook i { font-size: 18px; } /* Logo FB icon */
-.btn-facebook:hover { background-color: #166fe5; }
 
-/* Pied de page */
-.auth-footer { margin-top: 30px; font-size: 13px; }
-.forgot-link { color: var(--blue-brand); text-decoration: none; display: block; margin-bottom: 15px; }
-.auth-footer p { color: var(--text-muted); margin: 0; }
-.login-link { color: var(--blue-brand); text-decoration: none; font-weight: bold; }
+/* BOUTONS SOCIAUX */
+.social-login button {
+    width: 100%; padding: 12px; border-radius: 8px; border: none;
+    margin-bottom: 12px; display: flex; align-items: center;
+    justify-content: center; gap: 10px; font-weight: bold; cursor: pointer; color: white;
+}
+
+.btn-google { background-color: var(--google-red); }
+.btn-google img { width: 18px; filter: brightness(0) invert(1); } /* Logo blanc pour le style */
+
+.btn-facebook { background-color: var(--fb-blue); }
+
+.footer-links { margin-top: 30px; }
+.forgot-pwd { color: var(--btn-blue); text-decoration: none; font-size: 14px; display: block; margin-bottom: 15px; }
+.footer-links p { color: var(--text-gray); font-size: 14px; }
+.signup-link { color: var(--btn-blue); text-decoration: none; font-weight: bold; }
