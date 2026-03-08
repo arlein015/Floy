@@ -2,48 +2,123 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Threndly - Vérification</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        .code-container { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
-        .code-input { 
-            width: 40px; height: 50px; text-align: center; font-size: 20px; 
-            background: #111; border: 1px solid #333; color: white; border-radius: 8px;
+        :root { 
+            --blue: #2D9CDB; --black: #000000;
+            --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); 
         }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { 
+            margin: 0; background: var(--black); height: 100vh; 
+            display: flex; align-items: center; justify-content: center; color: white;
+        }
+
+        .verify-card {
+            width: 90%; max-width: 400px; text-align: center; padding: 30px;
+        }
+
+        .icon-box {
+            width: 80px; height: 80px; background: rgba(45, 156, 219, 0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 30px; color: var(--blue); font-size: 2rem;
+            border: 1px solid rgba(45, 156, 219, 0.2);
+        }
+
+        h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
+        p { color: #888; font-size: 0.95rem; line-height: 1.5; margin-bottom: 40px; }
+
+        /* --- GRILLE DES 6 CHIFFRES --- */
+        .code-container {
+            display: flex; justify-content: space-between; gap: 10px; margin-bottom: 40px;
+        }
+        .code-input {
+            width: 50px; height: 60px; background: #111; border: 1px solid #333;
+            border-radius: 12px; color: white; font-size: 1.8rem; font-weight: bold;
+            text-align: center; outline: none; transition: 0.3s;
+        }
+        .code-input:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(45, 156, 219, 0.3); }
+
+        .btn-verify {
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: var(--grad); color: white; font-weight: bold; font-size: 1.1rem;
+            cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.4); transition: 0.3s;
+        }
+        .btn-verify:active { transform: scale(0.98); }
+
+        #timer-text { margin-top: 25px; font-size: 0.85rem; color: #555; }
+        .resend-link { color: var(--blue); cursor: pointer; font-weight: 600; text-decoration: none; }
     </style>
 </head>
 <body>
-    <div class="login-wrapper">
-        <div class="login-card">
-            <h1 class="main-title">Vérification</h1>
-            <p style="color: #888;">Entrez le code à 6 chiffres envoyé à votre adresse mail.</p>
-            
-            <div class="code-container">
-                <input type="text" class="code-input" maxlength="1">
-                <input type="text" class="code-input" maxlength="1">
-                <input type="text" class="code-input" maxlength="1">
-                <input type="text" class="code-input" maxlength="1">
-                <input type="text" class="code-input" maxlength="1">
-                <input type="text" class="code-input" maxlength="1">
-            </div>
 
-            <button id="confirmBtn" class="btn-login">Confirmer</button>
+    <div class="verify-card">
+        <div class="icon-box">
+            <i class="fas fa-shield-alt"></i>
         </div>
+        
+        <h2>Vérification</h2>
+        <p>Intelligence Threndly : Nous avons envoyé un code de sécurité à votre adresse e-mail.</p>
+
+        <div class="code-container" id="otp-inputs">
+            <input type="text" class="code-input" maxlength="1" pattern="\d*">
+            <input type="text" class="code-input" maxlength="1" pattern="\d*">
+            <input type="text" class="code-input" maxlength="1" pattern="\d*">
+            <input type="text" class="code-input" maxlength="1" pattern="\d*">
+            <input type="text" class="code-input" maxlength="1" pattern="\d*">
+            <input type="text" class="code-input" maxlength="1" pattern="\d*">
+        </div>
+
+        <button class="btn-verify" onclick="validerCodeFinal()">
+            Confirmer l'identité
+        </button>
+
+        <p id="timer-text">
+            Vous n'avez rien reçu ? <br>
+            <span id="countdown">Attendez 60s</span> pour <span class="resend-link" onclick="renvoyerMail()">réessayer</span>.
+        </p>
     </div>
+
     <script>
-        // Logique simple pour passer d'une case à l'autre
-        const inputs = document.querySelectorAll('.code-input');
+        const inputs = document.querySelectorAll('#otp-inputs input');
+        
         inputs.forEach((input, index) => {
-            input.addEventListener('input', () => {
-                if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus(); // Passe au suivant
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus(); // Revient en arrière si on efface
+                }
             });
         });
 
-        document.getElementById('confirmBtn').onclick = () => {
-            localStorage.setItem('isLoggedIn', 'true'); // Pour rester connecté
-            window.location.href = 'chat.html'; // Vers la discussion
-        };
+        // Cette fonction regroupe les 6 chiffres pour ton script.js
+        function validerCodeFinal() {
+            let fullCode = "";
+            inputs.forEach(input => fullCode += input.value);
+            
+            // On stocke le code complet dans un champ caché ou on l'envoie direct
+            localStorage.setItem('code_tape', fullCode);
+            
+            // Appelle la fonction de vérification dans ton script.js
+            if(typeof verifierCode === "function") {
+                verifierCode();
+            }
+        }
     </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
