@@ -1,44 +1,41 @@
 // --- CONFIGURATION ---
 // Remplace par tes vrais IDs EmailJS
-const SERVICE_ID = "YOUR_SERVICE_ID";
-const TEMPLATE_ID_CODE = "YOUR_CODE_TEMPLATE_ID"; 
-const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+const SERVICE_ID = "service_id"; 
+const TEMPLATE_ID = "template_id"; 
+const PUBLIC_KEY = "VOTRE_CLE_PUBLIQUE";
 
 emailjs.init(PUBLIC_KEY);
 
-// --- FONCTION : LOGOUT (DÉCONNEXION) ---
+// --- FONCTION : DÉCONNEXION ---
 function logout() {
-    // Supprime l'identifiant de la mémoire
     localStorage.removeItem('threndly_id');
-    // Redirige vers l'accueil
     window.location.href = "index.html";
 }
 
-// --- FONCTION : ENVOYER LE CODE (Sur signup.html) ---
+// --- FONCTION : ENVOYER LE CODE (signup.html) ---
 function envoyerCode() {
     const email = document.getElementById('reg-mail').value;
     const user = document.getElementById('reg-user').value || "Utilisateur";
 
     if(!email.includes('@')) return alert("Email invalide");
 
-    // Génération du code à 6 chiffres
+    // Génération du code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     localStorage.setItem('temp_code', code);
 
     // Envoi via EmailJS
-    emailjs.send(SERVICE_ID, TEMPLATE_ID_CODE, {
-        email: email,
-        user_name: user,
-        verification_code: code
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        email: email, // Correspond à {{email}}
+        user_name: user, // Correspond à {{user_name}}
+        verification_code: code // Correspond à {{verification_code}}
     }).then(() => {
-        window.location.href = "verify.html";
-    }).catch(err => alert("Erreur d'envoi. Vérifiez vos IDs."));
+        window.location.href = "verify.html"; // Redirection vers ton module
+    });
 }
 
-// --- FONCTION : VÉRIFIER LE CODE (Sur verify.html) ---
+// --- FONCTION : VÉRIFIER (verify.html) ---
 function verifierCode() {
-    // Récupère les 6 chiffres (soit d'un input unique, soit du localStorage de verify.html)
-    const tape = localStorage.getItem('code_tape'); 
+    const tape = localStorage.getItem('code_tape'); // Récupéré par la grille de verify.html
     const attendu = localStorage.getItem('temp_code');
 
     if(tape === attendu && attendu !== null) {
@@ -50,18 +47,4 @@ function verifierCode() {
     }
 }
 
-// --- GESTION DU CHAT (Simple) ---
-function handleEnter(event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-}
-
-function sendMessage() {
-    const input = document.getElementById('msg-in');
-    if(input.value.trim() !== "") {
-        console.log("Message envoyé : " + input.value);
-        input.value = ""; // Vide le champ
-        // Ici tu ajouteras ta logique Firebase Database plus tard
-    }
-}
+// N'oublie pas d'ajouter <script src="script.js"></script> à la fin de tes HTML !
