@@ -1,69 +1,42 @@
-// Attendre que la page soit chargée
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm');
+// --- CONFIGURATION ---
+const firebaseConfig = { 
+    databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com", 
+    projectId: "trendly-fca7c" 
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+emailjs.init("VOTRE_CLE_PUBLIQUE"); //
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Empêche le rechargement de la page
-            
-            // Simulation de connexion
-            console.log("Connexion en cours vers Threndly...");
-            
-            // Redirection vers la page de chat
-            window.location.href = 'chat.html';
-        });
-    }
-});
+let timerEnCours = false;
 
-// Fonction pour générer un code à 6 chiffres
-function generateCode() {
-    return Math.floor(100000 + Math.random() * 900000);
+// --- FONCTION : ENVOYER LE CODE (Sur signup.html) ---
+function envoyerCode() {
+    if(timerEnCours) return;
+    const email = document.getElementById('reg-mail').value;
+    const user = document.getElementById('reg-user').value || "Utilisateur";
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    localStorage.setItem('temp_code', code); // On stocke pour vérifier sur verify.html
+
+    emailjs.send("service_id", "template_id", {
+        email: email, //
+        user_name: user, //
+        verification_code: code //
+    }).then(() => {
+        window.location.href = "verify.html"; //
+    });
 }
 
-// Quand l'utilisateur s'inscrit
-document.getElementById('signupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // On enregistre les infos et on simule l'envoi du mail
-    const userEmail = document.getElementById('reg_email').value;
-    const verificationCode = generateCode();
-    
-    localStorage.setItem('temp_email', userEmail);
-    localStorage.setItem('sent_code', verificationCode);
-    
-    alert("Un code a été envoyé à : " + userEmail + " (Code test : " + verificationCode + ")");
-    
-    // Direction la page de vérification
-    window.location.href = 'verify.html';
-});
+// --- FONCTION : VÉRIFIER (Sur verify.html) ---
+function verifierCode() {
+    const tape = document.getElementById('v-code').value;
+    const attendu = localStorage.getItem('temp_code');
 
-// Pour rester connecté
-function checkLogin() {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-        window.location.href = 'chat.html';
+    if(tape === attendu) {
+        localStorage.setItem('threndly_id', 'Logged');
+        window.location.href = "chat.html"; //
+    } else {
+        if(navigator.vibrate) navigator.vibrate([100, 50, 100]); // Vibration d'erreur
+        alert("Code incorrect !");
     }
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const signupForm = document.getElementById('signupForm');
-
-    if (signupForm) {
-        signupForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêche le rechargement
-
-            // On récupère les données
-            const email = document.querySelector('input[placeholder="E-mail ou numéro"]').value;
-            
-            // Génération d'un code fictif pour le test
-            const codeTest = Math.floor(100000 + Math.random() * 900000);
-            
-            // On sauvegarde l'état pour que l'utilisateur reste connecté plus tard
-            localStorage.setItem('userEmail', email);
-            
-            // Alerte pour simuler l'envoi (en attendant un service de mail réel)
-            alert("Un code de vérification a été envoyé à " + email + "\nVotre code de test est : " + codeTest);
-
-            // Redirection vers la page de vérification
-            window.location.href = 'verify.html';
-        });
-    }
-});
