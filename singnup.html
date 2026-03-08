@@ -2,54 +2,95 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Threndly - Créer un compte</title>
-    <link rel="stylesheet" href="signup.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --blue: #2D9CDB; --black: #000;
+            --grad: linear-gradient(135deg, #2D9CDB 0%, #BB6BD9 100%); 
+        }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { margin: 0; background: var(--black); height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+        .auth-card {
+            width: 90%; max-width: 400px; background: #000; padding: 40px 30px;
+            border-radius: 30px; border: 1px solid #1a1a1a; text-align: center;
+        }
+
+        .logo-txt { 
+            font-size: 2.2rem; font-weight: 900; background: var(--grad); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            margin-bottom: 30px; letter-spacing: -1px;
+        }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { color: #555; font-size: 0.8rem; margin-bottom: 6px; display: block; margin-left: 5px; }
+        input { 
+            width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #222; 
+            background: #0a0a0a; color: white; outline: none; font-size: 1rem;
+        }
+        input:focus { border-color: var(--blue); }
+
+        .btn-main {
+            width: 100%; padding: 18px; border-radius: 14px; border: none;
+            background: var(--blue); color: white; font-weight: bold; font-size: 1rem;
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+        }
+
+        .divider { margin: 25px 0; color: #333; font-size: 0.75rem; display: flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #111; margin: 0 15px; }
+
+        .btn-social {
+            width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #222;
+            background: transparent; color: white; font-weight: 600; font-size: 0.95rem;
+            margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer;
+        }
+        .btn-social i { font-size: 1.1rem; }
+        .google-icon { color: #EA4335; }
+        .fb-icon { color: #1877F2; }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="signup-card">
-            <div class="brand-logo-container">
-                <div class="brand-logo-icon">T</div>
-                <span class="brand-name">THRENDLY</span>
-            </div>
 
-            <h1>S'inscrire</h1>
-            <p class="subtitle">Rejoignez la communauté Threndly</p>
-            
-            <form id="signupForm">
-                <div class="input-row">
-                    <input type="text" placeholder="Nom" required>
-                    <input type="text" placeholder="Username" required>
-                </div>
-
-                <div class="input-group">
-                    <input type="text" placeholder="E-mail ou numéro" required>
-                </div>
-                
-                <div class="input-group">
-                    <input type="password" placeholder="Mot de passe" required>
-                </div>
-
-                <div class="input-group">
-                    <input type="password" placeholder="Confirmation du mot de passe" required>
-                </div>
-                
-                <button type="submit" class="btn-submit">S'inscrire</button>
-            </form>
-
-            <div class="separator">OU</div>
-
-            <div class="social-buttons">
-                <button class="btn-google">Continuer avec Google</button>
-                <button class="btn-fb">Continuer avec Facebook</button>
-            </div>
-            
-            <div class="footer-links">
-                <a href="#">Mot de passe oublié ?</a>
-                <p>Déjà un compte ? <a href="index.html" class="link-bold">Se connecter</a></p>
-            </div>
+    <div class="auth-card">
+        <div class="logo-txt">THRENDLY</div>
+        
+        <div class="input-group">
+            <label>ADRESSE E-MAIL</label>
+            <input type="email" id="reg-mail" placeholder="nom@exemple.com">
         </div>
+
+        <div class="input-group">
+            <label>NOM D'UTILISATEUR</label>
+            <input type="text" id="reg-user" placeholder="@votre-pseudo">
+        </div>
+
+        <button class="btn-main" onclick="envoyerCode()">
+            Continuer
+        </button>
+
+        <div class="divider">Ou continuer avec</div>
+
+        <button class="btn-social" onclick="loginGoogle()">
+            <i class="fab fa-google google-icon"></i> Google
+        </button>
+        
+        <button class="btn-social" onclick="loginFacebook()">
+            <i class="fab fa-facebook fb-icon"></i> Facebook
+        </button>
+
+        <p style="color:#444; font-size:0.75rem; margin-top:25px;">
+            En continuant, vous acceptez les conditions de Threndly.
+        </p>
     </div>
-</body><script src="script.js"></script>
+
+    <script src="script.js"></script>
+</body>
 </html>
