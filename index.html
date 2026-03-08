@@ -1,43 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data: https:;">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Threndly - Welcome</title>
-    
+    <title>Threndly</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
-    <style>
-        body { 
-            margin: 0; background: #000; height: 100vh; 
-            display: flex; align-items: center; justify-content: center;
-            font-family: -apple-system, sans-serif; color: white;
-        }
-        .loader {
-            width: 50px; height: 50px; border: 3px solid #111;
-            border-top: 3px solid #2D9CDB; border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
-<body>
-
-    <div class="loader"></div>
-
+<body style="background:#000; color:white; display:flex; align-items:center; justify-content:center; height:100vh;">
     <script>
-        // Intelligence : Redirection automatique
-        window.onload = function() {
-            if(localStorage.getItem('threndly_id')) {
-                window.location.href = "chat.html";
-            } else {
-                window.location.href = "signup.html";
-            }
+        window.onload = () => {
+            window.location.href = localStorage.getItem('threndly_id') ? "chat.html" : "signup.html";
         };
     </script>
-
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
