@@ -1,45 +1,75 @@
-/* Fond tout noir et texte blanc */
+:root {
+    --black: #000000;
+    --dark-grey: #0a0a0a;
+    --violet: #8a2be2;
+    --blue: #007bff;
+    --text-white: #ffffff;
+    --text-dim: #888;
+    --gradient: linear-gradient(135deg, #8a2be2 0%, #007bff 100%);
+}
+
 body {
-    background-color: #000000;
-    color: #ffffff;
-    font-family: sans-serif;
+    background-color: var(--black);
+    color: var(--text-white);
+    font-family: -apple-system, system-ui, sans-serif;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    min-height: 100vh;
 }
 
-.login-box {
-    background-color: #0a0a0a;
-    padding: 40px;
-    border-radius: 15px;
+.signup-card {
+    background: var(--dark-grey);
+    padding: 30px;
+    border-radius: 20px;
     border: 1px solid #222;
+    width: 90%;
+    max-width: 380px;
     text-align: center;
-    width: 320px;
 }
 
-/* Le dégradé Violet et Bleu pour le bouton */
-button {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #8a2be2 0%, #007bff 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
+.brand-logo {
+    width: 50px; height: 50px;
+    background: var(--gradient);
+    border-radius: 12px;
+    margin: 0 auto 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: bold;
 }
 
-/* Style des champs de saisie */
+.brand-name {
+    font-size: 20px; font-weight: bold; letter-spacing: 2px;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 25px;
+}
+
+.input-row { display: flex; gap: 10px; }
+
 input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 5px;
-    color: white;
-    box-sizing: border-box;
+    width: 100%; padding: 12px; margin-bottom: 12px;
+    background: #111; border: 1px solid #333;
+    border-radius: 8px; color: white; box-sizing: border-box;
 }
+
+input:focus { border-color: var(--violet); outline: none; }
+
+.btn-primary {
+    width: 100%; padding: 14px; margin-top: 10px;
+    background: var(--gradient); border: none;
+    border-radius: 8px; color: white; font-weight: bold; cursor: pointer;
+}
+
+.divider { margin: 20px 0; color: var(--text-dim); font-size: 12px; }
+
+.social-login button {
+    width: 100%; padding: 12px; margin-bottom: 10px;
+    border-radius: 8px; border: none; font-weight: 500; cursor: pointer;
+}
+
+.btn-google { background: white; color: black; }
+.btn-fb { background: #1877f2; color: white; }
+
+.footer-links a { color: var(--blue); text-decoration: none; font-size: 13px; }
+.footer-links p { font-size: 14px; color: var(--text-dim); }
+.bold { font-weight: bold; }
