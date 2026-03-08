@@ -1,0 +1,112 @@
+/* Définition des couleurs thématiques */
+:root {
+    --bg-black: #080808; /* Fond tout noir */
+    --card-bg: #141414; /* Fond de la carte légèrement plus clair */
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --border-color: #333333;
+    
+    /* Tes couleurs demandées */
+    --violet-main: #8a2be2;
+    --blue-main: #007bff;
+    
+    /* Le dégradé pour le bouton et le logo */
+    --gradient-threndly: linear-gradient(135deg, #8a2be2 0%, #007bff 100%);
+}
+
+body {
+    background-color: var(--bg-black);
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif; /* Une police moderne */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.signup-card {
+    background-color: var(--card-bg);
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Style du Logo */
+.brand-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.brand-logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-threndly); /* Dégradé Violet/Bleu */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    background: var(--gradient-threndly);
+    -webkit-background-clip: text; /* Le texte prend la couleur du dégradé */
+    -webkit-text-fill-color: transparent;
+}
+
+h1 { font-size: 24px; text-align: center; margin-bottom: 5px; }
+.subtitle { text-align: center; color: var(--text-muted); margin-bottom: 30px; font-size: 14px; }
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--text-muted); }
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #1a1a1a;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    box-sizing: border-box;
+}
+
+/* Effet quand on clique sur le champ */
+.input-group input:focus {
+    border-color: var(--violet-main);
+    outline: none;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+}
+
+/* LE BOUTON STYLÉ VIOLET & BLEU */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background: var(--gradient-threndly); /* Ton dégradé */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.footer-text { text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted); }
+.footer-text a { color: var(--blue-main); text-decoration: none; font-weight: bold; }
