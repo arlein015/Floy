@@ -3,59 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Inscription</title>
+    <title>Threndly - Connexion</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="main-wrapper">
-        <div class="auth-card">
+    <div class="login-wrapper">
+        <div class="login-card">
             
-            <div class="brand-header">
-                <div class="t-icon">T</div>
-                <h1 class="brand-text">THRENDLY</h1>
+            <h1 class="main-title">TRENDLY</h1>
+
+            <div class="welcome-text">
+                <h2>Content de vous revoir</h2>
+                <p>Connectez-vous à votre compte</p>
             </div>
-
-            <p class="auth-subtitle">Inscrivez-vous pour commencer</p>
             
-            <form id="signupForm">
-                <div class="input-row">
-                    <input type="text" placeholder="Nom" required>
-                    <input type="text" placeholder="Username" required>
-                </div>
-
+            <form id="loginForm">
                 <div class="input-group">
-                    <input type="text" placeholder="E-mail ou numéro" required>
+                    <label>E-mail</label>
+                    <input type="text" placeholder="vous@entreprise.com" required>
                 </div>
                 
                 <div class="input-group">
-                    <input type="password" placeholder="Mot de passe" required>
-                </div>
-
-                <div class="input-group">
-                    <input type="password" placeholder="Confirmer mot de passe" required>
+                    <label>Mot de passe</label>
+                    <input type="password" placeholder="Entrez votre mot de passe" required>
                 </div>
                 
-                <button type="submit" class="btn-register">S'inscrire</button>
+                <button type="submit" class="btn-login">Se connecter</button>
             </form>
 
-            <div class="or-divider">
-                <span>OU</span>
-            </div>
+            <div class="separator"><span>ou</span></div>
 
-            <div class="social-auth">
+            <div class="social-login">
                 <button class="btn-google">
-                    <img src="https://authjs.dev/img/providers/google.svg" alt="Google Logo">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google">
                     Continuer avec Google
                 </button>
+                
                 <button class="btn-facebook">
-                    <i class="fab fa-facebook-f"></i> Continuer avec Facebook
+                    <i class="fab fa-facebook-f"></i>
+                    Continuer avec Facebook
                 </button>
             </div>
             
-            <div class="auth-footer">
-                <a href="#" class="forgot-link">Mot de passe oublié ?</a>
-                <p>Déjà un compte ? <a href="#" class="login-link">Se connecter</a></p>
+            <div class="footer-links">
+                <a href="#" class="forgot-pwd">Mot de passe oublié ?</a>
+                <p>Vous n'avez pas de compte ? <a href="#" class="signup-link">S'inscrire</a></p>
             </div>
         </div>
     </div>
