@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurité - Floy</title>
+    <style>
+        :root { --fond: #000; --violet: #8A2BE2; }
+        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        .card { background: #111; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; }
+        .status-ok { color: #00ff00; font-size: 12px; }
+        button { width: 100%; background: var(--violet); color: white; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <a href="settings.html" style="color: white; text-decoration: none;">← Retour</a>
+    <h2 style="color: var(--violet)">Sécurité du compte</h2>
+    
+    <div class="card">
+        <h4>Authentification à deux facteurs</h4>
+        <p style="font-size: 13px; color: #888;">Protégez votre compte avec un code envoyé par SMS.</p>
+        <button>Activer</button>
+    </div>
+
+    <div class="card">
+        <h4>Appareils connectés</h4>
+        <p style="font-size: 13px;">Windows PC • Session active <span class="status-ok">●</span></p>
+    </div>
+</body>
+</html>
