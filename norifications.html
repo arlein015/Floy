@@ -3,164 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Notifications</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Floy - Notifications</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --threndly-violet: #8a2be2;
-            --threndly-blue: #007bff;
-            --bg-black: #000;
+            --floy-bg: linear-gradient(135deg, #ff8c00 0%, #3a01cc 100%);
+            --floy-cyan: #00e5ff;
         }
 
         body {
-            margin: 0; padding: 0; background-color: var(--bg-black);
-            font-family: 'Poppins', sans-serif; color: white; overflow: hidden;
+            margin: 0; background: var(--floy-bg) !important;
+            background-attachment: fixed; font-family: 'Poppins', sans-serif;
+            color: white; min-height: 100vh;
         }
 
-        /* Header Fixe */
-        .notif-header {
-            padding: 20px; text-align: center; border-bottom: 0.5px solid #111;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        .header {
+            padding: 20px; background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px); display: flex; align-items: center; gap: 15px;
             position: sticky; top: 0; z-index: 100;
         }
 
-        /* Filtres de notifications */
-        .notif-filters {
-            display: flex; justify-content: center; gap: 10px; padding: 15px;
-            border-bottom: 0.5px solid #111;
-        }
-        .filter-btn {
-            background: #111; border: none; color: #888; padding: 6px 15px;
-            border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
-        }
-        .filter-btn.active {
-            background: var(--threndly-violet); color: white;
-        }
+        .notif-container { padding: 15px; }
 
-        /* Liste des notifications */
-        .notif-container {
-            height: calc(100vh - 180px); overflow-y: auto; padding: 10px;
-        }
-
+        /* Item de notification en Dark Glass */
         .notif-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px;
-            border-radius: 12px; transition: 0.2s; cursor: pointer;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            margin-bottom: 10px; padding: 15px;
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer; transition: 0.3s;
         }
-        .notif-item:active { background: #0a0a0a; }
 
-        .avatar {
-            width: 48px; height: 48px; border-radius: 50%;
-            background: linear-gradient(45deg, var(--threndly-violet), var(--threndly-blue));
-            flex-shrink: 0; position: relative;
-        }
+        .notif-item:active { background: rgba(0, 0, 0, 0.6); transform: scale(0.98); }
+
+        .notif-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
         
-        /* Petit badge d'action (coeur, message, etc) sur l'avatar */
-        .action-badge {
-            position: absolute; bottom: 0; right: 0; width: 18px; height: 18px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 10px; color: white; border: 2px solid black;
+        .notif-content { flex: 1; font-size: 13px; }
+        .notif-time { font-size: 10px; opacity: 0.5; margin-top: 4px; }
+
+        .btn-follow {
+            background: #ff8c00; border: none; color: white;
+            padding: 6px 15px; border-radius: 10px; font-weight: 600; font-size: 12px;
         }
-        .bg-heart { background: #ff2d55; }
-        .bg-comment { background: var(--threndly-blue); }
-        .bg-follow { background: var(--threndly-violet); }
-
-        .notif-info { flex: 1; }
-        .notif-info p { margin: 0; font-size: 13px; line-height: 1.4; }
-        .notif-info b { color: white; }
-        .notif-time { font-size: 11px; color: #555; margin-top: 3px; }
-
-        .video-preview {
-            width: 40px; height: 52px; background: #222; border-radius: 6px;
-            background-size: cover; background-position: center; flex-shrink: 0;
-        }
-
-        .follow-back-btn {
-            background: var(--threndly-violet); color: white; border: none;
-            padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700;
-        }
-
-        /* Badge bleu */
-        .badge-verified { color: var(--threndly-blue); font-size: 10px; margin-left: 2px; }
-
-        /* Navigation Basse */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 70px;
-            background: #000; border-top: 0.5px solid #111;
-            display: flex; justify-content: space-around; align-items: center; z-index: 100;
-        }
-        .nav-icon { color: #555; font-size: 22px; cursor: pointer; }
-        .nav-icon.active { color: var(--threndly-violet); }
-        .plus-btn { background: white; color: black; padding: 6px 15px; border-radius: 10px; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="notif-header">
-        <h3 style="margin:0; font-size: 18px;">Activités</h3>
-    </div>
-
-    <div class="notif-filters">
-        <button class="filter-btn active">Tout</button>
-        <button class="filter-btn">Likes</button>
-        <button class="filter-btn">Commentaires</button>
+    <div class="header">
+        <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
+        <h2 style="margin:0; font-size: 18px;">Notifications</h2>
     </div>
 
     <div class="notif-container">
-        
         <div class="notif-item">
-            <div class="avatar">
-                <div class="action-badge bg-heart"><i class="fas fa-heart"></i></div>
-            </div>
-            <div class="notif-info">
-                <p><b>Arlein</b> <i class="fas fa-check-circle badge-verified"></i> a aimé votre vidéo.</p>
+            <img src="logo.png" class="notif-img">
+            <div class="notif-content">
+                <strong>@bouta</strong> a aimé votre vidéo.
                 <div class="notif-time">Il y a 2 min</div>
             </div>
-            <div class="video-preview" style="background-image: url('https://via.placeholder.com/40x50')"></div>
+            <div style="width: 40px; height: 40px; background: #222; border-radius: 5px;"></div>
         </div>
 
         <div class="notif-item">
-            <div class="avatar" style="filter: hue-rotate(90deg);">
-                <div class="action-badge bg-follow"><i class="fas fa-user-plus"></i></div>
+            <img src="logo.png" class="notif-img">
+            <div class="notif-content">
+                <strong>Floy Support <i class="fas fa-check-circle" style="color: var(--floy-cyan); font-size: 10px;"></i></strong> a commencé à vous suivre.
+                <div class="notif-time">Il y a 1 heure</div>
             </div>
-            <div class="notif-info">
-                <p><b>Bouta</b> a commencé à vous suivre.</p>
-                <div class="notif-time">Il y a 1h</div>
-            </div>
-            <button class="follow-back-btn">Retour</button>
+            <button class="btn-follow">S'abonner</button>
         </div>
-
-        <div class="notif-item">
-            <div class="avatar" style="filter: hue-rotate(180deg);">
-                <div class="action-badge bg-comment"><i class="fas fa-comment"></i></div>
-            </div>
-            <div class="notif-info">
-                <p><b>User123</b> a commenté: "C'est incroyable ! 🔥"</p>
-                <div class="notif-time">Il y a 5h</div>
-            </div>
-            <div class="video-preview" style="background-image: url('https://via.placeholder.com/40x50')"></div>
-        </div>
-
     </div>
-
-    <nav class="bottom-nav">
-        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
-        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
-        <div class="plus-btn" onclick="window.location.href='upload.html'"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-heart nav-icon active"></i>
-        <i class="fas fa-user nav-icon" onclick="window.location.href='profile.html'"></i>
-    </nav>
-
-    <script>
-        // Gestion simple des filtres (visuel seulement pour le moment)
-        const buttons = document.querySelectorAll('.filter-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-    </script>
 
 </body>
 </html>
