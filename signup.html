@@ -109,55 +109,52 @@
         </p>
     </div>
 
-    <script>
-        // --- CONFIGURATION EMAILJS ---
-        (function() {
-            emailjs.init("VOTRE_CLE_PUBLIQUE"); 
-        })();
+   <script>
+    // 1. Initialisation avec ta clé publique
+    (function() {
+        emailjs.init("ZMBJ1MUAvq-i9OTaG"); 
+    })();
 
-        // Génération du code OTP de 6 chiffres
-        function generateOTP() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
-        }
+    // 2. Fonction pour générer le code de 6 chiffres
+    function generateOTP() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
 
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const name = document.getElementById('userName').value;
-            const email = document.getElementById('userEmail').value;
-            
-            // On désactive le bouton pendant l'envoi
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Envoi du code...";
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const name = document.getElementById('userName').value;
+        const email = document.getElementById('userEmail').value;
+        
+        // On change l'état du bouton
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Envoi du code...";
 
-            const otpCode = generateOTP();
-            const expiration = Date.now() + 60000; // Expire dans 60 secondes
+        const otpCode = generateOTP();
+        const expiration = Date.now() + 60000; // Expire dans 60 secondes
 
-            // Sauvegarde locale pour la page de vérification
-            localStorage.setItem('validOTP', otpCode);
-            localStorage.setItem('otpExpiration', expiration);
+        // Sauvegarde pour la page de vérification
+        localStorage.setItem('validOTP', otpCode);
+        localStorage.setItem('otpExpiration', expiration);
 
-            // Préparation des paramètres pour ton template EmailJS
-            const templateParams = {
-                user_name: name,         // Correspond à {{user_name}}
-                otp_code: otpCode,       // Correspond à {{otp_code}}
-                to_email: email,         // Destination
-                time: new Date().toLocaleTimeString() // Correspond à {{time}}
-            };
+        // 3. Préparation des paramètres pour ton template
+        const templateParams = {
+            user_name: name,         // Remplit {{user_name}}
+            otp_code: otpCode,       // Remplit {{otp_code}}
+            to_email: email,         // Adresse de l'utilisateur
+            time: new Date().toLocaleTimeString() // Remplit {{time}}
+        };
 
-            // Envoi réel
-            emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
-                .then(function() {
-                    console.log("Mail envoyé avec succès !");
-                    window.location.href = 'verify.html';
-                }, function(error) {
-                    alert("Erreur lors de l'envoi : " + JSON.stringify(error));
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "Continuer";
-                });
-        });
-    </script>
-
-</body>
-</html>
+        // 4. Envoi réel avec tes IDs
+        emailjs.send('service_8hszhsz', 'template_3ehh52a', templateParams)
+            .then(function() {
+                console.log("Mail envoyé ! Code : " + otpCode);
+                window.location.href = 'verify.html';
+            }, function(error) {
+                alert("Erreur d'envoi : " + JSON.stringify(error));
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Continuer";
+            });
+    });
+</script>
