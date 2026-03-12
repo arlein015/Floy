@@ -84,6 +84,23 @@
         const chatContainer = document.getElementById('chatContainer');
         const currentUser = localStorage.getItem('floy_username') || "Anonyme";
 
+       // --- FONCTION APPEL VIDÉO ---
+document.getElementById('videoCallBtn').onclick = async () => {
+    // On crée un identifiant de salle unique basé sur le temps
+    const roomId = "Floy-" + Math.floor(Math.random() * 1000000);
+    const callUrl = `https://meet.jit.si/${roomId}`; // Utilisation d'un pont vidéo gratuit et puissant
+
+    if(confirm("Lancer un appel vidéo avec @bouta ?")) {
+        await addDoc(collection(db, "chats"), {
+            text: "📞 Appel vidéo lancé. Cliquez ici pour rejoindre l'appel.",
+            callLink: callUrl,
+            sender: currentUser,
+            timestamp: serverTimestamp()
+        });
+        // Ouvre l'appel pour celui qui appelle
+        window.open(callUrl, '_blank');
+    }
+};
         // --- SUPPRESSION ---
         window.deleteMsg = async (id) => {
             if(confirm("Supprimer ce message pour tout le monde ?")) {
