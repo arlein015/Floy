@@ -4,55 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLOY - Feed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="feed-page">
-    <div class="app-container">
-        <div class="top-tabs">
+<body class="feed-body">
+    <div class="video-wrapper">
+        <div class="top-nav">
             <span>Abonnements</span>
             <span class="active">Pour toi</span>
         </div>
 
-        <div class="video-section">
-            <video src="video-test.mp4" loop autoplay muted class="main-video"></video>
-            
-            <div class="video-overlay">
-                <div class="side-actions">
-                    <div class="action-item">
-                        <div class="icon-circle"><i class="fas fa-heart"></i></div>
-                        <span>12.5k</span>
-                    </div>
-                    <div class="action-item">
-                        <div class="icon-circle"><i class="fas fa-comment-dots"></i></div>
-                        <span>850</span>
-                    </div>
-                    <div class="action-item">
-                        <div class="icon-circle"><i class="fas fa-share"></i></div>
-                        <span>Partager</span>
-                    </div>
-                </div>
+        <video src="votre-video.mp4" class="full-video" loop autoplay muted></video>
 
-                <div class="video-details">
-                    <h3 class="creator-name">@user_floy <span class="badge-blue"><i class="fas fa-check-circle"></i></span></h3>
-                    <p class="video-caption">Regardez ce nouveau challenge sur #FLOY ! 🚀 ✨</p>
-                    <div class="music-info">
-                        <i class="fas fa-music"></i> <span>Son original - FLOY Music</span>
-                    </div>
-                </div>
+        <div class="video-ui">
+            <div class="right-sidebar">
+                <div class="action"><i class="fas fa-heart"></i><span>12.5k</span></div>
+                <div class="action"><i class="fas fa-comment-dots"></i><span>850</span></div>
+                <div class="action"><i class="fas fa-share"></i><span>Partager</span></div>
+            </div>
+
+            <div class="bottom-info">
+                <h3>@user_floy <i class="fas fa-check-circle badge-blue"></i></h3>
+                <p>Regardez ce nouveau challenge sur #FLOY ! 🚀 ✨</p>
+                <div class="music"><i class="fas fa-music"></i> Son original - FLOY Music</div>
             </div>
         </div>
-
-        <nav class="glass-nav">
-            <a href="feed.html" class="nav-item active"><i class="fas fa-house"></i></a>
-            <a href="explore.html" class="nav-item"><i class="fas fa-magnifying-glass"></i></a>
-            <div class="nav-upload">
-                <a href="upload.html" class="btn-add-gradient"><i class="fas fa-plus"></i></a>
-            </div>
-            <a href="message.html" class="nav-item"><i class="fas fa-message"></i></a>
-            <a href="profile.html" class="nav-item"><i class="fas fa-user"></i></a>
-        </nav>
     </div>
+
+    <nav class="main-nav">
+        <a href="feed.html"><i class="fas fa-house"></i></a>
+        <a href="explore.html"><i class="fas fa-magnifying-glass"></i></a>
+        <div class="add-button-container">
+            <a href="upload.html" class="add-btn-gradient"><i class="fas fa-plus"></i></a>
+        </div>
+        <a href="message.html"><i class="fas fa-envelope"></i></a>
+        <a href="profile.html"><i class="fas fa-user"></i></a>
+    </nav>
 </body>
 </html>
