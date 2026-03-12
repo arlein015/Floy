@@ -2,18 +2,18 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Threndly</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Floy - Bienvenue</title>
 </head>
-<body style="background:#000; color:white; display:flex; align-items:center; justify-content:center; height:100vh;">
-    <script>
-        window.onload = () => {
-            window.location.href = localStorage.getItem('threndly_id') ? "chat.html" : "signup.html";
-        };
-    </script>
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+<body style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+    <img src="logo.png" alt="Floy Logo" style="width: 150px; margin-bottom: 20px;">
+    <h1 style="color: var(--violet); text-shadow: 0 0 10px var(--violet);">FLOY</h1>
+    <p style="margin-bottom: 40px;">Le monde en vidéo.</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 15px; width: 80%; max-width: 300px;">
+        <a href="feed.html" style="text-decoration: none; text-align: center; background: var(--violet); color: white; padding: 15px; border-radius: 30px; font-weight: bold;">Regarder maintenant</a>
+        <a href="signup.html" style="text-decoration: none; text-align: center; border: 2px solid var(--bleu); color: var(--bleu); padding: 15px; border-radius: 30px; font-weight: bold;">S'inscrire</a>
+    </div>
 </body>
 </html>
