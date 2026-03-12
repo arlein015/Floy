@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - Floy</title>
+    <style>
+        :root { --fond: #000; --violet: #8A2BE2; --gris: #1a1a1a; }
+        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; }
+        header { padding: 20px; border-bottom: 1px solid var(--gris); display: flex; align-items: center; gap: 15px; }
+        .back-btn { text-decoration: none; color: white; font-size: 20px; }
+        .setting-section { margin-top: 20px; }
+        .setting-item { 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            border-bottom: 1px solid #050505;
+            cursor: pointer;
+        }
+        .setting-item:active { background: var(--gris); }
+        .danger { color: #ff4444; }
+        .version { text-align: center; color: #444; font-size: 12px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="profile.html" class="back-btn">←</a>
+        <h3>Paramètres</h3>
+    </header>
+
+    <div class="setting-section">
+        <div class="setting-item"><span>Compte</span><span>👤</span></div>
+        <div class="setting-item"><span>Confidentialité</span><span>🔒</span></div>
+        <div class="setting-item"><span>Sécurité</span><span>🛡️</span></div>
+        <div class="setting-item" onclick="location.href='wallet.html'"><span>Portefeuille (Wallet)</span><span style="color:var(--violet)">💰</span></div>
+        <div class="setting-item"><span>Langue</span><span>FR</span></div>
+        <div class="setting-item danger"><span>Déconnexion</span><span>🚪</span></div>
+    </div>
+
+    <p class="version">Floy v1.0.0 - Build 2026</p>
+</body>
+</html>
