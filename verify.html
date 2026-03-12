@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vérification - FLOY</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --floy-gradient: linear-gradient(135deg, #007bff 0%, #8a2be2 100%);
@@ -33,27 +32,21 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .brand-name {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
+        .brand-name { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
         .gradient-text {
             background: var(--floy-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        h2 { font-size: 20px; color: #333; margin-bottom: 10px; }
-        .instruction { font-size: 13px; color: #777; margin-bottom: 30px; line-height: 1.5; }
+        h2 { font-size: 18px; color: #333; margin-bottom: 10px; }
+        .instruction { font-size: 13px; color: #777; margin-bottom: 20px; line-height: 1.5; }
 
-        /* Conteneur des 6 chiffres */
         .otp-inputs {
             display: flex;
             justify-content: space-between;
             gap: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .otp-inputs input {
@@ -72,7 +65,13 @@
             outline: none;
             border-color: var(--floy-blue);
             background: white;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+        }
+
+        #timer {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #8a2be2;
         }
 
         .btn-verify {
@@ -88,16 +87,12 @@
             box-shadow: 0 4px 15px rgba(138, 43, 226, 0.2);
         }
 
-        .resend-text {
-            margin-top: 25px;
-            font-size: 13px;
-            color: #888;
-        }
-
-        .resend-text span {
-            color: var(--floy-blue);
+        .error-msg {
+            color: #ea4335;
+            font-size: 12px;
+            margin-top: 15px;
+            display: none;
             font-weight: 600;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -106,9 +101,11 @@
     <div class="verify-card">
         <h1 class="brand-name">F<span class="gradient-text">LOY</span></h1>
         <h2>Vérifier votre e-mail</h2>
-        <p class="instruction">Entrez le code à 6 chiffres que nous avons envoyé à votre adresse e-mail pour activer votre compte.</p>
+        <p class="instruction">Entrez le code à 6 chiffres reçu par mail pour activer votre compte.</p>
 
-        <form onsubmit="event.preventDefault(); window.location.href='feed.html';">
+        <div id="timer">Expire dans : <span id="seconds">60</span>s</div>
+
+        <form id="otpForm">
             <div class="otp-inputs">
                 <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
                 <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
@@ -118,32 +115,75 @@
                 <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
             </div>
 
-            <button type="submit" class="btn-verify">Vérifier le compte</button>
+            <button type="submit" class="btn-verify">Valider l'inscription</button>
+            <p id="errorBox" class="error-msg">Code incorrect ou expiré.</p>
         </form>
-
-        <p class="resend-text">
-            Vous n'avez pas reçu le code ? <span>Renvoyer</span>
-        </p>
     </div>
 
     <script>
-        // Script pour passer d'une case à l'autre automatiquement
         const inputs = document.querySelectorAll('.otp-inputs input');
-        
+        const timerText = document.getElementById('seconds');
+        const errorBox = document.getElementById('errorBox');
+
+        // 1. Gestion du Focus Automatique
         inputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
                 if (e.target.value.length > 0 && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
             });
-
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && !e.target.value && index > 0) {
                     inputs[index - 1].focus();
                 }
             });
         });
-    </script>
 
+        // 2. Gestion du Compteur de 60 secondes
+        const updateTimer = setInterval(() => {
+            const expiration = localStorage.getItem('otpExpiration');
+            const timeLeft = Math.max(0, Math.floor((expiration - Date.now()) / 1000));
+            
+            timerText.innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(updateTimer);
+                document.getElementById('timer').innerHTML = "<span style='color:#ea4335'>Code expiré !</span>";
+            }
+        }, 1000);
+
+        // 3. Vérification du Code
+        document.getElementById('otpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const expiration = localStorage.getItem('otpExpiration');
+            const now = Date.now();
+
+            // Vérifier le temps
+            if (now > expiration) {
+                errorBox.innerText = "Le temps est écoulé. Veuillez recommencer.";
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            // Récupérer le code tapé
+            let typedCode = "";
+            inputs.forEach(input => typedCode += input.value);
+
+            // Récupérer le vrai code stocké
+            const realCode = localStorage.getItem('validOTP');
+
+            if (typedCode === realCode) {
+                alert("Bravo ! Votre compte FLOY est activé.");
+                localStorage.removeItem('validOTP');
+                localStorage.removeItem('otpExpiration');
+                window.location.href = 'feed.html'; // Redirection vers le flux vidéo
+            } else {
+                errorBox.style.display = 'block';
+                inputs.forEach(input => input.value = "");
+                inputs[0].focus();
+            }
+        });
+    </script>
 </body>
 </html>
