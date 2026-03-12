@@ -2,34 +2,25 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commentaires - Floy</title>
+    <title>Threndly - Commentaires</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --fond: #0b0b0b; --violet: #8A2BE2; }
-        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; }
-        .comment-header { padding: 15px; text-align: center; border-bottom: 1px solid #222; font-weight: bold; }
-        .comment-list { height: calc(100vh - 120px); overflow-y: auto; padding: 15px; }
-        .comment-item { display: flex; gap: 10px; margin-bottom: 20px; }
-        .avatar-mini { width: 35px; height: 35px; border-radius: 50%; background: #333; flex-shrink: 0; }
-        .comment-content h5 { margin: 0; color: #888; font-size: 12px; }
-        .comment-content p { margin: 5px 0; font-size: 14px; }
-        .comment-input-area { position: fixed; bottom: 0; width: 100%; padding: 10px; background: #000; display: flex; gap: 10px; border-top: 1px solid #222; }
-        input { flex: 1; background: #1a1a1a; border: none; color: white; padding: 10px; border-radius: 20px; outline: none; }
+        .comm-header { padding: 20px; border-bottom: 1px solid #111; text-align: center; }
+        .comm-list { padding: 15px; height: calc(100vh - 160px); overflow-y: auto; }
+        .comm-item { display: flex; gap: 12px; margin-bottom: 20px; }
+        .user-pic { width: 40px; height: 40px; border-radius: 50%; background: var(--threndly-blue); }
+        .comm-txt b { font-size: 14px; }
+        .comm-txt p { margin: 2px 0; font-size: 13px; color: #ccc; }
     </style>
 </head>
 <body>
-    <div class="comment-header">256 Commentaires</div>
-    <div class="comment-list">
-        <div class="comment-item">
-            <div class="avatar-mini" style="background: var(--violet);"></div>
-            <div class="comment-content">
-                <h5>@fan_de_floy</h5>
-                <p>Incroyable cette vidéo ! Le mode néon est trop stylé 🔥</p>
-            </div>
+    <div class="comm-header">Commentaires (850)</div>
+    <div class="comm-list">
+        <div class="comm-item">
+            <div class="user-pic"></div>
+            <div class="comm-txt"><b>Arlein <i class="fas fa-check-circle badge-verified"></i></b><p>Toujours au top ! 🔥</p></div>
         </div>
-    </div>
-    <div class="comment-input-area">
-        <input type="text" placeholder="Ajouter un commentaire...">
     </div>
 </body>
 </html>
