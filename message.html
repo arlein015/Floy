@@ -3,163 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Messagerie</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Floy - Messages</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --threndly-violet: #8a2be2;
-            --threndly-blue: #007bff;
-            --bg-dark: #000000;
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #ff8c00 0%, #3a01cc 100%) !important;
+            background-attachment: fixed;
+            font-family: 'Poppins', sans-serif; color: white;
+            display: flex; flex-direction: column; height: 100vh;
         }
 
-        body { 
-            margin: 0; padding: 0; background-color: var(--bg-dark); 
-            font-family: 'Poppins', sans-serif; color: white; overflow: hidden; 
-        }
-
-        /* Header */
         .chat-header {
-            padding: 20px; border-bottom: 0.5px solid #111;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px); display: flex; align-items: center; gap: 15px;
         }
 
-        /* Liste des discussions */
-        .chat-list { height: calc(100vh - 150px); overflow-y: auto; padding: 10px; }
-        
-        .chat-item {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            border-radius: 12px; cursor: pointer; transition: 0.3s;
-        }
-        .chat-item:hover { background: #111; }
-
-        .avatar {
-            width: 55px; height: 55px; border-radius: 50%;
-            background: linear-gradient(45deg, var(--threndly-violet), var(--threndly-blue));
-            flex-shrink: 0;
+        .chat-container {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 15px;
         }
 
-        .chat-info { flex: 1; }
-        .chat-info h4 { margin: 0; font-size: 15px; }
-        .chat-info p { margin: 5px 0 0; font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .time { font-size: 11px; color: #555; }
-
-        /* FENÊTRE DE CHAT PRIVÉ (Cachée par défaut) */
-        .private-chat {
-            position: fixed; top: 0; right: -100%; width: 100%; height: 100%;
-            background: black; z-index: 100; transition: 0.4s ease; display: flex; flex-direction: column;
+        /* Message Reçu (Noir translucide) */
+        .msg-received {
+            align-self: flex-start; max-width: 75%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
+            padding: 12px 18px; border-radius: 20px 20px 20px 5px;
+            border: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px;
         }
-        .private-chat.active { right: 0; }
 
-        .msg-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        
-        .bubble { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; }
-        .bubble.me { align-self: flex-end; background: var(--threndly-violet); color: white; border-bottom-right-radius: 5px; }
-        .bubble.them { align-self: flex-start; background: #222; color: white; border-bottom-left-radius: 5px; }
-
-        /* Input Message */
-        .msg-input-area {
-            padding: 20px; border-top: 1px solid #111; display: flex; gap: 10px; align-items: center;
+        /* Message Envoyé (Orange vibrant) */
+        .msg-sent {
+            align-self: flex-end; max-width: 75%;
+            background: #ff8c00; padding: 12px 18px;
+            border-radius: 20px 20px 5px 20px; font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .msg-input-area input {
-            flex: 1; background: #111; border: none; padding: 12px 20px; 
-            border-radius: 25px; color: white; outline: none;
-        }
-        .send-btn { color: var(--threndly-blue); font-size: 20px; cursor: pointer; }
 
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 70px;
-            background: #000; border-top: 1px solid #111;
-            display: flex; justify-content: space-around; align-items: center;
+        .chat-input-area {
+            padding: 20px; background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px); display: flex; gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1; background: rgba(255, 255, 255, 0.1); border: none;
+            padding: 12px 20px; border-radius: 25px; color: white; outline: none;
+        }
+
+        .btn-send {
+            background: #ff8c00; border: none; width: 45px; height: 45px;
+            border-radius: 50%; color: white; cursor: pointer;
         }
     </style>
 </head>
 <body>
-
     <div class="chat-header">
-        <h2 style="margin: 0; font-size: 24px;">Messages</h2>
-        <i class="fas fa-edit" style="color: var(--threndly-violet); font-size: 20px;"></i>
-    </div>
-
-    <div class="chat-list">
-        <div class="chat-item" onclick="openChat('Arlein')">
-            <div class="avatar"></div>
-            <div class="chat-info">
-                <h4>Arlein <i class="fas fa-check-circle" style="color: #007bff; font-size: 12px;"></i></h4>
-                <p>Tu as vu ma dernière vidéo ? 🔥</p>
-            </div>
-            <div class="time">20:45</div>
-        </div>
-
-        <div class="chat-item" onclick="openChat('Bouta')">
-            <div class="avatar" style="filter: hue-rotate(90deg);"></div>
-            <div class="chat-info">
-                <h4>Bouta</h4>
-                <p>Le code fonctionne super bien !</p>
-            </div>
-            <div class="time">Hier</div>
+        <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
+        <img src="logo.png" style="width: 40px; height: 40px; border-radius: 50%;">
+        <div>
+            <div style="font-weight: 700; font-size: 15px;">Support Floy <i class="fas fa-check-circle" style="color: #00e5ff; font-size: 12px;"></i></div>
+            <div style="font-size: 10px; opacity: 0.6;">En ligne</div>
         </div>
     </div>
 
-    <div id="privateChat" class="private-chat">
-        <div class="chat-header">
-            <i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer"></i>
-            <h4 id="chatTitle">Nom</h4>
-            <i class="fas fa-video"></i>
-        </div>
-        
-        <div class="msg-container" id="msgContainer">
-            <div class="bubble them">Salut ! Bienvenue sur la messagerie FLOY.</div>
-            <div class="bubble me">Merci ! C'est super fluide.</div>
-        </div>
-
-        <div class="msg-input-area">
-            <i class="fas fa-camera" style="color: #888;"></i>
-            <input type="text" id="msgInput" placeholder="Envoyer un message...">
-            <i class="fas fa-paper-plane send-btn" onclick="sendMessage()"></i>
-        </div>
+    <div class="chat-container">
+        <div class="msg-received">Bienvenue sur Floy ! Comment puis-je vous aider aujourd'hui ?</div>
+        <div class="msg-sent">Bonjour, j'adore le nouveau thème sombre et orange !</div>
+        <div class="msg-received">Merci ! C'est le mélange "Noir & Dégradé" pour plus d'élégance. 😊</div>
     </div>
 
-    <nav class="bottom-nav">
-        <i class="fas fa-home" style="color: #555;" onclick="window.location.href='feed.html'"></i>
-        <i class="fas fa-search" style="color: #555;"></i>
-        <div style="background: white; color: black; padding: 6px 15px; border-radius: 10px;"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-comment" style="color: var(--threndly-violet);"></i>
-        <i class="fas fa-user" style="color: #555;" onclick="window.location.href='profile.html'"></i>
-    </nav>
-
-    <script>
-        function openChat(name) {
-            document.getElementById('chatTitle').innerText = name;
-            document.getElementById('privateChat').classList.add('active');
-        }
-
-        function closeChat() {
-            document.getElementById('privateChat').classList.remove('active');
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('msgInput');
-            const container = document.getElementById('msgContainer');
-
-            if(input.value.trim() !== "") {
-                const msg = document.createElement('div');
-                msg.className = 'bubble me';
-                msg.innerText = input.value;
-                container.appendChild(msg);
-                
-                // Auto scroll vers le bas
-                container.scrollTop = container.scrollHeight;
-                input.value = "";
-            }
-        }
-
-        // Envoyer avec la touche Entrée
-        document.getElementById('msgInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
+    <div class="chat-input-area">
+        <input type="text" placeholder="Écrire un message...">
+        <button class="btn-send"><i class="fas fa-paper-plane"></i></button>
+    </div>
 </body>
 </html>
