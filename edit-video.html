@@ -25,8 +25,17 @@
             padding: 15px; border-radius: 12px; color: white; outline: none; box-sizing: border-box;
             font-family: inherit;
         }
-        .input-group input:focus { border-color: var(--floy-orange); }
-    </style>
+    .input-group input, .input-group textarea {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        backdrop-filter: blur(5px);
+    }
+    .input-group input:focus {
+        border-color: var(--floy-orange);
+        background: rgba(255, 255, 255, 0.2);
+    }
+</style>
 </head>
 <body>
     <div class="header">
