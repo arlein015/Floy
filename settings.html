@@ -3,40 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramètres - Floy</title>
+    <title>Threndly - Paramètres</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --fond: #000; --violet: #8A2BE2; --gris: #1a1a1a; }
-        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; }
-        header { padding: 20px; border-bottom: 1px solid var(--gris); display: flex; align-items: center; gap: 15px; }
-        .back-btn { text-decoration: none; color: white; font-size: 20px; }
-        .setting-section { margin-top: 20px; }
-        .setting-item { 
-            padding: 15px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            border-bottom: 1px solid #050505;
-            cursor: pointer;
+        :root {
+            --threndly-violet: #8a2be2;
+            --threndly-blue: #007bff;
         }
-        .setting-item:active { background: var(--gris); }
-        .danger { color: #ff4444; }
-        .version { text-align: center; color: #444; font-size: 12px; margin-top: 50px; }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        .settings-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 0.5px solid #111;
+        }
+
+        .settings-list {
+            padding: 10px 0;
+        }
+
+        .section-title {
+            padding: 15px 20px 5px;
+            font-size: 12px;
+            color: #555;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 0.1px solid #111;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .settings-item:active {
+            background: #111;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-info i {
+            width: 20px;
+            color: var(--threndly-violet);
+            text-align: center;
+        }
+
+        .badge-blue {
+            color: var(--threndly-blue);
+            font-size: 12px;
+        }
+
+        .logout {
+            color: #ff3b30;
+            font-weight: 600;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        input:checked + .slider {
+            background-color: var(--threndly-violet);
+        }
     </style>
 </head>
 <body>
-    <header>
-        <a href="profile.html" class="back-btn">←</a>
-        <h3>Paramètres</h3>
-    </header>
 
-    <div class="setting-section">
-        <div class="setting-item"><span>Compte</span><span>👤</span></div>
-        <div class="setting-item"><span>Confidentialité</span><span>🔒</span></div>
-        <div class="setting-item"><span>Sécurité</span><span>🛡️</span></div>
-        <div class="setting-item" onclick="location.href='wallet.html'"><span>Portefeuille (Wallet)</span><span style="color:var(--violet)">💰</span></div>
-        <div class="setting-item"><span>Langue</span><span>FR</span></div>
-        <div class="setting-item danger"><span>Déconnexion</span><span>🚪</span></div>
+    <div class="settings-header">
+        <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
+        <h2 style="margin:0; font-size: 18px;">Paramètres</h2>
     </div>
 
-    <p class="version">Floy v1.0.0 - Build 2026</p>
+    <div class="settings-list">
+        <div class="section-title">Compte</div>
+        
+        <div class="settings-item" onclick="window.location.href='profile.html'">
+            <div class="item-info">
+                <i class="fas fa-user-circle"></i>
+                <span>Gérer le profil <i class="fas fa-check-circle badge-blue"></i></span>
+            </div>
+            <i class="fas fa-chevron-right" style="font-size: 12px; color: #333;"></i>
+        </div>
+
+        <div class="settings-item" onclick="window.location.href='wallet.html'">
+            <div class="item-info">
+                <i class="fas fa-wallet"></i>
+                <span>Portefeuille (Gains)</span>
+            </div>
+            <i class="fas fa-chevron-right" style="font-size: 12px; color: #333;"></i>
+        </div>
+
+        <div class="section-title">Préférences</div>
+
+        <div class="settings-item">
+            <div class="item-info">
+                <i class="fas fa-moon"></i>
+                <span>Mode Sombre</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" checked disabled>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-item" onclick="window.location.href='security.html'">
+            <div class="item-info">
+                <i class="fas fa-shield-alt"></i>
+                <span>Sécurité & Confidentialité</span>
+            </div>
+            <i class="fas fa-chevron-right" style="font-size: 12px; color: #333;"></i>
+        </div>
+
+        <div class="section-title">Support</div>
+
+        <div class="settings-item" onclick="window.location.href='support.html'">
+            <div class="item-info">
+                <i class="fas fa-question-circle"></i>
+                <span>Centre d'aide</span>
+            </div>
+            <i class="fas fa-chevron-right" style="font-size: 12px; color: #333;"></i>
+        </div>
+
+        <div class="settings-item logout" onclick="window.location.href='index.html'">
+            <div class="item-info">
+                <i class="fas fa-sign-out-alt" style="color: #ff3b30;"></i>
+                <span>Déconnexion</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
+        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
+        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
+        <i class="fas fa-user nav-icon active" onclick="window.location.href='profile.html'"></i>
+    </nav>
+
 </body>
 </html>
