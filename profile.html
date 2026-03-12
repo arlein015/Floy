@@ -2,219 +2,39 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - Threndly</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Threndly - Profil</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --threndly-blue: #007bff;
-            --threndly-violet: #8a2be2;
-            --threndly-gradient: linear-gradient(135deg, #007bff 0%, #8a2be2 100%);
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-        }
-
-        /* Header du Profil */
-        .profile-header {
-            padding: 40px 20px 20px;
-            text-align: center;
-            border-bottom: 1px solid #222;
-        }
-
-        .profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: var(--threndly-gradient);
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            border: 3px solid #111;
-        }
-
-        .username {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0;
-        }
-
-        .stat-item span {
-            display: block;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .stat-item label {
-            font-size: 12px;
-            color: #888;
-        }
-
+        .profile-header { text-align: center; padding: 40px 20px; }
+        .profile-pic { width: 100px; height: 100px; border-radius: 50%; background: var(--threndly-violet); margin: 0 auto 15px; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin: 20px 0; }
+        .stat-item b { display: block; font-size: 18px; }
+        .stat-item span { color: #888; font-size: 13px; }
         .edit-btn {
-            background: #222;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
+            background: #222; border: none; color: white;
+            padding: 10px 40px; border-radius: 5px; font-weight: 600;
         }
-
-        /* Onglets (Vidéos / Enregistrements) */
-        .profile-tabs {
-            display: flex;
-            border-bottom: 1px solid #222;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
-            cursor: pointer;
-            color: #888;
-            font-size: 14px;
-        }
-
-        .tab.active {
-            color: white;
-            border-bottom: 2px solid white;
-        }
-
-        /* Grille de vidéos */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            padding: 2px;
-        }
-
-        .video-item {
-            aspect-ratio: 9 / 16;
-            background: #111;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .video-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-        }
-
-        .video-views {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 70px;
-            background: #000;
-            border-top: 1px solid #222;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .nav-icon { color: var(--threndly-violet); font-size: 22px; }
-        .plus-icon { background: white; color: black; padding: 5px 15px; border-radius: 10px; }
     </style>
 </head>
 <body>
-
     <div class="profile-header">
-        <div class="profile-pic"><i class="fas fa-user"></i></div>
-        <div class="username">@utilisateur_threndly</div>
-        
+        <div class="profile-pic"></div>
+        <h3>@createur_floy <i class="fas fa-check-circle badge-verified"></i></h3>
         <div class="stats">
-            <div class="stat-item"><span>128</span><label>Abonnements</label></div>
-            <div class="stat-item"><span>4.5k</span><label>Abonnés</label></div>
-            <div class="stat-item"><span>12k</span><label>Likes</label></div>
+            <div class="stat-item"><b>1.2k</b><span>Abonnés</span></div>
+            <div class="stat-item"><b>450</b><span>Abonnements</span></div>
+            <div class="stat-item"><b>15k</b><span>Likes</span></div>
         </div>
-
-        <button class="edit-btn">Modifier le profil</button>
-    </div>
-
-    <div class="profile-tabs">
-        <div class="tab active"><i class="fas fa-th"></i> Mes Vidéos</div>
-        <div class="tab"><i class="fas fa-bookmark"></i> Enregistrées</div>
-    </div>
-
-    <div class="video-grid" id="savedGrid">
-    </div>
-        <div class="video-item">
-            <div class="video-views"><i class="fas fa-play"></i> 1.2k</div>
-        </div>
-        <div class="video-item">
-            <div class="video-views"><i class="fas fa-play"></i> 850</div>
-        </div>
-        <div class="video-item">
-            <div class="video-views"><i class="fas fa-play"></i> 12k</div>
-        </div>
+        <button class="edit-btn" onclick="window.location.href='edit-video.html'">Modifier le profil</button>
     </div>
 
     <nav class="bottom-nav">
         <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
-        <i class="fas fa-search nav-icon"></i>
-        <div class="plus-icon"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-comment nav-icon"></i>
-        <i class="fas fa-user nav-icon" style="color: white;"></i>
+        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
+        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
+        <i class="fas fa-user nav-icon active"></i>
     </nav>
-
-<script>
-    // Cette fonction lit les données enregistrées dans le navigateur
-    function loadSavedVideos() {
-        const grid = document.getElementById('savedGrid');
-        // On récupère les vidéos stockées par feed.html
-        const savedVideos = JSON.parse(localStorage.getItem('threndly_saved')) || [];
-
-        // Si la grille est vide
-        if (savedVideos.length === 0) {
-            grid.innerHTML = "<p style='grid-column: span 3; padding: 20px; color: #555; text-align:center;'>Aucune vidéo enregistrée.</p>";
-            return;
-        }
-
-        // On vide la grille avant d'afficher pour éviter les doublons
-        grid.innerHTML = "";
-        
-        // On crée chaque élément de la grille
-        savedVideos.forEach(video => {
-            const item = document.createElement('div');
-            item.className = 'video-item';
-            item.innerHTML = `
-                <img src="${video.thumbnail}" alt="Video">
-                <div class="video-views"><i class="fas fa-play"></i> ${video.views}</div>
-            `;
-            grid.appendChild(item);
-        });
-    }
-
-    // Très important : On lance la fonction dès que la page est chargée
-    window.onload = loadSavedVideos;
-</script>
 </body>
 </html>
