@@ -3,38 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOY - Explorer</title>
     <link rel="stylesheet" href="style.css">
-    <title>Explorer - Floy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="explore-page">
-    <header class="search-bar-container">
-        <div class="search-input-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Rechercher sur Floy...">
+<body class="dark-theme">
+    <div class="explore-container">
+        <div class="search-header">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher sur FLOY...">
+            </div>
+            <i class="fas fa-qrcode"></i>
         </div>
-    </header>
 
-    <main class="explore-content">
-        <section class="trending-hashtags">
-            <h3>Tendances</h3>
-            <div class="hashtag-item"><span>#FloyNeon</span><small>1.2M vues</small></div>
-            <div class="hashtag-item"><span>#CodeSolo</span><small>850k vues</small></div>
-        </section>
+        <div class="trending-banner">
+            <div class="banner-content">
+                <span>#ChallengeFloy2026</span>
+                <p>Participez au nouveau défi et gagnez des points !</p>
+            </div>
+        </div>
 
-        <section class="explore-grid">
-            <div class="grid-item" style="background: #111;"></div>
-            <div class="grid-item" style="background: #1a1a1a;"></div>
-            <div class="grid-item" style="background: #222;"></div>
-            <div class="grid-item" style="background: #0d0d0d;"></div>
-        </section>
-    </main>
+        <div class="explore-section">
+            <div class="section-title">
+                <span><i class="fas fa-hashtag"></i> Musique</span>
+                <a href="#">Voir plus ></a>
+            </div>
+            <div class="horizontal-scroll">
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+            </div>
+        </div>
 
-    <footer class="bottom-nav">
-        <a href="feed.html">🏠</a>
-        <a href="explore.html" class="active-tab">🔍</a>
-        <a href="upload.html" class="upload-center">+</a>
-        <a href="message.html">💬</a>
-        <a href="profile.html">👤</a>
-    </footer>
+        <div class="explore-section">
+            <div class="section-title">
+                <span><i class="fas fa-hashtag"></i> Humour</span>
+                <a href="#">Voir plus ></a>
+            </div>
+            <div class="horizontal-scroll">
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+                <div class="scroll-item"><img src="https://via.placeholder.com/120x160" alt="Video"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="feed.html"><i class="fas fa-home"></i></a>
+        <a href="explore.html" class="active-nav"><i class="fas fa-search"></i></a>
+        <a href="upload.html" class="upload-icon"><i class="fas fa-plus"></i></a>
+        <a href="message.html"><i class="fas fa-envelope"></i></a>
+        <a href="profile.html"><i class="fas fa-user"></i></a>
+    </nav>
 </body>
 </html>
