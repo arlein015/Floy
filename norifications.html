@@ -3,35 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOY - Notifications</title>
     <link rel="stylesheet" href="style.css">
-    <title>Notifications - Floy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="notif-page">
-    <header class="notif-header">
-        <h2>Activités</h2>
-        <select class="notif-filter">
-            <option>Tout</option>
-            <option>Likes</option>
-            <option>Commentaires</option>
-        </select>
-    </header>
-
-    <main class="notif-list">
-        <div class="notif-item">
-            <div class="notif-avatar"></div>
-            <div class="notif-text">
-                <strong>@user123</strong> a aimé votre vidéo. <span class="notif-time">2m</span>
+<body class="dark-theme">
+    <div class="notif-container">
+        <div class="notif-header">
+            <h1>Activités</h1>
+            <div class="notif-filter">
+                <span>Toute l'activité <i class="fas fa-caret-down"></i></span>
             </div>
-            <div class="notif-preview"></div>
         </div>
 
-        <div class="notif-item">
-            <div class="notif-avatar" style="background: var(--bleu);"></div>
-            <div class="notif-text">
-                <strong>@floy_dev</strong> s'est abonné à vous. <span class="notif-time">1h</span>
+        <div class="notif-section">
+            <h3 class="section-date">Aujourd'hui</h3>
+            
+            <div class="notif-item">
+                <div class="notif-avatar">
+                    <img src="https://via.placeholder.com/45" alt="User">
+                    <div class="notif-icon heart"><i class="fas fa-heart"></i></div>
+                </div>
+                <div class="notif-content">
+                    <p><strong>Floy_Fan</strong> a aimé votre vidéo. <span>2h</span></p>
+                </div>
+                <div class="notif-preview">
+                    <img src="https://via.placeholder.com/40x55" alt="Video">
+                </div>
             </div>
-            <button class="follow-back-btn">S'abonner</button>
+
+            <div class="notif-item">
+                <div class="notif-avatar">
+                    <img src="https://via.placeholder.com/45" alt="User">
+                    <div class="notif-icon follow"><i class="fas fa-user-plus"></i></div>
+                </div>
+                <div class="notif-content">
+                    <p><strong>Admin_Floy</strong> <span class="badge-certifie"><i class="fas fa-check-circle"></i></span> a commencé à vous suivre. <span>5h</span></p>
+                </div>
+                <button class="btn-follow-back">S'abonner</button>
+            </div>
         </div>
-    </main>
+
+        <div class="notif-section">
+            <h3 class="section-date">Cette semaine</h3>
+            
+            <div class="notif-item">
+                <div class="notif-avatar">
+                    <img src="https://via.placeholder.com/45" alt="User">
+                    <div class="notif-icon comment"><i class="fas fa-comment"></i></div>
+                </div>
+                <div class="notif-content">
+                    <p><strong>Kolo_Design</strong> a commenté : "Incroyable cette vidéo ! 🔥" <span>Hier</span></p>
+                </div>
+                <div class="notif-preview">
+                    <img src="https://via.placeholder.com/40x55" alt="Video">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="feed.html"><i class="fas fa-home"></i></a>
+        <a href="explore.html"><i class="fas fa-search"></i></a>
+        <a href="upload.html" class="upload-icon"><i class="fas fa-plus"></i></a>
+        <a href="message.html"><i class="fas fa-envelope"></i></a>
+        <a href="notifications.html" class="active-nav"><i class="fas fa-inbox"></i></a>
+    </nav>
 </body>
 </html>
