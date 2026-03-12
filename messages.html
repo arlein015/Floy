@@ -4,46 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Messenger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        :root {
+            --bg-violet: #1a0033; /* Violet profond */
+            --floy-cyan: #00e5ff; /* Cyan certifié */
+            --floy-orange: #ff8c00; /* Orange Floy */
+            --nav-black: #000000; /* Noir pur */
+        }
+
         body {
             margin: 0;
-            background: #1a0033; /* Violet sombre Floy */
-            font-family: sans-serif;
+            background: linear-gradient(180deg, var(--bg-violet) 0%, #000000 100%);
+            background-attachment: fixed;
+            font-family: 'Poppins', sans-serif;
             color: white;
+            min-height: 100vh;
+            padding-bottom: 80px;
         }
+
+        /* En-tête */
         .header {
             padding: 50px 20px 15px;
-            background: #000; /* Noir pur de tes images */
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        /* Section Storys Horizontale */
+        .stories-section {
+            padding: 20px 15px;
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .stories-section::-webkit-scrollbar { display: none; }
+
+        .story-container {
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .story-ring {
+            width: 65px; height: 65px;
+            border-radius: 50%;
+            border: 2px solid #a456f0; /* Bordure violette identique au feed */
+            padding: 3px;
+            margin-bottom: 5px;
+        }
+
+        .story-ring img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #222;
+        }
+
+        .story-name { font-size: 11px; opacity: 0.8; }
+
+        /* Liste des Discussions */
+        .chat-list { padding: 0 15px; }
+
+        .chat-item {
             display: flex;
             align-items: center;
             gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            transition: 0.3s;
         }
-        .nav-bottom {
-            position: fixed; bottom: 0; width: 100%; height: 70px;
-            background: #000; display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
+
+        .chat-item:active { background: rgba(255, 255, 255, 0.1); }
+
+        .user-avatar {
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-content { flex: 1; }
+
+        .chat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .user-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .last-msg { font-size: 13px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+        .chat-time { font-size: 11px; opacity: 0.4; }
+
+        /* Navigation Basse */
+        .footer-nav {
+            position: fixed; bottom: 0; width: 100%; height: 75px;
+            background: var(--nav-black); display: flex;
+            justify-content: space-around; align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item { color: white; font-size: 24px; opacity: 0.5; position: relative; }
+        .nav-item.active { opacity: 1; }
+        
+        .plus-btn {
+            background: linear-gradient(to right, #00e5ff, #a456f0);
+            padding: 5px 15px; border-radius: 12px; color: black;
+        }
+
+        .notif-badge {
+            position: absolute; top: -5px; right: -8px;
+            background: #ff3b30; font-size: 10px; padding: 2px 6px;
+            border-radius: 10px; border: 2px solid #000;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
-        <span style="font-weight: bold;">Floy Messenger</span>
-    </div>
 
-    <div style="padding: 20px;">
-        <p style="opacity: 0.5;">Tes discussions privées s'afficheront ici.</p>
-    </div>
+    <header class="header">
+        <i class="fas fa-chevron-left" onclick="window.location.href='feed.html'"></i>
+        <span style="font-weight: 700; font-size: 18px;">Floy Messenger</span>
+        <i class="fas fa-edit" style="color: var(--floy-orange);"></i>
+    </header>
 
-    <nav class="nav-bottom">
-        <i class="fas fa-home" onclick="window.location.href='feed.html'"></i>
-        <i class="fas fa-compass"></i>
-        <div style="background: linear-gradient(to right, #00e5ff, #a456f0); padding: 5px 15px; border-radius: 10px; color: black;">
-            <i class="fas fa-plus"></i>
+    <div class="stories-section">
+        <div class="story-container">
+            <div class="story-ring"><img src="logo.png"></div>
+            <div class="story-name">Ton Story</div>
         </div>
-        <i class="fas fa-comment-alt" style="opacity: 1;"></i>
-        <i class="fas fa-user" onclick="window.location.href='profile.html'"></i>
+        <div class="story-container">
+            <div class="story-ring"><img src="user1.jpg"></div>
+            <div class="story-name">Bouta</div>
+        </div>
+        <div class="story-container">
+            <div class="story-ring"><img src="user2.jpg"></div>
+            <div class="story-name">Luther</div>
+        </div>
+    </div>
+
+    <div class="chat-list">
+        <div class="chat-item" onclick="window.location.href='chat.html'">
+            <img src="logo.png" class="user-avatar">
+            <div class="chat-content">
+                <div class="chat-top">
+                    <span class="user-name">@bouta <i class="fas fa-check-circle" style="color: var(--floy-cyan);"></i></span>
+                    <span class="chat-time">20:51</span>
+                </div>
+                <div class="last-msg">On met tout en place maintenant ! 🔥</div>
+            </div>
+            <div style="width: 10px; height: 10px; background: var(--floy-orange); border-radius: 50%;"></div>
+        </div>
+
+        <div class="chat-item">
+            <div class="user-avatar" style="background: #333; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user"></i></div>
+            <div class="chat-content">
+                <div class="chat-top">
+                    <span class="user-name">Support Floy</span>
+                    <span class="chat-time">Hier</span>
+                </div>
+                <div class="last-msg">Bienvenue sur l'application Floy.</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="footer-nav">
+        <i class="fas fa-home nav-item" onclick="window.location.href='feed.html'"></i>
+        <i class="fas fa-compass nav-item"></i>
+        <div class="plus-btn" onclick="window.location.href='upload.html'"><i class="fas fa-plus"></i></div>
+        <div class="nav-item active">
+            <i class="fas fa-comment-alt"></i>
+            <span class="notif-badge">1</span>
+        </div>
+        <i class="fas fa-user nav-item" onclick="window.location.href='profile.html'"></i>
     </nav>
+
 </body>
 </html>
