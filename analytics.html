@@ -2,75 +2,17 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyses - Floy</title>
+    <title>Threndly - Analytics</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        :root { --fond: #000; --violet: #8A2BE2; --bleu: #00BFFF; --gris: #111; }
-        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        
-        .header-ana { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
-        .card-stats { background: var(--gris); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
-        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .small-card { background: #0a0a0a; padding: 15px; border-radius: 10px; border: 1px solid #1a1a1a; }
-        .valeur { font-size: 24px; font-weight: bold; color: var(--bleu); display: block; }
-        .label { font-size: 12px; color: #666; }
-
-        .chart-placeholder { 
-            height: 150px; 
-            width: 100%; 
-            background: linear-gradient(transparent, rgba(138, 43, 226, 0.1)); 
-            border-bottom: 2px solid var(--violet);
-            margin-top: 20px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-        }
-        .bar { width: 20px; background: var(--violet); border-top-left-radius: 5px; border-top-right-radius: 5px; }
+        .stat-card { background: #111; margin: 20px; padding: 20px; border-radius: 15px; border-left: 4px solid var(--threndly-blue); }
+        .stat-num { font-size: 28px; font-weight: 700; color: var(--threndly-violet); }
+        .chart-dummy { width: 100%; height: 150px; background: linear-gradient(90deg, #111 10%, #222 50%, #111 90%); border-radius: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <header class="header-ana">
-        <a href="profile.html" style="color:white; text-decoration:none;">←</a>
-        <h2>Analyses Créateur</h2>
-    </header>
-
-    <div class="card-stats">
-        <span class="label">Vues totales (7 derniers jours)</span>
-        <span class="valeur" style="color:var(--violet); font-size: 35px;">14,258</span>
-        
-        <div class="chart-placeholder">
-            <div class="bar" style="height: 40%;"></div>
-            <div class="bar" style="height: 60%;"></div>
-            <div class="bar" style="height: 30%;"></div>
-            <div class="bar" style="height: 90%;"></div>
-            <div class="bar" style="height: 50%;"></div>
-            <div class="bar" style="height: 70%;"></div>
-            <div class="bar" style="height: 85%;"></div>
-        </div>
-    </div>
-
-    <div class="stat-grid">
-        <div class="small-card">
-            <span class="valeur">+124</span>
-            <span class="label">Abonnés</span>
-        </div>
-        <div class="small-card">
-            <span class="valeur">89%</span>
-            <span class="label">Rétention</span>
-        </div>
-        <div class="small-card">
-            <span class="valeur">4.2k</span>
-            <span class="label">Partages</span>
-        </div>
-        <div class="small-card">
-            <span class="valeur" style="color:#00ff00;">$12.50</span>
-            <span class="label">Estimation gains</span>
-        </div>
-    </div>
-
-    <button style="width:100%; margin-top:30px; background:transparent; border:1px solid #333; color:white; padding:15px; border-radius:10px;">
-        Voir les détails par vidéo
-    </button>
+    <h2 style="padding: 20px;">Tableau de bord</h2>
+    <div class="stat-card"><span>Vues totales</span><div class="stat-num">1.2M</div><div class="chart-dummy"></div></div>
+    <div class="stat-card"><span>Gains estimés</span><div class="stat-num">450.00 €</div></div>
 </body>
 </html>
