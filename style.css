@@ -108,3 +108,129 @@ body.dark-theme {
 
 .history-section h3 { margin-top: 30px; font-size: 18px; }
 .empty-msg { text-align: center; color: #555; margin-top: 40px; font-style: italic; }
+/* Style du Profil FLOY */
+.profile-container {
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+.profile-header {
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-pic-container {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #8a2be2 0%, #007bff 100%);
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #000;
+}
+
+.username {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Ton Badge Bleu Inaltérable */
+.badge-certifie {
+    color: #2f81f7;
+    font-size: 16px;
+}
+
+.profile-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.stat strong { font-size: 18px; }
+.stat span { color: #888; font-size: 12px; }
+
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.btn-edit {
+    background: #111;
+    color: white;
+    border: 1px solid #333;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn-wallet-link {
+    background: #111;
+    color: #8a2be2;
+    border: 1px solid #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+/* Grille Vidéo */
+.video-grid-tabs {
+    display: flex;
+    border-top: 1px solid #222;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    color: #555;
+}
+
+.tab.active {
+    color: white;
+    border-bottom: 2px solid white;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+}
+
+.grid-item {
+    aspect-ratio: 3/4;
+    position: relative;
+    background: #0a0a0a;
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.view-count {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
