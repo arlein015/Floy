@@ -3,140 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threndly - Portefeuille</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Floy - Portefeuille</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+
     <style>
         :root {
-            --threndly-violet: #8a2be2;
-            --threndly-blue: #007bff;
+            --floy-gradient: linear-gradient(135deg, #3a55d1 0%, #a456f0 100%);
+            --floy-orange: #ff5e3a;
+            --floy-cyan: #00e5ff; /* Ta nouvelle couleur de badge */
         }
 
-        body {
-            background-color: #000;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+        body { 
+            margin: 0; background: var(--floy-gradient); background-attachment: fixed;
+            color: white; font-family: 'Poppins', sans-serif; padding: 20px;
         }
 
-        .wallet-header {
-            padding: 30px 20px;
-            text-align: center;
-            background: linear-gradient(180deg, #111 0%, #000 100%);
-            border-bottom: 0.5px solid #222;
-        }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
 
+        /* Carte de solde brillante */
         .balance-card {
-            background: linear-gradient(45deg, var(--threndly-violet), var(--threndly-blue));
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
             padding: 30px;
-            margin: 20px;
-            text-align: left;
-            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
         }
 
-        .balance-label { font-size: 14px; opacity: 0.9; }
-        .balance-amount { font-size: 36px; font-weight: 800; margin: 10px 0; }
+        .balance-label { font-size: 14px; opacity: 0.8; }
+        .balance-amount { font-size: 42px; font-weight: 700; margin: 10px 0; }
+        .cyan-text { color: var(--floy-cyan); }
+
+        /* Bouton de retrait orange */
+        .btn-withdraw {
+            width: 100%; background: var(--floy-orange); color: white; border: none;
+            padding: 16px; border-radius: 15px; font-weight: 700; font-size: 16px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(255, 94, 58, 0.3);
+        }
+
+        /* Historique */
+        .history-section { margin-top: 40px; }
+        .history-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.05); padding: 15px;
+            border-radius: 15px; margin-bottom: 10px; font-size: 14px;
+        }
         
-        .wallet-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 0 20px;
-        }
-
-        .action-btn {
-            background: #111;
-            border: 1px solid #333;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            font-weight: 600;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .action-btn i { color: var(--threndly-blue); font-size: 20px; }
-
-        .history-section {
-            flex: 1;
-            margin-top: 30px;
-            padding: 20px;
-            background: #050505;
-            border-radius: 30px 30px 0 0;
-        }
-
-        .history-title { font-weight: 700; margin-bottom: 20px; font-size: 18px; }
-
-        .transaction {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 0.5px solid #111;
-        }
-
-        .trans-info b { display: block; font-size: 14px; }
-        .trans-info span { font-size: 12px; color: #555; }
-        .trans-amount { font-weight: 700; color: #00ff88; } /* Vert pour les gains */
+        .badge-mini { color: var(--floy-cyan); font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="wallet-header">
-        <h2 style="margin: 0;">Mon Portefeuille</h2>
+    <div class="header">
+        <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
+        <h3 style="margin:0;">Mon Portefeuille</h3>
     </div>
 
     <div class="balance-card">
-        <div class="balance-label">Solde disponible</div>
-        <div class="balance-amount">125.50 €</div>
-        <div style="font-size: 12px; opacity: 0.8;">FLOY ID: @createur_floy <i class="fas fa-check-circle" style="font-size: 10px;"></i></div>
+        <span class="balance-label">Solde disponible</span>
+        <div class="balance-amount">1 250,00 <span style="font-size: 20px;">€</span></div>
+        <div style="font-size: 13px;">
+            Compte vérifié <i class="fas fa-check-circle badge-mini"></i>
+        </div>
     </div>
 
-    <div class="wallet-actions">
-        <div class="action-btn">
-            <i class="fas fa-arrow-down"></i>
-            Recharger
-        </div>
-        <div class="action-btn">
-            <i class="fas fa-university"></i>
-            Retirer
-        </div>
-    </div>
+    <button class="btn-withdraw" onclick="handleWithdraw()">Retirer mes gains</button>
 
     <div class="history-section">
-        <div class="history-title">Historique des gains</div>
-        
-        <div class="transaction">
-            <div class="trans-info">
-                <b>Cadeau de Arlein</b>
-                <span>Aujourd'hui, 14:20</span>
-            </div>
-            <div class="trans-amount">+ 5.00 €</div>
+        <h4 style="margin-bottom: 15px;">Dernières transactions</h4>
+        <div class="history-item">
+            <span>Revenus vidéos (Mars)</span>
+            <span style="color: #44ff44; font-weight: 600;">+ 450,00 €</span>
         </div>
-
-        <div class="transaction">
-            <div class="trans-info">
-                <b>Revenus Publicité</b>
-                <span>Hier, 23:10</span>
-            </div>
-            <div class="trans-amount">+ 12.40 €</div>
+        <div class="history-item">
+            <span>Cadeaux Live</span>
+            <span style="color: #44ff44; font-weight: 600;">+ 12,50 €</span>
         </div>
     </div>
 
-    <nav class="bottom-nav" style="background: #050505;">
-        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
-        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
-        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
-        <i class="fas fa-user nav-icon active" onclick="window.location.href='profile.html'"></i>
-    </nav>
-
+    <script>
+        function handleWithdraw() {
+            alert("Demande de retrait envoyée ! Vous recevrez vos fonds sous 24h.");
+        }
+    </script>
 </body>
 </html>
