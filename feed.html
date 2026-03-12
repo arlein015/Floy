@@ -11,217 +11,102 @@
 
     <style>
         :root {
-            /* Palette officielle tirée de ton logo.png */
-            --floy-orange: #ff8c00;      /* L'orange vibrant pour les actions actives */
-            --floy-dark-gray: #2f4f4f;  /* Le gris anthracite pour les icônes inactives */
-            --floy-electric-blue: #0000cd; /* Le bleu électrique pour la certification */
-            --bg-black: #000000;
-            --text-white: #ffffff;
-            --gray-subtle: #111111;
+            /* TON NOUVEAU THÈME (Inspiré de f2.jpg) */
+            --floy-gradient: linear-gradient(135deg, #3a55d1 0%, #a456f0 100%);
+            --floy-orange: #ff5e3a;      /* Orange vif du logo */
+            --floy-cyan: #00e5ff;        /* Bleu Cyan exact du badge */
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
-        body { margin: 0; padding: 0; background-color: var(--bg-black); font-family: 'Poppins', sans-serif; color: var(--text-white); overflow: hidden; height: 100vh; }
+        body { 
+            margin: 0; padding: 0; 
+            background: var(--floy-gradient); 
+            background-attachment: fixed;
+            font-family: 'Poppins', sans-serif; color: white; 
+            overflow: hidden; height: 100vh; 
+        }
 
         /* Container Principal */
-        .feed-container { position: relative; height: 100vh; width: 100%; display: flex; flex-direction: column; }
+        .feed-container { position: relative; height: 100vh; width: 100%; }
 
-        /* Zone Vidéo */
-        .video-wrapper { flex: 1; background: #000; display: flex; align-items: center; justify-content: center; position: relative; }
-        
-        /* Logo Floy en filigrane (utilisant ton fichier logo.png) */
-        .floy-watermark {
-            position: absolute; top: 20px; left: 20px; width: 50px; height: 50px; opacity: 0.8; z-index: 5;
-            background-image: url('logo.png'); background-size: contain; background-repeat: no-repeat;
+        /* Effet de flou sur le fond pour faire ressortir les éléments */
+        .video-overlay {
+            position: absolute; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
         }
 
-        /* Actions à droite (Like, Com, Share) */
-        .action-bar { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
-        .action-item { text-align: center; cursor: pointer; color: var(--floy-dark-gray); transition: 0.2s ease; }
-        .action-item:hover { transform: scale(1.1); }
-        .action-item i { font-size: 30px; margin-bottom: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .action-item span { font-size: 11px; font-weight: 600; display: block; color: var(--text-white); }
-        
-        /* États actifs basés sur l'orange du logo */
-        .liked { color: #ff2d55; } /* Le rouge pour le like reste standard, c'est universel */
-        .active-action { color: var(--floy-orange); } /* Orange pour le partage et le commentaire actifs */
-        .saved { color: #ffcc00; }
-
-        /* Infos Vidéo bas gauche */
-        .video-info { position: absolute; left: 15px; bottom: 90px; z-index: 10; max-width: 75%; }
-        .user-name { font-weight: 700; font-size: 16px; margin-bottom: 5px; display: flex; align-items: center; }
-        .badge-verified { color: var(--floy-electric-blue); margin-left: 5px; font-size: 14px; } /* Bleu électrique précis */
-        .description { font-size: 13px; opacity: 0.9; }
-
-        /* MODALES (Style Tiroir qui monte du bas) */
-        .modal {
-            position: fixed; bottom: -100%; left: 0; width: 100%; background: white;
-            border-radius: 20px 20px 0 0; color: #333; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; padding: 20px; box-sizing: border-box;
+        /* Badge de certification Bleu Cyan exact */
+        .badge-verified {
+            color: var(--floy-cyan) !important;
+            margin-left: 5px;
+            filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.5));
         }
-        .modal.active { bottom: 0; }
-        .modal-header { font-weight: 700; font-size: 16px; margin-bottom: 20px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        /* Design Partage */
-        .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center; }
-        .share-option { cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #333; text-decoration: none; }
-        .share-option i { font-size: 35px; }
-        .fa-whatsapp { color: #25D366; } .fa-facebook { color: #1877F2; } .fa-facebook-messenger { color: #0084FF; }
+        /* Barre d'actions latérale (Effet Brillant) */
+        .action-bar { 
+            position: absolute; right: 15px; bottom: 120px; 
+            display: flex; flex-direction: column; gap: 20px; z-index: 10; 
+        }
+        .action-item { 
+            text-align: center; cursor: pointer; 
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 10px; border-radius: 50%;
+            width: 45px; height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .action-item i { font-size: 22px; }
+        .action-item.liked i { color: #ff2d55; }
 
-        /* Design Commentaires */
-        .comments-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
-        .comment-item { display: flex; gap: 10px; margin-bottom: 15px; font-size: 14px; text-align: left; }
-        .comment-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--floy-dark-gray); flex-shrink: 0; }
-        .comment-input-area { display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
-        .comment-input-area input { flex: 1; border: none; background: #f0f2f5; padding: 10px; border-radius: 20px; outline: none; }
-        .publish-comment-btn { border: none; background: none; color: var(--floy-orange); font-weight: 700; cursor: pointer; }
+        /* Infos Créateur */
+        .video-info { 
+            position: absolute; left: 15px; bottom: 100px; z-index: 10; 
+        }
+        .user-name { font-weight: 700; font-size: 17px; display: flex; align-items: center; margin-bottom: 5px; }
 
-        /* Barre de Navigation Basse */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--bg-black); border-top: 0.5px solid var(--gray-subtle); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        .nav-icon { color: var(--floy-dark-gray); font-size: 22px; cursor: pointer; transition: 0.2s ease; }
-        .nav-icon.active { color: var(--floy-orange); } /* Orange pour l'icône active */
-        .plus-icon { background: white; color: black; padding: 6px 15px; border-radius: 10px; font-size: 20px; cursor: pointer; }
-
-        .close-btn { margin-top: 15px; padding: 12px; text-align: center; background: #f5f5f5; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        /* Barre de Navigation (Glassmorphism) */
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; height: 75px; 
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: space-around; align-items: center; z-index: 100; 
+        }
+        .nav-icon { color: rgba(255,255,255,0.5); font-size: 22px; cursor: pointer; }
+        .nav-icon.active { color: white; filter: drop-shadow(0 0 8px white); }
+        
+        .plus-btn { 
+            background: white; color: black; padding: 6px 15px; border-radius: 12px; 
+            font-size: 20px; box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+        }
     </style>
 </head>
 <body>
 
     <div class="feed-container">
-        <div class="video-wrapper">
-            <div class="floy-watermark"></div>
-            
-            <p style="color: #444;">[ Vidéo en lecture ]</p>
+        <div class="video-overlay"></div>
 
-            <div class="action-bar">
-                <div class="action-item" onclick="toggleLike(this)">
-                    <i class="fas fa-heart"></i>
-                    <span id="like-count">12.6k</span>
-                </div>
-                <div class="action-item" onclick="openComments()">
-                    <i class="fas fa-comment-dots"></i>
-                    <span>850</span>
-                </div>
-                <div class="action-item" onclick="toggleSave(this)">
-                    <i class="fas fa-bookmark"></i>
-                    <span>Enregistrer</span>
-                </div>
-                <div class="action-item" onclick="openShare()">
-                    <i class="fas fa-share"></i>
-                    <span>Partager</span>
-                </div>
-            </div>
-
-            <div class="video-info">
-                <div class="user-name">@createur_floy <i class="fas fa-check-circle badge-verified"></i></div>
-                <div class="description">Bienvenue sur FLOY ! Le nouveau thème est en ligne. 🚀 #Floy #Dev</div>
-            </div>
+        <div class="video-info">
+            <div class="user-name">@bouta <i class="fas fa-check-circle badge-verified"></i></div>
+            <div class="description">Découvrez la collection ! #Style #Premium 🚀</div>
         </div>
 
-        <div id="shareModal" class="modal">
-            <div class="modal-header">Partager via</div>
-            <div class="share-grid">
-                <div class="share-option" onclick="shareTo('WhatsApp')"><i class="fab fa-whatsapp"></i><span style="font-size: 11px;">WhatsApp</span></div>
-                <div class="share-option" onclick="shareTo('Messenger')"><i class="fab fa-facebook-messenger"></i><span style="font-size: 11px;">Messenger</span></div>
-                <div class="share-option" onclick="shareTo('Facebook')"><i class="fab fa-facebook"></i><span style="font-size: 11px;">Facebook</span></div>
-                <div class="share-option" onclick="copyLink()"><i class="fas fa-link"></i><span style="font-size: 11px;">Lien</span></div>
-            </div>
-            <div class="close-btn" onclick="closeModals()">Annuler</div>
-        </div>
-
-        <div id="commentModal" class="modal">
-            <div class="modal-header">850 Commentaires</div>
-            <div class="comments-list" id="commentsList">
-                <div class="comment-item">
-                    <div class="comment-avatar"></div>
-                    <div><strong>Arlein <i class="fas fa-check-circle badge-verified" style="font-size:10px;"></i></strong><br>Le thème orange claque ! 🔥</div>
-                </div>
-                <div class="comment-item">
-                    <div class="comment-avatar"></div>
-                    <div><strong>Bouta</strong><br>C'est tellement plus dynamique.</div>
-                </div>
-            </div>
-            <div class="comment-input-area">
-                <input type="text" id="newComment" placeholder="Ajouter un commentaire...">
-                <button class="publish-comment-btn" onclick="addComment()">Publier</button>
-            </div>
-            <div class="close-btn" onclick="closeModals()">Fermer</div>
+        <div class="action-bar">
+            <div class="action-item" onclick="this.classList.toggle('liked')"><i class="fas fa-heart"></i></div>
+            <div class="action-item"><i class="fas fa-comment-dots"></i></div>
+            <div class="action-item"><i class="fas fa-share"></i></div>
         </div>
 
         <nav class="bottom-nav">
             <i class="fas fa-home nav-icon active" onclick="window.location.href='feed.html'"></i>
             <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
-            <div class="plus-icon" onclick="openGallery()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
+            <div class="plus-btn" onclick="window.location.href='upload.html'"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-bell nav-icon" onclick="window.location.href='norifications.html'"></i>
             <i class="fas fa-user nav-icon" onclick="window.location.href='profile.html'"></i>
         </nav>
     </div>
 
-    <script>
-        // Gestion des modales (ouvertures)
-        function openShare() { 
-            closeModals(); 
-            document.getElementById('shareModal').classList.add('active'); 
-            document.querySelector('.fas.fa-share').parentElement.classList.add('active-action');
-        }
-        function openComments() { 
-            closeModals(); 
-            document.getElementById('commentModal').classList.add('active'); 
-            document.querySelector('.fas.fa-comment-dots').parentElement.classList.add('active-action');
-        }
-
-        // Fermeture globale des modales
-        function closeModals() {
-            document.getElementById('shareModal').classList.remove('active');
-            document.getElementById('commentModal').classList.remove('active');
-            // Retirer l'état actif orange des boutons d'action
-            document.querySelectorAll('.action-item').forEach(item => item.classList.remove('active-action'));
-        }
-
-        // Like (Cœur rouge standard)
-        function toggleLike(el) {
-            el.classList.toggle('liked');
-            let count = document.getElementById('like-count');
-            count.innerText = el.classList.contains('liked') ? "12.7k" : "12.6k";
-        }
-
-        // Sauvegarde vidéo
-        function toggleSave(el) {
-            el.classList.toggle('saved');
-            if(el.classList.contains('saved')) {
-                alert("Enregistré dans votre profil !");
-            }
-        }
-
-        // Ajouter un commentaire en direct
-        function addComment() {
-            const input = document.getElementById('newComment');
-            if(input.value.trim() !== "") {
-                const list = document.getElementById('commentsList');
-                const div = document.createElement('div');
-                div.className = 'comment-item';
-                div.innerHTML = `<div class="comment-avatar"></div><div><strong>Moi</strong><br>${input.value}</div>`;
-                list.prepend(div);
-                input.value = "";
-            }
-        }
-
-        // Ouvrir la galerie du téléphone (Bouton central "+")
-        function openGallery() {
-            const inp = document.createElement('input');
-            inp.type = 'file'; inp.accept = 'video/*';
-            inp.onchange = e => { if(e.target.files[0]) alert("Vidéo sélectionnée : " + e.target.files[0].name); };
-            inp.click();
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText("https://floy.app/v/12345");
-            alert("Lien copié dans le presse-papier !");
-            closeModals();
-        }
-
-        function shareTo(p) { 
-            alert("Partage vers " + p + "..."); 
-            closeModals();
-        }
-    </script>
 </body>
 </html>
