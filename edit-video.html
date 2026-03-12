@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éditer - Floy</title>
+    <style>
+        body { background: #000; color: white; font-family: sans-serif; padding: 20px; }
+        .preview-box { width: 100%; aspect-ratio: 9/16; background: #111; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: #444; }
+        textarea { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 15px; border-radius: 10px; height: 100px; }
+        .tag-btn { background: #222; border: 1px solid var(--violet); color: white; padding: 5px 15px; border-radius: 20px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <header style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <a href="upload.html" style="color:white; text-decoration:none;">Annuler</a>
+        <button style="background:var(--violet); border:none; color:white; padding:5px 20px; border-radius:5px;">Suivant</button>
+    </header>
+    <div class="preview-box">Aperçu de la vidéo</div>
+    <textarea placeholder="Décrivez votre vidéo..."></textarea>
+    <button class="tag-btn">#Tag</button>
+    <button class="tag-btn">@Mentionner</button>
+</body>
+</html>
