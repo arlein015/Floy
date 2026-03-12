@@ -3,28 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sécurité - Floy</title>
+    <title>Threndly - Sécurité</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --fond: #000; --violet: #8A2BE2; }
-        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .card { background: #111; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; }
-        .status-ok { color: #00ff00; font-size: 12px; }
-        button { width: 100%; background: var(--violet); color: white; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; }
+        :root {
+            --threndly-violet: #8a2be2;
+            --threndly-blue: #007bff;
+            --neon-glow: rgba(138, 43, 226, 0.5);
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header avec effet de flou */
+        .security-header {
+            padding: 25px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #111;
+        }
+
+        .security-container {
+            padding: 20px;
+        }
+
+        /* Carte de protection principale */
+        .status-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            border: 1px solid #222;
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, var(--neon-glow) 0%, transparent 70%);
+            opacity: 0.2;
+        }
+
+        .shield-icon {
+            font-size: 50px;
+            color: var(--threndly-blue);
+            text-shadow: 0 0 20px var(--threndly-blue);
+            margin-bottom: 15px;
+        }
+
+        /* Options de sécurité */
+        .security-option {
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #111;
+            transition: 0.3s ease;
+        }
+
+        .security-option:active {
+            transform: scale(0.98);
+            border-color: var(--threndly-violet);
+        }
+
+        .option-detail {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background: #111;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--threndly-violet);
+        }
+
+        .option-text b {
+            display: block;
+            font-size: 14px;
+        }
+
+        .option-text span {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Badge bleu certifié */
+        .verified-badge {
+            color: var(--threndly-blue);
+            font-size: 12px;
+        }
+
+        /* Bouton de sauvegarde */
+        .save-btn {
+            background: linear-gradient(90deg, var(--threndly-violet), var(--threndly-blue));
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 700;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
     </style>
 </head>
 <body>
-    <a href="settings.html" style="color: white; text-decoration: none;">← Retour</a>
-    <h2 style="color: var(--violet)">Sécurité du compte</h2>
-    
-    <div class="card">
-        <h4>Authentification à deux facteurs</h4>
-        <p style="font-size: 13px; color: #888;">Protégez votre compte avec un code envoyé par SMS.</p>
-        <button>Activer</button>
+
+    <div class="security-header">
+        <i class="fas fa-chevron-left" onclick="window.history.back()"></i>
+        <h2 style="margin:0; font-size: 20px;">Centre de Sécurité</h2>
     </div>
 
-    <div class="card">
-        <h4>Appareils connectés</h4>
-        <p style="font-size: 13px;">Windows PC • Session active <span class="status-ok">●</span></p>
+    <div class="security-container">
+        <div class="status-card">
+            <i class="fas fa-shield-halved shield-icon"></i>
+            <h3 style="margin:0;">Compte Protégé</h3>
+            <p style="font-size: 12px; color: #888;">Votre badge <i class="fas fa-check-circle verified-badge"></i> est actif et sécurisé.</p>
+        </div>
+
+        <div style="color: #555; font-size: 12px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; padding-left: 10px;">Accès au compte</div>
+
+        <div class="security-option">
+            <div class="option-detail">
+                <div class="icon-box"><i class="fas fa-mobile-alt"></i></div>
+                <div class="option-text">
+                    <b>Double Authentification (2FA)</b>
+                    <span>Code envoyé par email ou SMS</span>
+                </div>
+            </div>
+            <i class="fas fa-toggle-on" style="color: var(--threndly-blue); font-size: 24px;"></i>
+        </div>
+
+        <div class="security-option" onclick="alert('Redirection vers changement de mot de passe...')">
+            <div class="option-detail">
+                <div class="icon-box"><i class="fas fa-key"></i></div>
+                <div class="option-text">
+                    <b>Mot de passe</b>
+                    <span>Modifié il y a 2 mois</span>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color: #333;"></i>
+        </div>
+
+        <div class="security-option">
+            <div class="option-detail">
+                <div class="icon-box"><i class="fas fa-laptop-code"></i></div>
+                <div class="option-text">
+                    <b>Appareils connectés</b>
+                    <span>1 appareil actif</span>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color: #333;"></i>
+        </div>
+
+        <button class="save-btn">Vérifier la sécurité</button>
     </div>
+
+    <nav class="bottom-nav">
+        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
+        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
+        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
+        <i class="fas fa-user nav-icon active" onclick="window.location.href='profile.html'"></i>
+    </nav>
+
 </body>
 </html>
