@@ -2,17 +2,64 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - FLOY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Floy - Inscription</title>
 </head>
-<body style="padding: 20px;">
-    <a href="index.html" style="color: white; text-decoration: none;">← Retour</a>
-    <h2 style="margin-top: 40px; color: var(--violet);">Créer un compte</h2>
-    <form style="display: flex; flex-direction: column; gap: 20px; margin-top: 30px;">
-        <input type="text" placeholder="Nom d'utilisateur" style="background: #222; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px;">
-        <input type="email" placeholder="Email" style="background: #222; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px;">
-        <input type="password" placeholder="Mot de passe" style="background: #222; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px;">
-        <button type="submit" style="background: var(--violet); color: white; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">Continuer</button>
-    </form>
+<body>
+    <div class="main-container">
+        <div class="login-card">
+            
+            <div class="logo-container">
+                <h1 class="text-logo">F<span class="gradient-text">LOY</span></h1>
+            </div>
+
+            <h2>Créer un compte</h2>
+            <p class="subtitle">Rejoignez la communauté FLOY dès aujourd'hui</p>
+            
+            <form id="signupForm">
+                <div class="input-group">
+                    <label>Nom complet</label>
+                    <input type="text" id="reg_name" placeholder="Votre nom" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="reg_user" placeholder="@username" required>
+                </div>
+
+                <div class="input-group">
+                    <label>E-mail ou numéro</label>
+                    <input type="email" id="reg_email" placeholder="votre@mail.com" required>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Mot de passe</label>
+                        <input type="password" id="reg_pass" placeholder="••••••••" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Confirmation</label>
+                        <input type="password" id="reg_confirm" placeholder="••••••••" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary">S'inscrire</button>
+            </form>
+
+            <div class="auth-separator"><span>ou s'inscrire avec</span></div>
+
+            <div class="social-grid">
+                <button class="btn-social google"><i class="fab fa-google"></i> Google</button>
+                <button class="btn-social facebook"><i class="fab fa-facebook-f"></i> Facebook</button>
+            </div>
+            
+            <div class="footer-links">
+                <p>Déjà un compte ? <a href="index.html" class="link-secondary">Se connecter</a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
