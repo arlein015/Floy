@@ -40,14 +40,13 @@
 <body>
 
     <header class="chat-header">
-        <i class="fas fa-arrow-left" onclick="window.location.href='messages.html'"></i>
-        <div style="text-align:center">
-            <div style="font-weight:600; font-size:15px">@bouta <i class="fas fa-check-circle" style="color:var(--floy-cyan); font-size:10px"></i></div>
-            <div style="font-size:10px; opacity:0.5">En ligne</div>
-        </div>
-        <i class="fas fa-ellipsis-v" style="opacity:0.5"></i>
-    </header>
-
+    <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
+    <div style="text-align:center">
+        <div style="font-weight:600; font-size:15px">@bouta <i class="fas fa-check-circle" style="color:var(--floy-cyan); font-size:10px"></i></div>
+        <div style="font-size:10px; opacity:0.5">En ligne</div>
+    </div>
+    <i class="fas fa-video icon-btn" id="videoCallBtn" style="color:var(--floy-cyan); opacity:1"></i>
+</header>
     <div class="chat-container" id="chatContainer"></div>
 
     <div id="recordingStatus">
