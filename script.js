@@ -72,3 +72,19 @@ function toggleLike(button) {
         setTimeout(() => button.style.transform = "scale(1)", 200);
     }
 }
+// Aperçu de la vidéo avant publication
+const videoInput = document.getElementById('videoInput');
+const videoPreview = document.getElementById('videoPreview');
+const placeholder = document.querySelector('.upload-placeholder');
+
+if(videoInput) {
+    videoInput.onchange = function() {
+        const file = this.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            videoPreview.src = url;
+            videoPreview.hidden = false;
+            placeholder.hidden = true;
+        }
+    };
+}
