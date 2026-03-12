@@ -3,65 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Messenger Pro</title>
+    <title>Threndly - Chat Elite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-violet: #1a0033; --floy-cyan: #00e5ff; --floy-orange: #ff8c00; --glass: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; background: linear-gradient(180deg, var(--bg-violet) 0%, #000 100%); font-family: 'Poppins', sans-serif; color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        
-        /* Header */
-        .chat-header { padding: 45px 20px 15px; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Messages */
-        .chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
-        .msg { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; position: relative; transition: transform 0.2s; cursor: pointer; }
-        .msg:active { transform: scale(0.95); }
-        .msg-sent { align-self: flex-end; background: linear-gradient(135deg, #a456f0 0%, #3a55d1 100%); border-radius: 20px 20px 5px 20px; box-shadow: 0 4px 15px rgba(164, 86, 240, 0.2); }
-        .msg-received { align-self: flex-start; background: var(--glass); border-radius: 20px 20px 20px 5px; border: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Menu Suppression (Context Menu) */
-        .delete-btn { font-size: 10px; color: #ff3b30; display: block; margin-top: 5px; font-weight: bold; text-align: right; cursor: pointer; }
+        :root { 
+            --bg-dark: #000000;
+            --accent-violet: #a456f0;
+            --accent-blue: #3a55d1;
+            --floy-cyan: #00e5ff;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
 
-        /* Animation Ondes Vocales */
-        #recordingStatus { display: none; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(255, 59, 48, 0.15); border-radius: 50px; margin: 10px 20px; border: 1px solid rgba(255, 59, 48, 0.3); }
+        body { 
+            margin: 0; 
+            background: linear-gradient(180deg, #1a0033 0%, var(--bg-dark) 100%); 
+            font-family: 'Poppins', sans-serif; 
+            color: white; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+
+        /* --- Header --- */
+        .chat-header { 
+            padding: 45px 20px 15px; 
+            background: rgba(0,0,0,0.85); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            z-index: 10;
+        }
+        .header-user { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent-violet); }
+
+        /* --- Chat Container --- */
+        .chat-container { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            background: transparent;
+        }
+
+        .msg { 
+            max-width: 75%; 
+            padding: 12px 16px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            position: relative; 
+            transition: 0.2s;
+        }
+        .msg-sent { 
+            align-self: flex-end; 
+            background: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-blue) 100%); 
+            border-radius: 20px 20px 5px 20px; 
+            box-shadow: 0 4px 15px rgba(164, 86, 240, 0.2);
+        }
+        .msg-received { 
+            align-self: flex-start; 
+            background: var(--glass); 
+            border-radius: 20px 20px 20px 5px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+
+        /* --- Recording & Waves --- */
+        #recordingStatus { 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            padding: 10px; 
+            background: rgba(255, 59, 48, 0.15); 
+            border-radius: 50px; 
+            margin: 10px 20px; 
+        }
         .wave { width: 3px; height: 15px; background: #ff3b30; border-radius: 3px; animation: waveAnim 0.6s infinite ease-in-out; }
         @keyframes waveAnim { 0%, 100% { height: 5px; } 50% { height: 20px; } }
 
-        /* Zone Input */
-        .input-area { padding: 15px 20px 30px; background: #000; display: flex; align-items: center; gap: 12px; }
-        .message-input { flex: 1; background: var(--glass); border: none; padding: 14px 22px; border-radius: 30px; color: white; outline: none; font-size: 14px; }
+        /* --- Input Area --- */
+        .input-area { 
+            padding: 15px 20px 35px; 
+            background: var(--bg-dark); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .message-input { 
+            flex: 1; 
+            background: var(--glass); 
+            border: none; 
+            padding: 14px 22px; 
+            border-radius: 30px; 
+            color: white; 
+            outline: none; 
+            font-family: 'Poppins';
+        }
         .icon-btn { font-size: 20px; opacity: 0.7; cursor: pointer; transition: 0.3s; }
         .icon-btn:hover { opacity: 1; color: var(--floy-cyan); }
-        .recording-on { color: #ff3b30 !important; animation: pulse 1s infinite; opacity: 1; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .recording-on { color: #ff3b30 !important; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+        .delete-btn { font-size: 9px; color: #ff3b30; display: block; margin-top: 5px; text-align: right; cursor: pointer; opacity: 0.7; }
     </style>
 </head>
 <body>
 
     <header class="chat-header">
-    <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
-    <div style="text-align:center">
-        <div style="font-weight:600; font-size:15px">@bouta <i class="fas fa-check-circle" style="color:var(--floy-cyan); font-size:10px"></i></div>
-        <div style="font-size:10px; opacity:0.5">En ligne</div>
-    </div>
-    <i class="fas fa-video icon-btn" id="videoCallBtn" style="color:var(--floy-cyan); opacity:1"></i>
-</header>
+        <i class="fas fa-chevron-left" onclick="window.history.back()"></i>
+        <div class="header-user">
+            <img src="logo.png" class="user-avatar">
+            <div>
+                <div style="font-weight:700; font-size:14px">@bouta <i class="fas fa-check-circle" style="color:var(--floy-cyan); font-size:10px"></i></div>
+                <div style="font-size:10px; opacity:0.5">En ligne</div>
+            </div>
+        </div>
+        <i class="fas fa-video icon-btn" id="videoCallBtn" style="color:var(--floy-cyan)"></i>
+    </header>
+
     <div class="chat-container" id="chatContainer"></div>
 
     <div id="recordingStatus">
         <div class="wave"></div><div class="wave" style="animation-delay:0.1s"></div><div class="wave" style="animation-delay:0.2s"></div>
-        <span style="font-size:11px; color:#ff3b30; font-weight:600">ENREGISTREMENT...</span>
+        <span style="font-size:11px; color:#ff3b30; font-weight:700">ENREGISTREMENT EN COURS...</span>
     </div>
 
     <div class="input-area">
-        <label for="fileInput"><i class="fas fa-paperclip icon-btn"></i></label>
+        <label for="fileInput"><i class="fas fa-plus icon-btn"></i></label>
         <input type="file" id="fileInput" style="display:none" accept="image/*,video/*">
         
-        <input type="text" id="messageInput" class="message-input" placeholder="Message privé...">
+        <input type="text" id="messageInput" class="message-input" placeholder="Écris à Threndly...">
         
         <i class="fas fa-microphone icon-btn" id="micBtn"></i>
-        <i class="fas fa-paper-plane" id="sendBtn" style="color:var(--floy-cyan); font-size:22px"></i>
+        <i class="fas fa-paper-plane" id="sendBtn" style="color:var(--accent-violet); font-size:22px; cursor:pointer"></i>
     </div>
 
     <script type="module">
@@ -82,52 +161,43 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
         const chatContainer = document.getElementById('chatContainer');
-        const currentUser = localStorage.getItem('floy_username') || "Anonyme";
+        const currentUser = localStorage.getItem('floy_username') || "Utilisateur";
 
-       // --- FONCTION APPEL VIDÉO ---
-document.getElementById('videoCallBtn').onclick = async () => {
-    // On crée un identifiant de salle unique basé sur le temps
-    const roomId = "Floy-" + Math.floor(Math.random() * 1000000);
-    const callUrl = `https://meet.jit.si/${roomId}`; // Utilisation d'un pont vidéo gratuit et puissant
-
-    if(confirm("Lancer un appel vidéo avec @bouta ?")) {
-        await addDoc(collection(db, "chats"), {
-            text: "📞 Appel vidéo lancé. Cliquez ici pour rejoindre l'appel.",
-            callLink: callUrl,
-            sender: currentUser,
-            timestamp: serverTimestamp()
-        });
-        // Ouvre l'appel pour celui qui appelle
-        window.open(callUrl, '_blank');
-    }
-};
         // --- SUPPRESSION ---
         window.deleteMsg = async (id) => {
-            if(confirm("Supprimer ce message pour tout le monde ?")) {
-                await deleteDoc(doc(db, "chats", id));
+            if(confirm("Supprimer ce message ?")) await deleteDoc(doc(db, "chats", id));
+        };
+
+        // --- APPEL VIDÉO ---
+        document.getElementById('videoCallBtn').onclick = async () => {
+            const roomId = "Threndly-" + Math.floor(Math.random() * 10000);
+            const url = `https://meet.jit.si/${roomId}`;
+            if(confirm("Démarrer un appel vidéo ?")) {
+                await addDoc(collection(db, "chats"), { callLink: url, sender: currentUser, timestamp: serverTimestamp() });
+                window.open(url, '_blank');
             }
         };
 
-        // --- ENVOI TEXTE ---
+        // --- TEXTE ---
         document.getElementById('sendBtn').onclick = async () => {
-            const val = document.getElementById('messageInput').value.trim();
-            if(val) {
-                await addDoc(collection(db, "chats"), { text: val, sender: currentUser, timestamp: serverTimestamp() });
-                document.getElementById('messageInput').value = "";
+            const input = document.getElementById('messageInput');
+            if(input.value.trim()) {
+                await addDoc(collection(db, "chats"), { text: input.value, sender: currentUser, timestamp: serverTimestamp() });
+                input.value = "";
             }
         };
 
-        // --- ENVOI MEDIA ---
+        // --- FICHIERS ---
         document.getElementById('fileInput').onchange = async (e) => {
             const file = e.target.files[0];
             if(!file) return;
-            const sRef = ref(storage, `floy_media/${Date.now()}_${file.name}`);
+            const sRef = ref(storage, `media/${Date.now()}_${file.name}`);
             await uploadBytes(sRef, file);
             const url = await getDownloadURL(sRef);
             await addDoc(collection(db, "chats"), { fileUrl: url, fileType: file.type, sender: currentUser, timestamp: serverTimestamp() });
         };
 
-        // --- ENVOI VOCAL ---
+        // --- VOCAL ---
         let mr; let chunks = [];
         document.getElementById('micBtn').onclick = async function() {
             if(!mr || mr.state === "inactive") {
@@ -149,7 +219,7 @@ document.getElementById('videoCallBtn').onclick = async () => {
             } else { mr.stop(); }
         };
 
-        // --- AFFICHAGE ---
+        // --- TEMPS RÉEL (onSnapshot) ---
         onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "asc")), (snap) => {
             chatContainer.innerHTML = "";
             snap.forEach(d => {
@@ -157,16 +227,18 @@ document.getElementById('videoCallBtn').onclick = async () => {
                 const isMe = data.sender === currentUser;
                 const div = document.createElement('div');
                 div.classList.add('msg', isMe ? 'msg-sent' : 'msg-received');
-                
-                let content = data.fileUrl ? 
-                    (data.fileType.includes('image') ? `<img src="${data.fileUrl}" style="width:100%;border-radius:12px">` : 
-                    `<audio src="${data.fileUrl}" controls style="width:100%"></audio>`) : 
-                    `<div>${data.text}</div>`;
-                
-                // Option suppression si c'est mon message
-                let del = isMe ? `<span class="delete-btn" onclick="deleteMsg('${d.id}')">Supprimer</span>` : "";
-                
-                div.innerHTML = content + del;
+
+                let html = "";
+                if(data.callLink) {
+                    html = `<div style="text-align:center"><i class="fas fa-video"></i><br><a href="${data.callLink}" target="_blank" style="color:white;font-weight:700;font-size:11px">REJOINDRE L'APPEL</a></div>`;
+                } else if(data.fileUrl) {
+                    if(data.fileType.includes('image')) html = `<img src="${data.fileUrl}" style="width:100%;border-radius:12px">`;
+                    else if(data.fileType.includes('audio')) html = `<audio src="${data.fileUrl}" controls style="width:100%"></audio>`;
+                } else {
+                    html = `<div>${data.text}</div>`;
+                }
+
+                div.innerHTML = html + (isMe ? `<span class="delete-btn" onclick="deleteMsg('${d.id}')">Supprimer</span>` : "");
                 chatContainer.appendChild(div);
             });
             chatContainer.scrollTop = chatContainer.scrollHeight;
