@@ -3,63 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription - FLOY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>S'inscrire - FLOY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --floy-gradient: linear-gradient(135deg, #007bff 0%, #8a2be2 100%);
+            --floy-blue: #007bff;
+            --bg-light: #f4f7f6;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .signup-card {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .brand-name {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .gradient-text {
+            background: var(--floy-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 { font-size: 20px; color: #333; margin-bottom: 25px; }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #eee;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--floy-blue);
+        }
+
+        /* Champs côte à côte pour les mots de passe */
+        .password-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-signup {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--floy-gradient);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.2);
+        }
+
+        .separator {
+            margin: 20px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+
+        .separator span {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 10px;
+            color: #aaa;
+            font-size: 11px;
+        }
+
+        .social-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-social {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .google-color { color: #ea4335; }
+        .fb-color { color: #1877f2; }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer-text a {
+            color: var(--floy-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="login-card">
-            
-            <div class="logo-container">
-                <h1 class="text-logo">F<span class="gradient-text">LOY</span></h1>
+
+    <div class="signup-card">
+        <h1 class="brand-name">F<span class="gradient-text">LOY</span></h1>
+        <h2>Créer un compte</h2>
+
+        <form onsubmit="event.preventDefault(); window.location.href='verify.html';">
+            <div class="input-group">
+                <label>Nom complet</label>
+                <input type="text" placeholder="Ex: Jean Dupont" required>
             </div>
 
-            <h2>Créer un compte</h2>
-            <p class="subtitle">Rejoignez la communauté FLOY dès aujourd'hui</p>
-            
-            <form id="signupForm">
-                <div class="input-group">
-                    <label>Nom complet</label>
-                    <input type="text" id="reg_name" placeholder="Votre nom" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Nom d'utilisateur</label>
-                    <input type="text" id="reg_user" placeholder="@username" required>
-                </div>
-
-                <div class="input-group">
-                    <label>E-mail ou numéro</label>
-                    <input type="email" id="reg_email" placeholder="votre@mail.com" required>
-                </div>
-
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Mot de passe</label>
-                        <input type="password" id="reg_pass" placeholder="••••••••" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Confirmation</label>
-                        <input type="password" id="reg_confirm" placeholder="••••••••" required>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-primary">S'inscrire</button>
-            </form>
-
-            <div class="auth-separator"><span>ou s'inscrire avec</span></div>
-
-            <div class="social-grid">
-                <button class="btn-social google"><i class="fab fa-google"></i> Google</button>
-                <button class="btn-social facebook"><i class="fab fa-facebook-f"></i> Facebook</button>
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" placeholder="nom@exemple.com" required>
             </div>
-            
-            <div class="footer-links">
-                <p>Déjà un compte ? <a href="index.html" class="link-secondary">Se connecter</a></p>
+
+            <div class="password-row">
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <div class="input-group">
+                    <label>Confirmer</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
             </div>
+
+            <button type="submit" class="btn-signup">Continuer</button>
+        </form>
+
+        <div class="separator"><span>OU S'INSCRIRE AVEC</span></div>
+
+        <div class="social-btns">
+            <button class="btn-social google-color">
+                <i class="fab fa-google"></i> Google
+            </button>
+            <button class="btn-social fb-color">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </button>
         </div>
+
+        <p class="footer-text">
+            Déjà sur FLOY ? <a href="index.html">Se connecter</a>
+        </p>
     </div>
+
 </body>
 </html>
