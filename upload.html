@@ -3,49 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLOY - Publier une vidéo</title>
+    <title>Threndly - Publier une vidéo</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --threndly-violet: #8a2be2;
+            --threndly-blue: #007bff;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .upload-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 0.5px solid #111;
+        }
+
+        .upload-container {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        /* Zone de sélection de fichier */
+        .drop-zone {
+            width: 100%;
+            aspect-ratio: 9/12;
+            background: #050505;
+            border: 2px dashed #222;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .drop-zone:active {
+            border-color: var(--threndly-violet);
+            background: rgba(138, 43, 226, 0.05);
+        }
+
+        .drop-zone i {
+            font-size: 50px;
+            color: var(--threndly-violet);
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(138, 43, 226, 0.4);
+        }
+
+        /* Champs d'infos */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+        }
+
+        .input-group textarea, .input-group input {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            resize: none;
+        }
+
+        .input-group textarea:focus {
+            border-color: var(--threndly-blue);
+        }
+
+        /* Bouton Publier */
+        .publish-btn {
+            background: linear-gradient(90deg, var(--threndly-violet), var(--threndly-blue));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: auto;
+            margin-bottom: 80px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Prévisualisation (cachée par défaut) */
+        #videoPreview {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 18px;
+        }
+    </style>
 </head>
-<body class="dark-theme">
+<body>
+
+    <div class="upload-header">
+        <i class="fas fa-times" onclick="window.history.back()"></i>
+        <h3 style="margin:0; font-size: 18px;">Nouvelle Publication</h3>
+        <div style="width: 20px;"></div> </div>
+
     <div class="upload-container">
-        <div class="header-back">
-            <a href="feed.html"><i class="fas fa-chevron-left"></i></a>
-            <span>Nouvelle publication</span>
-        </div>
-
-        <div class="upload-box" id="dropZone">
-            <input type="file" id="videoInput" accept="video/*" hidden>
-            <div class="upload-placeholder" onclick="document.getElementById('videoInput').click()">
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <video id="videoPreview" autoplay muted loop></video>
+            <div id="uploadContent">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <p>Sélectionner une vidéo à publier</p>
-                <span>MP4 ou WebM (Max 50Mo)</span>
+                <p style="margin:0; font-weight: 600;">Sélectionner une vidéo</p>
+                <span style="font-size: 11px; color: #555;">MP4 ou MOV recommandé</span>
             </div>
-            <video id="videoPreview" controls hidden></video>
+            <input type="file" id="fileInput" accept="video/*" hidden onchange="previewVideo(event)">
         </div>
 
-        <div class="upload-details">
-            <textarea placeholder="Décrivez votre vidéo... #floy #viral" id="videoDesc"></textarea>
-            
-            <div class="setting-item">
-                <span><i class="fas fa-eye"></i> Qui peut voir cette vidéo ?</span>
-                <select>
-                    <option>Tout le monde</option>
-                    <option>Amis uniquement</option>
-                    <option>Privé</option>
-                </select>
-            </div>
+        <div class="input-group">
+            <label>Légende</label>
+            <textarea id="caption" rows="3" placeholder="Écris une légende captivante... #Threndly #Fun"></textarea>
         </div>
 
-        <button class="btn-publish" id="publishBtn">Publier</button>
+        <div class="input-group">
+            <label>Lieu</label>
+            <input type="text" placeholder="Ajouter un lieu">
+        </div>
+
+        <button class="publish-btn" onclick="handlePublish()">Publier sur Threndly</button>
     </div>
 
     <nav class="bottom-nav">
-        <a href="feed.html"><i class="fas fa-home"></i></a>
-        <a href="explore.html"><i class="fas fa-search"></i></a>
-        <a href="upload.html" class="upload-icon-active"><i class="fas fa-plus"></i></a>
-        <a href="message.html"><i class="fas fa-envelope"></i></a>
-        <a href="profile.html"><i class="fas fa-user"></i></a>
+        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
+        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
+        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
+        <i class="fas fa-user nav-icon" onclick="window.location.href='profile.html'"></i>
     </nav>
+
+    <script>
+        function previewVideo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const videoPreview = document.getElementById('videoPreview');
+                const uploadContent = document.getElementById('uploadContent');
+                const url = URL.createObjectURL(file);
+                
+                videoPreview.src = url;
+                videoPreview.style.display = 'block';
+                uploadContent.style.display = 'none';
+                document.getElementById('dropZone').style.border = 'none';
+            }
+        }
+
+        function handlePublish() {
+            const caption = document.getElementById('caption').value;
+            if (!document.getElementById('fileInput').files[0]) {
+                alert("Veuillez d'abord sélectionner une vidéo !");
+                return;
+            }
+            
+            // Simuler le chargement
+            const btn = document.querySelector('.publish-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication en cours...';
+            btn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                alert("Vidéo publiée avec succès sur Threndly !");
+                window.location.href = 'feed.html';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
