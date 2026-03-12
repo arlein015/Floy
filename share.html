@@ -3,24 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partager - Floy</title>
+    <title>Threndly - Partager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: rgba(0,0,0,0.9); color: white; font-family: sans-serif; display: flex; align-items: flex-end; height: 100vh; margin: 0; }
-        .share-panel { background: #1a1a1a; width: 100%; padding: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; }
-        .share-grid { display: flex; gap: 20px; overflow-x: auto; padding: 20px 0; }
-        .share-item { text-align: center; min-width: 70px; }
-        .icon-circle { width: 50px; height: 50px; border-radius: 50%; background: #333; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        :root {
+            --threndly-violet: #8a2be2;
+            --threndly-blue: #007bff;
+        }
+
+        body {
+            margin: 0; padding: 0; background-color: #000;
+            font-family: 'Poppins', sans-serif; color: white;
+            display: flex; align-items: flex-end; height: 100vh;
+        }
+
+        /* Container qui glisse du bas */
+        .share-container {
+            width: 100%;
+            background: #111;
+            border-radius: 30px 30px 0 0;
+            padding: 20px;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .share-header {
+            text-align: center; font-weight: 700; margin-bottom: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* Amis suggérés (Partage direct) */
+        .friends-row {
+            display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px;
+            scrollbar-width: none; /* Cache la barre de défilement */
+        }
+        .friends-row::-webkit-scrollbar { display: none; }
+
+        .friend-item {
+            display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 70px;
+        }
+        .friend-avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: linear-gradient(45deg, var(--threndly-violet), var(--threndly-blue));
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid transparent; transition: 0.3s;
+        }
+        .friend-avatar:active { border-color: white; transform: scale(0.9); }
+        .friend-name { font-size: 11px; color: #ccc; }
+
+        /* Grille des applications */
+        .apps-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+            border-top: 0.5px solid #222; padding-top: 25px;
+        }
+        .app-item {
+            display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer;
+        }
+        .app-icon {
+            width: 50px; height: 50px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+        }
+        
+        /* Couleurs des icônes */
+        .whatsapp { background: #25D366; color: white; }
+        .messenger { background: #0084FF; color: white; }
+        .instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .facebook { background: #1877F2; color: white; }
+        .copy-link { background: #333; color: white; }
+
+        .app-name { font-size: 10px; font-weight: 600; color: #888; }
+
+        .cancel-btn {
+            width: 100%; padding: 15px; background: #222; border: none;
+            border-radius: 15px; color: white; font-weight: 700; margin-top: 30px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="share-panel">
-        <h4 style="text-align:center; margin-top:0;">Partager à</h4>
-        <div class="share-grid">
-            <div class="share-item"><div class="icon-circle">💬</div><span>Message</span></div>
-            <div class="share-item"><div class="icon-circle">🔗</div><span>Lien</span></div>
-            <div class="share-item"><div class="icon-circle">📲</div><span>WhatsApp</span></div>
+
+    <div class="share-container">
+        <div class="share-header">
+            <span>Partager à</span>
+            <i class="fas fa-times" onclick="window.history.back()"></i>
         </div>
-        <button onclick="window.history.back()" style="width:100%; padding:15px; background:#222; border:none; color:white; border-radius:10px; margin-top:10px;">Annuler</button>
+
+        <div class="friends-row">
+            <div class="friend-item" onclick="sendTo('Arlein')">
+                <div class="friend-avatar">A</div>
+                <div class="friend-name">Arlein <i class="fas fa-check-circle" style="color:var(--threndly-blue); font-size: 8px;"></i></div>
+            </div>
+            <div class="friend-item" onclick="sendTo('Bouta')">
+                <div class="friend-avatar" style="filter: hue-rotate(90deg);">B</div>
+                <div class="friend-name">Bouta</div>
+            </div>
+            <div class="friend-item" onclick="sendTo('User123')">
+                <div class="friend-avatar" style="filter: hue-rotate(180deg);">U</div>
+                <div class="friend-name">User123</div>
+            </div>
+            <div class="friend-item" onclick="sendTo('FloyFan')">
+                <div class="friend-avatar" style="filter: hue-rotate(250deg);">F</div>
+                <div class="friend-name">FloyFan</div>
+            </div>
+        </div>
+
+        <div class="apps-grid">
+            <div class="app-item" onclick="appShare('WhatsApp')">
+                <div class="app-icon whatsapp"><i class="fab fa-whatsapp"></i></div>
+                <div class="app-name">WhatsApp</div>
+            </div>
+            <div class="app-item" onclick="appShare('Messenger')">
+                <div class="app-icon messenger"><i class="fab fa-facebook-messenger"></i></div>
+                <div class="app-name">Messenger</div>
+            </div>
+            <div class="app-item" onclick="appShare('Facebook')">
+                <div class="app-icon facebook"><i class="fab fa-facebook-f"></i></div>
+                <div class="app-name">Facebook</div>
+            </div>
+            <div class="app-item" onclick="copyLink()">
+                <div class="app-icon copy-link"><i class="fas fa-link"></i></div>
+                <div class="app-name">Lien</div>
+            </div>
+        </div>
+
+        <button class="cancel-btn" onclick="window.history.back()">Annuler</button>
     </div>
+
+    <script>
+        function sendTo(name) {
+            alert("Vidéo envoyée à " + name + " !");
+            window.history.back();
+        }
+
+        function appShare(platform) {
+            alert("Ouverture de " + platform + "...");
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText("https://threndly.app/v/12345");
+            alert("Lien copié dans le presse-papier !");
+        }
+    </script>
 </body>
 </html>
