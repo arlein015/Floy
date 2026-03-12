@@ -5,76 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenue sur Floy</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
 
     <style>
         :root {
-            --floy-gradient: linear-gradient(135deg, #3a55d1 0%, #a456f0 100%);
-            --floy-orange: #ff5e3a;
-            --floy-cyan: #00e5ff;
+            /* On utilise l'orange vif et le bleu/violet de ton logo F.png */
+            --floy-bg: linear-gradient(135deg, #ff8c00 0%, #3a01cc 100%);
+            --btn-orange: #ff8c00;
         }
 
         body {
             margin: 0; padding: 0;
-            background: var(--floy-gradient);
+            background: var(--floy-bg) !important; /* Force le dégradé */
             background-attachment: fixed;
-            color: white;
-            font-family: 'Poppins', sans-serif;
             height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            color: white;
         }
 
-        .glass-container {
+        .glass-box {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px 20px;
-            border-radius: 30px;
+            padding: 40px 25px;
+            border-radius: 35px;
+            text-align: center;
             width: 85%;
-            max-width: 350px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 340px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
-        .logo-main {
-            width: 100px; height: 100px;
-            border-radius: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        .logo-img { width: 90px; border-radius: 20px; margin-bottom: 20px; }
+
+        h1 { font-size: 26px; margin-bottom: 10px; font-weight: 700; }
+        h1 span { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+        .btn-main {
+            width: 100%; background: var(--btn-orange); color: white;
+            border: none; padding: 16px; border-radius: 18px;
+            font-weight: 700; font-size: 16px; margin-top: 20px;
+            cursor: pointer; box-shadow: 0 8px 20px rgba(255, 140, 0, 0.4);
         }
 
-        h1 { font-size: 28px; margin-bottom: 10px; }
-        .tagline { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 30px; }
-        .badge-mini { color: var(--floy-cyan); font-size: 12px; }
-
-        .btn-primary {
-            width: 100%; background: var(--floy-orange); color: white; border: none;
-            padding: 16px; border-radius: 15px; font-weight: 700; font-size: 16px;
-            cursor: pointer; margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(255, 94, 58, 0.3);
-        }
-
-        .btn-outline {
-            width: 100%; background: rgba(255,255,255,0.05); color: white;
-            border: 1px solid rgba(255,255,255,0.3); padding: 14px;
-            border-radius: 15px; font-weight: 600; cursor: pointer;
+        .btn-sub {
+            width: 100%; background: rgba(0,0,0,0.3); color: white;
+            border: 1px solid rgba(255,255,255,0.2); padding: 14px;
+            border-radius: 18px; font-weight: 600; margin-top: 12px; cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div class="glass-box">
+        <img src="logo.png" alt="Floy" class="logo-img">
+        <h1>Bienvenue sur <span>Floy</span></h1>
+        <p style="font-size: 13px; opacity: 0.8;">Partagez vos moments, gagnez des récompenses</p>
 
-    <div class="glass-container">
-        <img src="logo.png" alt="Floy" class="logo-main">
-        <h1>Bienvenue sur Floy</h1>
-        <p class="tagline">Créez, partagez et gagnez <i class="fas fa-check-circle badge-mini"></i></p>
-
-        <button class="btn-primary" onclick="window.location.href='feed.html'">Explorer</button>
-        <button class="btn-outline" onclick="window.location.href='signup.html'">Créer un compte</button>
+        <button class="btn-main" onclick="window.location.href='feed.html'">Commencer l'aventure</button>
+        <button class="btn-sub" onclick="window.location.href='signup.html'">Créer un compte</button>
     </div>
-
 </body>
 </html>
