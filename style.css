@@ -463,3 +463,57 @@ body.dark-theme {
     font-size: 13px;
     cursor: pointer;
 }
+/* --- Ajouts pour l'inscription --- */
+.input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-separator {
+    margin: 25px 0;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.auth-separator span {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0 10px;
+    color: #aaa;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.social-grid {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-social {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-social.google { color: #ea4335; }
+.btn-social.facebook { color: #1877f2; }
+
+.btn-social:hover {
+    background: #f9f9f9;
+    border-color: #ccc;
+}
