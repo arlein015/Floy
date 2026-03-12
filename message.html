@@ -3,46 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Messages</title>
+    <title>Floy - Messenger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --bg-violet: #1a0033; --nav-black: #000000; --floy-cyan: #00e5ff; }
-        body {
-            margin: 0; background: linear-gradient(180deg, var(--bg-violet) 0%, #000 100%);
-            font-family: 'Poppins', sans-serif; color: white; min-height: 100vh;
+        :root {
+            --bg-violet: #1a0033; /* Violet profond de tes images */
+            --floy-cyan: #00e5ff; /* Cyan certifié */
+            --floy-orange: #ff8c00; /* Orange Floy */
+            --nav-black: #000000; /* Noir pur */
         }
-        .header { padding: 50px 20px 15px; background: rgba(0,0,0,0.6); display: flex; justify-content: space-between; align-items: center; }
+
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, var(--bg-violet) 0%, #000000 100%);
+            background-attachment: fixed;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 50px 20px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-list { padding: 15px; }
+
         .chat-item {
             display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: rgba(255,255,255,0.05); border-radius: 20px; margin: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px; margin-bottom: 12px;
+            cursor: pointer;
         }
-        .user-img { width: 55px; height: 55px; border-radius: 50%; background: #333; }
-        .badge-cyan { color: var(--floy-cyan); font-size: 12px; }
-        
-        /* Navigation Basse Exacte */
+
+        .user-img { width: 55px; height: 55px; border-radius: 50%; border: 1px solid var(--floy-cyan); }
+        .badge-cyan { color: var(--floy-cyan); margin-left: 5px; }
+
         .footer-nav {
             position: fixed; bottom: 0; width: 100%; height: 70px;
-            background: var(--nav-black); display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            background: var(--nav-black); display: flex;
+            justify-content: space-around; align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .nav-item { color: white; font-size: 22px; opacity: 0.5; position: relative; }
+
+        .nav-item { color: white; font-size: 24px; opacity: 0.5; position: relative; }
         .nav-item.active { opacity: 1; }
-        .plus-btn { background: linear-gradient(to right, #00e5ff, #a456f0); padding: 5px 15px; border-radius: 10px; color: black; }
-        .badge { position: absolute; top: -5px; right: -8px; background: #ff3b30; font-size: 10px; padding: 2px 6px; border-radius: 10px; border: 2px solid #000; }
+        
+        .notif-badge {
+            position: absolute; top: -5px; right: -8px;
+            background: #ff3b30; font-size: 10px; padding: 2px 6px;
+            border-radius: 10px; border: 2px solid #000;
+        }
+
+        .plus-btn {
+            background: linear-gradient(to right, #00e5ff, #a456f0);
+            padding: 5px 15px; border-radius: 10px; color: black;
+        }
     </style>
 </head>
 <body>
+
     <div class="header">
         <i class="fas fa-arrow-left" onclick="window.location.href='feed.html'"></i>
-        <span style="font-weight:700">Messenger</span>
-        <i class="fas fa-edit" style="color:#ff8c00"></i>
+        <span style="font-weight: 700;">Floy Messenger</span>
+        <i class="fas fa-edit" style="color: var(--floy-orange);"></i>
     </div>
 
-    <div class="chat-item" onclick="window.location.href='chat.html'">
-        <div class="user-img"></div>
-        <div style="flex:1">
-            <div style="font-weight:700">@bouta <i class="fas fa-check-circle badge-cyan"></i></div>
-            <div style="font-size:13px; opacity:0.6">Bienvenue sur Floy !</div>
+    <div class="chat-list">
+        <div class="chat-item" onclick="window.location.href='chat.html'">
+            <img src="logo.png" class="user-img">
+            <div style="flex:1">
+                <div style="font-weight:700">@bouta <i class="fas fa-check-circle badge-cyan"></i></div>
+                <div style="font-size:13px; opacity:0.6">Discussion privée active.</div>
+            </div>
+            <div style="font-size: 11px; opacity: 0.4;">20:51</div>
         </div>
     </div>
 
@@ -52,9 +94,10 @@
         <div class="plus-btn"><i class="fas fa-plus"></i></div>
         <div class="nav-item active">
             <i class="fas fa-comment-alt"></i>
-            <span class="badge">1</span>
+            <span class="notif-badge">1</span>
         </div>
         <i class="fas fa-user nav-item" onclick="window.location.href='profile.html'"></i>
     </nav>
+
 </body>
 </html>
