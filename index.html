@@ -3,68 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Bienvenue</title>
-    <style>
-        :root {
-            --fond: #000000;
-            --violet: #8A2BE2;
-            --bleu: #00BFFF;
-        }
-
-        body {
-            background-color: var(--fond);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
-
-        .logo-placeholder {
-            color: var(--violet);
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            font-size: 50px;
-            letter-spacing: 5px;
-            margin: 0;
-            color: white;
-            text-shadow: 0 0 20px var(--violet);
-        }
-
-        p {
-            color: #888;
-            margin-bottom: 40px;
-        }
-
-        .btn-start {
-            background: var(--violet);
-            color: white;
-            text-decoration: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-weight: bold;
-            box-shadow: 0 0 15px var(--violet);
-            transition: 0.3s;
-        }
-
-        .btn-start:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px var(--violet);
-        }
-    </style>
+    <title>Connexion - FLOY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="logo-placeholder">Floy Logo</div>
-    <h1>FLOY</h1>
-    <p>Le monde en vidéo.</p>
-    
-    <a href="feed.html" class="btn-start">S'inscrire</a>
+<body class="auth-page">
+    <div class="login-card">
+        <div class="logo-area">
+            <img src="logo.png" alt="FLOY Logo" class="app-logo">
+            <h1 class="brand-name">F<span class="gradient-text">LOY</span></h1>
+        </div>
+
+        <h2>Content de vous revoir</h2>
+        <p class="subtitle">Connectez-vous à votre compte FLOY</p>
+        
+        <form>
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" placeholder="votre@email.com" required>
+            </div>
+            <div class="input-group">
+                <label>Mot de passe</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary">Se connecter</button>
+        </form>
+
+        <div class="separator"><span>ou</span></div>
+
+        <div class="social-login">
+            <button class="btn-google">Continuer avec Google</button>
+            <button class="btn-fb">Continuer avec Facebook</button>
+        </div>
+
+        <div class="card-footer">
+            <p>Nouveau sur FLOY ? <a href="signup.html">S'inscrire</a></p>
+        </div>
+    </div>
 </body>
 </html>
