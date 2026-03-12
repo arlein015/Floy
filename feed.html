@@ -130,12 +130,25 @@
         }
 
         // Fonction Enregistrer sur le profil
-        function toggleSave(element) {
-            element.classList.toggle('saved');
-            if(element.classList.contains('saved')) {
-                alert("Vidéo enregistrée dans votre profil !");
-            }
-        }
+       function toggleSave(element) {
+    element.classList.toggle('saved');
+    
+    // On crée un objet pour la vidéo actuelle
+    const videoData = {
+        id: Date.now(),
+        thumbnail: "https://via.placeholder.com/150/8a2be2/ffffff?text=Video", // Image temporaire
+        views: "1.2k"
+    };
+
+    if(element.classList.contains('saved')) {
+        // Récupérer la liste existante ou en créer une nouvelle
+        let savedVideos = JSON.parse(localStorage.getItem('threndly_saved')) || [];
+        savedVideos.push(videoData);
+        localStorage.setItem('threndly_saved', JSON.stringify(savedVideos));
+        
+        alert("Vidéo enregistrée dans votre profil !");
+    }
+}
 
         // Gestion du Partage
         function openShare() { document.getElementById('shareModal').classList.add('active'); }
