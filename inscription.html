@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floy - Inscription</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-violet: #1a0033; --floy-orange: #ff8c00; }
+        body {
+            margin: 0; height: 100vh;
+            background: #000;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Poppins', sans-serif; color: white;
+        }
+        .auth-card { text-align: center; width: 85%; max-width: 400px; }
+        .input-floy {
+            width: 100%; background: rgba(255,255,255,0.1); border: 1px solid #333;
+            padding: 18px; border-radius: 15px; color: white; margin-bottom: 20px;
+            outline: none; box-sizing: border-box;
+        }
+        .btn-orange {
+            width: 100%; background: var(--floy-orange); border: none;
+            padding: 18px; border-radius: 15px; color: white;
+            font-weight: 700; font-size: 16px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <h1 style="margin-bottom: 10px;">Rejoindre <span style="color: var(--floy-orange);">Floy</span></h1>
+        <p style="opacity: 0.6; margin-bottom: 30px;">Choisis ton pseudo pour commencer à discuter.</p>
+        
+        <input type="text" id="usernameInput" class="input-floy" placeholder="@ton_pseudo">
+        <button class="btn-orange" onclick="saveUser()">Rejoindre l'aventure</button>
+    </div>
+
+    <script>
+        function saveUser() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (username !== "") {
+                // On enregistre le pseudo dans le navigateur
+                localStorage.setItem('floy_username', username);
+                // On redirige vers le feed
+                window.location.href = 'feed.html';
+            } else {
+                alert("Choisis un pseudo !");
+            }
+        }
+    </script>
+</body>
+</html>
