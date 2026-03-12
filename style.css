@@ -80,3 +80,18 @@
 /* --- BOTTOM NAV --- */
 .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1a1a1a; font-size: 24px; }
 .upload-center { background: white; color: black !important; padding: 0 15px; border-radius: 10px; font-weight: bold; }
+.action-btn {
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.action-btn.active {
+    color: var(--violet) !important;
+    text-shadow: 0 0 20px var(--violet);
+}
+
+/* On cache les contrôles par défaut pour faire "App" */
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Remplit tout l'écran vertical */
+}
