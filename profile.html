@@ -3,92 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Profil</title>
+    <title>Threndly - Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        :root {
+            --bg-violet: #1a0033; /* Violet profond */
+            --floy-cyan: #00e5ff; /* Bleu cyan certifié */
+            --floy-orange: #ff8c00; /* Orange d'action */
+            --nav-black: #000000; /* Noir pur */
+        }
+
         body {
             margin: 0;
-            background: linear-gradient(135deg, #ff8c00 0%, #3a01cc 100%) !important;
+            background: linear-gradient(180deg, var(--bg-violet) 0%, #000000 100%);
             background-attachment: fixed;
-            font-family: 'Poppins', sans-serif; color: white;
+            font-family: 'Poppins', sans-serif;
+            color: white;
             padding-bottom: 80px;
         }
 
-       .profile-header { text-align: center; padding: 40px 20px; background: rgba(0,0,0,0.2); }
-    .stat-number { font-size: 20px; font-weight: 700; }
-    .stat-label { font-size: 12px; opacity: 0.6; }
-    .grid-video { background: #000; aspect-ratio: 9/12; }
-        /* En-tête mélange noir */
-        .header {
-            padding: 20px; background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px); display: flex; justify-content: space-between;
+        /* En-tête du profil */
+        .profile-header {
+            text-align: center;
+            padding: 50px 20px 20px;
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        /* Cartes de stats sombres */
-        .stat-card-dark {
-            background: rgba(0, 0, 0, 0.5); /* Noir dominant */
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 15px; border-radius: 20px; text-align: center; flex: 1;
+        .profile-pic-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
         }
 
-        .btn-wallet {
-            background: #ff8c00; color: white; border: none;
-            padding: 14px 30px; border-radius: 15px; font-weight: 700;
-            margin: 20px auto; display: flex; align-items: center; gap: 10px;
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--bg-violet);
+            object-fit: cover;
+            background: #222;
         }
 
-        /* Grille de vidéos sombre */
+        .username {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .badge-cyan {
+            color: var(--floy-cyan);
+            font-size: 16px;
+        }
+
+        /* Statistiques */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        /* Bouton Edit / Portefeuille */
+        .btn-profile {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        /* Grille de vidéos */
         .video-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
-            background: rgba(0, 0, 0, 0.3); padding: 3px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 2px;
         }
-        .video-item { aspect-ratio: 9/13; background: rgba(0, 0, 0, 0.2); }
 
-        /* Navigation basse noire */
-        .nav-dark {
-            position: fixed; bottom: 0; width: 100%; height: 70px;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px);
-            display: flex; justify-content: space-around; align-items: center;
+        .video-thumbnail {
+            aspect-ratio: 9/12;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+        }
+
+        /* Barre de navigation basse */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            background-color: var(--nav-black);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-icon {
+            color: white;
+            font-size: 22px;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        .nav-icon.active {
+            opacity: 1;
+        }
+
+        .plus-btn-container {
+            background: linear-gradient(to right, #00e5ff, #a456f0);
+            padding: 5px 15px;
+            border-radius: 10px;
+            color: black;
         }
     </style>
 </head>
 <body>
-   <div class="profile-header">
-    <img src="logo.png" style="width: 100px; border-radius: 50%; border: 3px solid var(--bg-dark-purple);">
-    <h2>@bouta <i class="fas fa-check-circle badge-cyan"></i></h2>
-    <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px;">
-        <div><div class="stat-number">150K</div><div class="stat-label">Likes</div></div>
-        <div><div class="stat-number">856</div><div class="stat-label">Abonnés</div></div>
-    </div>
-</div>
 
-    <div style="text-align: center; padding: 30px;">
-        <img src="logo.png" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.1);">
-        <h2 style="margin: 15px 0 5px;">Bouta <i class="fas fa-check-circle" style="color: #00e5ff;"></i></h2>
-        
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
-            <div class="stat-card-dark"><strong>45k</strong><br><small>Abonnés</small></div>
-            <div class="stat-card-dark"><strong>1.2M</strong><br><small>Likes</small></div>
+    <div class="profile-header">
+        <div class="profile-pic-container">
+            <img src="logo.png" class="profile-pic" alt="Profile">
+        </div>
+        <div class="username">
+            @bouta <i class="fas fa-check-circle badge-cyan"></i>
+        </div>
+        <p style="font-size: 13px; opacity: 0.7; margin-top: 8px;">Développeur Threndly | Créateur de contenu</p>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value">150K</div>
+                <div class="stat-label">Likes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">856</div>
+                <div class="stat-label">Abonnés</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">124</div>
+                <div class="stat-label">Suivis</div>
+            </div>
         </div>
 
-        <button class="btn-wallet" onclick="window.location.href='wallet.html'">
-            <i class="fas fa-wallet"></i> Mon Portefeuille
+        <button class="btn-profile" onclick="window.location.href='wallet.html'">
+            <i class="fas fa-wallet" style="color: var(--floy-orange);"></i> Mon Portefeuille
         </button>
     </div>
 
     <div class="video-grid">
-        <div class="video-item"></div>
-        <div class="video-item"></div>
-        <div class="video-item"></div>
+        <div class="video-thumbnail"></div>
+        <div class="video-thumbnail"></div>
+        <div class="video-thumbnail"></div>
+        <div class="video-thumbnail"></div>
+        <div class="video-thumbnail"></div>
+        <div class="video-thumbnail"></div>
     </div>
 
-    <nav class="nav-dark">
-        <i class="fas fa-home" style="opacity: 0.5;"></i>
-        <i class="fas fa-search" style="opacity: 0.5;"></i>
-        <i class="fas fa-plus-square" style="font-size: 24px;"></i>
-        <i class="fas fa-heart" style="opacity: 0.5;"></i>
-        <i class="fas fa-user"></i>
+    <nav class="footer-nav">
+        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
+        <i class="fas fa-compass nav-icon"></i>
+        <div class="plus-btn-container" onclick="window.location.href='upload.html'">
+            <i class="fas fa-plus"></i>
+        </div>
+        <i class="fas fa-comment-alt nav-icon" onclick="window.location.href='messages.html'"></i>
+        <i class="fas fa-user nav-icon active"></i>
     </nav>
+
 </body>
 </html>
