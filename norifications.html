@@ -4,135 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Threndly - Notifications</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --threndly-violet: #8a2be2;
             --threndly-blue: #007bff;
+            --bg-black: #000;
         }
 
         body {
-            background-color: #000;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
+            margin: 0; padding: 0; background-color: var(--bg-black);
+            font-family: 'Poppins', sans-serif; color: white; overflow: hidden;
         }
 
+        /* Header Fixe */
         .notif-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 0.5px solid #111;
-            font-weight: 700;
-            font-size: 18px;
+            padding: 20px; text-align: center; border-bottom: 0.5px solid #111;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .notif-list {
-            height: calc(100vh - 140px);
-            overflow-y: auto;
+        /* Filtres de notifications */
+        .notif-filters {
+            display: flex; justify-content: center; gap: 10px; padding: 15px;
+            border-bottom: 0.5px solid #111;
+        }
+        .filter-btn {
+            background: #111; border: none; color: #888; padding: 6px 15px;
+            border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+        .filter-btn.active {
+            background: var(--threndly-violet); color: white;
+        }
+
+        /* Liste des notifications */
+        .notif-container {
+            height: calc(100vh - 180px); overflow-y: auto; padding: 10px;
         }
 
         .notif-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            gap: 12px;
-            transition: 0.3s;
+            display: flex; align-items: center; gap: 12px; padding: 12px;
+            border-radius: 12px; transition: 0.2s; cursor: pointer;
         }
+        .notif-item:active { background: #0a0a0a; }
 
-        .notif-item:active {
-            background: #111;
-        }
-
-        .notif-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+        .avatar {
+            width: 48px; height: 48px; border-radius: 50%;
             background: linear-gradient(45deg, var(--threndly-violet), var(--threndly-blue));
-            flex-shrink: 0;
+            flex-shrink: 0; position: relative;
+        }
+        
+        /* Petit badge d'action (coeur, message, etc) sur l'avatar */
+        .action-badge {
+            position: absolute; bottom: 0; right: 0; width: 18px; height: 18px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: white; border: 2px solid black;
+        }
+        .bg-heart { background: #ff2d55; }
+        .bg-comment { background: var(--threndly-blue); }
+        .bg-follow { background: var(--threndly-violet); }
+
+        .notif-info { flex: 1; }
+        .notif-info p { margin: 0; font-size: 13px; line-height: 1.4; }
+        .notif-info b { color: white; }
+        .notif-time { font-size: 11px; color: #555; margin-top: 3px; }
+
+        .video-preview {
+            width: 40px; height: 52px; background: #222; border-radius: 6px;
+            background-size: cover; background-position: center; flex-shrink: 0;
         }
 
-        .notif-content {
-            flex: 1;
-            font-size: 13px;
-        }
-
-        .notif-content b {
-            color: white;
-        }
-
-        .notif-time {
-            font-size: 11px;
-            color: #555;
-            margin-top: 2px;
-        }
-
-        .notif-preview {
-            width: 40px;
-            height: 50px;
-            background: #222;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .follow-btn {
-            background: var(--threndly-violet);
-            color: white;
-            border: none;
-            padding: 6px 15px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+        .follow-back-btn {
+            background: var(--threndly-violet); color: white; border: none;
+            padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700;
         }
 
         /* Badge bleu */
-        .verified-notif {
-            color: var(--threndly-blue);
-            font-size: 10px;
-            margin-left: 2px;
+        .badge-verified { color: var(--threndly-blue); font-size: 10px; margin-left: 2px; }
+
+        /* Navigation Basse */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 70px;
+            background: #000; border-top: 0.5px solid #111;
+            display: flex; justify-content: space-around; align-items: center; z-index: 100;
         }
+        .nav-icon { color: #555; font-size: 22px; cursor: pointer; }
+        .nav-icon.active { color: var(--threndly-violet); }
+        .plus-btn { background: white; color: black; padding: 6px 15px; border-radius: 10px; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="notif-header">Toute l'activité</div>
+    <div class="notif-header">
+        <h3 style="margin:0; font-size: 18px;">Activités</h3>
+    </div>
 
-    <div class="notif-list">
+    <div class="notif-filters">
+        <button class="filter-btn active">Tout</button>
+        <button class="filter-btn">Likes</button>
+        <button class="filter-btn">Commentaires</button>
+    </div>
+
+    <div class="notif-container">
+        
         <div class="notif-item">
-            <div class="notif-avatar"></div>
-            <div class="notif-content">
-                <b>Arlein</b> <i class="fas fa-check-circle verified-notif"></i> a aimé votre vidéo.
-                <div class="notif-time">Il y a 2m</div>
+            <div class="avatar">
+                <div class="action-badge bg-heart"><i class="fas fa-heart"></i></div>
             </div>
-            <div class="notif-preview"></div>
+            <div class="notif-info">
+                <p><b>Arlein</b> <i class="fas fa-check-circle badge-verified"></i> a aimé votre vidéo.</p>
+                <div class="notif-time">Il y a 2 min</div>
+            </div>
+            <div class="video-preview" style="background-image: url('https://via.placeholder.com/40x50')"></div>
         </div>
 
         <div class="notif-item">
-            <div class="notif-avatar" style="filter: hue-rotate(45deg);"></div>
-            <div class="notif-content">
-                <b>Bouta</b> a commencé à vous suivre.
+            <div class="avatar" style="filter: hue-rotate(90deg);">
+                <div class="action-badge bg-follow"><i class="fas fa-user-plus"></i></div>
+            </div>
+            <div class="notif-info">
+                <p><b>Bouta</b> a commencé à vous suivre.</p>
                 <div class="notif-time">Il y a 1h</div>
             </div>
-            <button class="follow-btn">Retour</button>
+            <button class="follow-back-btn">Retour</button>
         </div>
 
         <div class="notif-item">
-            <div class="notif-avatar" style="filter: hue-rotate(90deg);"></div>
-            <div class="notif-content">
-                <b>User123</b> a commenté : "Incroyable cette app ! 🔥"
-                <div class="notif-time">Il y a 3h</div>
+            <div class="avatar" style="filter: hue-rotate(180deg);">
+                <div class="action-badge bg-comment"><i class="fas fa-comment"></i></div>
             </div>
-            <div class="notif-preview"></div>
+            <div class="notif-info">
+                <p><b>User123</b> a commenté: "C'est incroyable ! 🔥"</p>
+                <div class="notif-time">Il y a 5h</div>
+            </div>
+            <div class="video-preview" style="background-image: url('https://via.placeholder.com/40x50')"></div>
         </div>
+
     </div>
 
     <nav class="bottom-nav">
         <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
         <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
-        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;" onclick="window.location.href='upload.html'"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-comment nav-icon active"></i>
+        <div class="plus-btn" onclick="window.location.href='upload.html'"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-heart nav-icon active"></i>
         <i class="fas fa-user nav-icon" onclick="window.location.href='profile.html'"></i>
     </nav>
+
+    <script>
+        // Gestion simple des filtres (visuel seulement pour le moment)
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
 
 </body>
 </html>
