@@ -4,40 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vérification - FLOY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --floy-gradient: linear-gradient(135deg, #007bff 0%, #8a2be2 100%);
+            --floy-blue: #007bff;
+            --bg-light: #f4f7f6;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .verify-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .brand-name {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .gradient-text {
+            background: var(--floy-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 { font-size: 20px; color: #333; margin-bottom: 10px; }
+        .instruction { font-size: 13px; color: #777; margin-bottom: 30px; line-height: 1.5; }
+
+        /* Conteneur des 6 chiffres */
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .otp-inputs input {
+            width: 45px;
+            height: 55px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            background: #f9f9f9;
+            transition: 0.3s;
+        }
+
+        .otp-inputs input:focus {
+            outline: none;
+            border-color: var(--floy-blue);
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+        }
+
+        .btn-verify {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--floy-gradient);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.2);
+        }
+
+        .resend-text {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .resend-text span {
+            color: var(--floy-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="login-card">
-            
-            <div class="logo-container">
-                <h1 class="text-logo">F<span class="gradient-text">LOY</span></h1>
+
+    <div class="verify-card">
+        <h1 class="brand-name">F<span class="gradient-text">LOY</span></h1>
+        <h2>Vérifier votre e-mail</h2>
+        <p class="instruction">Entrez le code à 6 chiffres que nous avons envoyé à votre adresse e-mail pour activer votre compte.</p>
+
+        <form onsubmit="event.preventDefault(); window.location.href='feed.html';">
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="\d*" inputmode="numeric" required>
             </div>
 
-            <h2>Vérifiez votre e-mail</h2>
-            <p class="subtitle">Nous avons envoyé un code à 6 chiffres à votre adresse e-mail.</p>
-            
-            <form id="verifyForm">
-                <div class="otp-container">
-                    <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                    <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                    <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                    <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                    <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                    <input type="text" class="otp-input" maxlength="1" pattern="\d*" inputmode="numeric">
-                </div>
-                
-                <button type="submit" class="btn-primary">Vérifier le compte</button>
-            </form>
-            
-            <div class="footer-links">
-                <p>Vous n'avez pas reçu le code ? <a href="#" class="link-secondary">Renvoyer</a></p>
-                <a href="signup.html" class="link-muted">Modifier l'e-mail</a>
-            </div>
-        </div>
+            <button type="submit" class="btn-verify">Vérifier le compte</button>
+        </form>
+
+        <p class="resend-text">
+            Vous n'avez pas reçu le code ? <span>Renvoyer</span>
+        </p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Script pour passer d'une case à l'autre automatiquement
+        const inputs = document.querySelectorAll('.otp-inputs input');
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length > 0 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
