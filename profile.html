@@ -3,45 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOY - Profil</title>
     <link rel="stylesheet" href="style.css">
-    <title>Profil - Floy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="profile-page">
-    <header class="profile-header">
-        <a href="feed.html" class="back-btn">←</a>
-        <span class="profile-username">Mon Profil</span>
-        <button class="settings-icon">⚙️</button>
-    </header>
+<body class="dark-theme">
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-container">
+                <img src="https://via.placeholder.com/100" alt="Photo de profil" class="profile-img">
+            </div>
+            <h2 class="username">@votre_username <span class="badge-certifie"> <i class="fas fa-check-circle"></i></span></h2>
+            <p class="bio">Créateur de contenu sur FLOY 🚀</p>
+            
+            <div class="profile-stats">
+                <div class="stat"><strong>0</strong><span>Abonnements</span></div>
+                <div class="stat"><strong>0</strong><span>Abonnés</span></div>
+                <div class="stat"><strong>0</strong><span>J'aime</span></div>
+            </div>
 
-    <section class="profile-info">
-        <div class="profile-avatar"></div>
-        <h2 class="user-handle">@createur_floy</h2>
-        <div class="stats-row">
-            <div class="stat"><strong>128</strong><span>Abonnés</span></div>
-            <div class="stat"><strong>256</strong><span>Abonnements</span></div>
-            <div class="stat"><strong>1.2k</strong><span>Likes</span></div>
+            <div class="profile-actions">
+                <button class="btn-edit">Modifier le profil</button>
+                <a href="wallet.html" class="btn-wallet-link"><i class="fas fa-wallet"></i></a>
+            </div>
         </div>
-        <button class="edit-profile-btn">Modifier le profil</button>
-    </section>
 
-    <nav class="profile-tabs">
-        <button class="active">Vidéos</button>
-        <button>❤️</button>
-    </nav>
-    <div class="video-grid">
-        <div class="video-item"></div>
-        <div class="video-item"></div>
-        <div class="video-item"></div>
-        <div class="video-item"></div>
-        <div class="video-item"></div>
-        <div class="video-item"></div>
+        <div class="video-grid-tabs">
+            <div class="tab active"><i class="fas fa-th"></i></div>
+            <div class="tab"><i class="fas fa-heart"></i></div>
+        </div>
+
+        <div class="video-grid">
+            <div class="grid-item">
+                <img src="https://via.placeholder.com/150x200" alt="Video thumbnail">
+                <div class="view-count"><i class="fas fa-play"></i> 0</div>
+            </div>
+            </div>
     </div>
 
-    <footer class="bottom-nav">
-        <a href="feed.html">🏠</a>
-        <a href="upload.html" class="upload-center">+</a>
-        <a href="message.html">💬</a>
-        <a href="profile.html" class="active-tab">👤</a>
-    </footer>
+    <nav class="bottom-nav">
+        <a href="feed.html"><i class="fas fa-home"></i></a>
+        <a href="explore.html"><i class="fas fa-search"></i></a>
+        <a href="upload.html" class="upload-icon"><i class="fas fa-plus"></i></a>
+        <a href="message.html"><i class="fas fa-envelope"></i></a>
+        <a href="profile.html" class="active-nav"><i class="fas fa-user"></i></a>
+    </nav>
 </body>
 </html>
