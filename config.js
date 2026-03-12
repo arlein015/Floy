@@ -1,24 +1,18 @@
 const CONFIG = {
-    firebase: {
-        apiKey: "TON_API_KEY",
-        authDomain: "trendly-fca7c.firebaseapp.com",
-        databaseURL: "https://trendly-fca7c-default-rtdb.firebaseio.com",
-        projectId: "trendly-fca7c",
-        storageBucket: "trendly-fca7c.appspot.com",
-        messagingSenderId: "TON_ID",
-        appId: "TON_APP_ID"
-    },
-    emailjs: {
-        publicKey: "TON_PUBLIC_KEY",
-        serviceId: "service_id",
-        templateId: "template_id"
+    APP_NAME: "Threndly",
+    APP_VERSION: "1.0.4",
+    THEME_COLOR: "#8a2be2",
+    VERIFIED_COLOR: "#007bff",
+    API_URL: "https://api.threndly.com/v1",
+    LOGGED_IN: true,
+    USER_DATA: {
+        username: "@createur_floy",
+        isVerified: true,
+        tokens: 1250
     }
 };
 
-// Initialisation
-if (!firebase.apps.length) {
-    firebase.initializeApp(CONFIG.firebase);
+// Fonction globale pour le badge bleu
+function getBadge() {
+    return CONFIG.USER_DATA.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
 }
-const db = firebase.database();
-const auth = firebase.auth();
-emailjs.init(CONFIG.emailjs.publicKey);
