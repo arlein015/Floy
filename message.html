@@ -9,11 +9,10 @@
     
     <style>
         :root {
-            /* Couleurs extraites de tes images */
-            --bg-violet: #1a0033; 
-            --floy-cyan: #00e5ff;
-            --floy-orange: #ff8c00;
-            --nav-black: #000000;
+            --bg-violet: #1a0033; /* Violet profond */
+            --floy-cyan: #00e5ff; /* Badge bleu */
+            --floy-orange: #ff8c00; /* Boutons orange */
+            --nav-black: #000000; /* Barre noire */
         }
 
         body {
@@ -25,7 +24,7 @@
             min-height: 100vh;
         }
 
-        /* En-tête Messenger */
+        /* Barre du haut */
         .header {
             padding: 50px 20px 15px;
             background: rgba(0, 0, 0, 0.6);
@@ -38,83 +37,51 @@
             z-index: 100;
         }
 
-        /* Section Storys (comme sur ton feed) */
+        /* Storys utilisateur */
         .stories-container {
             display: flex;
             gap: 15px;
             padding: 20px 15px;
             overflow-x: auto;
-            scrollbar-width: none;
         }
-        .stories-container::-webkit-scrollbar { display: none; }
-
         .story-ring {
             width: 62px; height: 62px;
             border-radius: 50%;
-            border: 2px solid #a456f0; /* Bordure violette de ton image */
+            border: 2px solid #a456f0; /* Cercle violet */
             padding: 2px;
         }
-        .story-ring img {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+        .story-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
-        /* Liste des discussions privées */
+        /* Liste des chats */
         .chat-list { padding: 10px 15px; }
-
         .chat-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
+            display: flex; align-items: center; gap: 15px; padding: 15px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            margin-bottom: 10px;
+            border-radius: 20px; margin-bottom: 10px;
             border: 1px solid rgba(255, 255, 255, 0.03);
             cursor: pointer;
         }
-
         .user-img { width: 55px; height: 55px; border-radius: 50%; }
-        
-        .chat-info { flex: 1; }
-        .user-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 5px; }
-        .last-msg { font-size: 13px; opacity: 0.6; }
-        
         .badge-cyan { color: var(--floy-cyan); font-size: 12px; }
 
-        /* Navigation Basse (Style exact image_01bedc.png) */
+        /* Barre de Navigation Noire */
         .footer-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 70px;
+            position: fixed; bottom: 0; width: 100%; height: 70px;
             background: var(--nav-black);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+            display: flex; justify-content: space-around; align-items: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .nav-item { color: white; font-size: 24px; opacity: 0.5; cursor: pointer; position: relative; }
+        .nav-item { color: white; font-size: 24px; opacity: 0.5; position: relative; }
         .nav-item.active { opacity: 1; }
-
+        
         .plus-btn {
             background: linear-gradient(to right, #00e5ff, #a456f0);
-            padding: 5px 15px;
-            border-radius: 10px;
-            color: black;
-            font-size: 18px;
+            padding: 5px 15px; border-radius: 10px; color: black; font-size: 18px;
         }
-
-        .notif-badge {
-            position: absolute;
-            top: -5px; right: -8px;
-            background: #ff3b30;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            border: 2px solid var(--nav-black);
+        .notif-red {
+            position: absolute; top: -5px; right: -8px;
+            background: #ff3b30; font-size: 10px; padding: 2px 6px;
+            border-radius: 10px; border: 2px solid #000;
         }
     </style>
 </head>
@@ -122,22 +89,22 @@
 
     <div class="header">
         <i class="fas fa-arrow-left" onclick="window.location.href='feed.html'"></i>
-        <h2 style="margin:0; font-size: 18px;">Messenger</h2>
+        <span style="font-weight: 700;">Messenger</span>
         <i class="fas fa-edit" style="color: var(--floy-orange);"></i>
     </div>
 
     <div class="stories-container">
-        <div class="story-ring"><img src="user1.jpg"></div>
-        <div class="story-ring"><img src="user2.jpg"></div>
-        <div class="story-ring"><img src="user3.jpg"></div>
+        <div class="story-ring"><img src="logo.png"></div>
+        <div class="story-ring"><img src="logo.png"></div>
+        <div class="story-ring"><img src="logo.png"></div>
     </div>
 
     <div class="chat-list">
         <div class="chat-item" onclick="window.location.href='chat.html'">
             <img src="logo.png" class="user-img">
-            <div class="chat-info">
-                <div class="user-name">@bouta <i class="fas fa-check-circle badge-cyan"></i></div>
-                <div class="last-msg">On configure le message ce soir ! 🚀</div>
+            <div style="flex:1">
+                <div style="font-weight:700">@bouta <i class="fas fa-check-circle badge-cyan"></i></div>
+                <div style="font-size:13px; opacity:0.6">On configure ça ce soir !</div>
             </div>
             <div style="font-size: 11px; opacity: 0.4;">20:51</div>
         </div>
@@ -149,7 +116,7 @@
         <div class="plus-btn"><i class="fas fa-plus"></i></div>
         <div class="nav-item active">
             <i class="fas fa-comment-alt"></i>
-            <span class="notif-badge">1</span>
+            <span class="notif-red">1</span>
         </div>
         <i class="fas fa-user nav-item" onclick="window.location.href='profile.html'"></i>
     </nav>
