@@ -3,21 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support - Floy</title>
+    <title>Threndly - Support</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --fond: #000; --bleu: #00BFFF; }
-        body { background: var(--fond); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .faq-item { background: #111; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+        :root {
+            --threndly-violet: #8a2be2;
+            --threndly-blue: #007bff;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        .support-header {
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #111 0%, #000 100%);
+            text-align: center;
+            border-bottom: 1px solid #222;
+        }
+
+        .search-help {
+            margin-top: 15px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-help input {
+            background: none; border: none; color: white; width: 100%; outline: none;
+        }
+
+        .support-container { padding: 20px; }
+
+        .help-card {
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #111;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.3s;
+        }
+
+        .help-card:active {
+            border-color: var(--threndly-violet);
+            background: #111;
+        }
+
+        .help-icon {
+            width: 45px; height: 45px;
+            background: rgba(138, 43, 226, 0.1);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--threndly-violet);
+            font-size: 20px;
+        }
+
+        .help-info b { display: block; font-size: 15px; margin-bottom: 2px; }
+        .help-info span { font-size: 12px; color: #666; }
+
+        .contact-section {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            background: linear-gradient(to right, rgba(138, 43, 226, 0.05), rgba(0, 123, 255, 0.05));
+        }
+
+        .btn-contact {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: var(--threndly-violet);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <a href="settings.html" style="color: white; text-decoration: none;">← Retour</a>
-    <h2 style="color: var(--bleu)">Centre d'aide</h2>
-    
-    <div class="faq-item">Comment gagner des diamants ?</div>
-    <div class="faq-item">Signaler un problème technique</div>
-    <div class="faq-item">Politique de confidentialité</div>
 
-    <button style="width:100%; background: transparent; border: 1px solid var(--bleu); color: var(--bleu); padding: 15px; border-radius: 30px; margin-top: 30px;">Contacter le support Floy</button>
+    <div class="support-header">
+        <h2 style="margin:0;">Besoin d'aide ?</h2>
+        <div class="search-help">
+            <i class="fas fa-search" style="color: #444;"></i>
+            <input type="text" placeholder="Comment pouvons-nous vous aider ?">
+        </div>
+    </div>
+
+    <div class="support-container">
+        <div class="help-card">
+            <div class="help-icon"><i class="fas fa-play-circle"></i></div>
+            <div class="help-info">
+                <b>Guide d'utilisation</b>
+                <span>Apprendre à créer des vidéos FLOY</span>
+            </div>
+        </div>
+
+        <div class="help-card">
+            <div class="help-icon"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="help-info">
+                <b>Monétisation</b>
+                <span>Comment gagner de l'argent sur l'app</span>
+            </div>
+        </div>
+
+        <div class="help-card">
+            <div class="help-icon"><i class="fas fa-user-shield"></i></div>
+            <div class="help-info">
+                <b>Confidentialité</b>
+                <span>Gérer vos données et votre sécurité</span>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <p style="font-size: 14px; color: #888; margin: 0;">Vous ne trouvez pas de réponse ?</p>
+            <a href="mailto:support@threndly.com" class="btn-contact">Contacter l'équipe</a>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <i class="fas fa-home nav-icon" onclick="window.location.href='feed.html'"></i>
+        <i class="fas fa-search nav-icon" onclick="window.location.href='explore.html'"></i>
+        <div style="background:white; color:black; padding:6px 15px; border-radius:10px;"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-comment nav-icon" onclick="window.location.href='message.html'"></i>
+        <i class="fas fa-user nav-icon active" onclick="window.location.href='profile.html'"></i>
+    </nav>
+
 </body>
 </html>
