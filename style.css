@@ -1,18 +1,25 @@
 :root {
-    --bg-black: #000000;
-    --floy-orange: #ff8c00; /* Orange du logo */
-    --floy-blue: #0000cd;   /* Bleu du logo */
-    --floy-dark-gray: #2f4f4f; /* Gris foncé du logo */
-    --text-white: #ffffff;
-    --gray-dark: #111111;
+    /* Dégradé de fond inspiré de ton nouveau logo */
+    --floy-gradient: linear-gradient(135deg, #3a55d1 0%, #a456f0 100%);
+    --floy-orange: #ff5e3a; /* L'orange plus vif du nouveau logo */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-black);
-    color: var(--text-white);
+    background: var(--floy-gradient); /* Applique le dégradé sur tout l'écran */
+    background-attachment: fixed;
+    color: white;
     font-family: 'Poppins', sans-serif;
+}
+
+/* Effet "Brillant" (Glassmorphism) pour les éléments */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* --- Badge de certification bleu de Floy --- */
