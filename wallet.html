@@ -1,8 +1,52 @@
-<div class="wallet-card">
-    <h2>Mon Portefeuille FLOY</h2>
-    <div class="balance">
-        <span>Solde actuel</span>
-        <h1>250.00 $</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOY - Portefeuille</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+    <div class="wallet-container">
+        <div class="wallet-header">
+            <a href="profile.html"><i class="fas fa-chevron-left"></i></a>
+            <h1>Mon Portefeuille</h1>
+        </div>
+
+        <div class="balance-card">
+            <p>Solde FLOY</p>
+            <h2 id="userBalance">0.00 $</h2>
+            <button class="btn-cashout">Retirer l'argent</button>
+        </div>
+
+        <div class="wallet-stats">
+            <div class="stat-item">
+                <i class="fas fa-eye"></i>
+                <span>Vues payées</span>
+                <p>0</p>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-gift"></i>
+                <span>Cadeaux</span>
+                <p>0.00 $</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h3>Historique des gains</h3>
+            <div class="history-list">
+                <p class="empty-msg">Aucune transaction pour le moment.</p>
+            </div>
+        </div>
     </div>
-    <button class="btn-withdraw">Retirer mes gains</button>
-</div>
+
+    <nav class="bottom-nav">
+        <a href="feed.html"><i class="fas fa-home"></i></a>
+        <a href="explore.html"><i class="fas fa-search"></i></a>
+        <a href="upload.html" class="upload-icon"><i class="fas fa-plus"></i></a>
+        <a href="message.html"><i class="fas fa-envelope"></i></a>
+        <a href="profile.html" class="active-nav"><i class="fas fa-user"></i></a>
+    </nav>
+</body>
+</html>
