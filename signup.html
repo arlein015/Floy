@@ -4,135 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Inscription</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="icon" type="image/png" href="logo.png">
-
     <style>
-        :root {
-            --floy-orange: #ff8c00;
-            --floy-blue-fb: #1877F2;
-            --bg-black: #000000;
-        }
-
         body {
-            margin: 0; background: var(--bg-black); color: white;
-            font-family: 'Poppins', sans-serif; display: flex; align-items: center;
-            justify-content: center; min-height: 100vh;
+            margin: 0; height: 100vh;
+            background: linear-gradient(135deg, #ff8c00 0%, #3a01cc 100%) !important;
+            font-family: 'Poppins', sans-serif; color: white;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .signup-card {
-            width: 90%; max-width: 380px; text-align: center; padding: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Mélange noir intense */
+            backdrop-filter: blur(25px); padding: 40px 30px;
+            border-radius: 40px; width: 85%; max-width: 360px;
+            border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;
         }
 
-        .logo-small { width: 70px; margin-bottom: 20px; border-radius: 15px; }
-
-        h2 { margin-bottom: 30px; font-weight: 700; }
-
-        /* Formulaire */
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; margin-left: 5px; }
-        .input-group input {
-            width: 100%; background: #111; border: 1px solid #222; padding: 14px;
-            border-radius: 12px; color: white; outline: none; box-sizing: border-box;
+        .input-box {
+            width: 100%; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px;
+            border-radius: 15px; color: white; margin-bottom: 15px;
+            box-sizing: border-box; outline: none;
         }
-        .input-group input:focus { border-color: var(--floy-orange); }
 
-        .btn-register {
-            width: 100%; background: var(--floy-orange); color: white; border: none;
-            padding: 16px; border-radius: 12px; font-weight: 700; font-size: 16px;
-            margin-top: 10px; cursor: pointer; transition: 0.3s;
+        .input-box:focus { border-color: #ff8c00; }
+
+        .btn-reg {
+            width: 100%; background: #ff8c00; color: white;
+            border: none; padding: 16px; border-radius: 15px;
+            font-weight: 700; cursor: pointer; margin-top: 10px;
         }
-        .btn-register:disabled { background: #333; cursor: not-allowed; }
-
-        /* Liaisons Sociales */
-        .divider { margin: 30px 0; display: flex; align-items: center; gap: 10px; color: #444; font-size: 12px; }
-        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #222; }
-
-        .social-btns { display: flex; flex-direction: column; gap: 12px; }
-        .btn-social {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #222;
-            background: #000; color: white; font-weight: 600; display: flex;
-            align-items: center; justify-content: center; gap: 10px; cursor: pointer;
-        }
-        .btn-google i { color: #EA4335; }
-        .btn-fb { background: var(--floy-blue-fb); border: none; }
-
-        #error-msg { color: #ff4444; font-size: 11px; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
-
     <div class="signup-card">
-        <img src="logo.png" alt="Floy" class="logo-small">
-        <h2>Créer un compte</h2>
-
-        <div class="social-btns">
-            <button class="btn-social btn-google" onclick="socialLogin('Google')">
-                <i class="fab fa-google"></i> Continuer avec Google
-            </button>
-            <button class="btn-social btn-fb" onclick="socialLogin('Facebook')">
-                <i class="fab fa-facebook-f"></i> Continuer avec Facebook
-            </button>
-        </div>
-
-        <div class="divider">ou avec email</div>
-
-        <div class="input-group">
-            <label>Email</label>
-            <input type="email" id="email" placeholder="votre@email.com">
-        </div>
-
-        <div class="input-group">
-            <label>Mot de passe</label>
-            <input type="password" id="pass" placeholder="••••••••">
-        </div>
-
-        <div class="input-group">
-            <label>Confirmer le mot de passe</label>
-            <input type="password" id="confirmPass" placeholder="••••••••" oninput="validatePasswords()">
-            <span id="error-msg">Les mots de passe ne correspondent pas.</span>
-        </div>
-
-        <button class="btn-register" id="regBtn" onclick="handleSignup()" disabled>S'inscrire</button>
+        <h2 style="margin-bottom: 30px;">Créer un compte</h2>
+        <input type="text" class="input-box" placeholder="Nom d'utilisateur">
+        <input type="email" class="input-box" placeholder="Email">
+        <input type="password" class="input-box" placeholder="Mot de passe">
+        <input type="password" class="input-box" placeholder="Confirmer mot de passe">
         
-        <p style="font-size: 13px; color: #666; margin-top: 20px;">
-            Déjà inscrit ? <a href="index.html" style="color: var(--floy-orange); text-decoration: none;">Connexion</a>
+        <button class="btn-reg" onclick="window.location.href='verify.html'">Continuer</button>
+        
+        <p style="font-size: 12px; margin-top: 20px; opacity: 0.6;">
+            Déjà un compte ? <span style="color: #ff8c00; cursor: pointer;" onclick="window.location.href='index.html'">Se connecter</span>
         </p>
     </div>
-
-    <script>
-        function validatePasswords() {
-            const p1 = document.getElementById('pass').value;
-            const p2 = document.getElementById('confirmPass').value;
-            const btn = document.getElementById('regBtn');
-            const msg = document.getElementById('error-msg');
-
-            if (p1 === p2 && p1 !== "") {
-                btn.disabled = false;
-                msg.style.display = 'none';
-            } else {
-                btn.disabled = true;
-                if (p2 !== "") msg.style.display = 'block';
-            }
-        }
-
-        function handleSignup() {
-            const email = document.getElementById('email').value;
-            if(email === "") {
-                alert("Veuillez entrer un email valide.");
-                return;
-            }
-            // Redirection vers la vérification (étape suivante du projet)
-            window.location.href = 'verify.html';
-        }
-
-        function socialLogin(platform) {
-            alert("Liaison avec " + platform + " en cours...");
-            // Simulation de succès
-            setTimeout(() => { window.location.href = 'feed.html'; }, 1500);
-        }
-    </script>
 </body>
 </html>
