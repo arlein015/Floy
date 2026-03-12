@@ -18,6 +18,24 @@
             --glass: rgba(255, 255, 255, 0.1);
         }
 
+        .feed-header {
+        display: flex; justify-content: center; gap: 20px;
+        padding: 40px 10px 10px; font-weight: 600; font-size: 15px;
+    }
+    .header-tab { opacity: 0.6; cursor: pointer; border-bottom: 2px solid transparent; padding-bottom: 5px; }
+    .header-tab.active { opacity: 1; border-bottom: 2px solid white; }
+
+    .stories-row {
+        display: flex; gap: 15px; padding: 15px; overflow-x: auto;
+    }
+    .story-circle {
+        width: 60px; height: 60px; border-radius: 50%;
+        border: 2px solid #a456f0; padding: 2px;
+    }
+    .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+    .video-data { position: absolute; bottom: 100px; left: 15px; }
+    .badge-cyan { color: var(--floy-cyan); margin-left: 5px; }
         body { 
             margin: 0; padding: 0; 
             background: var(--floy-gradient); 
@@ -85,6 +103,23 @@
 </head>
 <body>
 
+    <div class="feed-header">
+    <span class="header-tab">Suivi</span>
+    <span class="header-tab active">Pour toi</span>
+    <span class="header-tab">Live</span>
+</div>
+
+<div class="stories-row">
+    <div class="story-circle"><img src="user1.jpg"></div>
+    <div class="story-circle"><img src="user2.jpg"></div>
+    <div class="story-circle"><img src="user3.jpg"></div>
+</div>
+
+<div class="video-data">
+    <div style="font-weight: 700; font-size: 18px;">@bouta <i class="fas fa-check-circle badge-cyan"></i></div>
+    <p style="font-size: 14px; margin-top: 5px;">Découvrez la collection Luther's Fashion 2024 !</p>
+    <div style="font-size: 13px; opacity: 0.8;"><i class="fas fa-music"></i> Original 2024</div>
+</div>
     <div class="feed-container">
         <div class="video-overlay"></div>
 
