@@ -114,3 +114,19 @@ body {
     /* Vous pouvez zoomer légèrement */
     /* transform: scale(1.1); */ 
 }
+.favicon-container {
+    width: 32px;  /* Taille standard d'un favicon */
+    height: 32px;
+    background-color: #ffffff;
+    border-radius: 8px; /* Petit arrondi style APK */
+    overflow: hidden; /* Coupe les bords de l'image pour suivre l'arrondi */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.favicon-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Magique : remplit tout le cadre blanc sans déformer */
+}
