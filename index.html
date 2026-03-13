@@ -8,109 +8,129 @@
     <style>
         :root {
             --bg: #000000;
-            --btn-orange: #ff8c00; /* Orange Threndly */
-            --text-white: #ffffff;
-            --text-gray: #666666;
+            --orange: #ff8c00;
+            --text: #ffffff;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text-white);
-            font-family: 'Segoe UI', sans-serif;
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            text-align: center;
         }
 
-        h1 { font-size: 2.5rem; margin-bottom: 30px; }
-        h1 span { color: var(--btn-orange); } /* Threndly en orange */
+        /* Logo Final */
+        .logo-img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
 
-        .auth-buttons-container {
-            width: 100%;
-            max-width: 300px;
+        h1 { font-size: 2.2rem; margin: 10px 0; font-weight: 800; }
+        h1 span { color: var(--orange); }
+
+        .subtitle { color: #888; margin-bottom: 40px; font-size: 0.95rem; }
+
+        .auth-container {
+            width: 90%;
+            max-width: 320px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
-        /* Bouton Google Blanc/Pro */
+        /* Bouton Google Style Officiel */
         .btn-google {
             background: white;
-            color: black;
+            color: #000;
             border: none;
-            padding: 14px;
-            border-radius: 30px;
+            padding: 12px;
+            border-radius: 25px;
             font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
-            transition: 0.3s;
+            font-size: 15px;
+            transition: 0.3s ease;
         }
 
-        /* Bouton Mail Orange épuré */
-        .btn-mail {
-            background: transparent;
-            color: var(--btn-orange);
-            border: 1px solid var(--btn-orange);
-            padding: 14px;
-            border-radius: 30px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .btn-google img { width: 20px; }
 
-        .btn-mail:hover { background: rgba(255, 140, 0, 0.1); }
+        .btn-google:hover { background: #f1f1f1; transform: translateY(-2px); }
 
-        .footer-links { margin-top: 30px; font-size: 0.9rem; }
-        .footer-links a { color: var(--btn-orange); text-decoration: none; font-weight: bold; }
-        
+        /* Divider "ou" */
         .divider {
             display: flex;
             align-items: center;
-            color: var(--text-gray);
+            color: #444;
+            font-size: 14px;
             margin: 10px 0;
         }
         .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: #222;
-            margin: 0 10px;
+            content: ""; flex: 1; height: 1px; background: #222; margin: 0 15px;
         }
+
+        /* Bouton Mail */
+        .btn-mail {
+            background: transparent;
+            color: white;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-mail:hover { border-color: var(--orange); color: var(--orange); }
+
+        /* Liens Footer */
+        .footer-links { margin-top: 35px; font-size: 14px; color: #aaa; }
+        .footer-links a { color: var(--orange); text-decoration: none; font-weight: 700; margin-left: 5px; }
+
+        .footer-links div { margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <h1>Bienvenue sur <span>Threndly</span></h1>
+    <img src="f3.png" alt="Logo Threndly" class="logo-img">
 
-    <div class="auth-buttons-container">
-        <button class="btn-google" id="google-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google__G__Logo.svg" width="20" alt="Google Logo">
+    <h1>Bienvenue sur <span>Threndly</span></h1>
+    <p class="subtitle">Partagez vos moments, gagnez des récompenses</p>
+
+    <div class="auth-container">
+        <button class="btn-google" id="google-login">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" alt="G">
             Continuer avec Google
         </button>
 
         <div class="divider">ou</div>
 
-        <button class="btn-mail" onclick="location.href='login.html'">
+        <button class="btn-mail" onclick="window.location.href='login.html'">
             <i class="fa-regular fa-envelope"></i>
             Utiliser mon adresse e-mail
         </button>
 
         <div class="footer-links">
-            Vous n'avez pas de compte ? <a href="signup.html">S'inscrire</a><br><br>
-            Déjà inscrit ? <a href="login.html">Se connecter</a>
+            Vous n'avez pas de compte ? <a href="signup.html">S'inscrire</a>
+            <div>Déjà inscrit ? <a href="login.html">Se connecter</a></div>
         </div>
     </div>
 
-    </body>
+    <script type="module">
+        // Importation Firebase ici...
+        // Ajoute ta logique de redirection automatique après signInWithPopup
+    </script>
+</body>
 </html>
