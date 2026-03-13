@@ -3,140 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threndly Messenger</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob:; media-src * data: blob:; connect-src *;">
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <title>Floy</title>
+    
     <style>
         :root {
             --bg: #000000;
-            --card: #0a0a0a;
+            --card: #0d0d0d;
             --primary: linear-gradient(135deg, #7F00FF, #007BFF);
             --accent: #00FFFF;
+            --text: #ffffff;
         }
+
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
 
-        /* Header moderne */
+        /* Header Premium */
         header {
             padding: 15px 20px;
             background: var(--card);
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid #222;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
 
-        .header-title { font-weight: 800; font-size: 1.2rem; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo { font-weight: 900; font-size: 1.4rem; letter-spacing: -1px; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-       /* Style des boutons du Header (Squircle) */
-        .call-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(127, 0, 255, 0.3);
+        .call-btns button {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #333;
             color: #fff;
-            width: 42px; height: 42px;
+            width: 40px; height: 40px;
             border-radius: 12px;
             cursor: pointer;
+            margin-left: 8px;
             transition: 0.3s;
         }
-       .call-btn:hover { background: var(--primary); transform: translateY(-2px); }
-        /* Zone messages */
+        .call-btns button:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Messages */
         #messages-container {
             flex: 1; overflow-y: auto; padding: 20px;
             display: flex; flex-direction: column; gap: 15px;
-            background-image: radial-gradient(#111 1px, transparent 1px);
-            background-size: 20px 20px;
         }
 
         .msg {
-            max-width: 75%; padding: 12px 16px; border-radius: 20px;
-            font-size: 15px; line-height: 1.4; position: relative;
-            animation: fadeIn 0.3s ease;
+            max-width: 70%; padding: 12px 16px; border-radius: 18px;
+            font-size: 15px; position: relative;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .sent { align-self: flex-end; background: var(--primary); border-bottom-right-radius: 4px; }
+        .received { align-self: flex-start; background: #1a1a1a; border: 1px solid #222; border-bottom-left-radius: 4px; }
 
-        .sent {
-            align-self: flex-end; background: var(--primary); color: white;
-            border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(127, 0, 255, 0.3);
-        }
-        .received {
-            align-self: flex-start; background: #1a1a1a; border: 1px solid #333;
-            border-bottom-left-radius: 4px;
-        }
-
-       /* Barre d'envoi "Glassmorphism" */
+        /* Barre d'envoi style iOS/Modern */
         .input-area {
             padding: 15px 20px;
             background: var(--card);
-            display: flex; align-items: center; gap: 15px;
-            border-top: 1px solid #1a1a1a;
+            display: flex; align-items: center; gap: 12px;
+            border-top: 1px solid #222;
         }
-       .btn-plus {
-            background: transparent; border: none;
-            color: #888; font-size: 20px; cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-plus:hover { color: var(--accent); }
-        .input-box {
-            flex: 1; background: #111; border: 1px solid #333;
-            color: #fff; padding: 12px 20px; border-radius: 30px;
-            outline: none; transition: 0.3s;
-        }
-        .input-box:focus { border-color: #7F00FF; }
 
-       #send-btn {
-            background: var(--primary);
-            border: none; color: #fff;
-            width: 48px; height: 48px;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(127, 0, 255, 0.4);
+        .icon-btn {
+            background: none; border: none; color: #666;
+            font-size: 20px; cursor: pointer; transition: 0.2s;
         }
-        #send-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); }
+        .icon-btn:hover { color: var(--accent); }
 
-        .recording { background: #ff0000 !important; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        #msg-input {
+            flex: 1; background: #181818; border: 1px solid #333;
+            color: #fff; padding: 12px 18px; border-radius: 25px;
+            outline: none; font-size: 15px;
+        }
 
-        img.media, video.media { max-width: 100%; border-radius: 12px; margin-top: 5px; }
+        #send-btn {
+            background: var(--primary); border: none; color: #fff;
+            width: 45px; height: 45px; border-radius: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .recording-active { color: #ff4d4d !important; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        
+        img.media { max-width: 100%; border-radius: 10px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-weight: 800; color: #7F00FF;">THRENDLY</div>
-    <div>
-        <button class="call-btn"><i class="fa-solid fa-phone"></i></button>
-        <button class="call-btn"><i class="fa-solid fa-video"></i></button>
+    <div class="logo">THRENDLY</div>
+    <div class="call-btns">
+        <button><i class="fa-solid fa-phone"></i></button>
+        <button><i class="fa-solid fa-video"></i></button>
     </div>
 </header>
 
 <div id="messages-container"></div>
 
-<div id="messages-container"></div>
-
 <div class="input-area">
-    <input type="file" id="file-input" style="display:none" accept="image/*,video/*">
-    <button class="btn-plus" onclick="document.getElementById('file-input').click()"><i class="fa-solid fa-circle-plus"></i></button>
-    <button class="btn-plus" id="vocal-btn"><i class="fa-solid fa-microphone"></i></button>
-    <input type="text" id="msg-input" placeholder="Message..." style="flex:1; background:#111; border:1px solid #333; color:white; padding:12px; border-radius:25px; outline:none;">
+    <input type="file" id="file-input" style="display:none">
+    <button class="icon-btn" onclick="document.getElementById('file-input').click()"><i class="fa-solid fa-paperclip"></i></button>
+    <button class="icon-btn" id="vocal-btn"><i class="fa-solid fa-microphone"></i></button>
+    <input type="text" id="msg-input" placeholder="Message..." autocomplete="off">
     <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
 </div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-    // --- REMPLACE PAR TES CONFIGS ---
+    // --- CONFIGURATION ---
     const firebaseConfig = {
         apiKey: "TON_API_KEY",
         authDomain: "floy-9f9a1.firebaseapp.com",
@@ -151,26 +138,23 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    const chatId = new URLSearchParams(window.location.search).get('id') || "chat_public";
-    let mediaRecorder;
-    let audioChunks = [];
+    const chatId = new URLSearchParams(window.location.search).get('id') || "chat_general";
 
-    // --- CHARGEMENT ---
+    // --- RÉCEPTION DES MESSAGES ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-            onSnapshot(q, (snap) => {
+            onSnapshot(q, (snapshot) => {
                 const container = document.getElementById('messages-container');
                 container.innerHTML = "";
-                snap.forEach(doc => {
+                snapshot.forEach(doc => {
                     const d = doc.data();
                     const div = document.createElement('div');
                     div.className = `msg ${d.senderId === user.uid ? 'sent' : 'received'}`;
                     
                     if(d.type === "image") div.innerHTML += `<img src="${d.url}" class="media">`;
-                    if(d.type === "video") div.innerHTML += `<video src="${d.url}" controls class="media"></video>`;
-                    if(d.type === "vocal") div.innerHTML += `<audio src="${d.url}" controls></audio>`;
                     if(d.text) div.innerHTML += `<div>${d.text}</div>`;
+                    if(d.type === "vocal") div.innerHTML += `<audio src="${d.url}" controls></audio>`;
                     
                     container.appendChild(div);
                 });
@@ -179,70 +163,65 @@
         }
     });
 
-    // --- ENVOI UNIQUE (CORRIGÉ) ---
-    async function sendMessage() {
-    const text = document.getElementById('msg-input').value.trim();
-    const file = document.getElementById('file-input').files[0];
-    const user = auth.currentUser;
+    // --- FONCTION ENVOI (LA CORRECTION EST ICI) ---
+    async function handleSend() {
+        console.log("Tentative d'envoi..."); // Pour vérifier dans la console
+        const input = document.getElementById('msg-input');
+        const text = input.value.trim();
+        const user = auth.currentUser;
 
-    if (!user || (!text && !file)) return; // On ne fait rien si tout est vide
+        if (!user) {
+            alert("Tu n'es pas connecté !");
+            return;
+        }
 
-    // On vide les champs immédiatement pour la fluidité
-    document.getElementById('msg-input').value = "";
-    document.getElementById('file-input').value = "";
+        if (text === "") return; // Ne rien envoyer si c'est vide
 
-    // Préparation du message de base
-    let messageData = {
-        senderId: user.uid,
-        timestamp: serverTimestamp(),
-        type: "text" // Par défaut c'est du texte
-    };
+        // On vide l'input tout de suite pour l'effet "pro"
+        input.value = "";
 
-    // Si y'a du texte, on l'ajoute
-    if (text) messageData.text = text;
+        try {
+            await addDoc(collection(db, "chats", chatId, "messages"), {
+                text: text,
+                senderId: user.uid,
+                type: "text",
+                timestamp: serverTimestamp()
+            });
+            console.log("Message envoyé !");
+        } catch (error) {
+            console.error("Erreur Firestore :", error);
+            alert("Erreur lors de l'envoi");
+        }
+    }
 
-    // Si y'a un fichier, on l'upload d'abord
-    if (file) {
+    // Écouteur sur le bouton
+    document.getElementById('send-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        handleSend();
+    });
+
+    // Écouteur sur la touche Entrée
+    document.getElementById('msg-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSend();
+        }
+    });
+
+    // --- GESTION DES FICHIERS ---
+    document.getElementById('file-input').onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !auth.currentUser) return;
+
         const fRef = ref(storage, `chats/${chatId}/${Date.now()}_${file.name}`);
         await uploadBytes(fRef, file);
-        messageData.url = await getDownloadURL(fRef);
-        messageData.type = file.type.includes("image") ? "image" : "video";
-    }
+        const url = await getDownloadURL(fRef);
 
-    // Envoi final à Firestore
-    try {
-        await addDoc(collection(db, "chats", chatId, "messages"), messageData);
-    } catch (e) {
-        console.error("Erreur d'envoi:", e);
-    }
-}
-
-    document.getElementById('send-btn').onclick = sendMessage;
-    document.getElementById('msg-input').onkeypress = (e) => { if(e.key === "Enter") sendMessage(); };
-
-    // --- VOCAL ---
-    const vBtn = document.getElementById('vocal-btn');
-    vBtn.onclick = async () => {
-        if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                const fRef = ref(storage, `chats/${chatId}/vocal_${Date.now()}.mp3`);
-                await uploadBytes(fRef, audioBlob);
-                const url = await getDownloadURL(fRef);
-                await addDoc(collection(db, "chats", chatId, "messages"), {
-                    url, type: "vocal", senderId: auth.currentUser.uid, timestamp: serverTimestamp()
-                });
-            };
-            mediaRecorder.start();
-            vBtn.classList.add('recording');
-        } else {
-            mediaRecorder.stop();
-            vBtn.classList.remove('recording');
-        }
+        await addDoc(collection(db, "chats", chatId, "messages"), {
+            url: url,
+            type: file.type.includes("image") ? "image" : "video",
+            senderId: auth.currentUser.uid,
+            timestamp: serverTimestamp()
+        });
     };
 </script>
 </body>
