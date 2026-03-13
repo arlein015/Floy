@@ -238,6 +238,48 @@
                     html = `<div>${data.text}</div>`;
                 }
 
+               import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const db = getFirestore();
+
+/**
+ * Crée ou récupère une discussion entre l'utilisateur actuel et un destinataire
+ * @param {string} currentUserId - Ton ID Firebase
+ * @param {string} otherUserId - L'ID de la personne à qui tu veux parler
+ */
+async function startChat(currentUserId, otherUserId) {
+    // 1. Créer un ID unique pour ce duo (ex: "abc_xyz")
+    // On les trie pour que l'ID soit le même que ce soit A qui parle à B ou B à A
+    const chatId = currentUserId < otherUserId 
+        ? `${currentUserId}_${otherUserId}` 
+        : `${otherUserId}_${currentUserId}`;
+
+    const chatRef = doc(db, "chats", chatId);
+    const chatSnap = await getDoc(chatRef);
+
+    if (!chatSnap.exists()) {
+        // 2. Si la discussion n'existe pas encore, on la crée
+        console.log("Création d'une nouvelle discussion...");
+        try {
+            await setDoc(chatRef, {
+                chatId: chatId,
+                participants: [currentUserId, otherUserId],
+                lastMessage: "",
+                timestamp: serverTimestamp(),
+                createdAt: serverTimestamp()
+            });
+            console.log("Discussion créée !");
+        } catch (error) {
+            console.error("Erreur lors de la création :", error);
+        }
+    } else {
+        console.log("La discussion existe déjà.");
+    }
+
+    // 3. Rediriger l'utilisateur vers la page de chat avec l'ID
+    // window.location.href = `chat.html?id=${chatId}`;
+    return chatId;
+}
                 div.innerHTML = html + (isMe ? `<span class="delete-btn" onclick="deleteMsg('${d.id}')">Supprimer</span>` : "");
                 chatContainer.appendChild(div);
             });
