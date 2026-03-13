@@ -129,23 +129,37 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // Une fois l'email envoyé, on vérifie toutes les 3 secondes si l'utilisateur a cliqué
+function startVerificationCheck(user) {
+    const checkInterval = setInterval(async () => {
+        await user.reload(); // Actualise l'état de l'utilisateur depuis Firebase
+        if (user.emailVerified) {
+            clearInterval(checkInterval);
+            alert("Email vérifié ! Bienvenue sur Threndly.");
+            window.location.href = "chat.html"; // Redirection automatique
+        }
+    }, 3000); // Vérification toutes les 3 secondes
+}
     // Inscription
     document.getElementById('signup-btn').onclick = async () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
 
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-            // Envoyer l'email de vérification Firebase
-            await sendEmailVerification(userCredential.user);
-            
-            // Afficher l'étape du code
-            document.getElementById('signup-step').style.display = 'none';
-            document.getElementById('verify-step').style.display = 'block';
-        } catch (error) {
-            alert("Erreur: " + error.message);
-        }
-    };
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        await sendEmailVerification(userCredential.user);
+        
+        // On cache le formulaire et on montre le message d'attente
+        document.getElementById('signup-step').style.display = 'none';
+        document.getElementById('verify-step').style.display = 'block';
+        
+        // On lance la surveillance de la vérification
+        startVerificationCheck(userCredential.user);
+        
+    } catch (error) {
+        alert("Erreur: " + error.message);
+    }
+};
 
     // Simulation de la vérification du code
     document.getElementById('verify-btn').onclick = () => {
