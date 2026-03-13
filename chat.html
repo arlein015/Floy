@@ -3,187 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob:; media-src * data: blob:; connect-src *;">
-    
     <link rel="icon" href="data:,">
-
-    <title>Chat - Floy</title>
-    
+    <title>Floy Chat Pro</title>
     <style>
-        :root {
-            --bg: #000000;
-            --card: #111111;
-            --primary: linear-gradient(135deg, #7F00FF, #00FFFF);
-            --text: #ffffff;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        header {
-            padding: 15px;
-            background: var(--card);
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #messages-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .msg {
-            max-width: 70%;
-            padding: 12px;
-            border-radius: 15px;
-            position: relative;
-        }
-
-        .sent {
-            align-self: flex-end;
-            background: var(--primary);
-            color: #000;
-            font-weight: 500;
-        }
-
-        .received {
-            align-self: flex-start;
-            background: #222;
-            border: 1px solid #333;
-        }
-
-        .input-area {
-            padding: 15px;
-            background: var(--card);
-            display: flex;
-            gap: 10px;
-        }
-
-        input {
-            flex: 1;
-            background: #222;
-            border: 1px solid #444;
-            color: white;
-            padding: 12px;
-            border-radius: 25px;
-            outline: none;
-        }
-
-        button {
-            background: var(--primary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .media { max-width: 100%; border-radius: 10px; margin-top: 5px; }
+        :root { --bg: #000; --card: #111; --primary: linear-gradient(135deg, #7F00FF, #00FFFF); --text: #fff; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { padding: 15px; background: var(--card); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .call-btns button { background: none; border: 1px solid #7F00FF; color: #7F00FF; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; margin-left: 5px; }
+        #messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 75%; padding: 12px; border-radius: 18px; position: relative; }
+        .sent { align-self: flex-end; background: var(--primary); color: #000; }
+        .received { align-self: flex-start; background: #222; border: 1px solid #333; }
+        .input-area { padding: 15px; background: var(--card); display: flex; align-items: center; gap: 10px; }
+        input[type="text"] { flex: 1; background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 25px; outline: none; }
+        .btn-action { background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .recording { background: red !important; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        audio { max-width: 100%; height: 35px; }
+        img.media, video.media { max-width: 100%; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <header>
     <div style="font-weight: bold; color: #7F00FF;">FLOY CHAT</div>
-    <button onclick="window.location.href='index.html'" style="padding: 5px 10px; font-size: 12px;">Retour</button>
+    <div class="call-btns">
+        <button onclick="startCall('audio')">📞</button>
+        <button onclick="startCall('video')">📹</button>
+    </div>
 </header>
 
 <div id="messages-container"></div>
 
 <div class="input-area">
     <input type="file" id="file-input" style="display:none" accept="image/*,video/*">
-    <button onclick="document.getElementById('file-input').click()">📷</button>
-    <input type="text" id="msg-input" placeholder="Message...">
-    <button id="send-btn">Envoyer</button>
-    <button id="record-btn">🎤</button>
+    <button class="btn-action" onclick="document.getElementById('file-input').click()">📷</button>
+    <button class="btn-action" id="vocal-btn">🎤</button>
+    <input type="text" id="msg-input" placeholder="Ecrivez...">
+    <button class="btn-action" id="send-btn">🚀</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-    // --- REMPLACE PAR TES INFOS FIREBASE ---
-    const firebaseConfig = {
-        apiKey: "TON_API_KEY",
-        authDomain: "floy-9f9a1.firebaseapp.com",
-        projectId: "floy-9f9a1",
-        storageBucket: "floy-9f9a1.firebasestorage.app",
-        messagingSenderId: "TON_ID",
-        appId: "TON_APP_ID"
-    };
-
+    const firebaseConfig = { /* COLLE TES INFOS ICI */ };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const chatId = urlParams.get('id') || "test_chat"; // ID de secours
+    const chatId = new URLSearchParams(window.location.search).get('id') || "chat_general";
+    let mediaRecorder;
+    let audioChunks = [];
 
-    // Chargement des messages
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            console.log("Utilisateur non connecté");
-            // Pas de redirection automatique ici pour éviter l'erreur 404 pendant tes tests
-        } else {
-            const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-            onSnapshot(q, (snapshot) => {
-                const container = document.getElementById('messages-container');
-                container.innerHTML = "";
-                snapshot.forEach(doc => {
-                    const d = doc.data();
-                    const div = document.createElement('div');
-                    div.className = `msg ${d.senderId === user.uid ? 'sent' : 'received'}`;
-                    
-                    if(d.type === "image") div.innerHTML += `<img src="${d.url}" class="media">`;
-                    if(d.type === "video") div.innerHTML += `<video src="${d.url}" controls class="media"></video>`;
-                    if(d.text) div.innerHTML += `<div>${d.text}</div>`;
-                    
-                    container.appendChild(div);
-                });
-                container.scrollTop = container.scrollHeight;
-            });
-        }
+    // --- ECOUTE DES MESSAGES ---
+    onSnapshot(query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc")), (snap) => {
+        const container = document.getElementById('messages-container');
+        container.innerHTML = "";
+        snap.forEach(doc => {
+            const d = doc.data();
+            const div = document.createElement('div');
+            div.className = `msg ${d.senderId === auth.currentUser?.uid ? 'sent' : 'received'}`;
+            
+            if(d.type === "image") div.innerHTML += `<img src="${d.url}" class="media">`;
+            if(d.type === "video") div.innerHTML += `<video src="${d.url}" controls class="media"></video>`;
+            if(d.type === "vocal") div.innerHTML += `<audio src="${d.url}" controls></audio>`;
+            if(d.text) div.innerHTML += `<div>${d.text}</div>`;
+            
+            container.appendChild(div);
+        });
+        container.scrollTop = container.scrollHeight;
     });
 
-    // Envoi
+    // --- GESTION VOCAL ---
+    document.getElementById('vocal-btn').onclick = async () => {
+        const btn = document.getElementById('vocal-btn');
+        if (!mediaRecorder || mediaRecorder.state === "inactive") {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                await uploadFile(audioBlob, "vocal");
+                audioChunks = [];
+            };
+            mediaRecorder.start();
+            btn.classList.add('recording');
+        } else {
+            mediaRecorder.stop();
+            btn.classList.remove('recording');
+        }
+    };
+
+    async function uploadFile(file, type) {
+        const fRef = ref(storage, `chats/${chatId}/${Date.now()}`);
+        await uploadBytes(fRef, file);
+        const url = await getDownloadURL(fRef);
+        await addDoc(collection(db, "chats", chatId, "messages"), {
+            url, type, senderId: auth.currentUser.uid, timestamp: serverTimestamp()
+        });
+    }
+
+    // --- ENVOI TEXTE ---
     document.getElementById('send-btn').onclick = async () => {
         const text = document.getElementById('msg-input').value;
-        const file = document.getElementById('file-input').files[0];
-        const user = auth.currentUser;
-
-        if (!user) return alert("Connecte-toi d'abord !");
-        if (!text && !file) return;
-
+        if (!text) return;
         document.getElementById('msg-input').value = "";
-        let url = null;
-        let type = "text";
-
-        if (file) {
-            const fRef = ref(storage, `chats/${chatId}/${Date.now()}_${file.name}`);
-            await uploadBytes(fRef, file);
-            url = await getDownloadURL(fRef);
-            type = file.type.includes("image") ? "image" : "video";
-        }
-
         await addDoc(collection(db, "chats", chatId, "messages"), {
-            text, url, type, senderId: user.uid, timestamp: serverTimestamp()
+            text, type: "text", senderId: auth.currentUser.uid, timestamp: serverTimestamp()
         });
     };
 </script>
