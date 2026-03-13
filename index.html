@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue sur Threndly</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Threndly - Bienvenue</title>
+    
     <link rel="icon" type="image/png" href="F4.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root {
             --bg: #000000;
@@ -23,35 +26,39 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden; /* Empêche le scroll sur mobile */
         }
 
-        /* Logo Final */
+        /* Grand Logo Central style APK Launch Screen */
         .logo-img {
-            width: 120px;
+            width: 150px; /* Plus grand pour l'effet APK */
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            /* Ajoute une ombre pour le relief */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+            border-radius: 30px; /* Coins arrondis comme une icône d'app */
         }
 
         h1 { font-size: 2.2rem; margin: 10px 0; font-weight: 800; }
         h1 span { color: var(--orange); }
 
-        .subtitle { color: #888; margin-bottom: 40px; font-size: 0.95rem; }
+        .subtitle { color: #888; margin-bottom: 50px; font-size: 0.95rem; }
 
         .auth-container {
             width: 90%;
             max-width: 320px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
 
-        /* Bouton Google Style Officiel */
+        /* Bouton Google Style Officiel (Centré et Pro) */
         .btn-google {
             background: white;
             color: #000;
             border: none;
-            padding: 12px;
-            border-radius: 25px;
+            padding: 14px;
+            border-radius: 30px;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -62,29 +69,28 @@
             transition: 0.3s ease;
         }
 
-        .btn-google img { width: 20px; }
-
+        .btn-google img { width: 22px; }
         .btn-google:hover { background: #f1f1f1; transform: translateY(-2px); }
 
-        /* Divider "ou" */
+        /* Divider "ou" épuré */
         .divider {
             display: flex;
             align-items: center;
             color: #444;
             font-size: 14px;
-            margin: 10px 0;
+            margin: 15px 0;
         }
         .divider::before, .divider::after {
             content: ""; flex: 1; height: 1px; background: #222; margin: 0 15px;
         }
 
-        /* Bouton Mail */
+        /* Bouton Mail Orange minimaliste */
         .btn-mail {
             background: transparent;
             color: white;
             border: 1px solid #333;
-            padding: 12px;
-            border-radius: 25px;
+            padding: 14px;
+            border-radius: 30px;
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -96,17 +102,16 @@
 
         .btn-mail:hover { border-color: var(--orange); color: var(--orange); }
 
-        /* Liens Footer */
-        .footer-links { margin-top: 35px; font-size: 14px; color: #aaa; }
+        /* Liens Footer bien placés */
+        .footer-links { margin-top: 40px; font-size: 14px; color: #aaa; }
         .footer-links a { color: var(--orange); text-decoration: none; font-weight: 700; margin-left: 5px; }
-
         .footer-links div { margin-top: 15px; }
     </style>
 </head>
 <body>
 
     <img src="F4/f3.png" alt="Logo Threndly" class="logo-img">
-    
+
     <h1>Bienvenue sur <span>Threndly</span></h1>
     <p class="subtitle">Partagez vos moments, gagnez des récompenses</p>
 
