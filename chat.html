@@ -132,6 +132,15 @@
         messagingSenderId: "TON_ID",
         appId: "TON_APP_ID"
     };
+    // --- GARDE-BARRIÈRE : Redirige si non connecté ---
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        console.log("Utilisateur non détecté, redirection...");
+        window.location.href = "login.html"; // Assure-toi que le nom du fichier est correct
+    } else {
+        console.log("Connecté en tant que :", user.email);
+    }
+});
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
