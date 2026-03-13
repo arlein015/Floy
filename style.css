@@ -77,3 +77,26 @@ body {
 .ton-bouton-classe:hover {
   box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); /* Lueur plus forte et bleutée au survol */
 }
+/* Le cadre blanc arrondi (le conteneur) */
+.logo-frame {
+    width: 60px;  /* Ajustez la taille selon vos besoins */
+    height: 60px; /* Doit être carré pour une icône parfaite */
+    background-color: #ffffff; /* Le fond blanc */
+    border-radius: 15px; /* Les coins arrondis style APK */
+    overflow: hidden; /* IMPORTANT : Empêche l'image de dépasser des coins arrondis */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ombre pour le relief */
+}
+
+/* L'image du logo à l'intérieur (image_5.png) */
+.logo-frame img {
+    /* La solution magique pour le "plein cadre" */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Remplit tout l'espace, sans déformer */
+    
+    /* Optionnel : Si votre logo original a des bords, vous pouvez zoomer légèrement */
+    /* transform: scale(1.1); */ 
+}
