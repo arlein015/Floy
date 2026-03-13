@@ -3,41 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Bienvenue</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Bienvenue sur Threndly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --bg-violet: #1a0033; --floy-orange: #ff8c00; }
+        :root {
+            --bg: #000000;
+            --card: #0d0d0d;
+            --primary: #ff8c00; /* Orange Threndly */
+            --text: #ffffff;
+            --gray: #888888;
+        }
+
         body {
-            margin: 0; height: 100vh;
-            background: #000; /* Fond noir pur comme ton image */
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Poppins', sans-serif; color: white;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
         }
-        .welcome-card { text-align: center; width: 85%; max-width: 400px; }
-        .logo-text { font-size: 14px; opacity: 0.8; margin-bottom: 40px; }
-        .main-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
-        .highlight { color: var(--floy-orange); }
-        .subtitle { font-size: 14px; opacity: 0.6; margin-bottom: 40px; }
-        .btn-orange {
-            width: 100%; background: var(--floy-orange); border: none;
-            padding: 18px; border-radius: 15px; color: white;
-            font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 15px;
+
+        .logo-container { margin-bottom: 30px; }
+        .logo-text { font-size: 1.2rem; color: var(--gray); letter-spacing: 2px; }
+
+        h1 { font-size: 2.5rem; margin: 10px 0; font-weight: 800; }
+        h1 span { color: var(--primary); }
+
+        .subtitle { color: var(--gray); margin-bottom: 40px; font-size: 1rem; }
+
+        .auth-container {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        .btn-outline {
-            width: 100%; background: transparent; border: 1px solid #333;
-            padding: 18px; border-radius: 15px; color: white; font-weight: 700;
+
+        /* Bouton Google Blanc/Pro */
+        .btn-google {
+            background: white;
+            color: black;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Bouton Mail Threndly */
+        .btn-mail {
+            background: transparent;
+            color: white;
+            border: 1px solid #333;
+            padding: 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-mail:hover { border-color: var(--primary); }
+
+        /* Liens du bas */
+        .footer-links { margin-top: 30px; font-size: 0.9rem; }
+        .footer-links a { color: var(--primary); text-decoration: none; font-weight: bold; }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            color: #333;
+            margin: 10px 0;
+        }
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #222;
+            margin: 0 10px;
         }
     </style>
 </head>
 <body>
-    <div class="welcome-card">
-        <div class="logo-text">Floy Logo</div>
-        <h1 class="main-title">Bienvenue sur <span class="highlight">Floy</span></h1>
-        <p class="subtitle">Partagez vos moments, gagnez des récompenses <span style="color:#0033ff">●</span></p>
-        
-        <button class="btn-orange" onclick="window.location.href='feed.html'">Commencer l'aventure</button>
-        <button class="btn-outline">Créer un compte</button>
+
+    <div class="logo-container">
+        <div class="logo-text">Threndly Logo</div>
+        <h1>Bienvenue sur <span>Threndly</span></h1>
+        <p class="subtitle">Partagez vos moments, gagnez des récompenses</p>
     </div>
+
+    <div class="auth-container">
+        <button class="btn-google" id="google-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google__G__Logo.svg" width="20" alt="Google">
+            Continuer avec Google
+        </button>
+
+        <div class="divider">ou</div>
+
+        <button class="btn-mail" onclick="location.href='login.html'">
+            <i class="fa-regular fa-envelope"></i>
+            Utiliser mon adresse e-mail
+        </button>
+
+        <div class="footer-links">
+            Vous n'avez pas de compte ? <a href="signup.html">S'inscrire</a><br><br>
+            Déjà inscrit ? <a href="login.html">Se connecter</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "TON_API_KEY",
+            authDomain: "floy-9f9a1.firebaseapp.com",
+            projectId: "floy-9f9a1",
+            storageBucket: "floy-9f9a1.firebasestorage.app",
+            messagingSenderId: "TON_ID",
+            appId: "TON_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Connexion Google
+        document.getElementById('google-btn').onclick = async () => {
+            try {
+                await signInWithPopup(auth, provider);
+                window.location.href = "chat.html";
+            } catch (error) {
+                console.error("Erreur Google:", error);
+            }
+        };
+    </script>
 </body>
 </html>
