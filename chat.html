@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob:; media-src * data: blob:; connect-src *;">
     <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Threndly Messenger</title>
     <style>
         :root {
@@ -39,13 +40,21 @@
 
         .header-title { font-weight: 800; font-size: 1.2rem; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .call-btn {
-            background: #111; border: 1px solid #333; color: var(--accent);
-            width: 40px; height: 40px; border-radius: 50%; cursor: pointer; margin-left: 8px;
-            transition: 0.3s;
-        }
-        .call-btn:hover { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
-
+       .call-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(127, 0, 255, 0.3);
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px; /* Carré arrondi plus moderne */
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+       .call-btn:hover {
+    background: var(--primary);
+    border-color: transparent;
+    transform: translateY(-2px);
+}
         /* Zone messages */
         #messages-container {
             flex: 1; overflow-y: auto; padding: 20px;
@@ -77,12 +86,16 @@
         }
 
         .btn-plus {
-            background: #1a1a1a; border: none; color: #fff;
-            width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
-            font-size: 20px; transition: 0.3s;
-        }
-        .btn-plus:hover { background: #333; }
-
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+       .btn-plus:hover {
+    color: var(--accent);
+}
         .input-box {
             flex: 1; background: #111; border: 1px solid #333;
             color: #fff; padding: 12px 20px; border-radius: 30px;
@@ -90,11 +103,19 @@
         }
         .input-box:focus { border-color: #7F00FF; }
 
-        #send-btn {
-            background: var(--primary); border: none; color: #fff;
-            width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
-            transition: 0.3s;
-        }
+       #send-btn {
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(127, 0, 255, 0.4);
+    cursor: pointer;
+}
         #send-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); }
 
         .recording { background: #ff0000 !important; animation: pulse 1s infinite; }
@@ -107,20 +128,20 @@
 
 <header>
     <div class="header-title">THRENDLY</div>
-    <div>
-        <button class="call-btn">📞</button>
-        <button class="call-btn">📹</button>
-    </div>
+   <div>
+    <button class="call-btn"><i class="fa-solid fa-phone"></i></button>
+    <button class="call-btn"><i class="fa-solid fa-video"></i></button>
+</div>
 </header>
 
 <div id="messages-container"></div>
 
 <div class="input-area">
     <input type="file" id="file-input" style="display:none" accept="image/*,video/*">
-    <button class="btn-plus" onclick="document.getElementById('file-input').click()">📷</button>
-    <button class="btn-plus" id="vocal-btn">🎤</button>
-    <input type="text" id="msg-input" placeholder="Message..." autocomplete="off">
-    <button id="send-btn">🚀</button>
+    <button class="btn-plus" onclick="document.getElementById('file-input').click()"><i class="fa-regular fa-image"></i></button>
+    <button class="btn-plus" id="vocal-btn"><i class="fa-solid fa-microphone"></i></button>
+    <input type="text" id="msg-input" placeholder="Écrivez votre message..." autocomplete="off">
+    <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
 </div>
 
 <script type="module">
