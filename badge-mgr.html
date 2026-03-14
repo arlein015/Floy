@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floy Verified Badge</title>
+    <style>
+        :root {
+            /* LA COULEUR OFFICIELLE DE FLOY */
+            --orange-floy: #FF7A1A;
+            --noir: #000;
+        }
 
+        body {
+            background-color: var(--noir);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* --- LE LOGO/BADGE ORANGE --- */
+        .floy-verified-badge {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            /* APPLIQUER LA COULEUR FLOY ORANGE */
+            stroke: var(--orange-floy);
+            stroke-width: 2.5; /* Épaisseur du contour */
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            
+            /* LÉGER EFFET LUMINEUX ORANGE (GLOW) */
+            filter: drop-shadow(0 0 4px var(--orange-floy));
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* EFFET AU SURVOL */
+        .floy-verified-badge:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px var(--orange-floy));
+        }
+
+        /* --- EXEMPLE D'INTÉGRATION DANS LE FEED --- */
+        .user-header-example {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="user-header-example">
+        @Arlein
+        
+        <svg class="floy-verified-badge" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" style="stroke:white; stroke-width:3;"/>
+            <circle cx="12" cy="12" r="10" style="stroke:var(--orange-floy); stroke-width:2.5;"/>
+        </svg>
+    </div>
+
+</body>
+</html>
