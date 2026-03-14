@@ -3,145 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Floy - Feed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="F4.png">
-    <link rel="apple-touch-icon" href="F4.png">
     <style>
-        :root {
-            --bg-violet: #1a0033; /* Le violet de tes images */
-            --floy-cyan: #00e5ff; /* Couleur du badge de certification */
-            --floy-orange: #ff8c00;
-            --nav-black: #000000;
-        }
+        :root { --orange-floy: #FF7A1A; --noir: #000; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: white; font-family: sans-serif; overflow: hidden; }
 
-        body {
-            margin: 0;
-            background: linear-gradient(180deg, var(--bg-violet) 0%, #000000 100%);
-            background-attachment: fixed;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-            overflow-x: hidden;
-        }
+        /* Container du défilement vertical (Snap Scrolling) */
+        .video-container { width: 100%; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        .video-container::-webkit-scrollbar { display: none; }
 
-        /* Header Tabs: Suivi, Pour toi, Live */
-        .header-tabs {
-            position: fixed;
-            top: 0; width: 100%;
-            display: flex; justify-content: center; gap: 25px;
-            padding: 50px 0 15px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
-            z-index: 100;
-            font-weight: 600;
-        }
-        .tab { opacity: 0.6; cursor: pointer; border-bottom: 2px solid transparent; padding-bottom: 5px; transition: 0.3s; }
-        .tab.active { opacity: 1; border-bottom: 2px solid white; }
+        /* Chaque vidéo occupe toute l'écran */
+        .video-slide { width: 100%; height: 100vh; scroll-snap-align: start; position: relative; background: #111; display: flex; align-items: center; justify-content: center; }
 
-        /* Stories Row */
-        .stories-row {
-            display: flex; gap: 15px; padding: 100px 15px 20px;
-            overflow-x: auto; scrollbar-width: none;
+        /* Logo Floy 3D flottant en haut */
+        .top-header { position: fixed; top: 15px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 100; pointer-events: none; }
+        .logo-3d-mini { 
+            width: 50px; height: 50px; background: var(--orange-floy); border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 5px 15px rgba(255, 122, 26, 0.5); 
         }
-        .stories-row::-webkit-scrollbar { display: none; }
-        .story-ring {
-            min-width: 62px; height: 62px;
-            border-radius: 50%;
-            border: 2px solid #a456f0; /* Bordure violette image_014a9f.png */
-            padding: 2px; position: relative;
-        }
-        .story-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .add-story {
-            position: absolute; bottom: 0; right: 0;
-            background: #e91e63; border-radius: 50%; width: 18px; height: 18px;
-            display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid var(--bg-violet);
-        }
+        .logo-3d-mini span { color: black; font-weight: 900; font-size: 14px; }
 
-        /* Video Info Overlay */
-        .video-overlay {
-            position: fixed; bottom: 100px; left: 15px; right: 80px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        .user-tag { font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 5px; }
-        .badge-cyan { color: var(--floy-cyan); font-size: 14px; }
-        .caption { font-size: 14px; margin: 8px 0; line-height: 1.4; }
+        /* Barre d'interaction à droite */
+        .side-bar { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .action-btn { background: none; border: none; color: white; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .action-btn i { font-size: 28px; margin-bottom: 5px; }
+        .action-btn span { font-size: 12px; font-weight: bold; }
+        .btn-active { color: var(--orange-floy) !important; }
 
-        /* Sidebar Actions */
-        .sidebar {
-            position: fixed; right: 15px; bottom: 120px;
-            display: flex; flex-direction: column; align-items: center; gap: 20px;
-        }
-        .action-item { text-align: center; cursor: pointer; }
-        .action-item i { font-size: 28px; margin-bottom: 5px; }
-        .action-count { font-size: 12px; font-weight: 600; }
+        /* Infos de la vidéo en bas à gauche */
+        .video-info { position: absolute; bottom: 90px; left: 15px; width: 75%; }
+        .video-info h3 { margin: 0; font-size: 16px; color: white; }
+        .video-info p { margin: 5px 0; font-size: 14px; color: #ccc; }
 
-        /* Barre de Navigation Basse (Style exact image_014a9f.png) */
-        .footer-nav {
-            position: fixed; bottom: 0; width: 100%; height: 75px;
-            background: var(--nav-black); display: flex;
-            justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 1000;
-        }
-        .nav-link { color: white; font-size: 24px; opacity: 0.5; cursor: pointer; position: relative; text-decoration: none; }
-        .nav-link.active { opacity: 1; }
-        
-        .plus-container {
-            background: linear-gradient(to right, #00e5ff, #a456f0);
-            padding: 5px 15px; border-radius: 12px; color: black; font-size: 18px;
-        }
-        .notif-dot {
-            position: absolute; top: -5px; right: -8px;
-            background: #ff3b30; font-size: 10px; padding: 2px 6px;
-            border-radius: 10px; border: 2px solid var(--nav-black); font-weight: 700;
-        }
+        /* Barre de navigation basse */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(0,0,0,0.9); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .nav-item { color: #888; text-decoration: none; font-size: 24px; transition: 0.3s; }
+        .nav-item.active { color: var(--orange-floy); }
+        .upload-btn { background: white; color: black; padding: 5px 15px; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header-tabs">
-        <span class="tab">Suivi</span>
-        <span class="tab active">Pour toi</span>
-        <span class="tab">Live</span>
+    <div class="top-header">
+        <div class="logo-3d-mini"><span>Floy</span></div>
     </div>
 
-    <div class="stories-row">
-        <div class="story-ring">
-            <img src="logo.png">
-            <div class="add-story"><i class="fas fa-plus"></i></div>
-        </div>
-        <div class="story-ring"><img src="logo.png"></div>
-        <div class="story-ring"><img src="logo.png"></div>
-    </div>
-
-    <div class="video-overlay">
-        <div class="user-tag">@bouta <i class="fas fa-check-circle badge-cyan"></i></div>
-        <div class="caption">Bienvenue sur Floy ! Découvrez la nouvelle collection 2024. #Style #Mode #Premium 🚀</div>
-        <div style="font-size: 13px;"><i class="fas fa-music"></i> Musique originale - @bouta</div>
-    </div>
-
-    <div class="sidebar">
-        <div class="action-item"><i class="fas fa-heart" style="color: #ff3b30;"></i><div class="action-count">150K</div></div>
-        <div class="action-item"><i class="fas fa-comment-dots"></i><div class="action-count">856</div></div>
-        <div class="action-item"><i class="fas fa-share"></i><div class="action-count">Partager</div></div>
-    </div>
-
-    <nav class="footer-nav">
-        <a href="feed.html" class="nav-link active"><i class="fas fa-home"></i></a>
-        <a href="#" class="nav-link"><i class="fas fa-compass"></i></a>
-        
-        <div class="nav-link" onclick="window.location.href='upload.html'">
-            <div class="plus-container"><i class="fas fa-plus"></i></div>
+    <div class="video-container">
+        <div class="video-slide">
+            <div style="color: #444;">[ Vidéo en cours de chargement... ]</div>
+            <div class="video-info">
+                <h3>@arlein_dev</h3>
+                <p>Bienvenue sur Floy ! Ma première vidéo. #orange #future</p>
+            </div>
+            <div class="side-bar">
+                <button class="action-btn" onclick="toggleLike(this)"><i>❤️</i><span>1.2k</span></button>
+                <button class="action-btn"><i>💬</i><span>45</span></button>
+                <button class="action-btn"><i>↪️</i><span>Partager</span></button>
+            </div>
         </div>
 
-        <a href="messages.html" class="nav-link">
-            <i class="fas fa-comment-alt"></i>
-            <span class="notif-dot">1</span>
-        </a>
+        <div class="video-slide">
+            <div style="color: #444;">[ Vidéo suivante... ]</div>
+            <div class="video-info">
+                <h3>@floy_official</h3>
+                <p>Découvrez la puissance de l'orange. 🚀</p>
+            </div>
+            <div class="side-bar">
+                <button class="action-btn" onclick="toggleLike(this)"><i>❤️</i><span>850</span></button>
+                <button class="action-btn"><i>💬</i><span>12</span></button>
+                <button class="action-btn"><i>↪️</i><span>Partager</span></button>
+            </div>
+        </div>
+    </div>
 
-        <a href="profile.html" class="nav-link"><i class="fas fa-user"></i></a>
+    <nav class="nav-bar">
+        <a href="feed.html" class="nav-item active">🏠</a>
+        <a href="explore.html" class="nav-item">🔍</a>
+        <a href="upload.html" class="nav-item upload-btn">+</a>
+        <a href="message.html" class="nav-item">💬</a>
+        <a href="profile.html" class="nav-item">👤</a>
     </nav>
+
+    <script>
+        function toggleLike(btn) {
+            btn.classList.toggle('btn-active');
+            let icon = btn.querySelector('i');
+            if(btn.classList.contains('btn-active')) {
+                icon.style.color = "#FF7A1A";
+            } else {
+                icon.style.color = "white";
+            }
+        }
+    </script>
 
 </body>
 </html>
