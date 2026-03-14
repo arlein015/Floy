@@ -5,56 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Feed</title>
     <style>
-        :root { --orange-floy: #FF7A1A; --noir: #000; }
+        :root { 
+            --orange-floy: #FF7A1A; /* La couleur de ton logo F4.png */
+            --noir: #000; 
+        }
+        
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: white; font-family: sans-serif; overflow: hidden; }
 
         /* Container Vidéo */
         .video-slide { width: 100%; height: 100vh; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
 
-        /* Barre Latérale */
-        .side-bar { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; gap: 18px; align-items: center; z-index: 10; }
+        /* Barre Latérale - Style image_c42239.png */
+        .side-bar { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
         
-        /* Avatar + Bouton Suivre */
+        /* Avatar + Bouton Suivre Orange */
         .avatar-container { position: relative; margin-bottom: 10px; }
         .user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
         .follow-btn { 
             position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
             background: var(--orange-floy); border: none; width: 22px; height: 22px; 
-            border-radius: 50%; color: white; font-weight: bold; cursor: pointer;
+            border-radius: 50%; color: black; font-weight: bold; cursor: pointer;
             display: flex; align-items: center; justify-content: center; font-size: 16px;
+            box-shadow: 0 0 10px var(--orange-floy);
         }
 
-        /* Actions */
+        /* Actions Style Orange */
         .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .heart-main { font-size: 38px; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
-        
-        /* Barre de Réactions */
+        .heart-main { font-size: 38px; color: white; transition: 0.3s; filter: drop-shadow(0 0 5px rgba(255,122,26,0.2)); }
+        .count-text { font-size: 13px; font-weight: bold; margin-top: 2px; }
+
+        /* Barre de Réactions (Appui long) */
         .reaction-bar {
-            position: absolute; right: 70px; background: #1a1a1a; padding: 10px; 
-            border-radius: 30px; display: none; gap: 12px; border: 1px solid #333; z-index: 100;
+            position: absolute; right: 70px; background: rgba(20,20,20,0.9); padding: 10px; 
+            border-radius: 30px; display: none; gap: 12px; border: 1px solid var(--orange-floy); z-index: 100;
         }
         .reaction-bar span { font-size: 30px; cursor: pointer; transition: 0.2s; }
 
-        /* --- ANIMATIONS DES EMOJIS --- */
+        /* Animations spécifiques */
         @keyframes haha-shake { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3) rotate(10deg); } }
-        @keyframes fire-burn { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.5); transform: scale(1.2); } }
         @keyframes angry-shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
-
         .animate-haha { animation: haha-shake 0.4s 3; }
-        .animate-fire { animation: fire-burn 0.5s infinite; }
         .animate-angry { animation: angry-shake 0.1s infinite; }
 
-        /* Disque Rond tournant */
+        /* Disque Rond tournant avec centre Orange */
         .music-disc {
             width: 45px; height: 45px; border-radius: 50%;
             background: radial-gradient(circle, #333 20%, #000 100%);
-            border: 8px solid #222; animation: rotate 3s linear infinite;
+            border: 8px solid #1a1a1a; animation: rotate 3s linear infinite;
             display: flex; align-items: center; justify-content: center;
         }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Nav Bar */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
+        /* NAV BAR - Style image_c42259.png mais ORANGE */
+        .nav-bar { 
+            position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; 
+            display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; 
+        }
+        .nav-icon { font-size: 26px; color: #555; cursor: pointer; transition: 0.3s; }
+        .nav-icon.active { color: var(--orange-floy); filter: drop-shadow(0 0 8px var(--orange-floy)); }
+
+        /* Le bouton PLUS Central Orange */
+        .btn-plus-orange { 
+            background: var(--orange-floy); 
+            width: 55px; height: 38px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: black; font-size: 24px; font-weight: bold;
+            box-shadow: 0 0 15px var(--orange-floy);
+            transition: 0.3s;
+        }
+        .btn-plus-orange:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -63,14 +82,14 @@
         <div class="side-bar">
             <div class="avatar-container">
                 <img src="https://i.pravatar.cc/100" class="user-avatar">
-                <button class="follow-btn" onclick="this.innerHTML='✓'; this.style.background='#444'">+</button>
+                <button class="follow-btn">+</button>
             </div>
 
-            <div class="action-item" style="position: relative;">
+            <div class="action-item">
                 <div class="reaction-bar" id="reactBar">
                     <span onclick="setReaction('😂', 'animate-haha')">😂</span>
                     <span onclick="setReaction('❤️', '')">❤️</span>
-                    <span onclick="setReaction('🔥', 'animate-fire')">🔥</span>
+                    <span onclick="setReaction('🔥', '')">🔥</span>
                     <span onclick="setReaction('😠', 'animate-angry')">😠</span>
                     <span onclick="setReaction('🤮', '')">🤮</span>
                 </div>
@@ -78,26 +97,34 @@
                      onclick="toggleLike()" 
                      onmousedown="startPress()" onmouseup="endPress()"
                      ontouchstart="startPress()" ontouchend="endPress()">🤍</div>
-                <span style="font-size: 12px;">150K</span>
+                <span class="count-text">150K</span>
             </div>
 
             <div class="action-item">
-                <span style="font-size: 30px;">💬</span>
-                <span style="font-size: 12px;">856</span>
+                <span style="font-size: 32px;">💬</span>
+                <span class="count-text">856</span>
+            </div>
+
+            <div class="action-item">
+                <span style="font-size: 32px;">➡️</span>
+                <span class="count-text">Partager</span>
             </div>
 
             <div class="music-disc">
-                <div style="width: 15px; height: 15px; background: var(--orange-floy); border-radius: 50%;"></div>
+                <div style="width: 15px; height: 15px; background: var(--orange-floy); border-radius: 50%; box-shadow: 0 0 5px var(--orange-floy);"></div>
             </div>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <span style="color: white; font-size: 24px;">🏠</span>
-        <span style="color: #666; font-size: 24px;">🔍</span>
-        <div style="background: linear-gradient(to right, #00BFFF, #FF00FF); padding: 5px 15px; border-radius: 10px; font-weight: bold;">+</div>
-        <span style="color: #666; font-size: 24px;">✉️</span>
-        <span style="color: #666; font-size: 24px;">👤</span>
+        <span class="nav-icon active">🏠</span>
+        <span class="nav-icon">🔍</span>
+        <div class="btn-plus-orange">+</div>
+        <div style="position: relative;">
+            <span class="nav-icon">✉️</span>
+            <div style="position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%; border: 1px solid black;">1</div>
+        </div>
+        <span class="nav-icon">👤</span>
     </nav>
 
     <script>
@@ -109,9 +136,11 @@
         function toggleLike() {
             if(!liked) {
                 setReaction('❤️', '');
+                mainIcon.style.color = '#ff0000';
                 liked = true;
             } else {
                 mainIcon.innerText = '🤍';
+                mainIcon.style.color = 'white';
                 mainIcon.className = 'heart-main';
                 liked = false;
             }
@@ -122,11 +151,7 @@
             mainIcon.className = 'heart-main ' + animClass;
             reactBar.style.display = 'none';
             liked = true;
-            
-            // Arrêter l'animation après un moment si c'est le rire
-            if(animClass === 'animate-haha') {
-                setTimeout(() => { mainIcon.classList.remove('animate-haha'); }, 2000);
-            }
+            if(animClass === 'animate-haha') setTimeout(() => { mainIcon.classList.remove('animate-haha'); }, 2000);
         }
 
         function startPress() { pressTimer = setTimeout(() => { reactBar.style.display = 'flex'; }, 600); }
