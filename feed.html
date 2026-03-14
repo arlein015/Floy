@@ -1,167 +1,83 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Feed</title>
-    <link rel="icon" type="image/png" href="F4.png">
-    <style>
-        :root { 
-            --orange-floy: #FF7A1A; 
-            --bleu-floy: #00BFFF; 
-            --noir: #000; 
-            --rouge-feu: #FF4500; /* Orange-Rouge vif */
-            --rouge-colere: #FF0000; /* Rouge vif intense */
-            --vert-vomi: #32CD32; /* Vert citron vomi */
-        }
-        
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: white; font-family: sans-serif; overflow: hidden; }
+<style>
+    /* Style du bouton Pouce */
+    .like-btn { 
+        background: rgba(255,255,255,0.1); 
+        border: none; 
+        width: 60px; 
+        height: 60px; 
+        border-radius: 50%; 
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+    }
 
-        /* Container du bouton d'action principal */
-        .action-container { position: relative; display: flex; flex-direction: column; align-items: center; }
+    /* Le SVG du pouce (contour par défaut) */
+    .thumb-icon {
+        width: 30px;
+        height: 30px;
+        fill: none; /* Vide au début */
+        stroke: white; /* Contour blanc */
+        stroke-width: 2;
+        transition: all 0.3s ease;
+    }
 
-        .like-btn { 
-            background: rgba(255,255,255,0.1); border: none; width: 55px; height: 55px; 
-            border-radius: 50%; color: white; font-size: 26px; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            display: flex; align-items: center; justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-        }
+    /* État ACTIF (Simple clic) */
+    .like-btn.active-like { 
+        background: rgba(0, 191, 255, 0.2); 
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+    }
 
-        /* Classes de couleurs selon la réaction */
-        .like-btn.active-like { color: var(--bleu-floy); background: rgba(0, 191, 255, 0.2); box-shadow: 0 0 15px var(--bleu-floy); }
-        .like-btn.active-love { color: #ff0000; background: rgba(255, 0, 0, 0.2); box-shadow: 0 0 15px #ff0000; }
-        .like-btn.active-haha { color: #ffd700; background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 15px #ffd700; }
-        .like-btn.active-wow { color: #ff8c00; background: rgba(255, 140, 0, 0.2); box-shadow: 0 0 15px #ff8c00; }
-        .like-btn.active-sad { color: #4682B4; background: rgba(70, 130, 180, 0.2); box-shadow: 0 0 15px #4682B4; }
-        .like-btn.active-fire { color: #FFD700; background: rgba(255, 69, 0, 0.3); box-shadow: 0 0 20px #FF4500, 0 0 10px #FFD700; } /* Effet flamme jaune/rouge */
-        
-        /* --- NOUVELLES COULEURS --- */
-        .like-btn.active-angry { color: #FF4500; background: rgba(255, 0, 0, 0.3); box-shadow: 0 0 15px #FF0000; } /* Rouge vif coléreux */
-        .like-btn.active-vomit { color: #FFFF00; background: rgba(50, 205, 50, 0.3); box-shadow: 0 0 15px #32CD32; } /* Vert vomi dégoûtant */
+    .like-btn.active-like .thumb-icon {
+        fill: var(--bleu-floy); /* Se remplit de bleu */
+        stroke: var(--bleu-floy); /* Contour devient bleu */
+        transform: scale(1.2) rotate(-10deg); /* Petit effet de rebond */
+    }
+</style>
 
-        /* BARRE DE RÉACTIONS ÉLARGIE */
-        .reaction-bar {
-            position: absolute; right: 70px; top: -10px; background: #1a1a1a; 
-            padding: 12px 20px; border-radius: 40px; display: none; gap: 15px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.9); border: 1px solid #333;
-            animation: popIn 0.3s forwards; z-index: 1000;
-        }
-        .reaction-bar span { font-size: 32px; cursor: pointer; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .reaction-bar span:hover { transform: scale(1.4) translateY(-8px); }
-
-        @keyframes popIn { 
-            from { opacity: 0; transform: scale(0.5) translateX(30px); } 
-            to { opacity: 1; transform: scale(1) translateX(0); } 
-        }
-
-        .side-bar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
-        
-        /* Masquer le contenu si non connecté */
-        #main-content { display: none; }
-    </style>
-</head>
-<body>
-
-    <div id="main-content">
-        <div class="side-bar">
-            <div class="action-container">
-                <div class="reaction-bar" id="reactionBar">
-                    <span onclick="selectReaction('👍', 'like')" title="J'aime">👍</span>
-                    <span onclick="selectReaction('❤️', 'love')" title="J'adore">❤️</span>
-                    <span onclick="selectReaction('😂', 'haha')" title="Haha">😂</span>
-                    <span onclick="selectReaction('😮', 'wow')" title="Wouah">😮</span>
-                    <span onclick="selectReaction('😢', 'sad')" title="Triste">😢</span>
-                    <span onclick="selectReaction('🔥', 'fire')" title="C'est chaud !">🔥</span>
-                    <span onclick="selectReaction('😠', 'angry')" title="Nerveuse">😠</span>
-                    
-                    <span onclick="selectReaction('🤮', 'vomit')" title="Vomir">🤮</span>
-                </div>
-
-                <button class="like-btn" id="likeBtn" 
-                        onmousedown="startPress()" 
-                        onmouseup="endPress()" 
-                        ontouchstart="startPress()" 
-                        ontouchend="endPress()" 
-                        onclick="toggleSimpleLike()">
-                    👍
-                </button>
-                <span id="likeCount" style="font-size: 12px; margin-top: 5px; font-weight: bold; color: #aaa;">1.4k</span>
-            </div>
-            
-            <button class="like-btn">💬</button>
-            <button class="like-btn">↪️</button>
+<div class="action-container">
+    <div class="reaction-bar" id="reactionBar">
         </div>
-    </div>
 
-    <script>
-        let timer;
-        const likeBtn = document.getElementById('likeBtn');
-        const reactionBar = document.getElementById('reactionBar');
-        const mainContent = document.getElementById('main-content');
-        let currentReaction = 'none';
+    <button class="like-btn" id="likeBtn" 
+            onclick="toggleSimpleLike()" 
+            onmousedown="startPress()" 
+            onmouseup="endPress()" 
+            ontouchstart="startPress()" 
+            ontouchend="endPress()">
+        <svg class="thumb-icon" viewBox="0 0 24 24" id="thumbSvg">
+            <path d="M23.5 10c0-1.1-.9-2-2-2h-6.1l.9-4.3c.1-.4 0-.8-.2-1.1-.2-.3-.5-.6-.9-.6H13c-.4 0-.8.2-1.1.5L7.4 8H2c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h17.1c.9 0 1.7-.6 1.9-1.5l2.5-9c.1-.1.1-.3.1-.5z"/>
+        </svg>
+    </button>
+    <span id="likeCount" style="font-size: 12px; margin-top: 5px; font-weight: bold;">1.4k</span>
+</div>
 
-        // 1. Vérification de la connexion instantanée
-        window.onload = function() {
-            if (localStorage.getItem('floy_isLoggedIn') !== 'true') {
-                // Si non connecté, on bloque l'accès
-                window.location.href = 'index.html';
-            } else {
-                // Sinon, on affiche le feed
-                mainContent.style.display = 'block';
-            }
-        };
+<script>
+    function toggleSimpleLike() {
+        if (!checkAuth()) return; // Vérifie si l'utilisateur est connecté
 
-        // 2. Simple Clic (Toggle Pouce Bleu)
-        function toggleSimpleLike() {
-            if (currentReaction === 'like') {
-                resetLike();
-            } else {
-                selectReaction('👍', 'like');
-            }
-        }
+        const btn = document.getElementById('likeBtn');
+        const svg = document.getElementById('thumbSvg');
 
-        // 3. Sélection d'une réaction spécifique
-        function selectReaction(emoji, type) {
-            // On retire toutes les classes de couleur
-            likeBtn.className = 'like-btn'; 
-            
-            // On applique la nouvelle icône et la nouvelle classe
-            likeBtn.innerText = emoji;
-            likeBtn.classList.add('active-' + type);
-            currentReaction = type;
-
-            // Animation de confirmation
-            likeBtn.style.transform = "scale(1.3)";
-            setTimeout(() => { likeBtn.style.transform = "scale(1)"; }, 200);
-
-            // Cacher la barre
-            reactionBar.style.display = 'none';
-        }
-
-        function resetLike() {
-            likeBtn.className = 'like-btn';
-            likeBtn.innerText = '👍';
+        if (currentReaction === 'like') {
+            // Si déjà bleu, on remet à vide
+            btn.classList.remove('active-like');
+            svg.style.fill = "none";
+            svg.style.stroke = "white";
             currentReaction = 'none';
+        } else {
+            // Si vide, on le rend bleu
+            btn.className = 'like-btn active-like';
+            svg.style.fill = "#00BFFF";
+            svg.style.stroke = "#00BFFF";
+            currentReaction = 'like';
+            
+            // Petit effet sonore ou vibration si tu veux plus tard
         }
+    }
 
-        // 4. Gestion de l'appui long
-        function startPress() {
-            timer = setTimeout(() => {
-                reactionBar.style.display = 'flex';
-            }, 500); // 500ms pour déclencher
-        }
-
-        function endPress() {
-            clearTimeout(timer);
-        }
-
-        // Fermer la barre si on clique ailleurs
-        document.addEventListener('click', (e) => {
-            if (!likeBtn.contains(e.target) && !reactionBar.contains(e.target)) {
-                reactionBar.style.display = 'none';
-            }
-        });
-    </script>
-</body>
-</html>
+    // Garde tes fonctions selectReaction pour les emojis (haha, feu, vomi, etc.)
+    // Elles changeront le contenu du SVG par l'emoji choisi comme on l'a fait avant !
+</script>
