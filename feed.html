@@ -4,239 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Feed</title>
-    <link rel="icon" type="image/png" href="F4.png">
     <style>
-        :root { 
-            --orange-floy: #FF7A1A; 
-            --noir: #000; 
-            --gris-fonce: #121212;
-            --blanc: #ffffff;
-        }
-        
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: var(--blanc); font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        :root { --orange-floy: #FF7A1A; --noir: #000; --blanc: #fff; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: var(--blanc); font-family: sans-serif; overflow: hidden; }
 
-        /* --- HEADER : RECHERCHE & ONGLETS (Simplifié pour le feed) --- */
-       .header-top { 
-            position: fixed; top: 0; width: 100%; z-index: 100; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            padding: 20px 0; display: flex; align-items: center; justify-content: center;
-        }
-        .tabs { display: flex; gap: 20px; font-weight: bold; font-size: 16px; margin-left: 40px; }
-        .tab { opacity: 0.6; cursor: pointer; transition: 0.3s; }
-        .tab.active { opacity: 1; border-bottom: 2px solid var(--orange-floy); padding-bottom: 3px; }
-        /* Icône Recherche en haut à droite */
-        .search-icon-container {
-            position: absolute; right: 20px; cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .search-icon-svg {
-            width: 24px; height: 24px; fill: var(--blanc);
-            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-            transition: fill 0.3s ease;
-        }
-        .search-icon-container:hover .search-icon-svg {
-            fill: var(--orange-floy);
-            filter: drop-shadow(0 0 8px var(--orange-floy));
-        }
-        .search-icon-container:active { transform: scale(0.9); }
-        /* --- CONTENEUR SCROLL (Reste du code identique) --- */
-        .video-container { width: 100%; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .video-container::-webkit-scrollbar { display: none; }
-        .video-slide { width: 100%; height: 100vh; scroll-snap-align: start; position: relative; background: #050505; }
-
-        /* --- INTERFACE LATÉRALE D'ACTION --- */
-        .side-bar { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; gap: 18px; align-items: center; z-index: 10; }
+        /* --- INTERFACE DE BASE --- */
+        .video-slide { width: 100%; height: 100vh; position: relative; background: #050505; display: flex; align-items: center; justify-content: center; }
         
-        .avatar-box { position: relative; margin-bottom: 5px; cursor: pointer; }
-        .user-pic { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--blanc); box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        /* Barre Latérale */
+        .side-bar { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
+        
+        /* Bouton Suivre Dynamique */
+        .avatar-box { position: relative; }
+        .user-pic { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--blanc); }
         .btn-follow { 
             position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
             background: var(--orange-floy); border: none; width: 22px; height: 22px; 
-            border-radius: 50%; color: var(--blanc); font-weight: bold; cursor: pointer; font-size: 16px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 10px rgba(255,122,26,0.5); transition: 0.3s;
+            border-radius: 50%; color: white; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
-        .btn-follow:hover { transform: translateX(-50%) scale(1.1); }
+        .btn-follow.active { background: #444; transform: translateX(-50%) scale(0); opacity: 0; }
 
-        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        
-        /* Style des Icônes d'Action */
-        .icon-btn { font-size: 38px; transition: 0.2s; filter: drop-shadow(0 0 5px rgba(0,0,0,0.7)); }
-        .count { font-size: 12px; font-weight: bold; margin-top: 2px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .svg-icon { width: 35px; height: 35px; fill: white; transition: 0.3s; }
+        .action-item:hover .svg-icon { fill: var(--orange-floy); }
 
-        /* --- LES BOUTONS SVG (Commentaire & Partage) --- */
-        .svg-action-icon {
-            width: 36px; height: 36px;
-            fill: var(--blanc); /* Blanc par défaut */
-            filter: drop-shadow(0 0 5px rgba(0,0,0,0.7));
-            transition: all 0.3s ease;
+        /* --- TIROIR DE COMMENTAIRES (MONTE EN HAUT) --- */
+        .comment-section {
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 70%;
+            background: #121212; border-radius: 20px 20px 0 0; z-index: 200;
+            transition: bottom 0.4s cubic-bezier(0.17, 0.84, 0.44, 1);
+            padding: 20px; box-sizing: border-box;
         }
+        .comment-section.open { bottom: 0; }
+        .comment-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .close-comments { font-size: 24px; cursor: pointer; }
 
-        /* Effet au survol (Glow Orange) */
-        .action-item:hover .svg-action-icon {
-            fill: var(--orange-floy);
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 10px rgba(255,122,26,0.8));
+        /* --- POPUP PARTAGER --- */
+        #shareToast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--orange-floy); color: black; padding: 10px 20px;
+            border-radius: 30px; font-weight: bold; display: none; z-index: 300;
         }
-
-        /* BARRE DE RÉACTIONS (Appui long) */
-        .reaction-bar {
-            position: absolute; right: 70px; background: rgba(0,0,0,0.95); 
-            padding: 12px 15px; border-radius: 30px; display: none; gap: 12px; border: 1px solid var(--orange-floy);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: popIn 0.3s ease-out; z-index: 100;
-        }
-        .reaction-bar span { font-size: 30px; transition: 0.2s; }
-        .reaction-bar span:hover { transform: scale(1.4) translateY(-5px); }
-
-        @keyframes popIn { from { opacity: 0; transform: scale(0.5) translateX(30px); } to { opacity: 1; transform: scale(1) translateX(0); } }
-
-        /* --- INFOS VIDÉO (BAS GAUCHE) --- */
-        .video-info { position: absolute; bottom: 90px; left: 15px; width: 75%; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); pointer-events: none; }
-        .user-name { font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-        .desc { font-size: 14px; line-height: 1.4; margin-bottom: 10px; color: #eee; }
-        .music-info { font-size: 13px; display: flex; align-items: center; gap: 6px; color: #ccc; }
-
-        /* DISQUE TOURNANT */
-        .disc { 
-            width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle, #444 20%, #000 100%);
-            border: 9px solid #1a1a1a; animation: spin 3s linear infinite; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 15px rgba(0,0,0,0.8);
-        }
-        .disc-center { width: 14px; height: 14px; background: var(--orange-floy); border-radius: 50%; box-shadow: 0 0 5px var(--orange-floy); }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* --- ANIMATIONS DES RÉACTIONS --- */
-        @keyframes shake-haha { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3) rotate(15deg); } }
-        @keyframes shake-angry { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        
-        .anim-haha { animation: shake-haha 0.4s 3 ease-out; }
-        .anim-angry { animation: shake-angry 0.1s infinite linear; }
-        .anim-heart { animation: heartbeat 0.3s ease-out; }
-
-        /* --- NAVIGATION BASSE (Style TikTok Orange) --- */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--noir); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
-        .nav-item { font-size: 26px; color: #666; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--blanc); filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); }
-        
-        .btn-add { 
-            background: var(--orange-floy); width: 55px; height: 40px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 24px;
-            box-shadow: 0 0 15px var(--orange-floy); transition: 0.3s;
-        }
-        .btn-add:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--orange-floy); }
     </style>
 </head>
 <body>
 
-    <header class="header-top">
-        <div class="tabs">
-            <span class="tab">Suivi</span>
-            <span class="tab active">Pour toi</span>
-            <span class="tab">Live</span>
-        </div>
-        <div class="search-icon-container" onclick="openSearch()">
-            <svg class="search-icon-svg" viewBox="0 0 24 24">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-        </div>
-    </header>
-    
-   <div class="video-container">
-        <div class="video-slide" style="display: flex; align-items: center; justify-content: center;">
-            <p style="color: #333;">Contenu Vidéo Floy</p>
-        </div>
-            <div class="video-info">
-                <div class="user-name">
-    @Arlein 
-    <svg width="16" height="16" ...> ... </svg>
-</div>
-                <div class="desc">Voici les nouveaux boutons SVG pour les commentaires et le partage ! Design épuré et réactif. Qu'en pensez-vous ? #Floy #UI #Design #Orange 🚀</div>
-                <div class="music-info">🎵 Son original - Floy Music Team</div>
+    <div id="shareToast">Lien copié ! 🔗</div>
+
+    <div class="video-slide">
+        <div class="side-bar">
+            <div class="avatar-box">
+                <img src="https://i.pravatar.cc/100?u=9" class="user-pic">
+                <button class="btn-follow" id="followBtn" onclick="followUser()">+</button>
             </div>
 
-            <div class="side-bar">
-                <div class="avatar-box">
-                    <img src="https://i.pravatar.cc/100?u=1" class="user-pic">
-                    <button class="btn-follow">+</button>
-                </div>
+            <div class="action-item" onclick="toggleComments()">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span style="font-size:12px">856</span>
+            </div>
 
-                <div class="action-item" style="position: relative;">
-                    <div class="reaction-bar" id="reactBar">
-                        <span onclick="react('😂', 'anim-haha', '#ffd700')">😂</span>
-                        <span onclick="react('❤️', 'anim-heart', '#ff0000')">❤️</span>
-                        <span onclick="react('🔥', '', '#ff4500')">🔥</span>
-                        <span onclick="react('😠', 'anim-angry', '#ff0000')">😠</span>
-                        <span onclick="react('🤮', '', '#32cd32')">🤮</span>
-                    </div>
-                    <div class="icon-btn" id="mainIcon" 
-                         onclick="fastLike()" 
-                         onmousedown="longPress()" onmouseup="endPress()"
-                         ontouchstart="longPress()" ontouchend="endPress()">🤍</div>
-                    <span class="count">1.2M</span>
-                </div>
-
-                <div class="action-item">
-                    <svg class="svg-action-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12c0 1.93.57 3.73 1.55 5.24L2 22l4.76-.92C8.27 21.63 10.07 22.2 12 22.2c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.47 0-2.88-.4-4.08-1.12l-2.43.47.47-2.43C5.4 15.88 5 14.47 5 13c0-3.86 3.14-7 7-7s7 3.14 7 7-3.14 7-7 7z"/>
-                    </svg>
-                    <span class="count">45k</span>
-                </div>
-
-                <div class="action-item">
-                    <svg class="svg-action-icon" viewBox="0 0 24 24">
-                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
-                    </svg>
-                    <span class="count">Partager</span>
-                </div>
-
-                <div class="disc"><div class="disc-center"></div></div>
+            <div class="action-item" onclick="shareVideo()">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                <span style="font-size:12px">Partager</span>
             </div>
         </div>
     </div>
 
-    <nav class="nav-bar">
-        <span class="nav-item active">🏠</span>
-        <span class="nav-item">🔍</span>
-        <div class="btn-add">+</div>
-        <span class="nav-item">✉️</span>
-        <span class="nav-item">👤</span>
-    </nav>
+    <div class="comment-section" id="commentBox">
+        <div class="comment-header">
+            <span>856 commentaires</span>
+            <span class="close-comments" onclick="toggleComments()">✕</span>
+        </div>
+        <div style="margin-top:20px; color:#888;">
+            <p><b>@Huarache:</b> Incroyable cette interface ! 🔥</p>
+            <p><b>@User2026:</b> Floy va tout casser.</p>
+        </div>
+    </div>
 
     <script>
-        let timer;
-        let liked = false;
-        const mainIcon = document.getElementById('mainIcon');
-        const reactBar = document.getElementById('reactBar');
-
-        function fastLike() {
-            if(!liked) {
-                react('❤️', 'anim-heart', '#ff0000');
-            } else {
-                mainIcon.innerText = '🤍';
-                mainIcon.style.color = 'var(--blanc)';
-                mainIcon.className = 'icon-btn';
-                liked = false;
-            }
+        // Fonction de suivi (Bouton +)
+        function followUser() {
+            const btn = document.getElementById('followBtn');
+            btn.classList.add('active'); // Fait disparaître le bouton avec animation
+            // Optionnel: envoyer une notification ici
         }
 
-        function react(emoji, animation, color) {
-            mainIcon.innerText = emoji;
-            mainIcon.className = 'icon-btn ' + animation;
-            mainIcon.style.color = color;
-            reactBar.style.display = 'none';
-            liked = true;
-            if(animation === 'anim-haha') setTimeout(() => mainIcon.classList.remove('anim-haha'), 1500);
-            if(animation === 'anim-heart') setTimeout(() => mainIcon.classList.remove('anim-heart'), 300);
+        // Fonction Tiroir Commentaires
+        function toggleComments() {
+            document.getElementById('commentBox').classList.toggle('open');
         }
 
-        function longPress() { timer = setTimeout(() => { reactBar.style.display = 'flex'; }, 500); }
-        function endPress() { clearTimeout(timer); }
-
-        window.onclick = function(e) { if(!e.target.closest('.action-item')) reactBar.style.display='none'; }
-        function openSearch() {
-            // Ici tu pourras lier ton fichier explore.html ou ouvrir une barre d'input
-            alert("Ouverture de la recherche Floy...");
+        // Fonction Partager
+        function shareVideo() {
+            const dummyLink = "https://floy.app/video/123";
+            navigator.clipboard.writeText(dummyLink);
+            
+            const toast = document.getElementById('shareToast');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
         }
     </script>
 </body>
