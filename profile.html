@@ -60,6 +60,21 @@
         .nav-icon { width: 28px; height: 28px; fill: #666; cursor: pointer; }
         .nav-icon.active { fill: white; }
         .btn-plus-large { background: var(--orange-floy); width: 65px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 28px; cursor: pointer; }
+        /* Styles spécifiques pour le Tableau de Bord */
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-mini-card { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #222; }
+.stat-mini-card h4 { margin: 0; font-size: 12px; color: #888; text-transform: uppercase; }
+.stat-mini-card p { margin: 5px 0 0; font-size: 18px; font-weight: bold; color: var(--orange-floy); }
+
+.earnings-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+.earnings-table th { text-align: left; color: #555; padding: 10px; border-bottom: 1px solid #222; }
+.earnings-table td { padding: 12px 10px; border-bottom: 1px solid #111; }
+.trend-up { color: #00ff00; font-size: 11px; }
+
+/* Simulation de graphique de flux */
+.flow-chart { height: 100px; display: flex; align-items: flex-end; gap: 4px; margin: 20px 0; padding: 10px; background: #0a0a0a; border-radius: 8px; }
+.bar { flex: 1; background: var(--orange-floy); border-radius: 2px 2px 0 0; min-height: 10px; opacity: 0.7; }
+.bar:hover { opacity: 1; }
     </style>
 </head>
 <body>
