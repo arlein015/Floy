@@ -3,112 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Vérification</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="icon" type="image/png" href="logo.png">
-
+    <title>Vérification Floy</title>
+    <link rel="icon" type="image/png" href="F4.png">
     <style>
-        :root {
-            --floy-orange: #ff8c00;
-            --bg-black: #000000;
+        /* Variables de couleur officielles de Floy */
+        :root { 
+            --orange-floy: #FF7A1A; 
+            --noir-profond: #000000;
+        }
+        
+        body { 
+            background: var(--noir-profond); color: white; font-family: 'Inter', sans-serif; 
+            margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; text-align: center; overflow: hidden;
         }
 
-        body {
-            margin: 0; background: var(--bg-black); color: white;
-            font-family: 'Poppins', sans-serif; display: flex; align-items: center;
-            justify-content: center; min-height: 100vh;
+        /* --- L'ICÔNE FLOY 3D --- */
+        .floy-icon-3d {
+            width: 140px;
+            height: 140px;
+            /* FOND ORANGE COMME TON LOGO */
+            background-color: var(--orange-floy);
+            border-radius: 35px; /* Angles arrondis doux */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 30px;
+            
+            /* Ombre portée pour le relief 3D */
+            box-shadow: 
+                0 15px 40px rgba(255, 122, 26, 0.5), /* Halo orange externe intense */
+                inset 0 2px 5px rgba(255,255,255,0.1), /* Lumière intérieure douce en haut */
+                inset 0 -2px 5px rgba(0,0,0,0.4); /* Ombre intérieure douce en bas */
+            
+            /* Animation de flottement doux */
+            animation: float 4s infinite ease-in-out;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .verify-card {
-            width: 90%; max-width: 380px; text-align: center; padding: 20px;
+        /* Effet au survol/toucher */
+        .floy-icon-3d:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 
+                0 20px 50px rgba(255, 122, 26, 0.7), /* Halo orange externe encore plus intense */
+                inset 0 2px 5px rgba(255,255,255,0.15);
         }
 
-        .logo-small { width: 70px; margin-bottom: 20px; border-radius: 15px; }
-
-        h2 { margin-bottom: 10px; font-weight: 700; }
-        p { color: #888; font-size: 14px; margin-bottom: 30px; }
-
-        /* Conteneur des 6 chiffres */
-        .code-container {
-            display: flex; justify-content: space-between; gap: 8px; margin-bottom: 30px;
+        /* Le texte "Floy" à l'intérieur */
+        .floy-icon-3d h1 {
+            font-size: 55px;
+            font-weight: 900;
+            margin: 0;
+            /* TEXTE NOIR COMME TON LOGO */
+            color: var(--noir-profond);
+            
+            /* Ombre douce pour le relief du texte */
+            text-shadow: 
+                0 1px 3px rgba(0,0,0,0.5);
+            
+            letter-spacing: -2px;
         }
 
-        .code-input {
-            width: 45px; height: 55px; background: #111; border: 1px solid #222;
-            border-radius: 10px; color: white; text-align: center; font-size: 24px;
-            font-weight: 700; outline: none; transition: 0.3s;
+        /* Texte descriptif */
+        p { color: #888; font-size: 16px; margin-bottom: 30px; }
+
+        /* Grille des cases de code */
+        .code-container { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-bottom: 40px;
+        }
+        
+        .box { 
+            width: 50px; 
+            height: 60px; 
+            background: #0a0a0a; 
+            border: 2px solid #333; 
+            border-radius: 12px; 
+            font-size: 28px; 
+            color: var(--orange-floy); 
+            text-align: center; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+        
+        .box:focus { 
+            border-color: var(--orange-floy); 
+            outline: none; 
+            box-shadow: 0 0 10px rgba(255, 122, 26, 0.3);
         }
 
-        .code-input:focus { border-color: var(--floy-orange); box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); }
-
-        .btn-verify {
-            width: 100%; background: var(--floy-orange); color: white; border: none;
-            padding: 16px; border-radius: 12px; font-weight: 700; font-size: 16px;
-            cursor: pointer; transition: 0.3s;
+        /* Bouton de confirmation */
+        .btn-verify { 
+            background: var(--orange-floy); 
+            color: var(--noir-profond); 
+            border: none; 
+            padding: 15px 50px; 
+            border-radius: 30px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+        
+        .btn-verify:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 122, 26, 0.4);
         }
 
-        .resend-link {
-            margin-top: 25px; font-size: 13px; color: #555;
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-
-        .resend-link span { color: var(--floy-orange); cursor: pointer; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div class="verify-card">
-        <img src="logo.png" alt="Floy" class="logo-small">
-        <h2>Vérifiez votre email</h2>
-        <p>Entrez le code à 6 chiffres envoyé à votre adresse email pour finaliser l'inscription.</p>
-
-        <div class="code-container" id="otp-inputs">
-            <input type="text" class="code-input" maxlength="1" oninput="moveNext(this, 0)">
-            <input type="text" class="code-input" maxlength="1" oninput="moveNext(this, 1)">
-            <input type="text" class="code-input" maxlength="1" oninput="moveNext(this, 2)">
-            <input type="text" class="code-input" maxlength="1" oninput="moveNext(this, 3)">
-            <input type="text" class="code-input" maxlength="1" oninput="moveNext(this, 4)">
-            <input type="text" class="code-input" maxlength="1" oninput="moveNext(this, 5)">
-        </div>
-
-        <button class="btn-verify" onclick="checkCode()">Confirmer</button>
-        
-        <div class="resend-link">
-            Vous n'avez rien reçu ? <span onclick="alert('Un nouveau code a été envoyé !')">Renvoyer le code</span>
-        </div>
+    <div class="floy-icon-3d">
+        <h1>Floy</h1>
     </div>
 
+    <h1>Vérification 🛡️</h1>
+    <p>Saisis le code envoyé sur ton mobile</p>
+
+    <div class="code-container">
+        <input type="text" class="box" maxlength="1" pattern="\d*">
+        <input type="text" class="box" maxlength="1" pattern="\d*">
+        <input type="text" class="box" maxlength="1" pattern="\d*">
+        <input type="text" class="box" maxlength="1" pattern="\d*">
+        <input type="text" class="box" maxlength="1" pattern="\d*">
+        <input type="text" class="box" maxlength="1" pattern="\d*">
+    </div>
+
+    <button class="btn-verify" onclick="location.href='feed.html'">CONFIRMER</button>
+
     <script>
-        const inputs = document.querySelectorAll('.code-input');
-
-        // Déplacement automatique vers la case suivante
-        function moveNext(current, index) {
-            if (current.value.length === 1 && index < 5) {
-                inputs[index + 1].focus();
-            }
-        }
-
-        // Gestion du bouton de retour (Backspacer)
+        // SCRIPT POUR PASSER AUTOMATIQUEMENT À LA CASE SUIVANTE
+        const inputs = document.querySelectorAll('.box');
         inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
             input.addEventListener('keydown', (e) => {
-                if (e.key === "Backspace" && input.value === "" && index > 0) {
+                if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
                     inputs[index - 1].focus();
                 }
             });
         });
-
-        function checkCode() {
-            let fullCode = "";
-            inputs.forEach(i => fullCode += i.value);
-
-            if (fullCode.length === 6) {
-                alert("Vérification réussie ! Bienvenue sur Floy.");
-                window.location.href = 'feed.html';
-            } else {
-                alert("Veuillez entrer les 6 chiffres du code.");
-            }
-        }
     </script>
 </body>
 </html>
