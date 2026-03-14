@@ -3,116 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Feed Ultime</title>
+    <title>Floy - Feed Animé</title>
     <style>
-        :root { 
-            --orange-floy: #FF7A1A; 
-            --noir: #000; 
-            --blanc: #fff;
-            --gris: #1a1a1a;
-        }
+        :root { --orange-floy: #FF7A1A; --noir: #000; --blanc: #fff; }
         
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: var(--blanc); font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: var(--blanc); font-family: sans-serif; overflow: hidden; }
 
-        /* --- HEADER : RECHERCHE & ONGLET --- */
-        .header-top { 
-            position: fixed; top: 0; width: 100%; z-index: 100; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-            padding: 15px 0; display: flex; align-items: center; justify-content: center;
-        }
-        .tabs { display: flex; gap: 15px; font-weight: bold; font-size: 16px; }
-        .tab { opacity: 0.6; cursor: pointer; transition: 0.3s; }
-        .tab.active { opacity: 1; border-bottom: 2px solid var(--orange-floy); padding-bottom: 3px; }
-        
-        .search-btn-top { position: absolute; right: 20px; cursor: pointer; }
-
-        /* --- CONTENEUR VIDÉO --- */
-        .video-container { width: 100%; height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; background: #050505; }
+        /* --- HEADER & NAV (Simplifié pour focus sur animations) --- */
+        .header-top { position: fixed; top: 0; width: 100%; z-index: 100; padding: 20px 0; display: flex; justify-content: center; gap: 15px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
+        .tab { opacity: 0.6; font-weight: bold; cursor: pointer; }
+        .tab.active { opacity: 1; border-bottom: 2px solid var(--orange-floy); }
 
         /* --- INTERFACE LATÉRALE --- */
-        .side-bar { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; gap: 18px; align-items: center; z-index: 10; }
+        .side-bar { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
         
-        .avatar-box { position: relative; margin-bottom: 5px; }
-        .user-pic { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--blanc); }
-        .btn-follow { 
-            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-            background: var(--orange-floy); border: none; width: 22px; height: 22px; 
-            border-radius: 50%; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
+        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; }
+        .main-emoji { font-size: 40px; transition: 0.2s; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
+
+        /* --- BARRE DE RÉACTIONS --- */
+        .reaction-bar {
+            position: absolute; right: 60px; background: rgba(20,20,20,0.95); 
+            padding: 12px; border-radius: 35px; display: none; gap: 15px; 
+            border: 1px solid var(--orange-floy); box-shadow: 0 0 20px rgba(255,122,26,0.3);
         }
-        .btn-follow.hidden { transform: translateX(-50%) scale(0); opacity: 0; }
+        .reaction-bar span { font-size: 30px; transition: 0.3s; cursor: pointer; }
+        .reaction-bar span:hover { transform: scale(1.4); }
 
-        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .svg-icon { width: 34px; height: 34px; fill: white; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); transition: 0.3s; }
-        .action-item:hover .svg-icon { fill: var(--orange-floy); }
+        /* --- LES ANIMATIONS INTELLIGENTES --- */
+        
+        /* 1. Haha : Saute et tourne */
+        @keyframes anim-haha {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-15px) rotate(-10deg); }
+            75% { transform: translateY(-15px) rotate(10deg); }
+        }
+        .react-haha { animation: anim-haha 0.5s ease-in-out 3; }
 
-        /* --- INFOS VIDÉO & BADGE --- */
-        .video-info { position: absolute; bottom: 90px; left: 15px; width: 70%; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
-        .user-row { display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 18px; margin-bottom: 8px; }
-        .desc { font-size: 14px; margin-bottom: 8px; color: #eee; }
+        /* 2. Angry : Tremblement rapide */
+        @keyframes anim-angry {
+            0% { transform: translate(0,0); }
+            25% { transform: translate(-3px, 2px); }
+            50% { transform: translate(3px, -2px); }
+            75% { transform: translate(-3px, -2px); }
+            100% { transform: translate(0,0); }
+        }
+        .react-angry { animation: anim-angry 0.1s infinite; color: #ff4d4d; }
+
+        /* 3. Feu : Pulsation lumineuse */
+        @keyframes anim-fire {
+            0%, 100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 5px orange); }
+            50% { transform: scale(1.2); filter: brightness(1.5) drop-shadow(0 0 15px var(--orange-floy)); }
+        }
+        .react-fire { animation: anim-fire 0.6s infinite; }
+
+        /* 4. Coeur : Battement */
+        @keyframes anim-heart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        .react-heart { animation: anim-heart 0.4s ease-out; }
 
         /* --- NAVIGATION BASSE --- */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--noir); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 100; }
-        .nav-item { width: 30px; height: 30px; fill: #666; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { fill: var(--blanc); }
-        
-        .btn-add-center { 
-            background: var(--orange-floy); width: 50px; height: 35px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 22px;
-            box-shadow: 0 0 10px var(--orange-floy);
-        }
-
-        /* --- DISQUE TOURNANT --- */
-        .music-disc { width: 45px; height: 45px; border-radius: 50%; background: radial-gradient(circle, #333 20%, #000 100%); border: 8px solid #222; animation: spin 3s linear infinite; display: flex; align-items: center; justify-content: center; }
-        .disc-dot { width: 12px; height: 12px; background: var(--orange-floy); border-radius: 50%; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
+        .btn-plus { background: var(--orange-floy); width: 50px; height: 35px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 22px; box-shadow: 0 0 10px var(--orange-floy); }
     </style>
 </head>
 <body>
 
     <header class="header-top">
-        <div class="tabs">
-            <span class="tab">Live</span>
-            <span class="tab">Suivi</span>
-            <span class="tab active">Pour toi</span>
-        </div>
-        <div class="search-btn-top">
-            <svg class="svg-icon" style="width:26px;" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        </div>
+        <span class="tab">Suivi</span>
+        <span class="tab active">Pour toi</span>
     </header>
 
-    <div class="video-container">
-        <div class="video-info">
-            <div class="user-row">
-                @Arlein 
-                <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF7A1A"/><path d="M17 9L11 15L7 11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <div class="side-bar">
+        <div class="action-item">
+            <div class="reaction-bar" id="reactBar">
+                <span onclick="applyReact('😂', 'react-haha')">😂</span>
+                <span onclick="applyReact('❤️', 'react-heart')">❤️</span>
+                <span onclick="applyReact('🔥', 'react-fire')">🔥</span>
+                <span onclick="applyReact('😠', 'react-angry')">😠</span>
+                <span onclick="applyReact('🤮', '')">🤮</span>
             </div>
-            <div class="desc">Interface Floy finalisée avec tous les icônes SVG ! #Floy #Vérifié 🚀</div>
+            
+            <div class="main-emoji" id="displayEmoji" 
+                 onclick="simpleLike()"
+                 onmousedown="startLongPress()" onmouseup="endLongPress()"
+                 ontouchstart="startLongPress()" ontouchend="endLongPress()">🤍</div>
+            <span style="font-size: 12px; font-weight: bold;">150K</span>
         </div>
 
-        <div class="side-bar">
-            <div class="avatar-box">
-                <img src="https://i.pravatar.cc/100?u=12" class="user-pic">
-                <button class="btn-follow" id="fBtn" onclick="this.classList.add('hidden')">+</button>
-            </div>
-
-            <div class="action-item"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span style="font-size:12px">150K</span></div>
-            
-            <div class="action-item"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="font-size:12px">856</span></div>
-            
-            <div class="action-item"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg><span style="font-size:12px">Partager</span></div>
-
-            <div class="music-disc"><div class="disc-dot"></div></div>
+        <div class="action-item">
+            <span style="font-size:32px">💬</span>
+            <span style="font-size:12px">856</span>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <svg class="nav-item active" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <svg class="nav-item" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <div class="btn-add-center">+</div>
-        <svg class="nav-item" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
-        <svg class="nav-item" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        <span style="font-size:24px">🏠</span>
+        <span style="font-size:24px; color:#555">🔍</span>
+        <div class="btn-plus">+</div>
+        <span style="font-size:24px; color:#555">✉️</span>
+        <span style="font-size:24px; color:#555">👤</span>
     </nav>
 
+    <script>
+        let pressTimer;
+        let isLiked = false;
+        const displayEmoji = document.getElementById('displayEmoji');
+        const reactBar = document.getElementById('reactBar');
+
+        // 1. Like simple (clic rapide)
+        function simpleLike() {
+            if (!isLiked) {
+                applyReact('❤️', 'react-heart');
+            } else {
+                displayEmoji.innerText = '🤍';
+                displayEmoji.className = 'main-emoji';
+                isLiked = false;
+            }
+        }
+
+        // 2. Appliquer une réaction avec son animation spécifique
+        function applyReact(emoji, animClass) {
+            displayEmoji.innerText = emoji;
+            displayEmoji.className = 'main-emoji ' + animClass; // Ajoute l'animation
+            reactBar.style.display = 'none';
+            isLiked = true;
+
+            // Stop l'animation après 2s pour le rire pour ne pas fatiguer l'oeil
+            if (animClass === 'react-haha') {
+                setTimeout(() => { displayEmoji.classList.remove('react-haha'); }, 2000);
+            }
+        }
+
+        // 3. Gestion de l'appui long pour ouvrir la barre
+        function startLongPress() {
+            pressTimer = setTimeout(() => {
+                reactBar.style.display = 'flex';
+            }, 500);
+        }
+
+        function endLongPress() {
+            clearTimeout(pressTimer);
+        }
+
+        // Fermer la barre si on clique ailleurs
+        window.onclick = function(event) {
+            if (!event.target.closest('.action-item')) {
+                reactBar.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
