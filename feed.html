@@ -4,213 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Feed</title>
-    <link rel="icon" type="image/png" href="F4.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --orange-floy: #FF7A1A; 
-            --noir: #000; 
-            --gris-icon: #fff; /* Couleur des icônes désactivées */
-            --rouge-notification: #FF0000;
+        :root { --orange-floy: #FF7A1A; --noir: #000; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: white; font-family: sans-serif; overflow: hidden; }
+
+        /* Container Vidéo */
+        .video-slide { width: 100%; height: 100vh; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+
+        /* Barre Latérale */
+        .side-bar { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; gap: 18px; align-items: center; z-index: 10; }
+        
+        /* Avatar + Bouton Suivre */
+        .avatar-container { position: relative; margin-bottom: 10px; }
+        .user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
+        .follow-btn { 
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            background: var(--orange-floy); border: none; width: 22px; height: 22px; 
+            border-radius: 50%; color: white; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
         }
+
+        /* Actions */
+        .action-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .heart-main { font-size: 38px; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
         
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--noir); color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
-
-        /* Container Vidéo (Snap Scrolling) */
-        .video-container { width: 100%; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .video-container::-webkit-scrollbar { display: none; }
-        .video-slide { width: 100%; height: 100vh; scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
-
-        /* --- INTERFACE LATÉRALE D'ACTION (image_3.png) --- */
-        .side-bar { position: absolute; right: 15px; bottom: 120px; display: flex; flex-direction: column; gap: 15px; align-items: center; z-index: 10; }
-        
-        /* Avatar avec contour blanc */
-        .user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; box-sizing: border-box; margin-bottom: 5px; cursor: pointer; }
-        .user-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-
-        /* Boutons d'action */
-        .action-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; color: white; }
-        
-        /* Icône Cœur (svg rempli) */
-        .heart-btn { font-size: 38px; color: var(--gris-icon); filter: drop-shadow(0 0 3px rgba(0,0,0,0.5)); transition: 0.2s; }
-        .action-item span { font-size: 13px; font-weight: 600; }
-
-        /* Icône Commentaire et Partager (svg) */
-        .action-icon { width: 32px; height: 32px; fill: white; filter: drop-shadow(0 0 3px rgba(0,0,0,0.5)); }
-
-        /* --- BARRE DE RÉACTIONS ANIMÉE (image_2.png inspirée) --- */
+        /* Barre de Réactions */
         .reaction-bar {
-            position: absolute; right: 75px; background: rgba(20,20,20,0.95); 
-            padding: 10px 18px; border-radius: 35px; display: none; gap: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
-            z-index: 1000;
+            position: absolute; right: 70px; background: #1a1a1a; padding: 10px; 
+            border-radius: 30px; display: none; gap: 12px; border: 1px solid #333; z-index: 100;
         }
-        
-        .reaction-bar span { 
-            font-size: 32px; transition: transform 0.2s ease, filter 0.2s ease; 
-            filter: grayscale(100%) opacity(0.7); /* Effet désactivé par défaut */
-        }
-        
-        /* Animation au survol d'un emoji */
-        .reaction-bar span:hover { 
-            transform: scale(1.4) translateY(-8px); 
-            filter: grayscale(0%) opacity(1); /* Devient coloré et net */
-        }
+        .reaction-bar span { font-size: 30px; cursor: pointer; transition: 0.2s; }
 
-        /* --- BARRE DE NAVIGATION INFÉRIEURE (image_2.png) --- */
-        .nav-bar { 
-            position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; 
-            display: flex; justify-content: space-around; align-items: center; 
-            border-top: 0.5px solid #222; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 900;
-        }
-        
-        .nav-icon { width: 32px; height: 32px; fill: rgba(255,255,255,0.7); cursor: pointer; transition: 0.2s; }
-        .nav-icon:hover { fill: white; transform: scale(1.1); }
-        .nav-icon.active { fill: white; opacity: 1; }
+        /* --- ANIMATIONS DES EMOJIS --- */
+        @keyframes haha-shake { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3) rotate(10deg); } }
+        @keyframes fire-burn { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.5); transform: scale(1.2); } }
+        @keyframes angry-shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
 
-        /* Le bouton PLUS central (Exactement comme image_2.png) */
-        .btn-plus-container { position: relative; display: flex; align-items: center; justify-content: center; }
-        .btn-plus { 
-            width: 70px; height: 45px; 
-            background: linear-gradient(135deg, #00BFFF 0%, #FF00FF 100%); /* Dégradé Bleu/Violet */
-            border-radius: 18px; display: flex; align-items: center; justify-content: center; 
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3), 0 0 15px rgba(255, 0, 255, 0.3);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
-        }
-        .btn-plus svg { width: 22px; height: 22px; fill: #000; }
-        .btn-plus:hover { transform: scale(1.1) rotate(5deg); }
+        .animate-haha { animation: haha-shake 0.4s 3; }
+        .animate-fire { animation: fire-burn 0.5s infinite; }
+        .animate-angry { animation: angry-shake 0.1s infinite; }
 
-        /* Badge de notification (sur l'icône message) */
-        .notif-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
-        .notif-badge { 
-            position: absolute; top: -5px; right: -5px; 
-            background: var(--rouge-notification); color: white; 
-            width: 20px; height: 20px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 11px; font-weight: 700; border: 2px solid #000;
+        /* Disque Rond tournant */
+        .music-disc {
+            width: 45px; height: 45px; border-radius: 50%;
+            background: radial-gradient(circle, #333 20%, #000 100%);
+            border: 8px solid #222; animation: rotate 3s linear infinite;
+            display: flex; align-items: center; justify-content: center;
         }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* --- ANIMATIONS --- */
-        @keyframes popIn { from { opacity: 0; transform: scale(0.5) translateX(30px); } to { opacity: 1; transform: scale(1) translateX(0); } }
-        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        /* Nav Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
 
-    <div class="video-container">
-        <div class="video-slide">
-            <div style="color:#222">[ Chargement Vidéo Floy... ]</div>
-            
-            <div class="side-bar">
-                <div class="user-avatar"><img src="https://i.pravatar.cc/150?u=bouta"></div>
-                
-                <div class="action-container action-item" id="heartContainer">
-                    <div class="reaction-bar" id="reactionBar">
-                        <span onclick="setReaction('❤️', '#FF0000')">❤️</span>
-                        <span onclick="setReaction('😂', '#ffd700')">😂</span>
-                        <span onclick="setReaction('😮', '#ff8c00')">😮</span>
-                        <span onclick="setReaction('😢', '#4682B4')">😢</span>
-                        <span onclick="setReaction('🔥', '#FF4500')">🔥</span>
-                        <span onclick="setReaction('😠', '#FF0000')">😠</span>
-                        <span onclick="setReaction('🤮', '#32CD32')">🤮</span>
-                    </div>
+    <div class="video-slide">
+        <div class="side-bar">
+            <div class="avatar-container">
+                <img src="https://i.pravatar.cc/100" class="user-avatar">
+                <button class="follow-btn" onclick="this.innerHTML='✓'; this.style.background='#444'">+</button>
+            </div>
 
-                    <div class="heart-btn" id="mainHeart" 
-                         onclick="toggleSimpleLike()" 
-                         onmousedown="startPress()" onmouseup="endPress()" 
-                         ontouchstart="startPress()" ontouchend="endPress()">🤍</div>
-                    <span>150K</span>
+            <div class="action-item" style="position: relative;">
+                <div class="reaction-bar" id="reactBar">
+                    <span onclick="setReaction('😂', 'animate-haha')">😂</span>
+                    <span onclick="setReaction('❤️', '')">❤️</span>
+                    <span onclick="setReaction('🔥', 'animate-fire')">🔥</span>
+                    <span onclick="setReaction('😠', 'animate-angry')">😠</span>
+                    <span onclick="setReaction('🤮', '')">🤮</span>
                 </div>
+                <div class="heart-main" id="mainIcon" 
+                     onclick="toggleLike()" 
+                     onmousedown="startPress()" onmouseup="endPress()"
+                     ontouchstart="startPress()" ontouchend="endPress()">🤍</div>
+                <span style="font-size: 12px;">150K</span>
+            </div>
 
-                <div class="action-item">
-                    <svg class="action-icon" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.933.567 3.733 1.54 5.23L2 22l4.77-.92C8.267 21.633 10.067 22.2 12 22.2c5.523 0 10-4.477 10-10s-4.477-10-10-10zm0 18c-1.5 0-2.933-.4-4.167-1.12L5 19.4l.6-2.52C4.833 15.633 4.4 14.167 4.4 12.6c0-4.167 3.367-7.6 7.6-7.6 4.167 0 7.6 3.433 7.6 7.6 0 4.167-3.433 7.6-7.6 7.6z"/></svg>
-                    <span>856</span>
-                </div>
+            <div class="action-item">
+                <span style="font-size: 30px;">💬</span>
+                <span style="font-size: 12px;">856</span>
+            </div>
 
-                <div class="action-item">
-                    <svg class="action-icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-                    <span>Partager</span>
-                </div>
+            <div class="music-disc">
+                <div style="width: 15px; height: 15px; background: var(--orange-floy); border-radius: 50%;"></div>
             </div>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <svg class="nav-icon active" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <div class="btn-plus-container">
-            <div class="btn-plus">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-            </div>
-        </div>
-        <div class="notif-wrapper">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            <div class="notif-badge">1</div>
-        </div>
-        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span style="color: white; font-size: 24px;">🏠</span>
+        <span style="color: #666; font-size: 24px;">🔍</span>
+        <div style="background: linear-gradient(to right, #00BFFF, #FF00FF); padding: 5px 15px; border-radius: 10px; font-weight: bold;">+</div>
+        <span style="color: #666; font-size: 24px;">✉️</span>
+        <span style="color: #666; font-size: 24px;">👤</span>
     </nav>
 
     <script>
         let pressTimer;
-        let isLiked = false;
-        let currentReaction = 'none';
-        const mainHeart = document.getElementById('mainHeart');
-        const reactionBar = document.getElementById('reactionBar');
+        let liked = false;
+        const mainIcon = document.getElementById('mainIcon');
+        const reactBar = document.getElementById('reactBar');
 
-        // Simple Clic : Like/Dislike
-        function toggleSimpleLike() {
-            if(!isConnected()) return;
-
-            if (currentReaction === 'like' || isLiked) {
-                resetLike();
+        function toggleLike() {
+            if(!liked) {
+                setReaction('❤️', '');
+                liked = true;
             } else {
-                setReaction('❤️', '#FF0000');
+                mainIcon.innerText = '🤍';
+                mainIcon.className = 'heart-main';
+                liked = false;
             }
         }
 
-        // Sélection d'une réaction
-        function setReaction(emoji, color) {
-            if(!isConnected()) return;
-
-            mainHeart.innerText = emoji;
-            mainHeart.style.color = color;
-            mainHeart.style.transform = 'scale(1)'; // Reset
+        function setReaction(emoji, animClass) {
+            mainIcon.innerText = emoji;
+            mainIcon.className = 'heart-main ' + animClass;
+            reactBar.style.display = 'none';
+            liked = true;
             
-            if (emoji === '🤍') {
-                isLiked = false;
-                currentReaction = 'none';
-            } else {
-                isLiked = true;
-                currentReaction = 'reacted';
-                // Animation de confirmation (battement de coeur)
-                mainHeart.style.animation = 'heartbeat 0.3s ease-out forwards';
-                setTimeout(() => { mainHeart.style.animation = 'none'; }, 300);
+            // Arrêter l'animation après un moment si c'est le rire
+            if(animClass === 'animate-haha') {
+                setTimeout(() => { mainIcon.classList.remove('animate-haha'); }, 2000);
             }
-
-            reactionBar.style.display = 'none';
         }
 
-        function resetLike() {
-            mainHeart.innerText = '🤍';
-            mainHeart.style.color = 'var(--gris-icon)';
-            isLiked = false;
-            currentReaction = 'none';
-        }
-
-        // Gestion de l'appui long
-        function startPress() { pressTimer = setTimeout(() => { reactionBar.style.display = 'flex'; }, 600); }
+        function startPress() { pressTimer = setTimeout(() => { reactBar.style.display = 'flex'; }, 600); }
         function endPress() { clearTimeout(pressTimer); }
 
-        // Fermer la barre si clic ailleurs
-        document.addEventListener('click', (e) => {
-            if (!mainHeart.contains(e.target) && !reactionBar.contains(e.target)) {
-                reactionBar.style.display = 'none';
-            }
-        });
-
-        // Fonction de vérification fictive (à lier à ta base de données)
-        function isConnected() { return true; } 
+        window.onclick = function(e) { if(!e.target.closest('.action-item')) reactBar.style.display='none'; }
     </script>
 </body>
 </html>
