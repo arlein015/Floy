@@ -3,111 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Threndly</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Connexion - Floy</title>
     <link rel="icon" type="image/png" href="F4.png">
     <style>
-        :root {
-            --bg: #000000;
-            --card: #0d0d0d;
-            --primary: linear-gradient(135deg, #7F00FF, #007BFF);
-            --text: #ffffff;
+        :root { --orange-floy: #FF7A1A; --fond: #000; }
+        body { 
+            background: var(--fond); color: white; font-family: 'Inter', sans-serif; 
+            margin: 0; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; 
         }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-card {
-            background: var(--card);
-            padding: 40px;
-            border-radius: 24px;
-            border: 1px solid #222;
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .logo { font-size: 2rem; font-weight: 900; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
-
+        .header-login { text-align: center; margin-bottom: 40px; }
+        .logo-small { width: 80px; margin-bottom: 15px; }
+        
+        .login-form { width: 100%; max-width: 350px; }
+        
+        .input-group { margin-bottom: 20px; }
+        label { display: block; color: var(--orange-floy); font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        
         input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: #181818;
-            border: 1px solid #333;
-            border-radius: 12px;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 20px;
-            background: var(--primary);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
+            width: 100%; background: #111; border: 1px solid #222; padding: 15px;
+            border-radius: 12px; color: white; font-size: 16px; outline: none; box-sizing: border-box;
             transition: 0.3s;
         }
+        input:focus { border-color: var(--orange-floy); box-shadow: 0 0 10px rgba(255, 122, 26, 0.2); }
 
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(127, 0, 255, 0.4); }
+        .btn-submit {
+            width: 100%; background: var(--orange-floy); color: black; border: none;
+            padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px;
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        .footer-links { margin-top: 30px; font-size: 14px; color: #666; }
+        .footer-links a { color: var(--orange-floy); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="login-card">
-    <div class="logo">THRENDLY</div>
-    <p>Connecte-toi pour discuter</p>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Mot de passe">
-    <button id="login-btn">Se connecter</button>
-    <p style="font-size: 12px; color: #666; margin-top: 15px;">Pas de compte ? Contacte l'admin.</p>
-</div>
+    <div class="header-login">
+        <img src="F4.png" class="logo-small" alt="Floy">
+        <h2 style="margin:0;">Bon retour !</h2>
+        <p style="color:#666; margin-top:5px;">Connecte-toi à ton compte Floy</p>
+    </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    <div class="login-form">
+        <div class="input-group">
+            <label>Email ou Pseudo</label>
+            <input type="text" id="user" placeholder="Ton identifiant">
+        </div>
 
-    const firebaseConfig = {
-        apiKey: "TON_API_KEY",
-        authDomain: "floy-9f9a1.firebaseapp.com",
-        projectId: "floy-9f9a1",
-        storageBucket: "floy-9f9a1.firebasestorage.app",
-        messagingSenderId: "TON_ID",
-        appId: "TON_APP_ID"
-    };
+        <div class="input-group">
+            <label>Mot de passe</label>
+            <input type="password" id="pass" placeholder="••••••••">
+        </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+        <button class="btn-submit" onclick="handleLogin()">SE CONNECTER</button>
+    </div>
 
-    // Redirige si déjà connecté
-    onAuthStateChanged(auth, (user) => {
-        if (user) window.location.href = "chat.html";
-    });
+    <div class="footer-links">
+        Pas encore membre ? <a href="signup.html">Créer un compte</a>
+    </div>
 
-    document.getElementById('login-btn').onclick = async () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
+    <script>
+        function handleLogin() {
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
 
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-            alert("Connexion réussie !");
-        } catch (error) {
-            alert("Erreur : " + error.message);
+            // On simule une vérification (tu pourras lier ça à une base de données plus tard)
+            if(user !== "" && pass !== "") {
+                // --- ACTION CRUCIALE ---
+                // On enregistre dans le téléphone que l'utilisateur est connecté
+                localStorage.setItem('floy_isLoggedIn', 'true');
+                
+                // On redirige vers le Feed (le flux vidéo)
+                window.location.href = 'feed.html';
+            } else {
+                alert("Veuillez remplir tous les champs.");
+            }
         }
-    };
-</script>
+    </script>
+
 </body>
 </html>
