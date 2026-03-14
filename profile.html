@@ -21,30 +21,27 @@
         .profile-header { padding: 40px 20px 20px; text-align: center; }
         .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; cursor: pointer; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--orange-floy); object-fit: cover; }
-        
-        /* Badge sur la photo (Optionnel, je le laisse car c'est stylé) */
         .verified-badge-photo { position: absolute; bottom: 5px; right: 5px; width: 22px; height: 22px; }
 
-        /* NOM AVEC BADGE */
         .display-name-container { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 2px; }
         .display-name { font-size: 22px; font-weight: bold; }
         .verified-badge-name { width: 20px; height: 20px; }
 
         .user-handle { font-size: 16px; color: #888; margin-bottom: 5px; }
-        .user-link { color: var(--orange-floy); text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 8px; display: block; }
+        .user-link { color: var(--orange-floy); text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 8px; display: block; height: 18px; }
 
         .stats-row { display: flex; justify-content: center; gap: 25px; margin: 20px 0; }
-        .stat-item { text-align: center; }
+        .stat-item { text-align: center; min-width: 80px; }
         .stat-val { font-weight: bold; font-size: 18px; display: block; }
         .stat-lab { color: #888; font-size: 12px; }
 
-        /* --- BOUTONS ACTIONS --- */
+        /* --- BOUTONS --- */
         .btn-main { width: 90%; background: var(--orange-floy); border: none; color: #000; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-bottom: 10px; }
         .btn-row { display: flex; gap: 10px; width: 90%; margin: 0 auto; }
         .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
         /* --- MODALS --- */
-        .modal { position: fixed; top: 100%; left: 0; width: 100%; height: 100%; background: var(--noir); z-index: 500; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); padding: 20px; box-sizing: border-box; }
+        .modal { position: fixed; top: 100%; left: 0; width: 100%; height: 100%; background: var(--noir); z-index: 500; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .modal.open { top: 0; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 15px; }
         
@@ -53,31 +50,22 @@
         .input-group label { display: block; color: #555; font-size: 12px; margin-bottom: 5px; }
         .input-group input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; }
 
-        .stat-card { background: var(--gris); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--orange-floy); }
+        /* --- ANALYTICS TABLEAU DE BORD --- */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-mini-card { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #222; }
+        .earnings-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        .earnings-table td, .earnings-table th { padding: 10px; border-bottom: 1px solid #111; text-align: left; }
+        .flow-chart { height: 80px; display: flex; align-items: flex-end; gap: 4px; margin: 15px 0; background: #0a0a0a; padding: 10px; border-radius: 8px; }
+        .bar { flex: 1; background: var(--orange-floy); opacity: 0.7; border-radius: 2px; }
 
         /* --- NAV BAR --- */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
         .nav-icon { width: 28px; height: 28px; fill: #666; cursor: pointer; }
         .nav-icon.active { fill: white; }
         .btn-plus-large { background: var(--orange-floy); width: 65px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 28px; cursor: pointer; }
-        /* Styles spécifiques pour le Tableau de Bord */
-.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.stat-mini-card { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #222; }
-.stat-mini-card h4 { margin: 0; font-size: 12px; color: #888; text-transform: uppercase; }
-.stat-mini-card p { margin: 5px 0 0; font-size: 18px; font-weight: bold; color: var(--orange-floy); }
-
-.earnings-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-.earnings-table th { text-align: left; color: #555; padding: 10px; border-bottom: 1px solid #222; }
-.earnings-table td { padding: 12px 10px; border-bottom: 1px solid #111; }
-.trend-up { color: #00ff00; font-size: 11px; }
-
-/* Simulation de graphique de flux */
-.flow-chart { height: 100px; display: flex; align-items: flex-end; gap: 4px; margin: 20px 0; padding: 10px; background: #0a0a0a; border-radius: 8px; }
-.bar { flex: 1; background: var(--orange-floy); border-radius: 2px 2px 0 0; min-height: 10px; opacity: 0.7; }
-.bar:hover { opacity: 1; }
     </style>
 </head>
-<body>
+<body onload="animateCounters()">
 
     <div class="top-bar" onclick="alert('Lien de profil copié !')">
         <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
@@ -95,13 +83,12 @@
         </div>
 
         <div class="user-handle" id="profUser">@arlein_off</div>
-        
         <a href="#" class="user-link" id="profLinkDisplay" target="_blank"></a>
 
         <div class="stats-row">
-            <div class="stat-item"><span class="stat-val">124</span><span class="stat-lab">Abonnements</span></div>
-            <div class="stat-item"><span class="stat-val">850K</span><span class="stat-lab">Abonnés</span></div>
-            <div class="stat-item"><span class="stat-val">12M</span><span class="stat-lab">J'aime</span></div>
+            <div class="stat-item"><span class="stat-val counter" data-target="124">0</span><span class="stat-lab">Abonnements</span></div>
+            <div class="stat-item"><span class="stat-val counter" data-target="850">0</span><span class="stat-lab">Abonnés (K)</span></div>
+            <div class="stat-item"><span class="stat-val counter" data-target="12">0</span><span class="stat-lab">J'aime (M)</span></div>
         </div>
 
         <button class="btn-main" onclick="this.innerText='Abonné'; this.style.background='#333'; this.style.color='#fff'">Suivre</button>
@@ -117,7 +104,6 @@
             <span style="font-weight:bold">Modifier le profil</span>
             <span style="color:var(--orange-floy); font-weight:bold; cursor:pointer" onclick="saveProfile()">Enregistrer</span>
         </div>
-        
         <div style="text-align:center; margin-bottom:30px;">
             <input type="file" id="fileInput" accept="image/*" onchange="previewImage(this)">
             <div onclick="document.getElementById('fileInput').click()" style="cursor:pointer">
@@ -125,20 +111,28 @@
                 <p style="color:var(--orange-floy); font-size:14px; margin-top:10px;">Changer la photo</p>
             </div>
         </div>
-
         <div class="input-group"><label>Nom</label><input type="text" id="inName" value="Arlein"></div>
         <div class="input-group"><label>Nom d'utilisateur</label><input type="text" id="inUser" value="@arlein_off"></div>
-        <div class="input-group"><label>Lien / Website</label><input type="text" id="inLink" placeholder="Ex: floy.app"></div>
+        <div class="input-group"><label>Lien / Website</label><input type="text" id="inLink" placeholder="Ex: google.com"></div>
     </div>
 
     <div class="modal" id="statsModal">
-        <div class="modal-header">
-            <span onclick="closeModal('statsModal')" style="cursor:pointer">Fermer</span>
-            <span style="font-weight:bold">Analyse Floy</span>
-            <span style="opacity:0">.</span>
+        <div class="modal-header"><span onclick="closeModal('statsModal')">Fermer</span><span style="font-weight:bold">Creator Studio</span><span></span></div>
+        <h3 style="font-size:14px; padding:0 10px;">Flux d'activité</h3>
+        <div class="flow-chart">
+            <div class="bar" style="height:40%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:50%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:65%"></div>
         </div>
-        <div class="stat-card"><h3>Vues totales</h3><p style="font-size:26px; color:var(--orange-floy); margin:0;">1,245,600</p></div>
-        <div class="stat-card"><h3>Nouveaux abonnés</h3><p style="font-size:26px; margin:0;">+12,400</p></div>
+        <div class="analytics-grid">
+            <div class="stat-mini-card"><h4>Vues</h4><p>1.2M</p></div>
+            <div class="stat-mini-card"><h4>Gains</h4><p>1,805 $</p></div>
+        </div>
+        <table class="earnings-table">
+            <tr><th>Source</th><th>Gains</th></tr>
+            <tr><td>Pubs Vidéo</td><td>425.00 $</td></tr>
+            <tr><td>Cadeaux</td><td>180.50 $</td></tr>
+            <tr><td>Sponsors</td><td>1,200.00 $</td></tr>
+        </table>
+        <button class="btn-main" style="margin-top:20px; width:100%" onclick="alert('Retrait en cours...')">Retirer les fonds</button>
     </div>
 
     <nav class="nav-bar">
@@ -153,12 +147,29 @@
         function openModal(id) { document.getElementById(id).classList.add('open'); }
         function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const updateCount = () => {
+                    const speed = target / 50;
+                    if (count < target) {
+                        count += Math.ceil(speed);
+                        counter.innerText = count;
+                        setTimeout(updateCount, 30);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('editPreview').src = e.target.result;
-                }
+                reader.onload = function(e) { document.getElementById('editPreview').src = e.target.result; }
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -166,16 +177,12 @@
         function saveProfile() {
             document.getElementById('profName').innerText = document.getElementById('inName').value;
             document.getElementById('profUser').innerText = document.getElementById('inUser').value;
-            
             const linkVal = document.getElementById('inLink').value;
             const linkDisplay = document.getElementById('profLinkDisplay');
             if(linkVal) {
-                linkDisplay.innerText = linkVal.replace('https://', '').replace('http://', '');
+                linkDisplay.innerText = linkVal;
                 linkDisplay.href = linkVal.startsWith('http') ? linkVal : 'https://' + linkVal;
-            } else {
-                linkDisplay.innerText = "";
             }
-
             document.getElementById('profImg').src = document.getElementById('editPreview').src;
             closeModal('editModal');
         }
