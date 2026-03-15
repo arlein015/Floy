@@ -25,75 +25,81 @@
             padding: 15px 20px; gap: 20px;
         }
         .icon-btn { cursor: pointer; fill: white; transition: 0.2s; }
-        .share-icon { transform: scaleX(-1); } /* Oriente la flèche vers la droite */
+        .share-icon { transform: scaleX(-1); }
 
         /* --- HEADER PROFIL --- */
-        .profile-header { padding: 20px; text-align: center; }
-        .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; }
+        .profile-header { padding: 10px 20px; text-align: center; }
+        .profile-pic-container { position: relative; width: 95px; height: 95px; margin: 0 auto 12px; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--orange-floy); object-fit: cover; }
-        .verified-badge { position: absolute; bottom: 5px; right: 5px; width: 22px; height: 22px; }
+        
+        .name-container { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 2px; }
+        .display-name { font-size: 20px; font-weight: bold; }
+        .verified-badge { width: 18px; height: 18px; fill: var(--orange-floy); }
 
-        .display-name { font-size: 22px; font-weight: bold; margin-bottom: 2px; }
-        .user-handle { font-size: 15px; color: #888; margin-bottom: 15px; }
+        .user-handle { font-size: 14px; color: #888; margin-bottom: 15px; }
 
+        /* --- STATS --- */
         .stats-row { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; }
         .stat-item { text-align: center; cursor: pointer; }
         .stat-val { font-weight: bold; font-size: 18px; display: block; }
         .stat-lab { color: #888; font-size: 12px; }
 
         /* --- BOUTONS --- */
-        .btn-row { display: flex; gap: 10px; width: 90%; margin: 0 auto 25px; }
-        .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
+        .btn-row { display: flex; gap: 10px; width: 95%; margin: 0 auto 20px; }
+        .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; }
 
         /* --- ONGLETS --- */
-        .tabs-selector { display: flex; border-top: 1px solid #222; margin-top: 10px; }
-        .tab-btn { flex: 1; padding: 12px; text-align: center; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .tabs-selector { display: flex; border-top: 1px solid #222; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; cursor: pointer; opacity: 0.4; }
         .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--blanc); }
-        .tab-btn svg { width: 24px; height: 24px; fill: white; }
+        .tab-btn svg { width: 22px; height: 22px; fill: white; }
 
-        /* --- GRILLE VIDÉO + EFFETS --- */
-        .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .video-item { aspect-ratio: 3/4; background: #1a1a1a; position: relative; overflow: hidden; cursor: pointer; }
-        .video-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
-        .video-item:hover img { transform: scale(1.1); }
-        .view-count { position: absolute; bottom: 5px; left: 5px; font-size: 11px; font-weight: bold; z-index: 2; }
+        /* --- GRILLE --- */
+        .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding-bottom: 80px; }
+        .video-item { aspect-ratio: 3/4; background: #1a1a1a; position: relative; overflow: hidden; }
+        .video-item img { width: 100%; height: 100%; object-fit: cover; }
+        .v-views { position: absolute; bottom: 5px; left: 5px; font-size: 10px; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+        /* --- NAV BAR --- */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 65px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
+        .nav-icon { width: 26px; height: 26px; fill: #555; cursor: pointer; }
+        .nav-icon.active { fill: white; }
+        .nav-plus { background: var(--orange-floy); width: 45px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 22px; }
 
         /* --- POPUP PARTAGE --- */
         .share-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; z-index: 2000; backdrop-filter: blur(5px); }
-        .share-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.7); width: 280px; background: #111; border: 1px solid #333; border-radius: 25px; padding: 30px 20px; text-align: center; z-index: 2001; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .share-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 270px; background: #111; border: 1px solid #333; border-radius: 25px; padding: 25px; text-align: center; z-index: 2001; opacity: 0; visibility: hidden; transition: 0.3s; }
         .share-popup.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
         .qr-box { background: white; padding: 10px; border-radius: 15px; display: inline-block; margin: 15px 0; }
-        .btn-copy { background: var(--orange-floy); color: black; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-
-        /* --- NAV BAR --- */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
-        .nav-icon { width: 28px; height: 28px; fill: #666; }
-        .nav-icon.active { fill: white; }
+        .qr-box img { width: 150px; height: 150px; display: block; }
+        .btn-copy { background: var(--orange-floy); color: black; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body onload="initProfile()">
 
     <div class="top-bar">
-        <svg class="icon-btn share-icon" onclick="openSharePopup()" width="26" height="26" viewBox="0 0 24 24" fill="white">
-            <path d="M12.5 4v3.5C7.3 8.3 4 12.3 4 17.5c2.4-3.4 5.6-5.1 8.5-5.1V16L20 10l-7.5-6z"></path>
-        </svg>
+        <svg class="icon-btn share-icon" onclick="openSharePopup()" width="24" height="24" viewBox="0 0 24 24"><path d="M12.5 4v3.5C7.3 8.3 4 12.3 4 17.5c2.4-3.4 5.6-5.1 8.5-5.1V16L20 10l-7.5-6z"/></svg>
+        <svg class="icon-btn" onclick="alert('Menu ouvert')" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </div>
 
     <div class="profile-header">
         <div class="profile-pic-container">
             <img src="https://i.pravatar.cc/150?u=Arlein" class="profile-pic">
-            <svg class="verified-badge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF7A1A"/><path d="M17 9L11 15L7 11" stroke="white" stroke-width="2.5" fill="none"/></svg>
         </div>
-        <div class="display-name">Arlein</div>
+        
+        <div class="name-container">
+            <span class="display-name">Arlein</span>
+            <svg class="verified-badge" viewBox="0 0 24 24"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/></svg>
+        </div>
         <div class="user-handle">@arlein_off</div>
 
         <div class="stats-row">
-            <div class="stat-item">
+            <div class="stat-item" onclick="window.location.href='following.html'">
                 <span class="stat-val counter" id="following-val" data-target="124">0</span>
                 <span class="stat-lab">Abonnements</span>
             </div>
             <div class="stat-item">
-                <span class="stat-val counter" id="followers-val" data-target="850">0</span>
+                <span class="stat-val counter" data-target="850">0</span>
                 <span class="stat-lab">Abonnés</span>
             </div>
             <div class="stat-item">
@@ -114,28 +120,28 @@
     </div>
 
     <div class="video-grid" id="mainGrid">
-        <div class="video-item"><img src="https://picsum.photos/seed/1/300/400"><div class="view-count">▶ 12K</div></div>
-        <div class="video-item"><img src="https://picsum.photos/seed/2/300/400"><div class="view-count">▶ 8K</div></div>
-        <div class="video-item"><img src="https://picsum.photos/seed/3/300/400"><div class="view-count">▶ 45K</div></div>
-    </div>
-
-    <div id="shareOverlay" class="share-overlay" onclick="closeSharePopup()"></div>
-    <div id="sharePopup" class="share-popup">
-        <div class="share-title">Partager le profil</div>
-        <div class="qr-box">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://floy.app/arlein_off" alt="QR">
-        </div>
-        <button class="btn-copy" onclick="copyLink()">🔗 Copier le lien</button>
+        <div class="video-item"><img src="https://picsum.photos/seed/a1/300/400"><div class="v-views">▶ 12.5K</div></div>
+        <div class="video-item"><img src="https://picsum.photos/seed/a2/300/400"><div class="v-views">▶ 8.2K</div></div>
+        <div class="video-item"><img src="https://picsum.photos/seed/a3/300/400"><div class="v-views">▶ 45K</div></div>
     </div>
 
     <nav class="nav-bar">
         <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <div class="nav-plus">+</div>
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10z"/></svg>
         <svg class="nav-icon active" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
     </nav>
 
+    <div id="shareOverlay" class="share-overlay" onclick="closeSharePopup()"></div>
+    <div id="sharePopup" class="share-popup">
+        <div class="share-title">Partager le profil</div>
+        <div class="qr-box"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://floy.app/arlein_off"></div>
+        <button class="btn-copy" onclick="copyLink()">🔗 Copier le lien</button>
+    </div>
+
     <script>
         function initProfile() {
-            // Charger les vrais nombres depuis le stockage
             const count = localStorage.getItem('floy_following_count') || "124";
             document.getElementById('following-val').setAttribute('data-target', count);
             animateCounters();
@@ -146,12 +152,11 @@
                 const target = +c.getAttribute('data-target');
                 let cur = 0;
                 const update = () => {
-                    const speed = target / 30;
                     if(cur < target) {
-                        cur += Math.ceil(speed);
-                        c.innerText = cur;
+                        cur += Math.ceil(target/30);
+                        c.innerText = cur > target ? target : cur;
                         setTimeout(update, 30);
-                    } else { c.innerText = target; }
+                    }
                 };
                 update();
             });
@@ -174,12 +179,9 @@
             });
         }
 
-        function switchTab(type, el) {
+        function switchTab(t, el) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            const grid = document.getElementById('mainGrid');
-            grid.innerHTML = type === 'likes' ? '<p style="grid-column:1/4;text-align:center;padding:20px;">Aucun like.</p>' : 
-            '<div class="video-item"><img src="https://picsum.photos/seed/1/300/400"><div class="view-count">▶ 12K</div></div><div class="video-item"><img src="https://picsum.photos/seed/2/300/400"><div class="view-count">▶ 8K</div></div>';
         }
     </script>
 </body>
