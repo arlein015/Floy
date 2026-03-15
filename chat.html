@@ -3,41 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Floy - Chat Certifié</title>
+    <title>Floy - Chat Illimité IndexedDB</title>
+    
+    <script src="db.js"></script>
     <script src="upload.js"></script>
+
     <style>
         :root { --orange: #FF7A1A; --bleu-certif: #0095f6; --noir: #000; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { background: var(--noir); color: white; font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* HEADER AVEC BADGE */
-        .chat-header { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #1a1a1a; background: var(--noir); gap: 10px; }
-        .back-btn { cursor: pointer; font-size: 24px; color: white; }
-        .user-name { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 17px; }
+        /* HEADER */
+        .chat-header { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #1a1a1a; background: var(--noir); gap: 10px; position: sticky; top: 0; z-index: 10; }
+        .back-btn { cursor: pointer; font-size: 24px; color: white; text-decoration: none; padding-right: 5px; }
+        .user-name { display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 17px; }
         .verify-badge { color: var(--bleu-certif); display: flex; align-items: center; }
 
         /* ZONE MESSAGES */
-        #chatBox { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .bubble { max-width: 75%; padding: 10px; border-radius: 18px; font-size: 15px; position: relative; word-wrap: break-word; }
+        #chatBox { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+        .bubble { max-width: 75%; padding: 12px; border-radius: 18px; font-size: 15px; position: relative; word-wrap: break-word; line-height: 1.4; }
         .sent { align-self: flex-end; background: var(--orange); color: black; border-bottom-right-radius: 2px; }
         .received { align-self: flex-start; background: #1a1a1a; border-bottom-left-radius: 2px; color: white; }
         
-        /* MÉDIAS SANS BORDURES */
-        .chat-media { max-width: 100%; border-radius: 12px; display: block; border: none !important; margin-bottom: 5px; }
-        .media-info { font-size: 10px; opacity: 0.8; display: flex; justify-content: space-between; }
+        /* MÉDIAS (SANS BORDURES) */
+        .chat-media { max-width: 100%; border-radius: 12px; display: block; border: none !important; outline: none !important; margin-bottom: 4px; }
+        .media-info { font-size: 10px; opacity: 0.6; display: flex; justify-content: space-between; padding: 0 4px; }
 
         /* BARRE DE SAISIE */
         .input-area { 
             background: #080808; padding: 10px 15px; display: flex; align-items: center; gap: 12px; border-top: 1px solid #1a1a1a;
             padding-bottom: env(safe-area-inset-bottom);
         }
-        .message-input { flex: 1; background: #151515; border: 1px solid #222; padding: 10px 15px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
+        .message-input { flex: 1; background: #151515; border: 1px solid #222; padding: 12px 16px; border-radius: 22px; color: white; font-size: 16px; outline: none; }
         
-        .btn-plus { color: var(--orange); font-size: 28px; background: none; border: none; font-weight: bold; cursor: pointer; }
+        .btn-plus { color: var(--orange); font-size: 30px; background: none; border: none; font-weight: bold; cursor: pointer; padding: 0; }
         .btn-icon { background: none; border: none; cursor: pointer; color: white; padding: 5px; display: flex; align-items: center; }
-        .btn-send { background: var(--orange); border-radius: 50%; width: 40px; height: 40px; justify-content: center; display: none; }
+        .btn-send { background: var(--orange); border-radius: 50%; width: 42px; height: 42px; justify-content: center; align-items: center; display: none; transition: 0.2s; }
         
-        /* TIMER VOCAL */
-        #vocalTimer { display: none; color: #ff4444; font-weight: bold; font-family: monospace; }
+        /* STYLE VOCAL DANS LA BULLE */
+        .vocal-msg audio { height: 35px; width: 180px; filter: invert(1); }
     </style>
 </head>
 <body>
@@ -58,22 +61,21 @@
         <button class="btn-plus" onclick="document.getElementById('fileIn').click()">+</button>
         <input type="file" id="fileIn" accept="image/*,video/*" hidden onchange="handleFileUpload(this)">
         
-        <span id="vocalTimer">0:00</span>
-        <input type="text" id="msgInput" class="message-input" placeholder="Message..." oninput="toggleButtons()">
+        <input type="text" id="msgInput" class="message-input" placeholder="Message privé..." oninput="toggleButtons()">
 
         <button id="micBtn" class="btn-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
         </button>
 
         <button id="sendBtn" class="btn-icon btn-send" onclick="sendText()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
     </div>
 
     <script>
         // CONFIGURATION MP
-        const CURRENT_USER = "U1"; 
-        const CONVO_ID = "convo_privé_u1_u2";
+        const CURRENT_USER = "U1"; // Simule ton identité
+        const CONVO_ID = "convo_u1_u2"; // Clé unique pour la discussion
         const partner = (CURRENT_USER === "U1") ? "Alexandre Dupont" : "Utilisateur 1";
         document.getElementById('partnerName').innerText = partner;
 
@@ -82,62 +84,64 @@
         const micBtn = document.getElementById('micBtn');
         const sendBtn = document.getElementById('sendBtn');
 
+        // Charger les messages au démarrage
         window.onload = load;
 
-        // Gestion de l'affichage Micro vs Envoyer
+        // Alternance Micro / Envoyer
         function toggleButtons() {
-            if (msgInput.value.trim() !== "") {
-                micBtn.style.display = "none";
-                sendBtn.style.display = "flex";
-            } else {
-                micBtn.style.display = "flex";
-                sendBtn.style.display = "none";
-            }
+            const hasText = msgInput.value.trim() !== "";
+            micBtn.style.display = hasText ? "none" : "flex";
+            sendBtn.style.display = hasText ? "flex" : "none";
         }
 
-        // LIAISON AVEC UPLOAD.JS
+        // --- GESTION DES FICHIERS (VIA UPLOAD.JS) ---
         async function handleFileUpload(input) {
             if (input.files && input.files[0]) {
                 try {
                     const result = await UploadModule.processFile(input.files[0]);
-                    save({
+                    await save({
                         content: result.content,
                         sender: CURRENT_USER,
-                        type: result.type, // 'image' ou 'video'
-                        size: (result.size / 1024).toFixed(1) + " KB"
+                        type: result.type, 
+                        size: (result.size / 1024).toFixed(1) + " KB",
+                        fileName: result.fileName
                     });
-                    input.value = "";
+                    input.value = ""; // Reset
                 } catch (err) { alert(err); }
             }
         }
 
-        function sendText() {
+        // --- ENVOI TEXTE ---
+        async function sendText() {
             const val = msgInput.value.trim();
             if (val) {
-                save({ content: val, sender: CURRENT_USER, type: 'text' });
+                await save({ content: val, sender: CURRENT_USER, type: 'text' });
                 msgInput.value = "";
                 toggleButtons();
             }
         }
 
-        function save(obj) {
-            const logs = JSON.parse(localStorage.getItem(CONVO_ID)) || [];
-            logs.push(obj);
-            localStorage.setItem(CONVO_ID, JSON.stringify(logs));
-            load();
+        // --- SAUVEGARDE DANS INDEXEDDB (VIA DB.JS) ---
+        async function save(obj) {
+            await DBModule.saveMessage(CONVO_ID, obj);
+            load(); // Rafraîchir l'écran
         }
 
-        function load() {
+        // --- CHARGEMENT DEPUIS INDEXEDDB ---
+        async function load() {
             chatBox.innerHTML = "";
-            const logs = JSON.parse(localStorage.getItem(CONVO_ID)) || [];
+            const logs = await DBModule.getMessages(CONVO_ID);
+            
             logs.forEach(m => {
                 const b = document.createElement('div');
                 b.className = `bubble ${m.sender === CURRENT_USER ? 'sent' : 'received'}`;
                 
                 if (m.type === 'image') {
-                    b.innerHTML = `<img src="${m.content}" class="chat-media"><div class="media-info"><span>${m.size}</span></div>`;
+                    b.innerHTML = `<img src="${m.content}" class="chat-media">
+                                   <div class="media-info"><span>${m.size}</span></div>`;
                 } else if (m.type === 'video') {
-                    b.innerHTML = `<video src="${m.content}" controls class="chat-media"></video><div class="media-info"><span>${m.size}</span></div>`;
+                    b.innerHTML = `<video src="${m.content}" controls class="chat-media"></video>
+                                   <div class="media-info"><span>${m.size}</span></div>`;
                 } else {
                     b.innerText = m.content;
                 }
@@ -146,6 +150,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        // Envoi avec la touche Entrée
         msgInput.onkeypress = (e) => { if(e.key === "Enter") sendText(); };
     </script>
 </body>
