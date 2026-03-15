@@ -10,37 +10,37 @@
         body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
 
         /* HEADER */
-        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; flex-shrink: 0; }
         .header h1 { margin: 0; font-size: 22px; font-weight: 800; }
 
-        /* STORYS */
+        /* SECTION STORYS */
         .story-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 8px solid #080808; flex-shrink: 0; }
         .story-bar::-webkit-scrollbar { display: none; }
         .story-item { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
-        .story-ring { width: 60px; height: 60px; border-radius: 50%; padding: 2px; border: 2px solid var(--orange); }
-        .add-story .story-ring { border: 2px dashed #444; position: relative; }
+        .story-ring { width: 60px; height: 60px; border-radius: 50%; padding: 2px; border: 2px solid var(--orange); position: relative; }
+        .add-story .story-ring { border: 2px dashed #444; }
         .add-story .plus { position: absolute; bottom: 0; right: 0; background: var(--orange); width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; display: flex; align-items: center; justify-content: center; color: black; font-size: 14px; font-weight: bold; }
         .story-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; }
         .story-name { font-size: 11px; color: #888; }
 
         /* LISTE DES DISCUSSIONS */
         .chat-list { flex: 1; overflow-y: auto; }
-        .chat-item { display: flex; align-items: center; padding: 15px; text-decoration: none; color: white; transition: 0.2s; }
+        .chat-item { display: flex; align-items: center; padding: 15px; text-decoration: none; color: white; transition: 0.2s; border-bottom: 0.5px solid #080808; }
         .chat-item:active { background: #111; }
         
-        .avatar-box { position: relative; margin-right: 15px; }
+        .avatar-box { margin-right: 15px; flex-shrink: 0; }
         .avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; background: #222; }
         
-        .chat-info { flex: 1; border-bottom: 1px solid #111; padding-bottom: 12px; min-width: 0; }
+        .chat-info { flex: 1; min-width: 0; }
         .chat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .user-name { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 4px; }
-        .cert-icon { color: var(--bleu); width: 14px; height: 14px; }
+        .user-name { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; }
+        .cert-icon { color: var(--bleu); flex-shrink: 0; }
         .time { font-size: 12px; color: #555; }
         
         .last-msg { font-size: 14px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* BOUTON GROUPE */
-        .fab { position: fixed; bottom: 30px; right: 20px; background: var(--orange); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: none; cursor: pointer; }
+        /* BOUTON FLOTTANT GROUPE */
+        .fab { position: fixed; bottom: 30px; right: 20px; background: var(--orange); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: none; cursor: pointer; z-index: 10; }
     </style>
 </head>
 <body>
@@ -52,7 +52,10 @@
 
     <div class="story-bar">
         <div class="story-item add-story">
-            <div class="story-ring"><img src="ma_photo.jpg" class="story-img" onerror="this.src='https://via.placeholder.com/60'"><div class="plus">+</div></div>
+            <div class="story-ring">
+                <img src="https://via.placeholder.com/60" class="story-img">
+                <div class="plus">+</div>
+            </div>
             <span class="story-name">Ta story</span>
         </div>
         <div id="storyList" style="display:flex; gap:15px;"></div>
@@ -66,54 +69,64 @@
     </button>
 
     <script>
-        // Tes contacts de base
+        // Ta liste de contacts
         const contacts = [
-            { id: "convo_1", name: "Alexandre Dupont", cert: true, img: "https://i.pravatar.cc/150?u=a" },
-            { id: "convo_2", name: "Julie Martin", cert: false, img: "https://i.pravatar.cc/150?u=j" },
-            { id: "convo_3", name: "Marc Evans", cert: true, img: "https://i.pravatar.cc/150?u=m" }
+            { id: "convo_1", name: "Alexandre Dupont", cert: true, img: "https://i.pravatar.cc/150?u=1" },
+            { id: "convo_2", name: "Julie Martin", cert: false, img: "https://i.pravatar.cc/150?u=2" },
+            { id: "convo_3", name: "Marc Evans", cert: true, img: "https://i.pravatar.cc/150?u=3" }
         ];
 
         async function renderChats() {
             const listContainer = document.getElementById('chatList');
+            if (!listContainer) return;
+
             let chatData = [];
 
-            // 1. Récupérer le dernier message et le temps pour chaque contact
+            // 1. On récupère les données pour chaque contact
             for (let c of contacts) {
-                const msgs = await DBModule.getMessages(c.id);
-                const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null;
-                
-                chatData.push({
-                    ...c,
-                    lastMessage: lastMsg,
-                    // Si pas de message, on met 0 pour qu'il soit en bas
-                    timestamp: lastMsg ? lastMsg.timestamp : 0 
-                });
+                try {
+                    const msgs = await DBModule.getMessages(c.id);
+                    const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null;
+                    
+                    chatData.push({
+                        ...c,
+                        lastMessage: lastMsg,
+                        // Si pas de message, on met 0 pour le tri
+                        timestamp: lastMsg ? (lastMsg.timestamp || 0) : 0 
+                    });
+                } catch (e) {
+                    console.error("Erreur DB pour " + c.name, e);
+                }
             }
 
-            // 2. TRIER : Le plus récent (timestamp élevé) en haut
+            // 2. TRI PAR RÉCURRENCE (Le plus récent en haut)
             chatData.sort((a, b) => b.timestamp - a.timestamp);
 
-            // 3. AFFICHER
+            // 3. AFFICHAGE PROPRE
             listContainer.innerHTML = chatData.map(chat => {
-                let preview = "Commencer la discussion";
+                let preview = "Démarrer une discussion";
+                let timeStr = "";
+
                 if (chat.lastMessage) {
                     if (chat.lastMessage.type === 'image') preview = "📷 Photo";
                     else if (chat.lastMessage.type === 'video') preview = "🎥 Vidéo";
                     else preview = chat.lastMessage.content;
+
+                    // Formater l'heure
+                    const d = new Date(chat.lastMessage.timestamp);
+                    timeStr = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
 
                 return `
                     <a href="chat.html?id=${chat.id}" class="chat-item">
-                        <div class="avatar-box">
-                            <img src="${chat.img}" class="avatar">
-                        </div>
+                        <div class="avatar-box"><img src="${chat.img}" class="avatar"></div>
                         <div class="chat-info">
                             <div class="chat-top">
                                 <span class="user-name">
                                     ${chat.name} 
-                                    ${chat.cert ? '<svg class="cert-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7l-3.3-3.3 1.4-1.4 1.9 1.9 5.3-5.3 1.4 1.4-6.7 6.7z"/></svg>' : ''}
+                                    ${chat.cert ? '<svg class="cert-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7l-3.3-3.3 1.4-1.4 1.9 1.9 5.3-5.3 1.4 1.4-6.7 6.7z"/></svg>' : ''}
                                 </span>
-                                <span class="time">${chat.lastMessage ? new Date(chat.lastMessage.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</span>
+                                <span class="time">${timeStr}</span>
                             </div>
                             <div class="last-msg">${preview}</div>
                         </div>
@@ -122,6 +135,7 @@
             }).join('');
         }
 
+        // On lance le rendu
         window.onload = renderChats;
     </script>
 </body>
