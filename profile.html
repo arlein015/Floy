@@ -25,7 +25,6 @@
             padding: 15px 20px; gap: 20px;
         }
         .icon-btn { cursor: pointer; fill: white; transition: 0.2s; }
-        .icon-btn:active { transform: scale(0.9); opacity: 0.7; }
 
         /* --- HEADER PROFIL --- */
         .profile-header { padding: 20px; text-align: center; }
@@ -33,39 +32,65 @@
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--orange-floy); object-fit: cover; }
         .verified-badge { position: absolute; bottom: 5px; right: 5px; width: 22px; height: 22px; }
 
-        .display-name { font-size: 22px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .user-handle { font-size: 16px; color: #888; margin-bottom: 5px; }
+        .display-name { font-size: 22px; font-weight: bold; margin-bottom: 2px; }
+        .user-handle { font-size: 15px; color: #888; margin-bottom: 15px; }
 
-        .stats-row { display: flex; justify-content: center; gap: 25px; margin: 25px 0; }
-        .stat-item { text-align: center; cursor: pointer; min-width: 80px; }
-        .stat-val { font-weight: bold; font-size: 20px; display: block; }
+        .stats-row { display: flex; justify-content: center; gap: 25px; margin-bottom: 20px; }
+        .stat-item { text-align: center; cursor: pointer; }
+        .stat-val { font-weight: bold; font-size: 18px; display: block; }
         .stat-lab { color: #888; font-size: 12px; }
 
         /* --- BOUTONS --- */
-        .btn-main { width: 90%; background: var(--orange-floy); border: none; color: #000; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin: 0 auto 15px; display: block; }
-        .btn-row { display: flex; gap: 10px; width: 90%; margin: 0 auto; }
+        .btn-row { display: flex; gap: 10px; width: 90%; margin: 0 auto 25px; }
         .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
 
-        /* --- MENU LATÉRAL (SIDE MENU) --- */
-        .side-menu { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%; background: #0a0a0a; z-index: 1000; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); box-shadow: -5px 0 15px rgba(0,0,0,0.5); }
+        /* --- ONGLETS (GRILLE / LIKES) --- */
+        .tabs-selector { display: flex; border-top: 1px solid #222; margin-top: 10px; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--blanc); }
+        .tab-btn svg { width: 24px; height: 24px; fill: white; }
+
+        /* --- GRILLE DE VIDÉOS --- */
+        .video-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 2px; 
+            padding: 2px;
+            min-height: 400px;
+        }
+        .video-item { 
+            aspect-ratio: 3/4; 
+            background: #1a1a1a; 
+            position: relative;
+            overflow: hidden;
+        }
+        .video-item img { width: 100%; height: 100%; object-fit: cover; }
+        .view-count { 
+            position: absolute; bottom: 5px; left: 5px; 
+            font-size: 11px; font-weight: bold; 
+            display: flex; align-items: center; gap: 3px;
+        }
+
+        /* --- MENU LATÉRAL --- */
+        .side-menu { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%; background: #0a0a0a; z-index: 1000; transition: 0.4s; }
         .side-menu.active { right: 0; }
         .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; }
         .menu-overlay.active { display: block; }
-        .menu-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-        .menu-item { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #111; display: flex; align-items: center; gap: 12px; }
-        .menu-item:active { background: #1a1a1a; }
+        .menu-item { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #111; }
 
         /* --- NAV BAR --- */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
-        .nav-icon { width: 28px; height: 28px; fill: #666; cursor: pointer; }
+        .nav-icon { width: 28px; height: 28px; fill: #666; }
         .nav-icon.active { fill: white; }
-        .btn-plus-large { background: var(--orange-floy); width: 60px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 24px; cursor: pointer; }
     </style>
 </head>
 <body onload="animateCounters()">
 
     <div class="top-bar">
-        <svg class="icon-btn" onclick="alert('Lien copié !')" width="24" height="24" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+        <svg class="icon-btn" onclick="alert('Lien de profil copié !')" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
         <svg class="icon-btn" onclick="toggleMenu()" width="28" height="28" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </div>
 
@@ -80,7 +105,7 @@
 
         <div class="stats-row">
             <div class="stat-item" onclick="window.location.href='followers.html'">
-                <span class="stat-val counter" id="following-target" data-target="124">0</span>
+                <span class="stat-val counter" data-target="124">0</span>
                 <span class="stat-lab">Abonnements</span>
             </div>
             <div class="stat-item" onclick="window.location.href='followers.html'">
@@ -93,30 +118,48 @@
             </div>
         </div>
 
-        <button class="btn-main">S'abonner</button>
         <div class="btn-row">
-            <button class="btn-sec" onclick="window.location.href='edit-profile.html'">Modifier</button>
-            <button class="btn-sec" onclick="window.location.href='follower-growth.html'">Tableau de bord</button>
+            <button class="btn-sec" onclick="window.location.href='edit-profile.html'">Modifier le profil</button>
+            <button class="btn-sec" onclick="window.location.href='follower-growth.html'">Analytics</button>
+        </div>
+    </div>
+
+    <div class="tabs-selector">
+        <div class="tab-btn active" onclick="switchGrid('posts', this)">
+            <svg viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z"/></svg>
+        </div>
+        <div class="tab-btn" onclick="switchGrid('likes', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+    </div>
+
+    <div class="video-grid" id="profileGrid">
+        <div class="video-item">
+            <img src="https://picsum.photos/seed/v1/300/400">
+            <div class="view-count">▶ 12.5K</div>
+        </div>
+        <div class="video-item">
+            <img src="https://picsum.photos/seed/v2/300/400">
+            <div class="view-count">▶ 8.2K</div>
+        </div>
+        <div class="video-item">
+            <img src="https://picsum.photos/seed/v3/300/400">
+            <div class="view-count">▶ 45K</div>
         </div>
     </div>
 
     <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
     <div id="sideMenu" class="side-menu">
-        <div class="menu-header">
-            <h3>Paramètres</h3>
-            <span style="font-size:30px; cursor:pointer" onclick="toggleMenu()">×</span>
-        </div>
-        <div class="menu-item" onclick="window.location.href='edit-profile.html'">⚙️ Paramètres du compte</div>
-        <div class="menu-item" onclick="window.location.href='wallet.html'">💳 Carte & Paiements</div>
+        <div style="padding:20px; border-bottom:1px solid #222; font-weight:bold">Paramètres</div>
+        <div class="menu-item" onclick="window.location.href='edit-profile.html'">⚙️ Profil</div>
+        <div class="menu-item" onclick="window.location.href='wallet.html'">💳 Portefeuille</div>
         <div class="menu-item" onclick="window.location.href='privacy.html'">🔒 Confidentialité</div>
-        <div class="menu-item" onclick="window.location.href='security.html'">🛡️ Sécurité</div>
-        <div class="menu-item" onclick="logout()" style="color:#ff4444; border-top: 1px solid #222; margin-top:20px;">🚪 Déconnexion</div>
     </div>
 
     <nav class="nav-bar">
         <svg class="nav-icon" onclick="window.location.href='feed.html'" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <svg class="nav-icon" onclick="window.location.href='explore.html'" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <div class="btn-plus-large" onclick="window.location.href='upload.html'">+</div>
+        <div style="background:var(--orange-floy); width:50px; height:35px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:black; font-weight:bold;">+</div>
         <svg class="nav-icon" onclick="window.location.href='messages.html'" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
         <svg class="nav-icon active" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
     </nav>
@@ -127,18 +170,25 @@
             document.getElementById('menuOverlay').classList.toggle('active');
         }
 
-        function logout() {
-            if(confirm("Se déconnecter de Floy ?")) {
-                localStorage.clear();
-                window.location.href = 'index.html';
+        function switchGrid(type, el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            const grid = document.getElementById('profileGrid');
+            
+            if(type === 'likes') {
+                grid.innerHTML = '<div style="grid-column: 1/4; text-align:center; padding:50px; color:#555;">Aucune vidéo likée pour le moment.</div>';
+            } else {
+                grid.innerHTML = `
+                    <div class="video-item"><img src="https://picsum.photos/seed/v1/300/400"><div class="view-count">▶ 12.5K</div></div>
+                    <div class="video-item"><img src="https://picsum.photos/seed/v2/300/400"><div class="view-count">▶ 8.2K</div></div>
+                    <div class="video-item"><img src="https://picsum.photos/seed/v3/300/400"><div class="view-count">▶ 45K</div></div>
+                `;
             }
         }
 
         function animateCounters() {
-            // Lecture des vraies valeurs dans le stockage
             const realFollowers = localStorage.getItem('floy_following_count') || "850";
-            const followersTarget = document.getElementById('followers-target');
-            followersTarget.setAttribute('data-target', realFollowers);
+            document.getElementById('followers-target').setAttribute('data-target', realFollowers);
 
             const counters = document.querySelectorAll('.counter');
             counters.forEach(counter => {
