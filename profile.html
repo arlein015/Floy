@@ -12,197 +12,105 @@
             --blanc: #fff; 
         }
         
-        body, html { margin: 0; padding: 0; background: var(--noir); color: var(--blanc); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body, html { 
+            margin: 0; padding: 0; 
+            background: var(--noir); color: var(--blanc); 
+            font-family: 'Segoe UI', sans-serif; 
+            overflow-x: hidden; 
+        }
 
         /* --- BARRE DU HAUT --- */
-        .top-bar { position: absolute; top: 15px; right: 15px; z-index: 10; cursor: pointer; }
+        .top-bar { 
+            display: flex; justify-content: flex-end; align-items: center;
+            padding: 15px 20px; gap: 20px;
+        }
+        .icon-btn { cursor: pointer; fill: white; transition: 0.2s; }
+        .icon-btn:active { transform: scale(0.9); opacity: 0.7; }
 
         /* --- HEADER PROFIL --- */
-        .profile-header { padding: 40px 20px 20px; text-align: center; }
-        .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; cursor: pointer; }
+        .profile-header { padding: 20px; text-align: center; }
+        .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; }
         .profile-pic { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--orange-floy); object-fit: cover; }
-        .verified-badge-photo { position: absolute; bottom: 5px; right: 5px; width: 22px; height: 22px; }
+        .verified-badge { position: absolute; bottom: 5px; right: 5px; width: 22px; height: 22px; }
 
-        .display-name-container { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 2px; }
-        .display-name { font-size: 22px; font-weight: bold; }
-        .verified-badge-name { width: 20px; height: 20px; }
-
+        .display-name { font-size: 22px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .user-handle { font-size: 16px; color: #888; margin-bottom: 5px; }
-        .user-link { color: var(--orange-floy); text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 8px; display: block; height: 18px; }
 
-        .stats-row { display: flex; justify-content: center; gap: 25px; margin: 20px 0; }
-        .stat-item { text-align: center; min-width: 80px; }
-        .stat-val { font-weight: bold; font-size: 18px; display: block; }
+        .stats-row { display: flex; justify-content: center; gap: 25px; margin: 25px 0; }
+        .stat-item { text-align: center; cursor: pointer; min-width: 80px; }
+        .stat-val { font-weight: bold; font-size: 20px; display: block; }
         .stat-lab { color: #888; font-size: 12px; }
 
         /* --- BOUTONS --- */
-        .btn-main { width: 90%; background: var(--orange-floy); border: none; color: #000; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-bottom: 10px; }
+        .btn-main { width: 90%; background: var(--orange-floy); border: none; color: #000; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin: 0 auto 15px; display: block; }
         .btn-row { display: flex; gap: 10px; width: 90%; margin: 0 auto; }
-        .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
 
-        /* --- MODALS --- */
-        .modal { position: fixed; top: 100%; left: 0; width: 100%; height: 100%; background: var(--noir); z-index: 500; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .modal.open { top: 0; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        
-        #fileInput { display: none; }
-        .input-group { margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
-        .input-group label { display: block; color: #555; font-size: 12px; margin-bottom: 5px; }
-        .input-group input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; }
-
-        /* --- ANALYTICS TABLEAU DE BORD --- */
-        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-mini-card { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #222; }
-        .earnings-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        .earnings-table td, .earnings-table th { padding: 10px; border-bottom: 1px solid #111; text-align: left; }
-        .flow-chart { height: 80px; display: flex; align-items: flex-end; gap: 4px; margin: 15px 0; background: #0a0a0a; padding: 10px; border-radius: 8px; }
-        .bar { flex: 1; background: var(--orange-floy); opacity: 0.7; border-radius: 2px; }
+        /* --- MENU LATÉRAL (SIDE MENU) --- */
+        .side-menu { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%; background: #0a0a0a; z-index: 1000; transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); box-shadow: -5px 0 15px rgba(0,0,0,0.5); }
+        .side-menu.active { right: 0; }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; }
+        .menu-overlay.active { display: block; }
+        .menu-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+        .menu-item { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #111; display: flex; align-items: center; gap: 12px; }
+        .menu-item:active { background: #1a1a1a; }
 
         /* --- NAV BAR --- */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
         .nav-icon { width: 28px; height: 28px; fill: #666; cursor: pointer; }
         .nav-icon.active { fill: white; }
-        .btn-plus-large { background: var(--orange-floy); width: 65px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 28px; cursor: pointer; }
-          /* Bouton Burger */
-.menu-burger {
-    position: absolute;
-    top: 15px;
-    right: 55px; /* À côté du bouton partager */
-    z-index: 100;
-    cursor: pointer;
-}
-
-/* Le Menu Latéral */
-.side-menu {
-    position: fixed;
-    top: 0;
-    right: -100%; /* Caché par défaut */
-    width: 80%;
-    max-width: 300px;
-    height: 100%;
-    background: #0a0a0a;
-    z-index: 1000;
-    transition: 0.4s cubic-bezier(0.17, 0.84, 0.44, 1);
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-}
-
-.side-menu.active {
-    right: 0;
-}
-
-.menu-header {
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #222;
-}
-
-.close-btn {
-    font-size: 30px;
-    cursor: pointer;
-}
-
-.menu-list {
-    padding: 10px 0;
-}
-
-.menu-item {
-    padding: 15px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.menu-item:active {
-    background: #1a1a1a;
-}
-
-/* Fond sombre quand le menu est ouvert */
-.menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    z-index: 999;
-}
-
-.menu-overlay.active {
-    display: block;
-}
+        .btn-plus-large { background: var(--orange-floy); width: 60px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 24px; cursor: pointer; }
     </style>
 </head>
 <body onload="animateCounters()">
 
-    <div class="top-bar" onclick="alert('Lien de profil copié !')">
-        <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+    <div class="top-bar">
+        <svg class="icon-btn" onclick="alert('Lien copié !')" width="24" height="24" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+        <svg class="icon-btn" onclick="toggleMenu()" width="28" height="28" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </div>
 
     <div class="profile-header">
-        <div class="profile-pic-container" onclick="openModal('editModal')">
-            <img src="https://i.pravatar.cc/150?u=Arlein" class="profile-pic" id="profImg">
-            <svg class="verified-badge-photo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF7A1A"/><path d="M17 9L11 15L7 11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <div class="profile-pic-container">
+            <img src="https://i.pravatar.cc/150?u=Arlein" class="profile-pic">
+            <svg class="verified-badge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF7A1A"/><path d="M17 9L11 15L7 11" stroke="white" stroke-width="2.5" fill="none"/></svg>
         </div>
 
-        <div class="display-name-container">
-            <div class="display-name" id="profName">Arlein</div>
-            <svg class="verified-badge-name" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF7A1A"/><path d="M17 9L11 15L7 11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-        </div>
-
-        <div class="user-handle" id="profUser">@arlein_off</div>
-        <a href="#" class="user-link" id="profLinkDisplay" target="_blank"></a>
+        <div class="display-name">Arlein</div>
+        <div class="user-handle">@arlein_off</div>
 
         <div class="stats-row">
-            <div class="stat-item"><span class="stat-val counter" data-target="124">0</span><span class="stat-lab">Abonnements</span></div>
-            <div class="stat-item"><span class="stat-val counter" data-target="850">0</span><span class="stat-lab">Abonnés (K)</span></div>
-            <div class="stat-item"><span class="stat-val counter" data-target="12">0</span><span class="stat-lab">J'aime (M)</span></div>
-        </div>
-
-        <button class="btn-main" onclick="this.innerText='Abonné'; this.style.background='#333'; this.style.color='#fff'">Suivre</button>
-        <div class="btn-row">
-            <button class="btn-sec" onclick="openModal('editModal')">Modifier</button>
-            <button class="btn-sec" onclick="openModal('statsModal')">Tableau de bord</button>
-        </div>
-    </div>
-
-    <div class="modal" id="editModal">
-        <div class="modal-header">
-            <span onclick="closeModal('editModal')" style="cursor:pointer">Annuler</span>
-            <span style="font-weight:bold">Modifier le profil</span>
-            <span style="color:var(--orange-floy); font-weight:bold; cursor:pointer" onclick="saveProfile()">Enregistrer</span>
-        </div>
-        <div style="text-align:center; margin-bottom:30px;">
-            <input type="file" id="fileInput" accept="image/*" onchange="previewImage(this)">
-            <div onclick="document.getElementById('fileInput').click()" style="cursor:pointer">
-                <img src="https://i.pravatar.cc/150?u=Arlein" id="editPreview" style="width:90px; height:90px; border-radius:50%; border:2px solid var(--orange-floy); object-fit: cover;">
-                <p style="color:var(--orange-floy); font-size:14px; margin-top:10px;">Changer la photo</p>
+            <div class="stat-item" onclick="window.location.href='followers.html'">
+                <span class="stat-val counter" id="following-target" data-target="124">0</span>
+                <span class="stat-lab">Abonnements</span>
+            </div>
+            <div class="stat-item" onclick="window.location.href='followers.html'">
+                <span class="stat-val counter" id="followers-target" data-target="850">0</span>
+                <span class="stat-lab">Abonnés</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val counter" data-target="12">0</span>
+                <span class="stat-lab">J'aime (M)</span>
             </div>
         </div>
-        <div class="input-group"><label>Nom</label><input type="text" id="inName" value="Arlein"></div>
-        <div class="input-group"><label>Nom d'utilisateur</label><input type="text" id="inUser" value="@arlein_off"></div>
-        <div class="input-group"><label>Lien / Website</label><input type="text" id="inLink" placeholder="Ex: google.com"></div>
+
+        <button class="btn-main">S'abonner</button>
+        <div class="btn-row">
+            <button class="btn-sec" onclick="window.location.href='edit-profile.html'">Modifier</button>
+            <button class="btn-sec" onclick="window.location.href='follower-growth.html'">Tableau de bord</button>
+        </div>
     </div>
 
-    <div class="modal" id="statsModal">
-        <div class="modal-header"><span onclick="closeModal('statsModal')">Fermer</span><span style="font-weight:bold">Creator Studio</span><span></span></div>
-        <h3 style="font-size:14px; padding:0 10px;">Flux d'activité</h3>
-        <div class="flow-chart">
-            <div class="bar" style="height:40%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:50%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:65%"></div>
+    <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
+    <div id="sideMenu" class="side-menu">
+        <div class="menu-header">
+            <h3>Paramètres</h3>
+            <span style="font-size:30px; cursor:pointer" onclick="toggleMenu()">×</span>
         </div>
-        <div class="analytics-grid">
-            <div class="stat-mini-card"><h4>Vues</h4><p>1.2M</p></div>
-            <div class="stat-mini-card"><h4>Gains</h4><p>1,805 $</p></div>
-        </div>
-        <table class="earnings-table">
-            <tr><th>Source</th><th>Gains</th></tr>
-            <tr><td>Pubs Vidéo</td><td>425.00 $</td></tr>
-            <tr><td>Cadeaux</td><td>180.50 $</td></tr>
-            <tr><td>Sponsors</td><td>1,200.00 $</td></tr>
-        </table>
-        <button class="btn-main" style="margin-top:20px; width:100%" onclick="alert('Retrait en cours...')">Retirer les fonds</button>
+        <div class="menu-item" onclick="window.location.href='edit-profile.html'">⚙️ Paramètres du compte</div>
+        <div class="menu-item" onclick="window.location.href='wallet.html'">💳 Carte & Paiements</div>
+        <div class="menu-item" onclick="window.location.href='privacy.html'">🔒 Confidentialité</div>
+        <div class="menu-item" onclick="window.location.href='security.html'">🛡️ Sécurité</div>
+        <div class="menu-item" onclick="logout()" style="color:#ff4444; border-top: 1px solid #222; margin-top:20px;">🚪 Déconnexion</div>
     </div>
 
     <nav class="nav-bar">
@@ -210,56 +118,34 @@
         <svg class="nav-icon" onclick="window.location.href='explore.html'" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <div class="btn-plus-large" onclick="window.location.href='upload.html'">+</div>
         <svg class="nav-icon" onclick="window.location.href='messages.html'" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
-        <svg class="nav-icon active" onclick="window.location.href='profile.html'" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-     <div class="menu-burger" onclick="toggleMenu()">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-</div>
-
-<div id="sideMenu" class="side-menu">
-    <div class="menu-content">
-        <div class="menu-header">
-            <h3>Paramètres</h3>
-            <span class="close-btn" onclick="toggleMenu()">×</span>
-        </div>
-        
-        <div class="menu-list">
-            <div class="menu-item" onclick="window.location.href='edit-profile.html'">
-                <span>⚙️ Paramètres du compte</span>
-            </div>
-            <div class="menu-item" onclick="window.location.href='wallet.html'">
-                <span>💳 Carte & Paiements</span>
-            </div>
-            <div class="menu-item" onclick="window.location.href='privacy.html'">
-                <span>🔒 Confidentialité</span>
-            </div>
-            <div class="menu-item" onclick="window.location.href='security.html'">
-                <span>🛡️ Sécurité</span>
-            </div>
-            <div class="menu-item" onclick="window.location.href='ads.html'">
-                <span>📊 Contenu publicitaire</span>
-            </div>
-            <hr style="border: 0; border-top: 1px solid #222; margin: 10px 0;">
-            <div class="menu-item" onclick="logout()">
-                <span style="color: #ff4444;">🚪 Déconnexion</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
+        <svg class="nav-icon active" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
     </nav>
 
     <script>
-        function openModal(id) { document.getElementById(id).classList.add('open'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        function logout() {
+            if(confirm("Se déconnecter de Floy ?")) {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
 
         function animateCounters() {
+            // Lecture des vraies valeurs dans le stockage
+            const realFollowers = localStorage.getItem('floy_following_count') || "850";
+            const followersTarget = document.getElementById('followers-target');
+            followersTarget.setAttribute('data-target', realFollowers);
+
             const counters = document.querySelectorAll('.counter');
             counters.forEach(counter => {
                 const target = +counter.getAttribute('data-target');
                 let count = 0;
                 const updateCount = () => {
-                    const speed = target / 50;
+                    const speed = target / 40 || 1;
                     if (count < target) {
                         count += Math.ceil(speed);
                         counter.innerText = count;
@@ -271,38 +157,6 @@
                 updateCount();
             });
         }
-
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) { document.getElementById('editPreview').src = e.target.result; }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function saveProfile() {
-            document.getElementById('profName').innerText = document.getElementById('inName').value;
-            document.getElementById('profUser').innerText = document.getElementById('inUser').value;
-            const linkVal = document.getElementById('inLink').value;
-            const linkDisplay = document.getElementById('profLinkDisplay');
-            if(linkVal) {
-                linkDisplay.innerText = linkVal;
-                linkDisplay.href = linkVal.startsWith('http') ? linkVal : 'https://' + linkVal;
-            }
-            document.getElementById('profImg').src = document.getElementById('editPreview').src;
-            closeModal('editModal');
-        }
-        function toggleMenu() {
-    document.getElementById('sideMenu').classList.toggle('active');
-    document.getElementById('menuOverlay').classList.toggle('active');
-}
-
-function logout() {
-    if(confirm("Voulez-vous vraiment vous déconnecter de Floy ?")) {
-        localStorage.clear(); // Optionnel : vide la session
-        window.location.href = 'login.html'; // Redirige vers la connexion
-    }
-}
     </script>
 </body>
 </html>
