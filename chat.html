@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Floy - Chat Permanent</title>
+    <title>Floy - Chat Pro</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; }
         body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -13,30 +13,33 @@
         .back-btn { cursor: pointer; margin-right: 15px; font-size: 22px; }
         .user-img { width: 38px; height: 38px; border-radius: 50%; background: #222; margin-right: 12px; }
 
+        /* BARRE DE RECHERCHE DANS LE CHAT */
+        .search-chat-bar { background: #0a0a0a; padding: 8px 15px; display: flex; border-bottom: 1px solid #111; }
+        .search-chat-bar input { flex: 1; background: #1a1a1a; border: none; border-radius: 8px; padding: 8px; color: white; font-size: 12px; outline: none; }
+
         /* ZONE DE MESSAGES */
-        .messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 100px; }
+        .messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .bubble { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
         .received { align-self: flex-start; background: #1a1a1a; border-bottom-left-radius: 4px; }
         .sent { align-self: flex-end; background: var(--orange); color: black; font-weight: 500; border-bottom-right-radius: 4px; }
-        
-        /* Style pour les images envoyées */
-        .chat-img { max-width: 100%; border-radius: 10px; margin-top: 5px; display: block; }
+        .chat-img { max-width: 100%; border-radius: 10px; margin-top: 5px; }
 
-        /* MENU D'ATTACHEMENT */
-        .attach-menu {
-            position: absolute; bottom: 80px; left: 15px; background: #1a1a1a; 
-            border: 1px solid #333; border-radius: 15px; display: none; 
-            flex-direction: column; padding: 10px; z-index: 100;
+        /* BARRE DE SAISIE (CLAVIER FIX) */
+        .input-area { 
+            padding: 12px 15px; background: var(--noir); border-top: 1px solid #1a1a1a; 
+            display: flex; align-items: center; gap: 10px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
         }
-        .attach-option { display: flex; align-items: center; gap: 10px; padding: 10px 15px; cursor: pointer; font-size: 14px; }
+        .message-input { flex: 1; background: #111; border: 1px solid #222; padding: 12px 18px; border-radius: 25px; color: white; outline: none; font-size: 16px; /* 16px évite le zoom auto sur iPhone */ }
+        .btn-plus { width: 40px; height: 40px; background: #1a1a1a; border-radius: 50%; border: none; color: white; cursor: pointer; }
+        .btn-send { width: 42px; height: 42px; background: var(--orange); border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; }
 
-        /* BARRE DE SAISIE */
-        .input-area { padding: 12px 15px; background: var(--noir); border-top: 1px solid #1a1a1a; display: flex; align-items: center; gap: 10px; position: relative; }
-        .btn-plus { width: 40px; height: 40px; background: #1a1a1a; border-radius: 50%; border: none; color: white; cursor: pointer; font-size: 20px; }
-        .message-input { flex: 1; background: #111; border: 1px solid #222; padding: 12px 18px; border-radius: 25px; color: white; outline: none; }
-        .btn-send { width: 42px; height: 42px; background: var(--orange); border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-
+        /* MENU + */
+        .attach-menu { position: absolute; bottom: 80px; left: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: none; flex-direction: column; padding: 10px; z-index: 100; }
+        .attach-option { display: flex; align-items: center; gap: 10px; padding: 10px 15px; cursor: pointer; }
         input[type="file"] { display: none; }
+        
+        /* Highlight pour la recherche */
+        .highlight { background: yellow; color: black; border-radius: 2px; }
     </style>
 </head>
 <body>
@@ -47,16 +50,18 @@
         <div style="font-weight: bold;">Alexandre Dupont</div>
     </div>
 
-    <div class="messages-container" id="chatBox">
-        </div>
+    <div class="search-chat-bar">
+        <input type="text" id="searchInput" placeholder="Rechercher dans la discussion..." oninput="searchMessages()">
+    </div>
+
+    <div class="messages-container" id="chatBox"></div>
 
     <div class="attach-menu" id="attachMenu">
         <label class="attach-option" for="upload-photo">🖼️ Photo <input type="file" id="upload-photo" accept="image/*" onchange="handleImage(this)"></label>
-        <label class="attach-option" for="upload-video">🎥 Vidéo (Simulée)</label>
         <label class="attach-option" onclick="clearChat()" style="color: #ff4444;">🗑️ Effacer tout</label>
     </div>
 
-    <div class="input-area">
+    <div class="input-area" id="inputArea">
         <button class="btn-plus" onclick="toggleMenu()">+</button>
         <input type="text" id="msgInput" class="message-input" placeholder="Message..." autocomplete="off">
         <button class="btn-send" onclick="sendMessage()">
@@ -69,52 +74,53 @@
         const msgInput = document.getElementById('msgInput');
         const attachMenu = document.getElementById('attachMenu');
 
-        // Charger les messages au démarrage
-        window.onload = () => {
-            const savedChat = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
-            savedChat.forEach(msg => renderBubble(msg.content, msg.type, msg.isImage));
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
+        window.onload = () => { loadMessages(); };
 
-        function toggleMenu() {
-            attachMenu.style.display = (attachMenu.style.display === 'flex') ? 'none' : 'flex';
+        function loadMessages() {
+            chatBox.innerHTML = "";
+            const history = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
+            history.forEach(msg => renderBubble(msg.content, msg.type, msg.isImage));
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
+
+        // FIX CLAVIER : Scroll auto quand on clique sur l'input
+        msgInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+                window.scrollTo(0, 0); // Empêche le décalage du body
+            }, 300);
+        });
 
         function sendMessage() {
             const text = msgInput.value.trim();
             if (text !== "") {
-                saveAndRender(text, 'sent', false);
+                saveMessage(text, 'sent', false);
                 msgInput.value = "";
                 attachMenu.style.display = 'none';
             }
         }
 
-        // Gérer l'envoi d'image réelle
         function handleImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    saveAndRender(e.target.result, 'sent', true);
-                };
+                reader.onload = (e) => saveMessage(e.target.result, 'sent', true);
                 reader.readAsDataURL(input.files[0]);
                 attachMenu.style.display = 'none';
             }
         }
 
-        // Sauvegarder dans localStorage et afficher
-        function saveAndRender(content, type, isImage) {
+        function saveMessage(content, type, isImage) {
             const history = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
             history.push({ content, type, isImage });
             localStorage.setItem('floy_chat_history', JSON.stringify(history));
-            
             renderBubble(content, type, isImage);
         }
 
-        // Afficher la bulle à l'écran
         function renderBubble(content, type, isImage) {
             const div = document.createElement('div');
             div.className = `bubble ${type}`;
-            
+            div.setAttribute('data-text', isImage ? "" : content.toLowerCase());
+
             if (isImage) {
                 const img = document.createElement('img');
                 img.src = content;
@@ -123,19 +129,31 @@
             } else {
                 div.innerText = content;
             }
-
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function clearChat() {
-            if(confirm("Supprimer toute la discussion ?")) {
-                localStorage.removeItem('floy_chat_history');
-                chatBox.innerHTML = "";
-                attachMenu.style.display = 'none';
-            }
+        // FONCTION RECHERCHE
+        function searchMessages() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const bubbles = document.querySelectorAll('.bubble');
+            bubbles.forEach(b => {
+                if (term === "") { b.style.opacity = "1"; b.style.display = "block"; }
+                else {
+                    const txt = b.getAttribute('data-text');
+                    if (txt.includes(term)) {
+                        b.style.opacity = "1";
+                        b.style.display = "block";
+                    } else {
+                        b.style.opacity = "0.2";
+                        b.style.display = "none";
+                    }
+                }
+            });
         }
 
+        function toggleMenu() { attachMenu.style.display = (attachMenu.style.display === 'flex') ? 'none' : 'flex'; }
+        function clearChat() { if(confirm("Vider la discussion ?")) { localStorage.removeItem('floy_chat_history'); loadMessages(); } }
         msgInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 
