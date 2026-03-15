@@ -3,35 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Bienvenue</title>
-    <link rel="icon" type="image/png" href="F4.png">
+    <title>Floy - Home</title>
     <style>
         :root { --orange-floy: #FF7A1A; --noir: #000; }
-        body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-        /* LOGO 3D SIGNATURE FLOY */
-        .floy-logo-3d {
-            width: 120px; height: 120px; background: var(--orange-floy);
-            border-radius: 30px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 30px rgba(255, 122, 26, 0.4), inset 0 2px 5px rgba(255,255,255,0.2);
-            animation: float 3s infinite ease-in-out; margin-bottom: 20px;
-        }
-        .floy-logo-3d span { color: black; font-size: 45px; font-weight: 900; letter-spacing: -2px; }
-
-        .btn-box { width: 85%; max-width: 320px; display: flex; flex-direction: column; gap: 12px; }
-        .btn { padding: 16px; border-radius: 15px; font-weight: bold; text-decoration: none; text-align: center; transition: 0.3s; }
-        .btn-signup { background: var(--orange-floy); color: black; }
-        .btn-login { background: transparent; color: white; border: 1px solid #333; }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; }
+        .feed-item { border-bottom: 1px solid #111; padding-bottom: 15px; margin-bottom: 15px; }
+        .post-img { width: 100%; aspect-ratio: 1/1; background: #111; object-fit: cover; }
+        .post-info { padding: 12px; }
+        .user-name { font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
-    <div class="floy-logo-3d"><span>Floy</span></div>
-    <p style="color:#888; margin-bottom:40px;">L'instant en orange.</p>
-    <div class="btn-box">
-        <a href="signup.html" class="btn btn-signup">S'INSCRIRE</a>
-        <a href="login.html" class="btn btn-login">SE CONNECTER</a>
+    <div style="padding: 15px; font-weight: 900; color: var(--orange-floy); font-size: 20px;">FLOY</div>
+    
+    <div id="feed">
+        <div class="feed-item">
+            <div class="post-info"><span class="user-name">alex_dev</span> • Super projet !</div>
+            <img src="https://picsum.photos/500?random=11" class="post-img">
+        </div>
+        <div class="feed-item">
+            <div class="post-info"><span class="user-name">lisa_floy</span> • Enfin en ligne 🚀</div>
+            <img src="https://picsum.photos/500?random=12" class="post-img">
+        </div>
     </div>
+
+    <script src="navbar.js"></script>
 </body>
 </html>
