@@ -140,6 +140,32 @@
             }
         }
 
+        // Fonction dans chat.html pour gérer l'upload
+async function handleFileUpload(input) {
+    if (input.files && input.files[0]) {
+        try {
+            // APPEL DU MODULE UPLOAD
+            const fileProcessed = await UploadModule.processFile(input.files[0]);
+
+            // ENVOI AU CHAT (Enregistre l'objet complet)
+            save({
+                content: fileProcessed.content,
+                sender: CURRENT_USER, // U1 ou U2
+                fileName: fileProcessed.fileName,
+                isImg: fileProcessed.type === 'image',
+                isVid: fileProcessed.type === 'video',
+                isDoc: fileProcessed.type === 'doc'
+            });
+
+            // Réinitialise l'input pour pouvoir renvoyer le même fichier si besoin
+            input.value = "";
+            
+        } catch (error) {
+            // Affiche l'erreur si le fichier est trop lourd par exemple
+            alert(error);
+        }
+    }
+}
         function saveVoice() {
             const blob = new Blob(audioChunks, { type: 'audio/mp3' });
             const reader = new FileReader();
@@ -190,6 +216,6 @@
         }
 
         msgInput.onkeypress = (e) => { if(e.key === "Enter") sendText(); };
-    </script>
+    <script src="upload.js"></script>
 </body>
 </html>
