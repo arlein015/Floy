@@ -1,1 +1,22 @@
+<style>
+    /* Style universel pour le badge */
+    .floy-badge {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 4px;
+        flex-shrink: 0; /* Empêche le badge de s'écraser */
+    }
 
+    /* Taille pour le Profil (Grand) */
+    .name-container .floy-badge {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Taille pour le Feed/Messages (Petit) */
+    .feed-username .floy-badge, 
+    .msg-user .floy-badge {
+        width: 14px;
+        height: 14px;
+    }
+</style>
