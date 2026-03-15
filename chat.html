@@ -8,35 +8,46 @@
         :root { --orange: #FF7A1A; --noir: #000; }
         body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* HEADER AVEC FLÈCHE RETOUR */
+        /* HEADER */
         .chat-header { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #1a1a1a; background: var(--noir); }
         .back-btn { cursor: pointer; margin-right: 15px; font-size: 24px; padding: 5px; }
-        .user-img { width: 35px; height: 35px; border-radius: 50%; background: #222; margin-right: 10px; }
 
         /* ZONE MESSAGES */
         #chatBox { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { max-width: 75%; padding: 12px; border-radius: 18px; font-size: 15px; position: relative; user-select: none; }
+        .bubble { max-width: 75%; padding: 12px; border-radius: 18px; font-size: 15px; position: relative; }
         .sent { align-self: flex-end; background: var(--orange); color: black; border-bottom-right-radius: 2px; }
         .received { align-self: flex-start; background: #1a1a1a; border-bottom-left-radius: 2px; }
-        .chat-img { max-width: 100%; border-radius: 10px; display: block; }
 
-        /* MENU CONTEXTUEL (APPUI LONG) */
+        /* TAILLE DES IMAGES/VIDÉOS RÉDUITE */
+        .chat-img, .chat-vid { 
+            max-width: 220px; /* Taille réduite */
+            max-height: 300px;
+            border-radius: 10px; 
+            display: block; 
+            margin: 2px 0;
+        }
+
+        /* MENU CONTEXTUEL */
         #contextMenu { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999; }
         .menu-box { background: #1a1a1a; width: 260px; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
         .menu-opt { padding: 15px; text-align: center; border-bottom: 1px solid #222; font-weight: bold; cursor: pointer; }
-        .menu-opt:active { background: #252525; }
 
-        /* BARRE DE SAISIE (BAS DE PAGE REEL) */
+        /* BARRE DE SAISIE */
         .input-area { 
-            background: #080808; padding: 10px 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a;
-            padding-bottom: env(safe-area-inset-bottom); /* Gère l'espace des iPhones récents */
+            background: #080808; padding: 10px 15px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #1a1a1a;
+            padding-bottom: env(safe-area-inset-bottom);
         }
         .message-input { 
             flex: 1; background: #151515; border: 1px solid #222; padding: 12px 18px; 
             border-radius: 25px; color: white; font-size: 16px; outline: none; 
         }
-        .btn-plus { width: 40px; height: 40px; background: #222; border-radius: 50%; border: none; color: white; font-size: 22px; cursor: pointer; }
-        .btn-send { width: 42px; height: 42px; background: var(--orange); border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-icon { background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 5px; }
+        .btn-plus { color: white; font-size: 28px; font-weight: 300; }
+        
+        .btn-send { 
+            width: 42px; height: 42px; background: var(--orange); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+        }
 
         input[type="file"] { display: none; }
     </style>
@@ -45,7 +56,6 @@
 
     <div class="chat-header">
         <div class="back-btn" onclick="window.location.href='message-list.html'">←</div>
-        <img src="https://picsum.photos/100?random=1" class="user-img">
         <b id="chatTitle">Alexandre Dupont</b>
     </div>
 
@@ -54,20 +64,22 @@
     <div id="contextMenu" onclick="this.style.display='none'">
         <div class="menu-box" onclick="event.stopPropagation()">
             <div class="menu-opt" onclick="copyAction()">📋 Copier</div>
-            <div class="menu-opt" onclick="pinAction()">📌 Épingler</div>
-            <div id="saveMediaBtn" class="menu-opt" onclick="saveMediaAction()">💾 Enregistrer</div>
             <div class="menu-opt" onclick="deleteAction()" style="color: #ff4444;">🗑️ Supprimer</div>
-            <div class="menu-opt" style="background: #222;" onclick="document.getElementById('contextMenu').style.display='none'">Annuler</div>
+            <div class="menu-opt" onclick="document.getElementById('contextMenu').style.display='none'">Annuler</div>
         </div>
     </div>
 
     <div class="input-area">
-        <button class="btn-plus" onclick="document.getElementById('fileIn').click()">+</button>
+        <button class="btn-icon btn-plus" onclick="document.getElementById('fileIn').click()">+</button>
         <input type="file" id="fileIn" accept="image/*,video/*" onchange="uploadMedia(this)">
         
-        <input type="text" id="msgInput" class="message-input" placeholder="Message..." inputmode="text">
-        
-        <button class="btn-send" onclick="send()">
+        <input type="text" id="msgInput" class="message-input" placeholder="Message..." oninput="toggleButtons()">
+
+        <button id="micBtn" class="btn-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </button>
+
+        <button id="sendBtn" class="btn-icon btn-send" onclick="send()" style="display: none;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
     </div>
@@ -75,10 +87,11 @@
     <script>
         const chatBox = document.getElementById('chatBox');
         const msgInput = document.getElementById('msgInput');
+        const micBtn = document.getElementById('micBtn');
+        const sendBtn = document.getElementById('sendBtn');
         let selectedIdx = null;
         let holdTimer;
 
-        // Charger l'historique permanent
         function load() {
             chatBox.innerHTML = "";
             const logs = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
@@ -86,23 +99,35 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        // Basculer entre Micro et Envoyer
+        function toggleButtons() {
+            if (msgInput.value.trim() !== "") {
+                micBtn.style.display = "none";
+                sendBtn.style.display = "flex";
+            } else {
+                micBtn.style.display = "flex";
+                sendBtn.style.display = "none";
+            }
+        }
+
         function send() {
             const val = msgInput.value.trim();
             if(!val) return;
-            saveAndReload({content: val, type: 'sent', isImg: false});
+            save({content: val, type: 'sent', isImg: false});
             msgInput.value = "";
-            msgInput.focus(); // Garde le clavier ouvert
+            toggleButtons();
+            msgInput.focus();
         }
 
         function uploadMedia(input) {
             if(input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => saveAndReload({content: e.target.result, type: 'sent', isImg: true});
+                reader.onload = (e) => save({content: e.target.result, type: 'sent', isImg: true});
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function saveAndReload(msg) {
+        function save(msg) {
             const logs = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
             logs.push(msg);
             localStorage.setItem('floy_chat_history', JSON.stringify(logs));
@@ -112,7 +137,6 @@
         function drawBubble(m, i) {
             const b = document.createElement('div');
             b.className = `bubble ${m.type}`;
-            
             if(m.isImg) {
                 const img = document.createElement('img');
                 img.src = m.content;
@@ -122,20 +146,16 @@
                 b.innerText = m.content;
             }
 
-            // Gestion appui long
             b.onmousedown = b.ontouchstart = () => {
                 holdTimer = setTimeout(() => {
                     selectedIdx = i;
-                    document.getElementById('saveMediaBtn').style.display = m.isImg ? 'block' : 'none';
                     document.getElementById('contextMenu').style.display = 'flex';
                 }, 600);
             };
             b.onmouseup = b.ontouchend = () => clearTimeout(holdTimer);
-
             chatBox.appendChild(b);
         }
 
-        // Actions du menu
         function deleteAction() {
             let logs = JSON.parse(localStorage.getItem('floy_chat_history'));
             logs.splice(selectedIdx, 1);
@@ -144,29 +164,8 @@
             document.getElementById('contextMenu').style.display = 'none';
         }
 
-        function copyAction() {
-            const logs = JSON.parse(localStorage.getItem('floy_chat_history'));
-            if(!logs[selectedIdx].isImg) {
-                navigator.clipboard.writeText(logs[selectedIdx].content);
-                alert("Copié !");
-            }
-            document.getElementById('contextMenu').style.display = 'none';
-        }
-
-        function saveMediaAction() {
-            const logs = JSON.parse(localStorage.getItem('floy_chat_history'));
-            const a = document.createElement('a');
-            a.href = logs[selectedIdx].content;
-            a.download = "Floy_Media_" + Date.now();
-            a.click();
-            document.getElementById('contextMenu').style.display = 'none';
-        }
-
-        function pinAction() { alert("Message épinglé !"); document.getElementById('contextMenu').style.display = 'none'; }
-
         msgInput.onkeypress = (e) => { if(e.key === "Enter") send(); };
         window.onload = load;
     </script>
-
 </body>
 </html>
