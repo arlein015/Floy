@@ -2,148 +2,186 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Messages Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Floy - Messages</title>
     <script src="db.js"></script>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; }
-        body { background: var(--noir); color: white; font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #1a1a1a; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--noir); color: white; font-family: -apple-system, sans-serif; 
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
+        }
 
-        /* HEADER & SEARCH */
+        /* HEADER */
         .header { padding: 15px 20px 5px; flex-shrink: 0; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .search-bar { background: #1a1a1a; border-radius: 12px; padding: 10px; display: flex; align-items: center; }
-        .search-bar input { background: transparent; border: none; color: white; margin-left: 10px; outline: none; width: 100%; font-size: 16px; }
+        .header-top h1 { margin: 0; font-size: 26px; font-weight: 800; }
+        
+        /* BARRE DE RECHERCHE */
+        .search-container { background: var(--gris); border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; margin-bottom: 10px; }
+        .search-container input { 
+            background: transparent; border: none; color: white; margin-left: 10px; 
+            outline: none; width: 100%; font-size: 16px; 
+        }
 
-        /* STORY SECTION */
-        .story-bar { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; border-bottom: 1px solid #1a1a1a; flex-shrink: 0; }
+        /* SECTION STORIES */
+        .story-bar { 
+            display: flex; gap: 15px; padding: 10px 20px 15px; 
+            overflow-x: auto; border-bottom: 1px solid #111; flex-shrink: 0; 
+        }
         .story-bar::-webkit-scrollbar { display: none; }
-        .story-item { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; position: relative; }
-        .story-ring { width: 62px; height: 62px; border-radius: 50%; padding: 2px; border: 2px solid var(--orange); background: #111; }
-        .add-story .story-ring { border: 2px dashed #444; }
-        .plus-btn { position: absolute; bottom: 18px; right: 0; background: var(--orange); width: 22px; height: 22px; border-radius: 50%; border: 2px solid black; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; }
-        .story-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .story-name { font-size: 11px; color: #888; text-align: center; width: 65px; overflow: hidden; text-overflow: ellipsis; }
+        
+        .story-item { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; position: relative; }
+        .story-circle { 
+            width: 66px; height: 66px; border-radius: 50%; padding: 2px; 
+            border: 2px solid var(--orange); background: var(--noir);
+        }
+        .add-story .story-circle { border: 2px dashed #444; }
+        .story-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; }
+        
+        .plus-badge { 
+            position: absolute; bottom: 20px; right: 0; background: var(--orange); 
+            width: 22px; height: 22px; border-radius: 50%; border: 2px solid black; 
+            display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; 
+        }
+        .story-name { font-size: 11px; color: #888; max-width: 70px; overflow: hidden; text-overflow: ellipsis; }
 
-        /* LISTE DES MESSAGES */
-        .chat-list { flex: 1; overflow-y: auto; }
-        .chat-item { display: flex; align-items: center; padding: 15px 20px; text-decoration: none; color: white; border-bottom: 0.5px solid #080808; }
-        .chat-item:active { background: #0a0a0a; }
-        .avatar { width: 55px; height: 55px; border-radius: 50%; margin-right: 15px; flex-shrink: 0; object-fit: cover; background: #222; }
+        /* LISTE DES DISCUSSIONS */
+        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+        .chat-item { 
+            display: flex; align-items: center; padding: 12px 20px; 
+            text-decoration: none; color: white; border-bottom: 0.5px solid #0a0a0a; 
+        }
+        .chat-item:active { background: #080808; }
+        
+        .avatar { width: 58px; height: 58px; border-radius: 50%; margin-right: 15px; flex-shrink: 0; object-fit: cover; background: #222; }
         .chat-info { flex: 1; min-width: 0; }
-        .chat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .user-name { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 5px; }
-        .cert-icon { color: var(--orange); }
+        .chat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .user-name { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 4px; }
+        .cert-icon { color: var(--orange); flex-shrink: 0; }
         .last-msg { font-size: 14px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* BOUTON FLOTTANT GROUPE */
-        .fab { position: fixed; bottom: 30px; right: 20px; background: var(--orange); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.6); cursor: pointer; z-index: 99; }
+        .fab { 
+            position: fixed; bottom: 30px; right: 20px; background: var(--orange); 
+            width: 60px; height: 60px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; border: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); cursor: pointer; z-index: 99;
+        }
     </style>
 </head>
 <body>
 
-    <audio id="pop" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"></audio>
+    <audio id="soundPop" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3"></audio>
 
     <div class="header">
         <div class="header-top">
-            <h1 style="margin:0; letter-spacing:-1px;">Messages</h1>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <h1>Messages</h1>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Rechercher..." oninput="refreshList(this.value)">
+        <div class="search-container">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#666"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="searchIn" placeholder="Rechercher..." oninput="refreshUI(this.value)">
         </div>
     </div>
 
-    <div class="story-bar">
-        <div class="story-item add-story" onclick="document.getElementById('stInput').click()">
-            <div class="story-ring">
-                <img src="ma_photo.jpg" class="story-img" onerror="this.src='https://via.placeholder.com/60'">
-                <div class="plus-btn">+</div>
+    <div class="story-bar" id="storyBar">
+        <div class="story-item add-story" onclick="document.getElementById('fileStory').click()">
+            <div class="story-circle">
+                <img src="avatar_placeholder.png" class="story-img" onerror="this.src='https://ui-avatars.com/api/?name=Me&background=333&color=fff'">
+                <div class="plus-badge">+</div>
             </div>
             <span class="story-name">Ajouter</span>
         </div>
-        <input type="file" id="stInput" hidden accept="image/*" onchange="addNewStory(this)">
-        <div id="newStoryArea" style="display:flex; gap:15px;"></div>
+        <input type="file" id="fileStory" hidden accept="image/*" onchange="postNewStory(this)">
+        <div id="dynamicStories" style="display:flex; gap:15px;"></div>
     </div>
 
-    <div class="chat-list" id="chatContainer"></div>
+    <div class="chat-list" id="chatList"></div>
 
-    <button class="fab" onclick="makeGroup()">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="black"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    <button class="fab" onclick="createGroup()">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="black"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
     </button>
 
     <script>
-        // On récupère les contacts et les groupes sauvegardés
-        let baseContacts = [
-            { id: "user1", name: "Alexandre", cert: true, img: "https://i.pravatar.cc/150?u=1" },
-            { id: "user2", name: "Julie Martin", cert: false, img: "https://i.pravatar.cc/150?u=2" }
+        // DONNÉES DE BASE
+        const baseContacts = [
+            { id: "alex_01", name: "Alexandre", cert: true, img: "https://i.pravatar.cc/150?u=a1" },
+            { id: "julie_02", name: "Julie Martin", cert: false, img: "https://i.pravatar.cc/150?u=a2" }
         ];
 
-        // Charger les groupes depuis le stockage local pour qu'ils ne disparaissent pas
-        let groups = JSON.parse(localStorage.getItem('my_groups')) || [];
-
-        function addNewStory(input) {
-            if (input.files[0]) {
+        // 1. GESTION DES STORYS
+        function postNewStory(input) {
+            if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const area = document.getElementById('newStoryArea');
-                    const html = `
-                        <div class="story-item">
-                            <div class="story-ring"><img src="${e.target.result}" class="story-img"></div>
-                            <span class="story-name">Moi</span>
-                        </div>`;
-                    area.insertAdjacentHTML('afterbegin', html);
+                    const area = document.getElementById('dynamicStories');
+                    const div = document.createElement('div');
+                    div.className = 'story-item';
+                    div.innerHTML = `<div class="story-circle"><img src="${e.target.result}" class="story-img"></div><span class="story-name">Moi</span>`;
+                    area.prepend(div);
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function makeGroup() {
+        // 2. CRÉATION DE GROUPE
+        function createGroup() {
             const name = prompt("Nom du groupe :");
             if (name) {
-                const newG = { id: "grp_" + Date.now(), name: name, cert: false, isGroup: true, img: "https://cdn-icons-png.flaticon.com/512/615/615075.png" };
+                const groups = JSON.parse(localStorage.getItem('floy_groups') || "[]");
+                const newG = { id: "grp_" + Date.now(), name: name, isGroup: true, img: "https://ui-avatars.com/api/?name=" + name + "&background=FF7A1A&color=000" };
                 groups.unshift(newG);
-                localStorage.setItem('my_groups', JSON.stringify(groups));
-                document.getElementById('pop').play();
-                refreshList();
+                localStorage.setItem('floy_groups', JSON.stringify(groups));
+                document.getElementById('soundPop').play();
+                refreshUI();
             }
         }
 
-        async function refreshList(search = "") {
-            const container = document.getElementById('chatContainer');
+        // 3. RENDU DE LA LISTE (BOUCLE CORRIGÉE)
+        async function refreshUI(query = "") {
+            const container = document.getElementById('chatList');
+            if (!container) return;
+
+            const groups = JSON.parse(localStorage.getItem('floy_groups') || "[]");
             const all = [...groups, ...baseContacts];
-            let finalData = [];
+            
+            let listHTML = "";
 
             for (let c of all) {
-                if (search && !c.name.toLowerCase().includes(search.toLowerCase())) continue;
+                if (query && !c.name.toLowerCase().includes(query.toLowerCase())) continue;
                 
-                // On récupère les messages via db.js (IndexedDB)
-                const msgs = await DBModule.getMessages(c.id);
-                const last = msgs[msgs.length - 1];
-                
-                finalData.push({ ...c, last, ts: last ? (last.timestamp || 0) : 0 });
-            }
+                // On tente de récupérer le dernier message
+                let lastText = "Démarrer un chat";
+                try {
+                    const msgs = await DBModule.getMessages(c.id);
+                    if (msgs && msgs.length > 0) {
+                        const last = msgs[msgs.length - 1];
+                        lastText = last.type === 'text' ? last.content : "📷 Média";
+                    }
+                } catch(e) { console.error("DB offline"); }
 
-            // TRI : Le plus récent en haut
-            finalData.sort((a, b) => b.ts - a.ts);
-
-            container.innerHTML = finalData.map(c => `
-                <a href="chat.html?id=${c.id}" class="chat-item">
-                    <img src="${c.img}" class="avatar">
-                    <div class="chat-info">
-                        <div class="chat-top">
-                            <span class="user-name">
-                                ${c.name}
-                                ${c.cert ? '<svg class="cert-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7l-3.3-3.3 1.4-1.4 1.9 1.9 5.3-5.3 1.4 1.4-6.7 6.7z"/></svg>' : ''}
-                            </span>
+                listHTML += `
+                    <a href="chat.html?id=${c.id}" class="chat-item">
+                        <img src="${c.img}" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=${c.name}'">
+                        <div class="chat-info">
+                            <div class="chat-row">
+                                <span class="user-name">
+                                    ${c.name}
+                                    ${c.cert ? '<svg class="cert-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7l-3.3-3.3 1.4-1.4 1.9 1.9 5.3-5.3 1.4 1.4-6.7 6.7z"/></svg>' : ''}
+                                </span>
+                            </div>
+                            <div class="last-msg">${lastText}</div>
                         </div>
-                        <div class="last-msg">${c.last ? (c.last.type === 'text' ? c.last.content : "📷 Photo/Média") : "Démarrer une discussion"}</div>
-                    </div>
-                </a>
-            `).join('');
+                    </a>
+                `;
+            }
+            container.innerHTML = listHTML;
         }
 
-        window.onload = () => refreshList();
+        window.onload = () => refreshUI();
     </script>
 </body>
 </html>
