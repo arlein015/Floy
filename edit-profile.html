@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floy - Modifier le Profil</title>
+    <style>
+        :root { 
+            --orange-floy: #FF7A1A; 
+            --noir: #000; 
+            --gris-fonce: #0A0A0A;
+            --gris-moyen: #161616; 
+            --blanc: #fff; 
+        }
 
+        body { 
+            margin: 0; 
+            background: var(--noir); 
+            color: var(--blanc); 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #222;
+            position: sticky;
+            top: 0;
+            background: var(--noir);
+            z-index: 100;
+        }
+
+        .back-btn { font-size: 24px; cursor: pointer; color: var(--blanc); text-decoration: none; }
+        .save-btn { color: var(--orange-floy); font-weight: bold; cursor: pointer; }
+
+        /* --- PHOTO DE PROFIL --- */
+        .profile-photo-section {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .photo-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--orange-floy);
+        }
+
+        .camera-icon {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--orange-floy);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--noir);
+        }
+
+        /* --- SECTIONS DE MENU --- */
+        .section-title {
+            padding: 15px 20px 5px;
+            font-size: 13px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-list {
+            background: var(--gris-fonce);
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #1a1a1a;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:active { background: #222; }
+
+        .menu-item-info { display: flex; align-items: center; gap: 15px; }
+        .menu-item-info span { font-size: 16px; }
+        
+        .value-text { color: #888; font-size: 14px; margin-right: 10px; }
+        .arrow { color: #444; font-weight: bold; }
+
+        /* --- INPUTS --- */
+        .input-item {
+            background: var(--gris-fonce);
+            padding: 10px 20px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .input-item label { display: block; font-size: 12px; color: #555; margin-bottom: 5px; }
+        .input-item input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            padding: 5px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="profile.html" class="back-btn">‹</a>
+        <span style="font-weight:bold">Modifier le profil</span>
+        <span class="save-btn" onclick="saveAll()">Enregistrer</span>
+    </div>
+
+    <div class="profile-photo-section">
+        <div class="photo-container" onclick="alert('Ouvrir la galerie')">
+            <img src="https://i.pravatar.cc/150?u=Arlein" id="current-photo">
+            <div class="camera-icon">📷</div>
+        </div>
+        <p style="color:var(--orange-floy); font-size:14px; margin-top:10px;">Changer de photo</p>
+    </div>
+
+    <div class="section-title">Informations de base</div>
+    <div class="input-item">
+        <label>Nom</label>
+        <input type="text" id="name" value="Arlein">
+    </div>
+    <div class="input-item">
+        <label>Nom d'utilisateur</label>
+        <input type="text" id="username" value="@arlein_off">
+    </div>
+    <div class="input-item" onclick="window.location.href='profile-banner.html'">
+        <label>Bannière</label>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:#888; font-size:14px;">Modifier l'image de fond</span>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <div class="section-title">Personnalisation Floy</div>
+    <div class="menu-list">
+        <div class="menu-item" onclick="window.location.href='profile-theme.html'">
+            <div class="menu-item-info"><span>🎨 Thème & Couleurs</span></div>
+            <span class="arrow">›</span>
+        </div>
+        <div class="menu-item" onclick="window.location.href='profile-music.html'">
+            <div class="menu-item-info"><span>🎵 Musique du profil</span></div>
+            <span class="value-text">Désactivée</span>
+            <span class="arrow">›</span>
+        </div>
+        <div class="menu-item" onclick="window.location.href='profile-widgets.html'">
+            <div class="menu-item-info"><span>🧩 Widgets</span></div>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <div class="section-title">Outils & Marketing</div>
+    <div class="menu-list">
+        <div class="menu-item" onclick="window.location.href='profile-qr.html'">
+            <div class="menu-item-info"><span>🔳 Mon QR Code</span></div>
+            <span class="arrow">›</span>
+        </div>
+        <div class="menu-item" onclick="window.location.href='promo-codes.html'">
+            <div class="menu-item-info"><span>🎟️ Codes Promo</span></div>
+            <span class="arrow">›</span>
+        </div>
+        <div class="menu-item" onclick="window.location.href='profile-visit-log.html'">
+            <div class="menu-item-info"><span>👁️ Historique des visites</span></div>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <div class="section-title">Programme</div>
+    <div class="menu-list">
+        <div class="menu-item" onclick="window.location.href='beta-program.html'">
+            <div class="menu-item-info"><span>🚀 Programme Beta</span></div>
+            <span class="value-text" style="color:var(--orange-floy)">Inscrit</span>
+            <span class="arrow">›</span>
+        </div>
+    </div>
+
+    <script>
+        function saveAll() {
+            // Ici tu peux ajouter la logique pour sauvegarder dans LocalStorage
+            alert("Profil mis à jour !");
+            window.location.href = 'profile.html';
+        }
+    </script>
+
+</body>
+</html>
