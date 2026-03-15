@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Floy - Chat Final</title>
+    <title>Floy - Chat avec Vocal</title>
     <script src="db.js"></script>
     <script src="upload.js"></script>
     <style>
@@ -15,28 +15,27 @@
         .user-info { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 17px; }
         .verify-badge { color: var(--bleu); display: flex; }
 
-        /* ZONE MESSAGES ILLIMITÉE */
+        /* ZONE MESSAGES */
         #chatBox { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-        
-        .bubble { 
-            max-width: 75%; padding: 12px; border-radius: 18px; font-size: 15px; 
-            line-height: 1.4; word-wrap: break-word; flex-shrink: 0; /* GARDE LA FORME */
-        }
+        .bubble { max-width: 75%; padding: 12px; border-radius: 18px; font-size: 15px; line-height: 1.4; word-wrap: break-word; flex-shrink: 0; }
         .sent { align-self: flex-end; background: var(--orange); color: black; border-bottom-right-radius: 2px; }
         .received { align-self: flex-start; background: #1a1a1a; color: white; border-bottom-left-radius: 2px; }
 
-        /* PHOTOS FIXES (SANS BORDURES) */
-        .chat-img, .chat-video { 
-            width: 180px; height: auto; border-radius: 12px; display: block; 
-            border: none !important; outline: none !important; 
-        }
+        /* MÉDIAS FIXES */
+        .chat-img, .chat-video { width: 180px; height: auto; border-radius: 12px; display: block; border: none !important; }
         .bubble:has(.chat-img) { padding: 3px; background: transparent; }
 
         /* BARRE SAISIE */
         .input-area { background: #080808; padding: 10px 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a; padding-bottom: env(safe-area-inset-bottom); }
         .message-input { flex: 1; background: #151515; border: 1px solid #222; padding: 12px; border-radius: 22px; color: white; outline: none; }
+        
         .btn-plus { color: var(--orange); font-size: 30px; background: none; border: none; cursor: pointer; }
-        .btn-send { background: var(--orange); border-radius: 50%; width: 40px; height: 40px; display: none; align-items: center; justify-content: center; border: none; cursor: pointer; }
+        .btn-icon { background: none; border: none; cursor: pointer; color: white; display: flex; align-items: center; padding: 5px; }
+        
+        .btn-send { 
+            background: var(--orange); border-radius: 50%; width: 42px; height: 42px; 
+            display: none; align-items: center; justify-content: center; border: none; 
+        }
     </style>
 </head>
 <body>
@@ -54,7 +53,13 @@
     <div class="input-area">
         <button class="btn-plus" onclick="document.getElementById('fileIn').click()">+</button>
         <input type="file" id="fileIn" accept="image/*,video/*" hidden onchange="handleFileUpload(this)">
+        
         <input type="text" id="msgInput" class="message-input" placeholder="Message..." oninput="toggleBtn()">
+
+        <button id="micBtn" class="btn-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+        </button>
+
         <button id="sendBtn" class="btn-send" onclick="sendText()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
@@ -69,6 +74,7 @@
         const chatBox = document.getElementById('chatBox');
         const msgInput = document.getElementById('msgInput');
         const sendBtn = document.getElementById('sendBtn');
+        const micBtn = document.getElementById('micBtn');
 
         const FX = {
             play: () => { 
@@ -83,7 +89,11 @@
 
         window.onload = load;
 
-        function toggleBtn() { sendBtn.style.display = msgInput.value.trim() ? "flex" : "none"; }
+        function toggleBtn() { 
+            const hasText = msgInput.value.trim() !== "";
+            sendBtn.style.display = hasText ? "flex" : "none";
+            micBtn.style.display = hasText ? "none" : "flex";
+        }
 
         async function handleFileUpload(input) {
             if (input.files[0]) {
