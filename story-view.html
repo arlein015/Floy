@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Voir la Story</title>
+    <style>
+        body { background: #000; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Barre de progression */
+        .progress-container { display: flex; gap: 5px; padding: 10px; position: absolute; top: env(safe-area-inset-top); width: 100%; box-sizing: border-box; z-index: 10; }
+        .progress-bg { background: rgba(255,255,255,0.3); height: 3px; flex: 1; border-radius: 2px; overflow: hidden; }
+        .progress-fill { background: white; height: 100%; width: 0%; transition: width 5s linear; }
 
+        /* Image de la story */
+        .story-content { width: 100%; height: 100%; object-fit: cover; }
+
+        .header-story { position: absolute; top: 30px; left: 15px; display: flex; align-items: center; gap: 10px; z-index: 10; color: white; text-decoration: none; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid white; }
+    </style>
+</head>
+<body>
+
+    <div class="progress-container">
+        <div class="progress-bg"><div id="bar" class="progress-fill"></div></div>
+    </div>
+
+    <a href="messages.html" class="header-story">
+        <img src="ma_photo.jpg" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=Moi'">
+        <span style="font-weight: bold;">Ta story</span>
+    </a>
+
+    <img id="storyImg" class="story-content" src="">
+
+    <script>
+        window.onload = () => {
+            const savedImg = localStorage.getItem('user_story_img');
+            
+            if (!savedImg) {
+                window.location.href = "messages.html";
+                return;
+            }
+
+            document.getElementById('storyImg').src = savedImg;
+
+            // Lancer la barre de progression
+            setTimeout(() => {
+                document.getElementById('bar').style.width = '100%';
+            }, 100);
+
+            // Fermer automatiquement après 5 secondes
+            setTimeout(() => {
+                window.location.href = "messages.html";
+            }, 5100);
+        };
+    </script>
+</body>
+</html>
