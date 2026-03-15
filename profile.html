@@ -89,7 +89,9 @@
         <svg class="icon-btn share-icon" onclick="openSharePopup()" width="24" height="24" viewBox="0 0 24 24"><path d="M12.5 4v3.5C7.3 8.3 4 12.3 4 17.5c2.4-3.4 5.6-5.1 8.5-5.1V16L20 10l-7.5-6z"/></svg>
         <svg class="icon-btn" onclick="toggleFloyMenu()" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </div>
-
+    <svg onclick="hitLike()" width="24" height="24" viewBox="0 0 24 24" style="cursor:pointer;">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="red"/>
+    </svg>
     <div class="profile-header">
         <div class="profile-pic-container">
             <img src="https://i.pravatar.cc/150?u=Arlein" class="profile-pic">
@@ -100,20 +102,24 @@
         </div>
         <div class="user-handle">@arlein_off</div>
 
-        <div class="stats-row">
-            <a href="following.html" class="stat-item">
-                <span class="stat-val counter" id="following-val" data-target="124">0</span>
-                <span class="stat-lab">Abonnements</span>
-            </a>
-            <div class="stat-item">
-                <span class="stat-val counter" data-target="850">0</span>
-                <span class="stat-lab">Abonnés</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val counter" data-target="12">0</span>
-                <span class="stat-lab">J'aime (M)</span>
-            </div>
-        </div>
+        <div class="stats-container" style="display: flex; justify-content: space-around; padding: 20px; text-align: center;">
+    <div>
+        <div id="nb-abonnes" style="font-weight: bold; font-size: 18px;">0</div>
+        <div style="font-size: 11px; color: #666;">Abonnés</div>
+    </div>
+    <div>
+        <div id="nb-abonnements" style="font-weight: bold; font-size: 18px;">0</div>
+        <div style="font-size: 11px; color: #666;">Abonnements</div>
+    </div>
+    <div>
+        <div id="nb-likes" style="font-weight: bold; font-size: 18px;">0</div>
+        <div style="font-size: 11px; color: #666;">J'aime</div>
+    </div>
+</div>
+
+<button id="btn-follow" onclick="toggleFollow()" style="width: 80%; margin: 10px 10%; padding: 10px; border-radius: 20px; border: none; background: var(--orange-floy); font-weight: bold; cursor: pointer;">
+    S'ABONNER
+</button>
 
         <div class="btn-row">
     <button class="btn-sec" style="background: var(--orange-floy); color: black; border: none;" onclick="toggleFollow(this)">Suivre</button>
@@ -227,6 +233,70 @@
         btn.style.border = "none";
     }
 }
+        <script>
+    // Initialisation des données au chargement de la page
+    window.onload = function() {
+        // On récupère les valeurs stockées ou 0 par défaut
+        let followers = localStorage.getItem('count_followers') || 0;
+        let following = localStorage.getItem('count_following') || 0;
+        let likes = localStorage.getItem('count_likes') || 0;
+
+        // On les affiche dans les éléments HTML
+        document.getElementById('nb-abonnes').innerText = followers;
+        document.getElementById('nb-abonnements').innerText = following;
+        document.getElementById('nb-likes').innerText = likes;
+
+        // Vérifier l'état du bouton follow
+        if(localStorage.getItem('is_following') === 'true') {
+            updateFollowBtn(true);
+        }
+    }
+
+    // Fonction pour s'abonner / se désabonner
+    function toggleFollow() {
+        let count = parseInt(localStorage.getItem('count_followers')) || 0;
+        let isFollowing = localStorage.getItem('is_following') === 'true';
+
+        if (!isFollowing) {
+            count++; // On ajoute 1 abonné
+            localStorage.setItem('is_following', 'true');
+            updateFollowBtn(true);
+        } else {
+            count--; // On retire 1 abonné
+            localStorage.setItem('is_following', 'false');
+            updateFollowBtn(false);
+        }
+
+        localStorage.setItem('count_followers', count);
+        document.getElementById('nb-abonnes').innerText = count;
+    }
+
+    function updateFollowBtn(active) {
+        const btn = document.getElementById('btn-follow');
+        if(active) {
+            btn.innerText = "ABONNÉ";
+            btn.style.background = "#222";
+            btn.style.color = "white";
+        } else {
+            btn.innerText = "S'ABONNER";
+            btn.style.background = "var(--orange-floy)";
+            btn.style.color = "black";
+        }
+    }
+
+    // Fonction pour simuler un Like sur une publication
+    function hitLike() {
+        let count = parseInt(localStorage.getItem('count_likes')) || 0;
+        count++;
+        localStorage.setItem('count_likes', count);
+        document.getElementById('nb-likes').innerText = count;
+        
+        // Optionnel : Envoyer une notification
+        if(typeof sendNotification === "function") {
+            sendNotification("Nouveau Like", "Un utilisateur a aimé votre publication !");
+        }
+    }
+</script>
     </script>
 </body>
 </html>
