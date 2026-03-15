@@ -2,161 +2,138 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Messages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Floy - Messages & Storys</title>
+    <script src="db.js"></script>
     <style>
-        :root { --orange-floy: #FF7A1A; --noir: #000; --gris: #121212; --vert: #44ff44; }
+        :root { --orange: #FF7A1A; --bleu: #0095f6; --noir: #000; --gris: #1a1a1a; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+
+        /* HEADER */
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--noir); border-bottom: 1px solid #080808; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+
+        /* SECTION STORYS */
+        .story-container { 
+            display: flex; gap: 15px; padding: 15px; overflow-x: auto; 
+            border-bottom: 1px solid var(--gris); scrollbar-width: none; 
+        }
+        .story-container::-webkit-scrollbar { display: none; }
+
+        .story-item { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; cursor: pointer; }
         
-        body { 
-            background: var(--noir); color: white; 
-            font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px;
+        /* Cercle de la Story */
+        .story-circle { 
+            width: 65px; height: 65px; border-radius: 50%; padding: 3px;
+            border: 2px solid var(--orange); /* Cercle coloré */
+            display: flex; align-items: center; justify-content: center;
         }
-
-        /* Header fixe */
-        .header {
-            padding: 20px; border-bottom: 1px solid #1a1a1a;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; background: var(--noir); z-index: 100;
-        }
-
-        .search-chat {
-            padding: 10px 20px;
-        }
-        .search-chat input {
-            width: 100%; background: #111; border: 1px solid #222;
-            padding: 10px 15px; border-radius: 10px; color: white; outline: none;
-        }
-
-        /* Liste des discussions */
-        .chat-list { display: flex; flex-direction: column; }
-
-        .chat-item {
-            display: flex; align-items: center; padding: 15px 20px;
-            cursor: pointer; transition: 0.2s; border-bottom: 1px solid #080808;
-        }
-        .chat-item:active { background: #0a0a0a; }
-
-        .avatar-box { position: relative; margin-right: 15px; }
-        .avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 1px solid #222; }
-        .status-dot { 
-            position: absolute; bottom: 2px; right: 2px; 
-            width: 12px; height: 12px; background: var(--vert); 
-            border: 2px solid var(--noir); border-radius: 50%; 
-        }
-
-        .chat-info { flex: 1; }
-        .chat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .chat-name { font-weight: bold; font-size: 15px; }
-        .chat-time { font-size: 11px; color: #555; }
-
-        .chat-bottom { display: flex; justify-content: space-between; align-items: center; }
-        .chat-msg { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .story-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; }
         
-        .notif-badge { 
-            background: var(--orange-floy); color: black; 
-            font-weight: 900; font-size: 10px; 
-            padding: 2px 6px; border-radius: 10px; 
+        /* Bouton "Ajouter une story" */
+        .add-story .story-circle { border: 2px dashed #444; position: relative; }
+        .add-story .plus-icon { 
+            position: absolute; bottom: 0; right: 0; background: var(--orange); 
+            width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--noir);
+            display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; font-size: 14px;
         }
+        .story-name { font-size: 11px; color: #ccc; max-width: 70px; overflow: hidden; text-overflow: ellipsis; }
 
-        .unread { background: rgba(255, 122, 26, 0.03); }
-        .unread .chat-name { color: white; }
-        .unread .chat-msg { color: white; font-weight: 500; }
+        /* LISTE DES MESSAGES */
+        .conv-list { flex: 1; overflow-y: auto; }
+        .conv-item { 
+            display: flex; align-items: center; padding: 15px; 
+            text-decoration: none; color: white; transition: 0.2s;
+        }
+        .conv-item:active { background: var(--gris); }
+        .avatar { width: 55px; height: 55px; border-radius: 50%; margin-right: 15px; object-fit: cover; background: #222; }
+        .conv-info { flex: 1; border-bottom: 0.5px solid #111; padding-bottom: 10px; }
+        .user-row { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+        .user-name { font-weight: 600; font-size: 16px; }
+        .last-msg { font-size: 14px; color: #888; }
+
+        /* BOUTON FLOTTANT (CRÉER GROUPE) */
+        .fab-group {
+            position: fixed; bottom: 30px; right: 20px;
+            background: var(--orange); width: 56px; height: 56px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 122, 26, 0.4);
+            cursor: pointer; z-index: 100; border: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <span style="font-weight: 900; font-size: 20px; letter-spacing: 1px;">MESSAGES</span>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        <h1>Messages</h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
     </div>
 
-    <div class="search-chat">
-        <input type="text" placeholder="Rechercher une discussion...">
-    </div>
-
-    <div class="chat-list">
-        <div class="chat-item unread" onclick="window.location.href='chat.html'">
-    <div class="avatar-box">
-        <img src="https://picsum.photos/100?random=1" class="avatar">
-        <div class="status-dot"></div>
-    </div>
-    <div class="chat-info">
-        <div class="chat-top">
-            <span class="chat-name">Alexandre Dupont</span>
-            <span class="chat-time">14:02</span>
-        </div>
-        <div class="chat-bottom">
-            <span class="chat-msg">T'as vu le nouveau design de l'app ?</span>
-            <span class="notif-badge">1</span>
-        </div>
-    </div>
-</div>
-
-<div class="chat-item" onclick="window.location.href='chat-with-admin.html'">
-    <div class="avatar-box">
-        <img src="https://picsum.photos/100?random=3" class="avatar">
-        <div class="status-dot"></div>
-    </div>
-    <div class="chat-info">
-        <div class="chat-top">
-            <span class="chat-name">Equipe Support</span>
-            <span class="chat-time">Lun.</span>
-        </div>
-        <div class="chat-bottom">
-            <span class="chat-msg">Votre retrait vers Binance a été validé.</span>
-        </div>
-    </div>
-</div>
-
-        <div class="chat-item" onclick="alert('Ouverture de la discussion...')">
-            <div class="avatar-box">
-                <img src="https://picsum.photos/100?random=3" class="avatar">
-                <div class="status-dot"></div>
+    <div class="story-container">
+        <div class="story-item add-story" onclick="document.getElementById('storyInput').click()">
+            <div class="story-circle">
+                <img src="ma_photo.jpg" class="story-img" onerror="this.src='https://via.placeholder.com/65'">
+                <div class="plus-icon">+</div>
             </div>
-            <div class="chat-info">
-                <div class="chat-top">
-                    <span class="chat-name">Equipe Support</span>
-                    <span class="chat-time">Lun.</span>
-                </div>
-                <div class="chat-bottom">
-                    <span class="chat-msg">Votre retrait vers Binance a été validé. ✅</span>
-                </div>
-            </div>
+            <span class="story-name">Ta story</span>
         </div>
+        <input type="file" id="storyInput" hidden accept="image/*">
 
-        <div class="chat-item unread" onclick="alert('Ouverture de la discussion...')">
-            <div class="avatar-box">
-                <img src="https://picsum.photos/100?random=4" class="avatar">
-            </div>
-            <div class="chat-info">
-                <div class="chat-top">
-                    <span class="chat-name">Lukas King</span>
-                    <span class="chat-time">22 fév.</span>
-                </div>
-                <div class="chat-bottom">
-                    <span class="chat-msg">On se capte pour le live ce soir ?</span>
-                    <span class="notif-badge">3</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-item" onclick="alert('Ouverture de la discussion...')">
-            <div class="avatar-box">
-                <img src="https://picsum.photos/100?random=5" class="avatar">
-            </div>
-            <div class="chat-info">
-                <div class="chat-top">
-                    <span class="chat-name">Mina_Dev</span>
-                    <span class="chat-time">15 fév.</span>
-                </div>
-                <div class="chat-bottom">
-                    <span class="chat-msg">J'ai fini le script Python pour les followers.</span>
-                </div>
-            </div>
-        </div>
+        <div id="friendsStories" style="display: flex; gap: 15px;"></div>
     </div>
 
-    <script src="navbar.js"></script>
+    <div class="conv-list" id="convList"></div>
 
+    <button class="fab-group" onclick="alert('Créer un nouveau groupe ?')">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="black">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+    </button>
+
+    <script>
+        const friends = [
+            { name: "Alexandre", img: "https://i.pravatar.cc/150?u=1" },
+            { name: "Julie", img: "https://i.pravatar.cc/150?u=2" },
+            { name: "Marc", img: "https://i.pravatar.cc/150?u=3" },
+            { name: "Sarah", img: "https://i.pravatar.cc/150?u=4" }
+        ];
+
+        function loadStories() {
+            const container = document.getElementById('friendsStories');
+            container.innerHTML = friends.map(f => `
+                <div class="story-item">
+                    <div class="story-circle"><img src="${f.img}" class="story-img"></div>
+                    <span class="story-name">${f.name}</span>
+                </div>
+            `).join('');
+        }
+
+        async function loadConversations() {
+            const list = document.getElementById('convList');
+            // Simulation de données IndexedDB
+            const contacts = [
+                { id: "convo_1", name: "Alexandre Dupont", cert: true, msg: "On se voit quand ?", img: "https://i.pravatar.cc/150?u=1" },
+                { id: "convo_2", name: "Julie Martin", cert: false, msg: "📷 Photo", img: "https://i.pravatar.cc/150?u=2" }
+            ];
+
+            list.innerHTML = contacts.map(c => `
+                <a href="chat.html?id=${c.id}" class="conv-item">
+                    <img src="${c.img}" class="avatar">
+                    <div class="conv-info">
+                        <div class="user-row">
+                            <span class="user-name">${c.name}</span>
+                            ${c.cert ? '<span style="color:#0095f6">●</span>' : ''}
+                        </div>
+                        <div class="last-msg">${c.msg}</div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        window.onload = () => {
+            loadStories();
+            loadConversations();
+        };
+    </script>
 </body>
 </html>
