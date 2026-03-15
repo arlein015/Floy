@@ -2,121 +2,125 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Profil Officiel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Floy - Mon Profil</title>
     <style>
-        :root { --orange-floy: #FF7A1A; --noir: #000; --gris: #121212; }
-        body { background: var(--noir); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 100px; }
-
-        /* BARRE DE MENU HAUTE */
-        .nav-top {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; position: sticky; top: 0; background: var(--noir); z-index: 100;
-        }
-        .nav-right-icons { display: flex; gap: 18px; align-items: center; }
-
-        /* BADGE VERIFIE */
-        .badge-v { width: 16px; height: 16px; fill: #0095f6; margin-left: 5px; vertical-align: middle; }
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --nav-h: 75px; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 100px; }
 
         /* HEADER PROFIL */
-        .profile-header { text-align: center; padding: 10px 0; }
-        .avatar { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--orange-floy); padding: 3px; }
+        .profile-header { padding: 40px 20px 20px; text-align: center; }
+        .profile-pic-container { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; }
+        .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); }
+        
+        .user-name { font-size: 22px; font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .bio { color: #888; font-size: 14px; margin-bottom: 20px; }
 
-        /* COMPTEURS */
-        .stats-bar { display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; }
-        .stat-item { text-align: center; flex: 1; }
-        .stat-num { font-weight: 800; font-size: 17px; display: block; }
-        .stat-label { font-size: 10px; color: #555; text-transform: uppercase; }
+        /* COMPTEURS RÉELS */
+        .stats-bar { display: flex; justify-content: space-around; padding: 20px; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; }
+        .stat-item { text-align: center; }
+        .stat-num { display: block; font-size: 18px; font-weight: bold; }
+        .stat-label { font-size: 12px; color: #666; }
 
-        /* BOUTONS */
-        .btn-container { display: flex; gap: 8px; padding: 15px 20px; }
-        .btn-edit { flex: 1; background: #1a1a1a; color: white; border: 1px solid #333; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
-        .btn-main { flex: 2; background: var(--orange-floy); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
+        /* BOUTONS ACTIONS */
+        .actions { padding: 20px; display: flex; gap: 10px; }
+        .btn-edit { flex: 1; background: #222; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; }
+        .btn-live { background: var(--orange); color: black; padding: 10px 20px; border-radius: 8px; font-weight: bold; border: none; text-decoration: none; }
 
-        /* GRILLE PHOTOS */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 10px; }
-        .photo-item { aspect-ratio: 1/1; background-color: #111; background-size: cover; background-position: center; }
-
-        /* MODAL PARTAGE */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #121212; width: 80%; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid #222; }
+        /* NAV BAR SVG */
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h); background: rgba(5,5,5,0.95); backdrop-filter: blur(10px); border-top: 1px solid #1a1a1a; display: flex; justify-content: space-evenly; align-items: center; padding-bottom: env(safe-area-inset-bottom); z-index: 1000; }
+        .nav-item { color: #666; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+        .nav-item.active { color: var(--orange); }
+        .nav-item svg { width: 24px; height: 24px; }
+        .nav-text { font-size: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="nav-top">
-        <div style="font-weight: 800; font-size: 16px;">floy.app</div>
-        <div class="nav-right-icons">
-            <svg onclick="openShare()" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="cursor:pointer;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        </div>
-    </div>
-
     <div class="profile-header">
-        <img src="https://via.placeholder.com/150" class="avatar">
-        <div style="font-weight: 800; font-size: 19px; margin-top: 10px;">
-            <span id="p-name">Chargement...</span>
-            <svg class="badge-v" viewBox="0 0 24 24"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/></svg>
+        <div class="profile-pic-container">
+            <img id="myAvatar" src="ma_photo.jpg" class="profile-pic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=333&color=fff'">
         </div>
-        <div id="p-bio" style="font-size: 13px; color: #888; margin-top: 5px;">Bio en attente...</div>
+        <div class="user-name">
+            <span id="displayUsername">Utilisateur</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--orange)"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7l-3.3-3.3 1.4-1.4 1.9 1.9 5.3-5.3 1.4 1.4-6.7 6.7z"/></svg>
+        </div>
+        <div class="bio" id="displayBio">En attente de bio...</div>
     </div>
 
     <div class="stats-bar">
-        <div class="stat-item"><span class="stat-num" id="s-followers">0</span><span class="stat-label">Abonnés</span></div>
-        <div class="stat-item"><span class="stat-num" id="s-following">0</span><span class="stat-label">Suivis</span></div>
-        <div class="stat-item"><span class="stat-num" id="s-likes">0</span><span class="stat-label">J'aime</span></div>
-    </div>
-
-    <div class="btn-container">
-        <button class="btn-edit" onclick="window.location.href='settings.html'">MODIFIER</button>
-        <button class="btn-main" id="btn-f" onclick="doFollow()">S'ABONNER</button>
-        <button class="btn-edit" onclick="window.location.href='withdraw-funds.html'" style="flex:0;">💰</button>
-    </div>
-
-    <div class="photo-grid">
-        <div class="photo-item" style="background-image:url('https://picsum.photos/300?sig=10')"></div>
-        <div class="photo-item" style="background-image:url('https://picsum.photos/300?sig=11')"></div>
-        <div class="photo-item" style="background-image:url('https://picsum.photos/300?sig=12')"></div>
-    </div>
-
-    <div id="shareModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin:0;">Partager</h2>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=floy" style="margin:15px; border-radius:10px;">
-            <button onclick="closeShare()" style="background:none; border:none; color:white; font-weight:bold; cursor:pointer; width:100%;">FERMER</button>
+        <div class="stat-item">
+            <span class="stat-num" id="countPosts">0</span>
+            <span class="stat-label">Posts</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num" id="countFollowers">1.2k</span>
+            <span class="stat-label">Abonnés</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num" id="countFollowing">450</span>
+            <span class="stat-label">Abonnements</span>
         </div>
     </div>
 
-    <script src="navbar.js"></script>
+    <div class="actions">
+        <button class="btn-edit" onclick="editProfile()">Modifier le profil</button>
+        <a href="live.html" class="btn-live">Go Live</a>
+    </div>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span class="nav-text">Accueil</span>
+        </a>
+        <a href="explorer.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span class="nav-text">Explorer</span>
+        </a>
+        <a href="story-creator.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            <span class="nav-text">Créer</span>
+        </a>
+        <a href="messages.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span class="nav-text">Messages</span>
+        </a>
+        <a href="profil.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="nav-text">Profil</span>
+        </a>
+    </nav>
 
     <script>
-        // Logique de chargement des données
-        window.onload = function() {
-            if(!localStorage.getItem('f_name')) {
-                localStorage.setItem('f_name', 'Utilisateur Floy');
-                localStorage.setItem('f_bio', 'Passionné de Python 🐍');
-                localStorage.setItem('f_followers', '0');
+        // Charger les données sauvegardées
+        function loadProfileData() {
+            const savedName = localStorage.getItem('user_name') || "Utilisateur Floy";
+            const savedBio = localStorage.getItem('user_bio') || "Passionné de code & design";
+            const savedAvatar = localStorage.getItem('user_story_img'); // On réutilise l'avatar de la story
+            
+            document.getElementById('displayUsername').textContent = savedName;
+            document.getElementById('displayBio').textContent = savedBio;
+            if(savedAvatar) document.getElementById('myAvatar').src = savedAvatar;
+
+            // Simuler des nombres d'abonnés liés (on pourrait les rendre modifiables aussi)
+            document.getElementById('countFollowers').textContent = localStorage.getItem('count_followers') || "1,240";
+        }
+
+        function editProfile() {
+            const newName = prompt("Nouveau nom :", document.getElementById('displayUsername').textContent);
+            const newBio = prompt("Nouvelle bio :", document.getElementById('displayBio').textContent);
+            
+            if(newName) {
+                localStorage.setItem('user_name', newName);
+                document.getElementById('displayUsername').textContent = newName;
             }
-            loadData();
-        };
-
-        function loadData() {
-            document.getElementById('p-name').innerText = localStorage.getItem('f_name');
-            document.getElementById('p-bio').innerText = localStorage.getItem('f_bio');
-            document.getElementById('s-followers').innerText = localStorage.getItem('f_followers');
-            document.getElementById('s-following').innerText = localStorage.getItem('f_following') || "0";
-            document.getElementById('s-likes').innerText = localStorage.getItem('f_likes') || "0";
+            if(newBio) {
+                localStorage.setItem('user_bio', newBio);
+                document.getElementById('displayBio').textContent = newBio;
+            }
         }
 
-        function doFollow() {
-            let count = parseInt(localStorage.getItem('f_followers'));
-            count++;
-            localStorage.setItem('f_followers', count);
-            loadData();
-        }
-
-        function openShare() { document.getElementById('shareModal').style.display = 'flex'; }
-        function closeShare() { document.getElementById('shareModal').style.display = 'none'; }
+        window.onload = loadProfileData;
     </script>
 </body>
 </html>
