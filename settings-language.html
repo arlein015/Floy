@@ -24,15 +24,14 @@
 <body>
 
     <div class="header">
-        <a href="profile.html" class="back-btn">‹</a>
-        <span style="font-weight:bold">Langue de l'application</span>
+        <a href="settings.html" class="back-btn">‹</a>
+        <span style="font-weight:bold">Langues</span>
     </div>
 
     <div class="lang-list">
-        <div class="lang-item active" onclick="selectLang(this, 'fr')">
-            <span>Français (France)</span>
-            <span class="check-icon">✓</span>
-        </div>
+        <div class="lang-item" onclick="setLang('fr')">Français <span class="check">✓</span></div>
+        <div class="lang-item" onclick="setLang('en')">English</div>
+    </div>
         <div class="lang-item" onclick="selectLang(this, 'en')">
             <span>English</span>
             <span class="check-icon">✓</span>
