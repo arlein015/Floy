@@ -1,1 +1,12 @@
-
+<style>
+    body { background: #000; color: #fff; padding: 20px; font-family: sans-serif; }
+    .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .color-box { height: 60px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; }
+    .color-box.active { border-color: #fff; }
+</style>
+<h3>Thème de l'App</h3>
+<div class="theme-grid">
+    <div class="color-box" style="background:#FF7A1A" onclick="alert('Thème Floy appliqué')"></div>
+    <div class="color-box" style="background:#8A2BE2"></div>
+    <div class="color-box" style="background:#00BFFF"></div>
+</div>
