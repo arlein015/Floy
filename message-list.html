@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floy - Liste des Messages</title>
+    <style>
+        :root { --orange: #FF7A1A; --noir: #000; --gris-fonce: #0a0a0a; }
+        body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
+        
+        .header { padding: 20px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--noir); z-index: 10; }
+        
+        /* Liste des discussions */
+        .chat-list { display: flex; flex-direction: column; }
+        .chat-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #080808; cursor: pointer; transition: 0.2s; }
+        .chat-item:active { background: #111; }
+        
+        .avatar { width: 55px; height: 55px; border-radius: 50%; background: #222; margin-right: 15px; border: 1px solid #222; object-fit: cover; }
+        .chat-info { flex: 1; }
+        .chat-name { font-weight: bold; font-size: 15px; display: block; margin-bottom: 3px; }
+        .chat-preview { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        
+        .unread-dot { width: 10px; height: 10px; background: var(--orange); border-radius: 50%; margin-left: 10px; }
+        .time { font-size: 11px; color: #444; }
+    </style>
+</head>
+<body>
 
+    <div class="header">
+        <span style="font-weight: 900; font-size: 20px;">MESSAGES</span>
+        <div onclick="window.location.href='message-search.html'" style="cursor:pointer;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </div>
+    </div>
+
+    <div class="chat-list">
+        <div class="chat-item" onclick="window.location.href='chat.html'">
+            <img src="https://picsum.photos/100?random=1" class="avatar">
+            <div class="chat-info">
+                <span class="chat-name">Alexandre Dupont</span>
+                <span class="chat-preview">On se capte pour le projet ?</span>
+            </div>
+            <div class="unread-dot"></div>
+        </div>
+
+        <div class="chat-item" onclick="window.location.href='chat-with-admin.html'">
+            <img src="https://picsum.photos/100?random=10" class="avatar">
+            <div class="chat-info">
+                <span class="chat-name" style="color:var(--orange)">Admin Floy 🛡️</span>
+                <span class="chat-preview">Bienvenue sur l'application !</span>
+            </div>
+            <span class="time">10:45</span>
+        </div>
+
+        <div class="chat-item" onclick="window.location.href='group-chat.html'">
+            <img src="https://picsum.photos/100?random=5" class="avatar">
+            <div class="chat-info">
+                <span class="chat-name">Groupe Dev Python 🐍</span>
+                <span class="chat-preview">Sami: Quelqu'un a fini le module ?</span>
+            </div>
+            <span class="time">Hier</span>
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+</body>
+</html>
