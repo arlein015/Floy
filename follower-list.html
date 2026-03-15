@@ -23,4 +23,27 @@
         }
         localStorage.setItem('floy_following_count', count);
     }
+    <script>
+    function updateFollowing(btn) {
+        // 1. Récupérer la valeur actuelle dans la mémoire du navigateur
+        let currentCount = parseInt(localStorage.getItem('floy_following_count')) || 124;
+
+        if (btn.innerText === "Suivre en retour") {
+            // 2. Action : Suivre
+            btn.innerText = "Amis";
+            btn.style.background = "#333";
+            btn.style.color = "#fff";
+            currentCount++; 
+        } else {
+            // 3. Action : Se désabonner
+            btn.innerText = "Suivre en retour";
+            btn.style.background = "#FF7A1A";
+            btn.style.color = "#000";
+            currentCount--;
+        }
+
+        // 4. Sauvegarder la nouvelle valeur
+        localStorage.setItem('floy_following_count', currentCount);
+    }
+</script>
 </script>
