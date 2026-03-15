@@ -3,102 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Chat</title>
-    <script src="db.js"></script>
-    <script src="upload.js"></script>
+    <title>Profil - Floy</title>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; }
-        body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        body { background: #000; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .chat-header { padding: 15px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 10px; }
-        #chatBox { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        
-        .bubble { max-width: 75%; padding: 12px; border-radius: 18px; line-height: 1.4; flex-shrink: 0; word-wrap: break-word; }
-        .sent { align-self: flex-end; background: var(--orange); color: black; border-bottom-right-radius: 2px; }
-        .received { align-self: flex-start; background: #1a1a1a; color: white; border-bottom-left-radius: 2px; }
-        .chat-img { width: 180px; height: auto; border-radius: 12px; display: block; }
+        :root { --orange: #FF7A1A; --noir: #000; --nav-h: 75px; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 110px; }
 
-        .input-area { background: #080808; padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #1a1a1a; }
-        .message-input { flex: 1; background: #151515; border: 1px solid #222; padding: 12px; border-radius: 22px; color: white; outline: none; }
-        .btn-plus { color: var(--orange); font-size: 30px; background: none; border: none; }
-        .btn-send { background: var(--orange); border-radius: 50%; width: 40px; height: 40px; border: none; display: none; align-items: center; justify-content: center; }
-        .btn-mic { background: none; border: none; color: white; display: flex; }
+        /* HEADER & PARTAGE */
+        .top-nav { display: flex; justify-content: flex-end; padding: 20px; gap: 20px; }
+        .icon-btn { background: none; border: none; color: white; cursor: pointer; }
+
+        .profile-header { text-align: center; }
+        .profile-pic-container { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; }
+        .profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--orange); }
+        
+        .user-info h2 { margin: 5px 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .badge-orange { color: var(--orange); }
+        .bio { color: #888; font-size: 14px; margin-bottom: 25px; }
+
+        /* ACTIONS */
+        .profile-actions { display: flex; flex-direction: column; gap: 10px; padding: 0 20px; }
+        .row-actions { display: flex; gap: 10px; }
+        .btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; font-size: 14px; }
+        .btn-follow { background: var(--orange); color: black; }
+        .btn-msg { background: #222; color: white; }
+
+        /* NAV BAR SVG */
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h); background: rgba(5,5,5,0.98); backdrop-filter: blur(15px); border-top: 1px solid #1a1a1a; display: flex; justify-content: space-evenly; align-items: center; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { color: #666; text-decoration: none; display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .nav-item.active { color: var(--orange); }
+        .nav-item svg { width: 24px; height: 24px; }
     </style>
 </head>
 <body>
 
-    <div class="chat-header">
-        <div onclick="history.back()" style="cursor:pointer; font-size:20px;">←</div>
-        <div id="partnerName" style="font-weight:bold;">Chat</div>
+    <div class="top-nav">
+        <button class="icon-btn" onclick="alert('Lien copié !')">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+        </button>
+        <button class="icon-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
     </div>
 
-    <div id="chatBox"></div>
-
-    <div class="input-area">
-        <button class="btn-plus" onclick="document.getElementById('fileIn').click()">+</button>
-        <input type="file" id="fileIn" hidden accept="image/*,video/*" onchange="handleFileUpload(this)">
-        <input type="text" id="msgInput" class="message-input" placeholder="Message..." oninput="toggleBtn()">
-        
-        <button id="micBtn" class="btn-mic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg></button>
-        
-        <button id="sendBtn" class="btn-send" onclick="sendText()"><svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
-    <div>
-        <h2>Discussion</h2>
-        <p>Chat en cours de chargement...</p>
-        <button onclick="window.location.href='messages.html'" style="background:#FF7A1A; border:none; padding:10px; border-radius:5px;">Retour</button>
+    <div class="profile-header">
+        <div class="profile-pic-container">
+            <img id="myAvatar" src="ma_photo.jpg" class="profile-pic" onerror="this.src='https://ui-avatars.com/api/?name=User&background=FF7A1A&color=000'">
+        </div>
+        <div class="user-info">
+            <h2>
+                <span id="displayUsername">Utilisateur</span>
+                <span class="badge-orange">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7l-3.3-3.3 1.4-1.4 1.9 1.9 5.3-5.3 1.4 1.4-6.7 6.7z"/></svg>
+                </span>
+            </h2>
+            <div class="bio">Bienvenue sur mon profil certifié !</div>
+        </div>
     </div>
+
+    <div class="profile-actions">
+        <div class="row-actions">
+            <button class="btn btn-follow" id="followBtn" onclick="toggleFollow()">Suivre</button>
+            <button class="btn btn-msg" onclick="goToChat()">Message</button>
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </a>
+        <a href="explorer.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle></svg>
+        </a>
+        <a href="story-creator.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        </a>
+        <a href="messages.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </a>
+        <a href="profil.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+    </nav>
 
     <script>
-        // RÉPARATION DU BUG DE MÉLANGE : On lit l'ID de l'URL
-        const params = new URLSearchParams(window.location.search);
-        const CONVO_ID = params.get('id') || "default"; 
-        const CURRENT_USER = "Moi";
+        function goToChat() {
+            const name = document.getElementById('displayUsername').textContent;
+            const img = document.getElementById('myAvatar').src;
+            const id = "contact_" + name.toLowerCase().replace(/\s/g, '');
 
-        const chatBox = document.getElementById('chatBox');
-        const msgInput = document.getElementById('msgInput');
-
-        window.onload = load;
-
-        function toggleBtn() {
-            const hasText = msgInput.value.trim() !== "";
-            document.getElementById('sendBtn').style.display = hasText ? "flex" : "none";
-            document.getElementById('micBtn').style.display = hasText ? "none" : "flex";
-        }
-
-        async function handleFileUpload(input) {
-            if (input.files[0]) {
-                const res = await UploadModule.processFile(input.files[0]);
-                await save({ content: res.content, sender: CURRENT_USER, type: res.type });
-                input.value = "";
+            let contacts = JSON.parse(localStorage.getItem('floy_contacts') || "[]");
+            if (!contacts.find(c => c.id === id)) {
+                contacts.push({ id, name, img });
+                localStorage.setItem('floy_contacts', JSON.stringify(contacts));
             }
+            // IMPORTANT : Vérifie que le fichier chat.html existe sur ton GitHub
+            window.location.href = "chat.html?id=" + id;
         }
 
-        async function sendText() {
-            const val = msgInput.value.trim();
-            if (val) { 
-                await save({ content: val, sender: CURRENT_USER, type: 'text' }); 
-                msgInput.value = ""; 
-                toggleBtn(); 
-            }
-        }
-
-        async function save(obj) {
-            obj.timestamp = Date.now(); // Indispensable pour le tri !
-            await DBModule.saveMessage(CONVO_ID, obj);
-            load();
-        }
-
-        async function load() {
-            chatBox.innerHTML = "";
-            const logs = await DBModule.getMessages(CONVO_ID); // On ne charge que les messages de CET ID
-            logs.forEach(m => {
-                const b = document.createElement('div');
-                b.className = `bubble ${m.sender === CURRENT_USER ? 'sent' : 'received'}`;
-                if (m.type === 'image') b.innerHTML = `<img src="${m.content}" class="chat-img">`;
-                else b.innerText = m.content;
-                chatBox.appendChild(b);
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
+        function toggleFollow() {
+            const btn = document.getElementById('followBtn');
+            btn.textContent = (btn.textContent === "Suivre") ? "Abonné" : "Suivre";
+            btn.style.background = (btn.textContent === "Abonné") ? "#1a1a1a" : "var(--orange)";
+            btn.style.color = (btn.textContent === "Abonné") ? "white" : "black";
         }
     </script>
 </body>
