@@ -3,116 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Wallet & Binance</title>
+    <title>Floy Wallet - Binance Edition</title>
     <style>
-        :root { --orange-floy: #FF7A1A; --binance-yellow: #F3BA2F; --noir: #000; --gris: #121212; }
-        body { background: var(--noir); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 40px; }
+        :root { 
+            --orange-floy: #FF7A1A; 
+            --binance-yellow: #F3BA2F; 
+            --noir: #000; 
+            --gris: #121212; 
+            --blanc: #fff; 
+        }
         
-        .header { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #222; }
+        body { 
+            background: var(--noir); color: var(--blanc); 
+            font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding-bottom: 30px;
+        }
+
+        .header { 
+            display: flex; align-items: center; padding: 20px; 
+            border-bottom: 1px solid #222; position: sticky; top: 0; background: var(--noir); z-index: 100;
+        }
         .back-btn { font-size: 24px; cursor: pointer; text-decoration: none; color: white; margin-right: 20px; }
 
         /* Carte de Solde */
         .balance-card {
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            margin: 20px; padding: 30px; border-radius: 25px; border: 1px solid #333; text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            margin: 20px; padding: 25px; border-radius: 20px; border: 1px solid #333; text-align: center;
         }
-        .balance-amount { font-size: 38px; font-weight: bold; margin: 10px 0; color: var(--orange-floy); }
-
-        /* Actions SVGs */
-        .action-row { display: flex; justify-content: space-around; margin: 20px; gap: 10px; }
-        .action-btn { 
-            flex: 1; background: var(--gris); border: 1px solid #333; 
-            padding: 15px; border-radius: 18px; cursor: pointer; text-align: center;
-        }
-        .action-btn svg { width: 24px; height: 24px; fill: white; margin-bottom: 8px; }
-        .action-btn span { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .balance-amount { font-size: 36px; font-weight: bold; margin: 5px 0; color: var(--orange-floy); }
 
         /* Section Binance */
-        .binance-box {
-            margin: 20px; padding: 20px; border-radius: 20px;
-            background: rgba(243, 186, 47, 0.05); border: 1px solid rgba(243, 186, 47, 0.2);
+        .binance-card {
+            margin: 0 20px 20px; padding: 20px; border-radius: 15px;
+            background: rgba(243, 186, 47, 0.07); border: 1px solid rgba(243, 186, 47, 0.3);
             display: flex; align-items: center; justify-content: space-between;
         }
-        .binance-logo { display: flex; align-items: center; gap: 10px; font-weight: bold; color: var(--binance-yellow); }
-        .btn-connect { 
-            background: var(--binance-yellow); color: black; border: none; 
-            padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; 
+        .binance-logo-group { display: flex; align-items: center; gap: 12px; font-weight: 800; color: var(--binance-yellow); letter-spacing: 1px; }
+        
+        /* Boutons Actions */
+        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; }
+        .btn-action { 
+            background: var(--gris); border: 1px solid #222; padding: 15px; 
+            border-radius: 12px; cursor: pointer; text-align: center; transition: 0.2s;
         }
+        .btn-action:active { transform: scale(0.95); background: #1a1a1a; }
+        .btn-action svg { width: 22px; height: 22px; fill: white; margin-bottom: 6px; }
+        .btn-action span { display: block; font-size: 10px; font-weight: bold; }
 
-        /* Liste Transactions */
-        .transaction-item {
-            display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #111;
+        /* Convertisseur */
+        .converter-box { 
+            margin: 20px; padding: 20px; background: #0a0a0a; border-radius: 15px; border: 1px solid #222;
         }
-        .trans-icon-bg { width: 40px; height: 40px; background: #1a1a1a; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
-        .trans-icon-bg svg { width: 20px; height: 20px; fill: var(--orange-floy); }
+        .input-group { 
+            display: flex; align-items: center; background: #000; padding: 12px; border-radius: 10px; border: 1px solid #333;
+        }
+        .input-group input { 
+            background: transparent; border: none; color: white; font-size: 20px; width: 100%; outline: none; font-weight: bold;
+        }
+        .conv-results { display: flex; justify-content: space-between; margin-top: 15px; }
+        .res-item { font-size: 13px; font-weight: 600; }
+
+        /* Status Badge */
+        .btn-status { 
+            background: var(--binance-yellow); color: black; border: none; 
+            padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <a href="profile.html" class="back-btn">‹</a>
-        <span style="font-weight:bold">PORTEFEUILLE</span>
+        <span style="font-weight:bold; letter-spacing: 1px;">PORTEFEUILLE</span>
     </div>
 
     <div class="balance-card">
-        <div style="color:#888; font-size:12px;">SOLDE TOTAL ESTIMÉ</div>
-        <div class="balance-amount">1,250.00 ◈</div>
-        <div style="color: #44ff44; font-size: 13px;">+ 5.2% ce mois</div>
+        <div style="color:#666; font-size:12px; font-weight:bold;">SOLDE DISPONIBLE</div>
+        <div class="balance-amount">2,450.00 ◈</div>
+        <div style="font-size:11px; color:#888;">Environ 24.50 €</div>
     </div>
 
-    <div class="binance-box">
-        <div class="binance-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16.624 13.92l2.817-2.817 2.817 2.817-2.817 2.817-2.817-2.817zm-4.124 4.125l2.817-2.817 2.817 2.817-2.817 2.817-2.817-2.817zm-4.125-4.125l2.817-2.817 2.817 2.817-2.817 2.817-2.817-2.817zm4.125-4.125l2.817-2.817 2.817 2.817-2.817 2.817-2.817-2.817zm0-8.25l2.817 2.817-2.817 2.817-2.817-2.817 2.817-2.817zm8.25 8.25l2.817 2.817-2.817 2.817-2.817-2.817 2.817-2.817zm-16.5 0l2.817 2.817-2.817 2.817-2.817-2.817 2.817-2.817zm8.25 8.25l2.817 2.817-2.817 2.817-2.817-2.817 2.817-2.817z"/></svg>
+    <div class="binance-card">
+        <div class="binance-logo-group">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0L8.12 3.88L12 7.76L15.88 3.88L12 0Z"/>
+                <path d="M24 12L20.12 8.12L16.24 12L20.12 15.88L24 12Z"/>
+                <path d="M12 24L15.88 20.12L12 16.24L8.12 20.12L12 24Z"/>
+                <path d="M0 12L3.88 15.88L7.76 12L3.88 8.12L0 12Z"/>
+                <path d="M12 11.23L12.77 12L12 12.77L11.23 12L12 11.23Z"/>
+                <path d="M8.53 12L12 8.53L15.47 12L12 15.47L8.53 12Z"/>
+            </svg>
             BINANCE
         </div>
-        <button class="btn-connect" id="binanceBtn" onclick="connectBinance()">Connecter</button>
+        <button class="btn-status" id="binanceConnect" onclick="linkBinance()">CONNECTER</button>
     </div>
 
-    <div class="action-row">
-        <div class="action-btn">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-            <span>Dépôt</span>
+    <div class="action-grid">
+        <div class="btn-action">
+            <svg viewBox="0 0 24 24"><path d="M11 9V5H13V9H16L12 13L8 9H11ZM5 18V16H19V18H5Z"/></svg>
+            <span>DÉPÔT</span>
         </div>
-        <div class="action-btn">
-            <svg viewBox="0 0 24 24"><path d="M5 13h14v-2H5v2zM19 13l-4 4 1.41 1.41L21.82 13l-5.41-5.41L15 9l4 4z"/></svg>
-            <span>Retrait</span>
+        <div class="btn-action">
+            <svg viewBox="0 0 24 24"><path d="M13 15V19H11V15H8L12 11L16 15H13ZM19 6V8H5V6H19Z"/></svg>
+            <span>RETRAIT</span>
         </div>
-        <div class="action-btn">
-            <svg viewBox="0 0 24 24"><path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/></svg>
-            <span>Échange</span>
+        <div class="btn-action">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.5L20.5 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/></svg>
+            <span>HISTO</span>
         </div>
     </div>
 
-    <div style="padding: 20px; font-weight: bold;">HISTORIQUE</div>
-
-    <div class="transaction-item">
-        <div style="display:flex; align-items:center;">
-            <div class="trans-icon-bg">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            </div>
-            <div>
-                <div style="font-size:14px; font-weight:bold;">Récompense Vidéo</div>
-                <div style="font-size:11px; color:#555;">14 Mars 2026</div>
-            </div>
+    <div class="converter-box">
+        <label style="font-size: 11px; color:#555; display:block; margin-bottom:10px; font-weight:bold;">CALCULER MES GAINS</label>
+        <div class="input-group">
+            <input type="number" id="tokenIn" placeholder="0" oninput="doConvert()">
+            <span style="color:var(--orange-floy); font-weight:bold; margin-left:10px;">◈</span>
         </div>
-        <div style="color:var(--orange-floy); font-weight:bold;">+ 15.00 ◈</div>
+        
+        <div class="conv-results">
+            <div class="res-item" style="color:white;">EUR: <span id="resEUR">0.00</span> €</div>
+            <div class="res-item" style="color:var(--binance-yellow);">USDT: <span id="resUSDT">0.00</span></div>
+        </div>
     </div>
 
     <script>
-        function connectBinance() {
-            const btn = document.getElementById('binanceBtn');
-            btn.innerText = "Liaison...";
-            btn.style.opacity = "0.5";
+        // Taux de conversion
+        const RATE_EUR = 0.01;
+        const RATE_USDT = 0.0108;
+
+        function doConvert() {
+            const val = document.getElementById('tokenIn').value;
+            const eurOut = document.getElementById('resEUR');
+            const usdtOut = document.getElementById('resUSDT');
+
+            if (val > 0) {
+                eurOut.innerText = (val * RATE_EUR).toFixed(2);
+                usdtOut.innerText = (val * RATE_USDT).toFixed(3);
+            } else {
+                eurOut.innerText = "0.00";
+                usdtOut.innerText = "0.00";
+            }
+        }
+
+        function linkBinance() {
+            const btn = document.getElementById('binanceConnect');
+            btn.innerText = "LIAISON...";
+            btn.style.opacity = "0.7";
             
             setTimeout(() => {
-                btn.innerText = "Connecté ✅";
-                btn.style.background = "#222";
-                btn.style.color = "#F3BA2F";
-                btn.style.opacity = "1";
-                alert("Votre compte Binance est maintenant lié à Floy !");
-            }, 2000);
+                btn.innerText = "ACTIF ✅";
+                btn.style.background = "#1a1a1a";
+                btn.style.color = "var(--binance-yellow)";
+                btn.style.border = "1px solid var(--binance-yellow)";
+                alert("Votre compte Binance est désormais lié pour les retraits USDT !");
+            }, 1800);
         }
     </script>
-
 </body>
 </html>
