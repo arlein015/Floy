@@ -25,6 +25,7 @@
             padding: 15px 20px; gap: 20px;
         }
         .icon-btn { cursor: pointer; fill: white; transition: 0.2s; }
+        .share-icon { transform: scaleX(-1); } /* Oriente la flèche vers la droite */
 
         /* --- HEADER PROFIL --- */
         .profile-header { padding: 20px; text-align: center; }
@@ -44,171 +45,38 @@
         .btn-row { display: flex; gap: 10px; width: 90%; margin: 0 auto 25px; }
         .btn-sec { flex: 1; background: var(--gris); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
 
-        /* --- ONGLETS (GRILLE / LIKES) --- */
+        /* --- ONGLETS --- */
         .tabs-selector { display: flex; border-top: 1px solid #222; margin-top: 10px; }
         .tab-btn { flex: 1; padding: 12px; text-align: center; cursor: pointer; opacity: 0.5; transition: 0.3s; }
         .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--blanc); }
         .tab-btn svg { width: 24px; height: 24px; fill: white; }
 
-        /* --- GRILLE DE VIDÉOS --- */
-        .video-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 2px; 
-            padding: 2px;
-            min-height: 400px;
-        }
-        .video-item { 
-            aspect-ratio: 3/4; 
-            background: #1a1a1a; 
-            position: relative;
-            overflow: hidden;
-        }
-        .video-item img { width: 100%; height: 100%; object-fit: cover; }
-        .view-count { 
-            position: absolute; bottom: 5px; left: 5px; 
-            font-size: 11px; font-weight: bold; 
-            display: flex; align-items: center; gap: 3px;
-        }
+        /* --- GRILLE VIDÉO + EFFETS --- */
+        .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .video-item { aspect-ratio: 3/4; background: #1a1a1a; position: relative; overflow: hidden; cursor: pointer; }
+        .video-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+        .video-item:hover img { transform: scale(1.1); }
+        .view-count { position: absolute; bottom: 5px; left: 5px; font-size: 11px; font-weight: bold; z-index: 2; }
 
-        /* --- MENU LATÉRAL --- */
-        .side-menu { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%; background: #0a0a0a; z-index: 1000; transition: 0.4s; }
-        .side-menu.active { right: 0; }
-        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; }
-        .menu-overlay.active { display: block; }
-        .menu-item { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #111; }
+        /* --- POPUP PARTAGE --- */
+        .share-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; z-index: 2000; backdrop-filter: blur(5px); }
+        .share-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.7); width: 280px; background: #111; border: 1px solid #333; border-radius: 25px; padding: 30px 20px; text-align: center; z-index: 2001; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .share-popup.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+        .qr-box { background: white; padding: 10px; border-radius: 15px; display: inline-block; margin: 15px 0; }
+        .btn-copy { background: var(--orange-floy); color: black; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
         /* --- NAV BAR --- */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1a1a1a; z-index: 100; }
         .nav-icon { width: 28px; height: 28px; fill: #666; }
         .nav-icon.active { fill: white; }
-        /* --- EFFETS DE SURVOL SUR LA GRILLE (HOVER) --- */
-
-/* 1. Zoom Léger (Scale) */
-.video-item img {
-    /* Transition indispensable pour rendre l'effet fluide */
-    transition: transform 0.4s ease-in-out; 
-}
-
-.video-item:hover img {
-    /* Agrandit l'image de 8% (1.08) */
-    transform: scale(1.08); 
-}
-
-/* 2. Assombrissement et Mise en avant des infos */
-
-/* On crée l'overlay noir par défaut (invisible) */
-.video-item::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 40%);
-    opacity: 0; /* Caché par défaut */
-    transition: opacity 0.3s ease;
-    z-index: 1; /* Derrière le view-count, devant l'img */
-}
-
-/* On cache les infos par défaut pour les faire apparaître au hover (Optionnel) */
-.view-count {
-    opacity: 0.8; /* Légèrement transparent de base */
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateY(0px);
-    z-index: 2; /* Devant l'overlay */
-}
-
-/* --- ACTIONS AU SURVOL --- */
-
-.video-item:hover::after {
-    opacity: 1; /* L'ombre apparaît */
-}
-
-.video-item:hover .view-count {
-    opacity: 1; /* Les infos deviennent totalement opaques */
-    transform: translateY(-3px); /* Petit mouvement vers le haut pour le dynamisme */
-}
-    /* Fond sombre qui couvre tout l'écran */
-    .share-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.85);
-        display: none; /* Masqué par défaut */
-        z-index: 2000;
-        backdrop-filter: blur(5px);
-    }
-
-    /* Fenêtre surgissante (Popup) */
-    .share-popup {
-        position: fixed;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%) scale(0.7);
-        width: 280px;
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 25px;
-        padding: 30px 20px;
-        text-align: center;
-        z-index: 2001;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    /* État quand la popup est ouverte */
-    .share-popup.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    .qr-box {
-        background: white;
-        padding: 12px;
-        border-radius: 15px;
-        display: inline-block;
-        margin: 20px 0;
-    }
-
-    .qr-box img {
-        width: 160px;
-        height: 160px;
-        display: block;
-    }
-
-    .share-title { font-weight: bold; font-size: 18px; margin-bottom: 5px; color: white; }
-    .share-handle { color: #888; font-size: 14px; margin-bottom: 20px; }
-
-    /* Bouton orange Floy */
-    .btn-copy {
-        background: #FF7A1A;
-        color: black;
-        border: none;
-        width: 100%;
-        padding: 14px;
-        border-radius: 12px;
-        font-weight: bold;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .btn-copy:active { transform: scale(0.95); }
-
-    .close-share {
-        position: absolute;
-        top: 15px; right: 20px;
-        font-size: 28px;
-        color: #555;
-        cursor: pointer;
-    }
     </style>
 </head>
-<body onload="animateCounters()">
+<body onload="initProfile()">
 
     <div class="top-bar">
-        <svg class="icon-btn" onclick="openSharePopup()" width="26" height="26" viewBox="0 0 24 24" fill="white" style="transform: scaleX(-1);">
-    <path d="M12.5 4v3.5C7.3 8.3 4 12.3 4 17.5c2.4-3.4 5.6-5.1 8.5-5.1V16L20 10l-7.5-6z"></path>
-</svg>
-        <svg class="icon-btn" onclick="toggleMenu()" width="28" height="28" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg class="icon-btn share-icon" onclick="openSharePopup()" width="26" height="26" viewBox="0 0 24 24" fill="white">
+            <path d="M12.5 4v3.5C7.3 8.3 4 12.3 4 17.5c2.4-3.4 5.6-5.1 8.5-5.1V16L20 10l-7.5-6z"></path>
+        </svg>
     </div>
 
     <div class="profile-header">
@@ -216,17 +84,16 @@
             <img src="https://i.pravatar.cc/150?u=Arlein" class="profile-pic">
             <svg class="verified-badge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF7A1A"/><path d="M17 9L11 15L7 11" stroke="white" stroke-width="2.5" fill="none"/></svg>
         </div>
-
         <div class="display-name">Arlein</div>
         <div class="user-handle">@arlein_off</div>
 
         <div class="stats-row">
-            <div class="stat-item" onclick="window.location.href='followers.html'">
-                <span class="stat-val counter" data-target="124">0</span>
+            <div class="stat-item">
+                <span class="stat-val counter" id="following-val" data-target="124">0</span>
                 <span class="stat-lab">Abonnements</span>
             </div>
-            <div class="stat-item" onclick="window.location.href='followers.html'">
-                <span class="stat-val counter" id="followers-target" data-target="850">0</span>
+            <div class="stat-item">
+                <span class="stat-val counter" id="followers-val" data-target="850">0</span>
                 <span class="stat-lab">Abonnés</span>
             </div>
             <div class="stat-item">
@@ -239,145 +106,81 @@
             <button class="btn-sec" onclick="window.location.href='edit-profile.html'">Modifier le profil</button>
             <button class="btn-sec" onclick="window.location.href='follower-growth.html'">Analytics</button>
         </div>
-        <div class="qr-box">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://floy.app/arlein_off" alt="QR Code Floy">
-    </div>
-        <button class="btn-copy" onclick="copyFloyLink()">
-        🔗 Copier le lien
-    </button>
-</div>
     </div>
 
     <div class="tabs-selector">
-        <div class="tab-btn active" onclick="switchGrid('posts', this)">
-            <svg viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z"/></svg>
-        </div>
-        <div class="tab-btn" onclick="switchGrid('likes', this)">
-            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        </div>
+        <div class="tab-btn active" onclick="switchTab('posts', this)"><svg viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z"/></svg></div>
+        <div class="tab-btn" onclick="switchTab('likes', this)"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
     </div>
 
-    <div class="video-grid" id="profileGrid">
-        <div class="video-item">
-            <img src="https://picsum.photos/seed/v1/300/400">
-            <div class="view-count">▶ 12.5K</div>
-        </div>
-        <div class="video-item">
-            <img src="https://picsum.photos/seed/v2/300/400">
-            <div class="view-count">▶ 8.2K</div>
-        </div>
-        <div class="video-item">
-            <img src="https://picsum.photos/seed/v3/300/400">
-            <div class="view-count">▶ 45K</div>
-        </div>
+    <div class="video-grid" id="mainGrid">
+        <div class="video-item"><img src="https://picsum.photos/seed/1/300/400"><div class="view-count">▶ 12K</div></div>
+        <div class="video-item"><img src="https://picsum.photos/seed/2/300/400"><div class="view-count">▶ 8K</div></div>
+        <div class="video-item"><img src="https://picsum.photos/seed/3/300/400"><div class="view-count">▶ 45K</div></div>
     </div>
 
     <div id="shareOverlay" class="share-overlay" onclick="closeSharePopup()"></div>
-    <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
     <div id="sharePopup" class="share-popup">
-    <div id="sideMenu" class="side-menu">
-        <span class="close-share" onclick="closeSharePopup()">&times;</span>
-        <div class="share-title">Partager mon profil</div>
-        <div class="share-handle">@arlein_off</div>
-        <div style="padding:20px; border-bottom:1px solid #222; font-weight:bold">Paramètres</div>
-        <div class="menu-item" onclick="window.location.href='edit-profile.html'">⚙️ Profil</div>
-        <div class="menu-item" onclick="window.location.href='wallet.html'">💳 Portefeuille</div>
-        <div class="menu-item" onclick="window.location.href='privacy.html'">🔒 Confidentialité</div>
+        <div class="share-title">Partager le profil</div>
+        <div class="qr-box">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://floy.app/arlein_off" alt="QR">
+        </div>
+        <button class="btn-copy" onclick="copyLink()">🔗 Copier le lien</button>
     </div>
 
     <nav class="nav-bar">
-        <svg class="nav-icon" onclick="window.location.href='feed.html'" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <svg class="nav-icon" onclick="window.location.href='explore.html'" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <div style="background:var(--orange-floy); width:50px; height:35px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:black; font-weight:bold;">+</div>
-        <svg class="nav-icon" onclick="window.location.href='messages.html'" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
-        <svg class="nav-icon active" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <svg class="nav-icon active" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
     </nav>
 
     <script>
-        function toggleMenu() {
-            document.getElementById('sideMenu').classList.toggle('active');
-            document.getElementById('menuOverlay').classList.toggle('active');
-        }
-
-        function switchGrid(type, el) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            const grid = document.getElementById('profileGrid');
-            
-            if(type === 'likes') {
-                grid.innerHTML = '<div style="grid-column: 1/4; text-align:center; padding:50px; color:#555;">Aucune vidéo likée pour le moment.</div>';
-            } else {
-                grid.innerHTML = `
-                    <div class="video-item"><img src="https://picsum.photos/seed/v1/300/400"><div class="view-count">▶ 12.5K</div></div>
-                    <div class="video-item"><img src="https://picsum.photos/seed/v2/300/400"><div class="view-count">▶ 8.2K</div></div>
-                    <div class="video-item"><img src="https://picsum.photos/seed/v3/300/400"><div class="view-count">▶ 45K</div></div>
-                `;
-            }
+        function initProfile() {
+            // Charger les vrais nombres depuis le stockage
+            const count = localStorage.getItem('floy_following_count') || "124";
+            document.getElementById('following-val').setAttribute('data-target', count);
+            animateCounters();
         }
 
         function animateCounters() {
-            const realFollowers = localStorage.getItem('floy_following_count') || "850";
-            document.getElementById('followers-target').setAttribute('data-target', realFollowers);
-
-            const counters = document.querySelectorAll('.counter');
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                let count = 0;
-                const updateCount = () => {
-                    const speed = target / 40 || 1;
-                    if (count < target) {
-                        count += Math.ceil(speed);
-                        counter.innerText = count;
-                        setTimeout(updateCount, 30);
-                    } else {
-                        counter.innerText = target;
-                    }
+            document.querySelectorAll('.counter').forEach(c => {
+                const target = +c.getAttribute('data-target');
+                let cur = 0;
+                const update = () => {
+                    const speed = target / 30;
+                    if(cur < target) {
+                        cur += Math.ceil(speed);
+                        c.innerText = cur;
+                        setTimeout(update, 30);
+                    } else { c.innerText = target; }
                 };
-                updateCount();
+                update();
             });
         }
+
         function openSharePopup() {
-        const overlay = document.getElementById('shareOverlay');
-        const popup = document.getElementById('sharePopup');
-        
-        if(overlay && popup) {
-            overlay.style.display = 'block';
-            setTimeout(() => {
-                popup.classList.add('active');
-            }, 10);
+            document.getElementById('shareOverlay').style.display = 'block';
+            setTimeout(() => document.getElementById('sharePopup').classList.add('active'), 10);
         }
-    }
 
         function closeSharePopup() {
-        const overlay = document.getElementById('shareOverlay');
-        const popup = document.getElementById('sharePopup');
-        
-        if(overlay && popup) {
-            popup.classList.remove('active');
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 300);
+            document.getElementById('sharePopup').classList.remove('active');
+            setTimeout(() => document.getElementById('shareOverlay').style.display = 'none', 300);
         }
-    }
-        function copyFloyLink() {
-        const profileUrl = "https://floy.app/arlein_off";
-        
-        navigator.clipboard.writeText(profileUrl).then(() => {
-            const btn = document.querySelector('.btn-copy');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = "✅ Lien copié !";
-            btn.style.background = "#28a745"; // Vert
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = "#FF7A1A"; // Retour Orange
+
+        function copyLink() {
+            navigator.clipboard.writeText("https://floy.app/arlein_off").then(() => {
+                alert("Lien copié !");
                 closeSharePopup();
-            }, 1200);
-        });
-    }
+            });
+        }
+
+        function switchTab(type, el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = type === 'likes' ? '<p style="grid-column:1/4;text-align:center;padding:20px;">Aucun like.</p>' : 
+            '<div class="video-item"><img src="https://picsum.photos/seed/1/300/400"><div class="view-count">▶ 12K</div></div><div class="video-item"><img src="https://picsum.photos/seed/2/300/400"><div class="view-count">▶ 8K</div></div>';
+        }
     </script>
-    <iframe src="share-popup.html" style="display:none;" id="shareFrame"></iframe>
 </body>
 </html>
-
