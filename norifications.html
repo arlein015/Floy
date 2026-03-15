@@ -4,94 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Notifications</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --floy-bg: linear-gradient(135deg, #ff8c00 0%, #3a01cc 100%);
-            --floy-cyan: #00e5ff;
+        :root { --orange-floy: #FF7A1A; --noir: #000; --gris: #121212; }
+        body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; }
+        .header { padding: 20px; border-bottom: 1px solid #222; display: flex; align-items: center; }
+        .notif-item { 
+            padding: 15px 20px; border-bottom: 1px solid #111; display: flex; gap: 15px;
+            animation: fadeIn 0.5s ease;
         }
-
-        body {
-            margin: 0; background: var(--floy-bg) !important;
-            background-attachment: fixed; font-family: 'Poppins', sans-serif;
-            color: white; min-height: 100vh;
-        }
-
-        .header {
-            padding: 20px; background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px); display: flex; align-items: center; gap: 15px;
-            position: sticky; top: 0; z-index: 100;
-        }
-
-        .notif-container { padding: 15px; }
-
-        /* Item de notification en Dark Glass */
-        .notif-item {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            margin-bottom: 10px; padding: 15px;
-            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex; align-items: center; gap: 12px;
-            cursor: pointer; transition: 0.3s;
-        }
-
-        .notif-item:active { background: rgba(0, 0, 0, 0.6); transform: scale(0.98); }
-
-        .notif-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
-        
-        .notif-content { flex: 1; font-size: 13px; }
-        .notif-time { font-size: 10px; opacity: 0.5; margin-top: 4px; }
-
-        .btn-follow {
-            background: #ff8c00; border: none; color: white;
-            padding: 6px 15px; border-radius: 10px; font-weight: 600; font-size: 12px;
-        }
+        .notif-icon { font-size: 20px; background: #1a1a1a; padding: 10px; border-radius: 50%; }
+        .notif-content { flex: 1; }
+        .notif-title { font-weight: bold; font-size: 14px; margin-bottom: 3px; }
+        .notif-body { font-size: 12px; color: #888; }
+        .notif-time { font-size: 10px; color: #444; margin-top: 5px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <i class="fas fa-arrow-left" onclick="window.history.back()"></i>
-        <h2 style="margin:0; font-size: 18px;">Notifications</h2>
+        <div onclick="window.history.back()" style="cursor:pointer; margin-right:20px; font-size:24px;">‹</div>
+        <span style="font-weight:bold;">NOTIFICATIONS</span>
     </div>
 
-    <div class="notif-container">
-        <div class="notif-item">
-            <img src="logo.png" class="notif-img">
-            <div class="notif-content">
-                <strong>@bouta</strong> a aimé votre vidéo.
-                <div class="notif-time">Il y a 2 min</div>
-            </div>
-            <div style="width: 40px; height: 40px; background: #222; border-radius: 5px;"></div>
+    <div id="notifContainer">
         </div>
 
-        <div class="notif-item">
-            <img src="logo.png" class="notif-img">
-            <div class="notif-content">
-                <strong>Floy Support <i class="fas fa-check-circle" style="color: var(--floy-cyan); font-size: 10px;"></i></strong> a commencé à vous suivre.
-                <div class="notif-time">Il y a 1 heure</div>
-            </div>
-            <button class="btn-follow">S'abonner</button>
-        </div>
-    </div>
-<script>
-    function sendNotification(titre, message) {
-    // On récupère les notifications existantes ou on crée un tableau vide
-    let notifications = JSON.parse(localStorage.getItem('floy_notifications')) || [];
-    
-    // On ajoute la nouvelle notification en haut de la liste
-    notifications.unshift({
-        id: Date.now(),
-        title: titre,
-        body: message,
-        time: "À l'instant",
-        icon: "💰",
-        read: false
-    });
-    
-    // On sauvegarde dans le stockage local du navigateur
-    localStorage.setItem('floy_notifications', JSON.stringify(notifications));
-}
+    <script>
+        function loadNotifs() {
+            const container = document.getElementById('notifContainer');
+            const data = JSON.parse(localStorage.getItem('floy_notifications')) || [];
+            
+            if(data.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#444; margin-top:50px;">Aucune notification</div>';
+                return;
+            }
+
+            container.innerHTML = data.map(n => `
+                <div class="notif-item">
+                    <div class="notif-icon">${n.icon}</div>
+                    <div class="notif-content">
+                        <div class="notif-title">${n.title}</div>
+                        <div class="notif-body">${n.body}</div>
+                        <div class="notif-time">${n.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = loadNotifs;
     </script>
 </body>
 </html>
