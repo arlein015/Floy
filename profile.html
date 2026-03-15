@@ -250,6 +250,35 @@
                 updateCount();
             });
         }
+        // Ajoute ceci à l'intérieur de tes balises <script>
+function openSharePopup() {
+    // 1. On affiche d'abord le fond sombre (Overlay)
+    const overlay = document.getElementById('shareOverlay');
+    const popup = document.getElementById('sharePopup');
+
+    if (overlay && popup) {
+        overlay.style.display = 'block';
+        
+        // 2. On ajoute la classe 'active' pour l'animation de la popup
+        setTimeout(() => {
+            popup.classList.add('active');
+        }, 10);
+    } else {
+        console.error("Erreur : Le module share-popup n'est pas présent dans la page.");
+    }
+}
+
+function closeSharePopup() {
+    const overlay = document.getElementById('shareOverlay');
+    const popup = document.getElementById('sharePopup');
+
+    if (overlay && popup) {
+        popup.classList.remove('active');
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+}
     </script>
     <iframe src="share-popup.html" style="display:none;" id="shareFrame"></iframe>
 </body>
