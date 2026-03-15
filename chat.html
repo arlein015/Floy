@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Floy - Chat Interactif</title>
+    <title>Floy - Chat Permanent</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; }
-        
         body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
         /* HEADER */
@@ -15,24 +14,25 @@
         .user-img { width: 38px; height: 38px; border-radius: 50%; background: #222; margin-right: 12px; }
 
         /* ZONE DE MESSAGES */
-        .messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
-        .bubble { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; animation: pop 0.2s ease-out; }
+        .messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 100px; }
+        .bubble { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
         .received { align-self: flex-start; background: #1a1a1a; border-bottom-left-radius: 4px; }
         .sent { align-self: flex-end; background: var(--orange); color: black; font-weight: 500; border-bottom-right-radius: 4px; }
-        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        /* Style pour les images envoyées */
+        .chat-img { max-width: 100%; border-radius: 10px; margin-top: 5px; display: block; }
 
-        /* MENU D'ATTACHEMENT (CACHÉ PAR DÉFAUT) */
+        /* MENU D'ATTACHEMENT */
         .attach-menu {
             position: absolute; bottom: 80px; left: 15px; background: #1a1a1a; 
             border: 1px solid #333; border-radius: 15px; display: none; 
-            flex-direction: column; padding: 10px; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            flex-direction: column; padding: 10px; z-index: 100;
         }
-        .attach-option { display: flex; align-items: center; gap: 10px; padding: 10px 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .attach-option:hover { background: #252525; border-radius: 10px; }
+        .attach-option { display: flex; align-items: center; gap: 10px; padding: 10px 15px; cursor: pointer; font-size: 14px; }
 
         /* BARRE DE SAISIE */
-        .input-area { padding: 12px 15px; background: var(--noir); border-top: 1px solid #1a1a1a; display: flex; align-items: center; gap: 10px; }
-        .btn-plus { width: 40px; height: 40px; background: #1a1a1a; border-radius: 50%; border: none; color: white; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .input-area { padding: 12px 15px; background: var(--noir); border-top: 1px solid #1a1a1a; display: flex; align-items: center; gap: 10px; position: relative; }
+        .btn-plus { width: 40px; height: 40px; background: #1a1a1a; border-radius: 50%; border: none; color: white; cursor: pointer; font-size: 20px; }
         .message-input { flex: 1; background: #111; border: 1px solid #222; padding: 12px 18px; border-radius: 25px; color: white; outline: none; }
         .btn-send { width: 42px; height: 42px; background: var(--orange); border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
@@ -48,18 +48,17 @@
     </div>
 
     <div class="messages-container" id="chatBox">
-        <div class="bubble received">Salut ! Voici les fichiers que tu as demandés.</div>
-    </div>
+        </div>
 
     <div class="attach-menu" id="attachMenu">
-        <label class="attach-option" for="upload-photo">🖼️ Photo <input type="file" id="upload-photo" accept="image/*" onchange="handleFile(this)"></label>
-        <label class="attach-option" for="upload-video">🎥 Vidéo <input type="file" id="upload-video" accept="video/*" onchange="handleFile(this)"></label>
-        <label class="attach-option" for="upload-doc">📄 Document <input type="file" id="upload-doc" accept=".pdf,.doc,.txt" onchange="handleFile(this)"></label>
+        <label class="attach-option" for="upload-photo">🖼️ Photo <input type="file" id="upload-photo" accept="image/*" onchange="handleImage(this)"></label>
+        <label class="attach-option" for="upload-video">🎥 Vidéo (Simulée)</label>
+        <label class="attach-option" onclick="clearChat()" style="color: #ff4444;">🗑️ Effacer tout</label>
     </div>
 
     <div class="input-area">
         <button class="btn-plus" onclick="toggleMenu()">+</button>
-        <input type="text" id="msgInput" class="message-input" placeholder="Message..." autofocus autocomplete="off">
+        <input type="text" id="msgInput" class="message-input" placeholder="Message..." autocomplete="off">
         <button class="btn-send" onclick="sendMessage()">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
@@ -70,54 +69,76 @@
         const msgInput = document.getElementById('msgInput');
         const attachMenu = document.getElementById('attachMenu');
 
-        // Ouvrir/Fermer le menu +
+        // Charger les messages au démarrage
+        window.onload = () => {
+            const savedChat = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
+            savedChat.forEach(msg => renderBubble(msg.content, msg.type, msg.isImage));
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
         function toggleMenu() {
             attachMenu.style.display = (attachMenu.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        // Envoyer un message texte
         function sendMessage() {
             const text = msgInput.value.trim();
             if (text !== "") {
-                createBubble(text, 'sent');
+                saveAndRender(text, 'sent', false);
                 msgInput.value = "";
                 attachMenu.style.display = 'none';
-                
-                // Simulation d'une réponse après 1 seconde
-                setTimeout(() => {
-                    createBubble("Bien reçu ! 👍", 'received');
-                }, 1000);
             }
         }
 
-        // Créer une bulle de message
-        function createBubble(content, type) {
+        // Gérer l'envoi d'image réelle
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveAndRender(e.target.result, 'sent', true);
+                };
+                reader.readAsDataURL(input.files[0]);
+                attachMenu.style.display = 'none';
+            }
+        }
+
+        // Sauvegarder dans localStorage et afficher
+        function saveAndRender(content, type, isImage) {
+            const history = JSON.parse(localStorage.getItem('floy_chat_history')) || [];
+            history.push({ content, type, isImage });
+            localStorage.setItem('floy_chat_history', JSON.stringify(history));
+            
+            renderBubble(content, type, isImage);
+        }
+
+        // Afficher la bulle à l'écran
+        function renderBubble(content, type, isImage) {
             const div = document.createElement('div');
             div.className = `bubble ${type}`;
-            div.innerText = content;
+            
+            if (isImage) {
+                const img = document.createElement('img');
+                img.src = content;
+                img.className = "chat-img";
+                div.appendChild(img);
+            } else {
+                div.innerText = content;
+            }
+
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Gérer les fichiers (Photo/Vidéo)
-        function handleFile(input) {
-            if (input.files && input.files[0]) {
-                const fileName = input.files[0].name;
-                createBubble(`📁 Fichier envoyé : ${fileName}`, 'sent');
+        function clearChat() {
+            if(confirm("Supprimer toute la discussion ?")) {
+                localStorage.removeItem('floy_chat_history');
+                chatBox.innerHTML = "";
                 attachMenu.style.display = 'none';
             }
         }
 
-        // Envoyer avec Entrée
-        msgInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        // Fermer le menu si on clique sur les messages
-        chatBox.addEventListener('click', () => { attachMenu.style.display = 'none'; });
+        msgInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 
     <script src="navbar.js"></script>
-
 </body>
 </html>
