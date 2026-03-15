@@ -53,6 +53,12 @@
             position: absolute; right: 65px; background: rgba(15,15,15,0.95); 
             padding: 10px; border-radius: 30px; display: none; gap: 15px; border: 1px solid var(--orange-floy);
         }
+        .floy-badge {width: 1.1em; /* Prend la taille du texte voisin */ height: 1.1em; vertical-align: middle; /* Aligne parfaitement avec le nom */ margin-left: 5px; display: inline-block;}
+        /* Pour le profil (Nom plus gros) */
+        .display-name .floy-badge {width: 22px;height: 22px;}
+        /* Pour les messages ou le feed (Nom plus petit) */
+        .message-sender .floy-badge, .feed-user .floy-badge {width: 16px; height: 16px;}
+
         .reaction-bar span { font-size: 30px; transition: 0.3s; }
         .reaction-bar span:hover { transform: scale(1.4); }
 
