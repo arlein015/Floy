@@ -75,6 +75,24 @@
             <path d="M0,80 Q50,70 100,40 T200,60 T300,20 T400,50" fill="none" stroke="var(--orange-floy)" stroke-width="3" stroke-linecap="round"/>
         </svg>
     </div>
-
+<script>
+    function sendNotification(titre, message) {
+    // On récupère les notifications existantes ou on crée un tableau vide
+    let notifications = JSON.parse(localStorage.getItem('floy_notifications')) || [];
+    
+    // On ajoute la nouvelle notification en haut de la liste
+    notifications.unshift({
+        id: Date.now(),
+        title: titre,
+        body: message,
+        time: "À l'instant",
+        icon: "💰",
+        read: false
+    });
+    
+    // On sauvegarde dans le stockage local du navigateur
+    localStorage.setItem('floy_notifications', JSON.stringify(notifications));
+}
+   </script> 
 </body>
 </html>
