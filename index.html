@@ -4,45 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" type="image/png" href="./favicon.png">
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data: https:; script-src 'self' 'unsafe-inline';">
     <title>Floy - Feed</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
         body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
         
-        /* FEED & POSTS */
-        .app-header { padding: 15px 20px; border-bottom: 1px solid var(--bordure); background: var(--noir); position: sticky; top: 0; z-index: 100; }
-        .logo-text { color: var(--orange); font-weight: 900; font-size: 24px; }
-        .post { border-bottom: 1px solid var(--bordure); padding-bottom: 15px; }
-        .post-actions { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .app-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordure); position: sticky; top: 0; background: var(--noir); z-index: 100; }
+        .logo-text { color: var(--orange); font-weight: 900; font-size: 24px; letter-spacing: 1px; }
+
+        .post { border-bottom: 1px solid var(--bordure); padding-bottom: 15px; position: relative; }
+        .post-header { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .post-avatar { width: 35px; height: 35px; border-radius: 50%; background: #333; border: 1px solid var(--orange); }
         
-        .btn-boost-trigger { 
+        .three-dots { cursor: pointer; fill: #888; }
+
+        .post-media { width: 100%; aspect-ratio: 1/1; background: #1a1a1a; object-fit: cover; }
+
+        .post-actions { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .action-left { display: flex; gap: 18px; fill: white; }
+        .action-icon { cursor: pointer; transition: 0.2s; }
+        .action-icon:active { transform: scale(0.8); }
+
+        .btn-boost-link { 
             background: rgba(255, 122, 26, 0.15); border: 1px solid var(--orange); color: var(--orange); 
-            padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer;
+            padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 11px; text-decoration: none;
             display: flex; align-items: center; gap: 5px;
         }
 
-        /* MODULE BOOST (MODAL) */
-        .boost-modal { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); z-index: 1000; display: none; 
-            align-items: center; justify-content: center;
-        }
-        .boost-card { 
-            background: var(--gris); width: 85%; max-width: 350px; 
-            border-radius: 25px; border: 1px solid var(--bordure); 
-            padding: 30px; text-align: center; animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* MENU OPTIONS (3 POINTS) */
+        .options-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: none; align-items: flex-end; }
+        .options-content { background: var(--gris); width: 100%; border-radius: 25px 25px 0 0; padding: 20px 0; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        .boost-icon-big { width: 60px; height: 60px; background: rgba(255,122,26,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; fill: var(--orange); }
-        .boost-card h2 { margin: 0 0 10px; font-size: 20px; }
-        .boost-card p { font-size: 14px; color: #aaa; margin-bottom: 25px; line-height: 1.4; }
-        
-        .btn-confirm-boost { width: 100%; background: var(--orange); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
-        .btn-cancel { background: none; border: none; color: #666; font-size: 14px; cursor: pointer; }
+        .option-item { padding: 18px 25px; display: flex; align-items: center; gap: 15px; font-size: 16px; cursor: pointer; border-bottom: 1px solid var(--bordure); }
+        .option-item:last-child { border: none; color: #ff4444; }
 
         /* NAV BAS */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; }
         .nav-item { fill: #666; }
         .nav-item.active { fill: var(--orange); }
     </style>
@@ -55,29 +55,37 @@
 
     <div class="feed-container">
         <div class="post">
-            <div style="padding: 12px 15px; font-weight: bold; font-size: 14px;">Arlein_Dev</div>
-            <img src="https://picsum.photos/600/600" style="width: 100%; aspect-ratio:1/1; object-fit: cover;">
-            <div class="post-actions">
-                <div style="display: flex; gap: 20px; fill: white;">
-                    <svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <div class="post-header">
+                <div class="user-info">
+                    <div class="post-avatar"></div>
+                    <span style="font-weight:bold; font-size:14px;">Arlein_Dev</span>
                 </div>
-                <button class="btn-boost-trigger" onclick="openBoostModule()">
+                <div class="three-dots" onclick="openOptions()">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                </div>
+            </div>
+
+            <img src="https://picsum.photos/600/600" class="post-media">
+
+            <div class="post-actions">
+                <div class="action-left">
+                    <svg class="action-icon" width="26" height="26" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <svg class="action-icon" width="26" height="26" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <svg class="action-icon" width="26" height="26" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                </div>
+                <a href="./boost.html" class="btn-boost-link">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     BOOST
-                </button>
+                </a>
             </div>
         </div>
     </div>
 
-    <div id="boostModule" class="boost-modal">
-        <div class="boost-card">
-            <div class="boost-icon-big">
-                <svg width="32" height="32" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <h2>Booster ce post ?</h2>
-            <p>Propulsez votre contenu en tête du feed pendant 24h pour <b>50 Jetons</b>.</p>
-            <button class="btn-confirm-boost" onclick="confirmBoost()">Confirmer le Boost</button>
-            <button class="btn-cancel" onclick="closeBoostModule()">Annuler</button>
+    <div id="optionsModal" class="options-modal" onclick="closeOptions()">
+        <div class="options-content" onclick="event.stopPropagation()">
+            <div class="option-item" onclick="copyLink()">🔗 Copier le lien</div>
+            <div class="option-item" onclick="saveImage()">💾 Enregistrer l'image</div>
+            <div class="option-item" onclick="closeOptions()">❌ Annuler</div>
         </div>
     </div>
 
@@ -88,15 +96,16 @@
     </nav>
 
     <script>
-        function openBoostModule() {
-            document.getElementById('boostModule').style.display = 'flex';
+        function openOptions() { document.getElementById('optionsModal').style.display = 'flex'; }
+        function closeOptions() { document.getElementById('optionsModal').style.display = 'none'; }
+        
+        function copyLink() {
+            alert("Lien copié dans le presse-papier !");
+            closeOptions();
         }
-        function closeBoostModule() {
-            document.getElementById('boostModule').style.display = 'none';
-        }
-        function confirmBoost() {
-            alert("🚀 Boost activé ! Vos 50 jetons ont été déduits.");
-            closeBoostModule();
+        function saveImage() {
+            alert("Image enregistrée dans votre galerie !");
+            closeOptions();
         }
     </script>
 </body>
