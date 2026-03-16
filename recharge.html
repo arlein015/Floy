@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <title>Recharger - Floy</title>
+    <style>
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--bordure); }
+        .back-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        
+        .content { padding: 30px 20px; flex: 1; text-align: center; }
+        .title { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
+        .subtitle { color: #888; font-size: 14px; margin-bottom: 30px; }
+
+        .amount-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
+        .amount-card { background: var(--gris); border: 1px solid var(--bordure); padding: 20px; border-radius: 15px; cursor: pointer; transition: 0.2s; }
+        .amount-card:active { border-color: var(--orange); transform: scale(0.95); }
+        .amount-val { display: block; font-size: 20px; font-weight: bold; color: var(--orange); }
+
+        .custom-input { width: 100%; background: var(--gris); border: 1px solid var(--bordure); padding: 15px; border-radius: 12px; color: white; font-size: 16px; margin-bottom: 20px; text-align: center; box-sizing: border-box; }
+        
+        .pay-btn { width: 100%; background: var(--orange); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='./shop.html'">←</button>
+        <span style="font-weight: bold;">Recharger le Wallet</span>
+    </div>
+
+    <div class="content">
+        <div class="title">Ajouter des fonds</div>
+        <p class="subtitle">Choisissez un montant pour recharger votre compte Floy.</p>
+
+        <div class="amount-grid">
+            <div class="amount-card" onclick="setAmount(5)"> <span class="amount-val">5$</span> </div>
+            <div class="amount-card" onclick="setAmount(10)"> <span class="amount-val">10$</span> </div>
+            <div class="amount-card" onclick="setAmount(20)"> <span class="amount-val">20$</span> </div>
+            <div class="amount-card" onclick="setAmount(50)"> <span class="amount-val">50$</span> </div>
+        </div>
+
+        <input type="number" id="customAmount" class="custom-input" placeholder="Autre montant ($)">
+        
+        <button class="pay-btn" onclick="processPayment()">Payer maintenant</button>
+    </div>
+
+    <script>
+        function setAmount(val) {
+            document.getElementById('customAmount').value = val;
+        }
+
+        function processPayment() {
+            const amt = document.getElementById('customAmount').value;
+            if(amt > 0) {
+                alert("Redirection vers la passerelle de paiement pour : " + amt + "$");
+            } else {
+                alert("Veuillez entrer un montant valide.");
+            }
+        }
+    </script>
+
+</body>
+</html>
