@@ -3,73 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>➕</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
     <title>Créer - Floy</title>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #1a1a1a; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-
-        /* HEADER */
-        .header { padding: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--gris); }
-        .btn-close { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0 10px; }
-        .header h1 { font-size: 18px; margin: 0; flex-grow: 1; text-align: center; margin-right: 34px; }
-
-        /* MENU DE CRÉATION */
-        .create-options { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 0 30px; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: sans-serif; overflow: hidden; color: white; }
         
-        .option-card { background: var(--gris); padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; transition: transform 0.2s, background 0.2s; border: 1px solid transparent; }
-        .option-card:active { transform: scale(0.98); background: #252525; border-color: var(--orange); }
-        
-        .icon-circle { width: 50px; height: 50px; background: rgba(255, 122, 26, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--orange); font-size: 24px; }
-        
-        .option-text b { display: block; font-size: 16px; margin-bottom: 4px; }
-        .option-text span { font-size: 13px; color: #888; }
+        /* APPAREIL PHOTO (FLUX VIDÉO) */
+        #video-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transform: scaleX(-1); }
 
-        /* NAV BAR (Pour pouvoir annuler) */
-        .nav-bar { height: 70px; border-top: 1px solid var(--gris); display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-item { color: #555; text-decoration: none; font-size: 24px; }
+        /* INTERFACE OVERLAY */
+        .overlay { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.8) 100%); }
+
+        .top-icons { padding: 40px 20px; display: flex; justify-content: space-between; }
+        .close-btn { font-size: 28px; background: none; border: none; color: white; cursor: pointer; }
+
+        /* BOUTON CAPTURE CENTRAL */
+        .capture-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .capture-btn { width: 75px; height: 75px; border-radius: 50%; border: 5px solid white; background: none; padding: 5px; cursor: pointer; margin-bottom: 30px; }
+        .capture-btn-inner { width: 100%; height: 100%; border-radius: 50%; background: white; transition: 0.2s; }
+        .capture-btn.live-mode .capture-btn-inner { background: #FF0000; }
+
+        /* SÉLECTEUR DE MODE (PUBLIER / CRÉER / LIVE) */
+        .mode-selector { display: flex; justify-content: center; gap: 30px; padding-bottom: 30px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .mode { opacity: 0.5; transition: 0.3s; cursor: pointer; }
+        .mode.active { opacity: 1; color: white; }
+
+        /* ÉCRAN DE LANCEMENT LIVE (CACHÉ PAR DÉFAUT) */
+        #live-setup { position: absolute; bottom: 150px; left: 0; right: 0; text-align: center; display: none; animation: fadeIn 0.3s; }
+        .btn-start-live { background: #FF0000; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <button class="btn-close" onclick="window.location.href='index.html'">✕</button>
-        <h1>Créer</h1>
+    <video id="video-preview" autoplay playsinline></video>
+
+    <div class="overlay">
+        <div class="top-icons">
+            <button class="close-btn" onclick="window.location.href='index.html'">✕</button>
+            <div style="font-size: 20px;">⚡ ⚙️</div>
+        </div>
+
+        <div class="bottom-controls">
+            <div id="live-setup">
+                <h2 style="margin-bottom: 20px;">Prêt à passer en direct ?</h2>
+                <button class="btn-start-live" onclick="window.location.href='live-stream.html'">DÉMARRER LE LIVE</button>
+            </div>
+
+            <div class="capture-container">
+                <div class="capture-btn" id="mainBtn">
+                    <div class="capture-btn-inner"></div>
+                </div>
+            </div>
+
+            <div class="mode-selector">
+                <span class="mode active" onclick="switchMode(this, 'publier')">Publier</span>
+                <span class="mode" onclick="switchMode(this, 'creer')">Créer</span>
+                <span class="mode" onclick="switchMode(this, 'live')">Live</span>
+            </div>
+        </div>
     </div>
 
-    <div class="create-options">
-        <a href="#" class="option-card" onclick="alert('Module Photo bientôt disponible !')">
-            <div class="icon-circle">🖼️</div>
-            <div class="option-text">
-                <b>Publication</b>
-                <span>Partagez une photo dans le flux</span>
-            </div>
-        </a>
+    <script>
+        // Activation de la caméra au chargement
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                document.getElementById('video-preview').srcObject = stream;
+            } catch (err) {
+                console.log("Caméra bloquée ou non disponible");
+            }
+        }
 
-        <a href="#" class="option-card" onclick="alert('Module Story bientôt disponible !')">
-            <div class="icon-circle">📸</div>
-            <div class="option-text">
-                <b>Story</b>
-                <span>Visible pendant 24 heures</span>
-            </div>
-        </a>
+        function switchMode(element, mode) {
+            // Mise à jour visuelle des textes
+            document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
+            element.classList.add('active');
 
-        <a href="live-stream.html" class="option-card">
-            <div class="icon-circle">🎥</div>
-            <div class="option-text">
-                <b>En direct</b>
-                <span>Lancez un live stream maintenant</span>
-            </div>
-        </a>
-    </div>
+            const liveSetup = document.getElementById('live-setup');
+            const mainBtn = document.getElementById('mainBtn');
 
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-item">🏠</a>
-        <a href="live-stream.html" class="nav-item">🎥</a>
-        <a href="create.html" class="nav-item" style="color: var(--orange)">➕</a>
-        <a href="messages.html" class="nav-item">💬</a>
-        <a href="profil.html" class="nav-item">👤</a>
-    </nav>
+            if (mode === 'live') {
+                liveSetup.style.display = 'block';
+                mainBtn.classList.add('live-mode');
+            } else {
+                liveSetup.style.display = 'none';
+                mainBtn.classList.remove('live-mode');
+            }
+        }
 
+        initCamera();
+    </script>
 </body>
 </html>
