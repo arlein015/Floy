@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <title>Boutique - Floy</title>
+    <style>
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 100px; }
+        
+        /* HEADER */
+        .shop-header { padding: 40px 20px 20px; text-align: center; border-bottom: 1px solid var(--bordure); }
+        .shop-header h1 { color: var(--orange); font-size: 24px; letter-spacing: 2px; margin: 0; }
+
+        /* SECTION ARTICLES */
+        .section-title { padding: 20px; font-size: 14px; font-weight: bold; color: #888; text-transform: uppercase; }
+        
+        .item-card { background: var(--gris); margin: 0 20px 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--bordure); display: flex; align-items: center; justify-content: space-between; }
+        .item-info { display: flex; align-items: center; gap: 15px; }
+        .item-icon { width: 50px; height: 50px; background: rgba(255, 122, 26, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; fill: var(--orange); }
+        
+        .item-text h3 { margin: 0; font-size: 16px; }
+        .item-text p { margin: 5px 0 0; font-size: 12px; color: #aaa; }
+
+        .price-tag { background: var(--orange); color: white; padding: 8px 15px; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; border: none; }
+
+        /* BANNIÈRE PROMO */
+        .promo-banner { background: linear-gradient(135deg, #FF7A1A, #b34f00); margin: 20px; padding: 25px; border-radius: 20px; position: relative; overflow: hidden; }
+        .promo-banner h2 { margin: 0; font-size: 20px; }
+        .promo-banner p { margin: 10px 0 0; font-size: 13px; opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="shop-header">
+        <h1>FLOY SHOP</h1>
+    </div>
+
+    <div class="promo-banner">
+        <h2>Devenez Certifié</h2>
+        <p>Obtenez votre badge et débloquez les liens en bio.</p>
+    </div>
+
+    <div class="section-title">Abonnements & Services</div>
+
+    <div class="item-card">
+        <div class="item-info">
+            <div class="item-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            </div>
+            <div class="item-text">
+                <h3>Certification Floy</h3>
+                <p>Badge vérifié + Liens bio illimités</p>
+            </div>
+        </div>
+        <button class="price-tag">10$/mois</button>
+    </div>
+
+    <div class="item-card">
+        <div class="item-info">
+            <div class="item-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div class="item-text">
+                <h3>Boost Express</h3>
+                <p>Visibilité max pendant 24h</p>
+            </div>
+        </div>
+        <button class="price-tag">3$ / 24h</button>
+    </div>
+
+    <div style="position: fixed; bottom: 30px; left: 0; right: 0; text-align: center;">
+        <button onclick="window.location.href='./index.html'" style="background:none; border: 1px solid #333; color: white; padding: 10px 25px; border-radius: 20px; font-size: 12px;">Retour au Feed</button>
+    </div>
+
+</body>
+</html>
