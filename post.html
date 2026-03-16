@@ -3,70 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Publier</title>
+    <title>Floy - Post</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
         body { background: var(--noir); color: white; font-family: sans-serif; margin: 0; }
-        header { padding: 15px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--bordure); }
-        .publish-btn { color: var(--orange); background: none; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .upload-zone { width: 100%; aspect-ratio: 1/1; background: var(--gris); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: pointer; }
-        #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        textarea { width: 100%; background: none; border: none; color: white; padding: 20px; font-size: 16px; outline: none; box-sizing: border-box; }
+        header { 
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--bordure); 
+        }
+        .btn-close { color: white; }
+        .btn-publier { color: var(--orange); background: none; border: none; font-weight: 800; font-size: 16px; cursor: pointer; }
+        
+        .upload-box { 
+            width: 100%; aspect-ratio: 1/1; background: var(--gris); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            cursor: pointer; border-bottom: 1px solid var(--bordure);
+        }
+        #img-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .upload-icon { color: #444; text-align: center; }
+        
+        textarea { width: 100%; background: none; border: none; color: white; padding: 20px; font-size: 18px; outline: none; box-sizing: border-box; }
         #file-input { display: none; }
     </style>
 </head>
 <body>
+
     <header>
-        <a href="index.html" style="color:white; text-decoration:none;">Annuler</a>
-        <b>Nouveau Post</b>
-        <button id="btn-publier" class="publish-btn" onclick="publierPost()">Publier</button>
+        <a href="index.html" class="btn-close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </a>
+        <b style="font-size:18px">Nouveau</b>
+        <button id="btn-send" class="btn-publier" onclick="publier()">Publier</button>
     </header>
 
-    <div class="upload-zone" onclick="document.getElementById('file-input').click()">
-        <span id="label-photo">📷 Appuie ici pour choisir une photo</span>
-        <img id="preview-img">
+    <div class="upload-box" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon" id="prompt">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <p style="margin-top:10px; font-weight:bold; font-size:14px">Sélectionner une photo</p>
+        </div>
+        <img id="img-preview">
     </div>
-    
+
     <input type="file" id="file-input" accept="image/*">
-    <textarea id="caption" placeholder="Écris une légende..."></textarea>
+    <textarea id="caption-box" placeholder="Une légende..."></textarea>
 
     <script type="module">
         import { db, storage } from './firebase-config.js';
         import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        const fileInput = document.getElementById('file-input');
-        const previewImg = document.getElementById('preview-img');
-        const labelPhoto = document.getElementById('label-photo');
-        const btn = document.getElementById('btn-publier');
+        const input = document.getElementById('file-input');
+        const preview = document.getElementById('img-preview');
+        const prompt = document.getElementById('prompt');
 
-        // Gérer l'affichage de l'image choisie
-        fileInput.onchange = (e) => {
+        input.onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
-                previewImg.src = URL.createObjectURL(file);
-                previewImg.style.display = 'block';
-                labelPhoto.style.display = 'none';
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+                prompt.style.display = 'none';
             }
         };
 
-        window.publierPost = async () => {
-            const file = fileInput.files[0];
-            if (!file) return alert("Choisis une photo !");
-
-            btn.innerText = "Envoi...";
+        window.publier = async () => {
+            const file = input.files[0];
+            if (!file) return alert("Photo manquante !");
+            
+            const btn = document.getElementById('btn-send');
             btn.disabled = true;
+            btn.innerText = "...";
 
             try {
-                // 1. Upload vers Firebase Storage
-                const storageRef = ref(storage, 'posts/' + Date.now() + "_" + file.name);
-                await uploadBytes(storageRef, file);
-                const url = await getDownloadURL(storageRef);
+                const imgRef = ref(storage, `posts/${Date.now()}`);
+                await uploadBytes(imgRef, file);
+                const url = await getDownloadURL(imgRef);
 
-                // 2. Enregistrement dans Firestore
                 await addDoc(collection(db, "posts"), {
                     imageUrl: url,
-                    caption: document.getElementById('caption').value,
+                    caption: document.getElementById('caption-box').value,
                     username: "User_Floy",
                     createdAt: serverTimestamp(),
                     likes: 0
@@ -74,9 +88,7 @@
 
                 window.location.href = "index.html";
             } catch (err) {
-                console.error(err);
-                alert("Erreur ! Vérifie que tes RULES Firebase sont bien sur 'true'.");
-                btn.innerText = "Publier";
+                alert("Erreur !");
                 btn.disabled = false;
             }
         };
