@@ -6,66 +6,90 @@
     <link rel="icon" type="image/png" href="./favicon.png">
     <title>Boutique Floy</title>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; --rouge: #ff4444; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        :root { 
+            --orange: #FF7A1A; 
+            --noir: #000; 
+            --gris: #121212; 
+            --bordure: #262626; 
+            --rouge: #ff4444; 
+        }
         
+        body { 
+            background: var(--noir); 
+            color: white; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            margin: 0; 
+            padding-bottom: 90px; 
+            overflow-x: hidden; 
+        }
+
         /* NOTIFICATION FLASH */
         .notif-flash { 
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: var(--orange); color: white; padding: 12px 25px; border-radius: 30px;
             font-weight: 800; font-size: 13px; z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(255, 122, 26, 0.4); white-space: nowrap;
+            box-shadow: 0 10px 30px rgba(255, 122, 26, 0.4);
         }
 
         /* HEADER */
-        .shop-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordure); background: var(--noir); position: sticky; top: 0; z-index: 100; }
+        .shop-header { 
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--bordure); background: var(--noir); position: sticky; top: 0; z-index: 100; 
+        }
         .balance-box { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 18px; color: var(--orange); }
 
-        /* SECTION HERO : BADGE ÉTOILÉ GÉANT */
+        /* SECTION HERO : BADGE OFFICIEL GÉANT */
         .vip-hero { 
             margin: 15px; padding: 40px 20px; border-radius: 35px; 
             background: radial-gradient(circle at top, rgba(255,122,26,0.15) 0%, var(--noir) 100%); 
             border: 1px solid var(--bordure); position: relative; text-align: center;
         }
 
-        .giant-badge-container { display: flex;justify-content: center; align-items: center; perspective: 1000px; /* Ajoute un peu de profondeur */}
-        .giant-badge-container svg {filter: drop-shadow(0 0 15px rgba(255, 122, 26, 0.5)); animation: slowRotate 10s linear infinite; /* Rotation très lente pour le style */}
-        
-        @keyframes slowRotate {from { transform: rotate(0deg); } to { transform: rotate(360deg); }}
+        .giant-badge-container {
+            margin-bottom: 20px; display: flex; justify-content: center;
+            filter: drop-shadow(0 0 20px rgba(255, 122, 26, 0.5));
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 
-        .vip-title { font-size: 26px; font-weight: 900; margin-bottom: 5px; color: white; letter-spacing: 1px; }
+        .vip-title { font-size: 24px; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; }
         
         .countdown-box {
             display: inline-block; background: rgba(255, 68, 68, 0.1);
             border: 1px solid rgba(255, 68, 68, 0.3); padding: 6px 15px;
             border-radius: 10px; margin-bottom: 15px; color: var(--rouge);
-            font-family: monospace; font-weight: bold; font-size: 13px;
+            font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 13px;
         }
 
-        .vip-price { font-size: 22px; font-weight: 900; color: white; margin-bottom: 20px; }
+        .vip-price { font-size: 22px; font-weight: 900; margin-bottom: 20px; }
         .price-strike { text-decoration: line-through; color: #555; font-size: 16px; margin-right: 8px; }
         
         .btn-rent { 
             background: var(--orange); color: white; border: none; padding: 16px; 
             border-radius: 18px; font-weight: 900; font-size: 16px; cursor: pointer; width: 100%;
-            box-shadow: 0 4px 15px rgba(255, 122, 26, 0.3);
         }
 
         /* LISTE JETONS */
         .section-title { padding: 20px 20px 10px; font-size: 12px; color: #666; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
         .pack-list { padding: 0 15px; }
-        .pack-card { background: var(--gris); border: 1px solid var(--bordure); padding: 20px; border-radius: 22px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .pack-card { 
+            background: var(--gris); border: 1px solid var(--bordure); padding: 20px; 
+            border-radius: 22px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; 
+        }
         .price-tag { background: white; color: black; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 900; cursor: pointer; }
 
         /* NAV BAS */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; z-index: 10; }
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); 
+            border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        }
         .nav-item { fill: #444; }
         .nav-item.active { fill: var(--orange); }
     </style>
 </head>
 <body>
 
-    <div id="flashNotif" class="notif-flash">🔥 OFFRE FLASH : -33% sur la certification !</div>
+    <div id="flashNotif" class="notif-flash">🔥 OFFRE : La certification est à -33% !</div>
 
     <div class="shop-header">
         <div class="balance-box">
@@ -76,13 +100,12 @@
     </div>
 
     <div class="vip-hero">
-    <div class="giant-badge-container">
-    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 21.35l-1.45 1.32-1.94-.37-1.7 1-1.25-1.55-1.95.12-.66-1.85-1.88-.54.02-1.95-1.46-1.3L1.5 12l-1.32-1.45.37-1.94-1-1.7 1.55-1.25-.12-1.95 1.85-.66.54-1.88 1.95.02 1.3-1.46L12 1.5l1.45 1.32 1.94.37 1.7-1 1.25 1.55 1.95-.12.66 1.85 1.88.54-.02 1.95 1.46 1.3L22.5 12l1.32 1.45-.37 1.94 1 1.7-1.55 1.25.12 1.95-1.85.66-.54 1.88-1.95-.02-1.3 1.46L12 22.5l-1.45-1.32z" fill="var(--orange)"/>
-        
-        <path d="M7 12.5L10 15.5L17 8.5" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-</div>
+        <div class="giant-badge-container">
+            <svg width="110" height="110" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45 1.32-1.94-.37-1.7 1-1.25-1.55-1.95.12-.66-1.85-1.88-.54.02-1.95-1.46-1.3L1.5 12l-1.32-1.45.37-1.94-1-1.7 1.55-1.25-.12-1.95 1.85-.66.54-1.88 1.95.02 1.3-1.46L12 1.5l1.45 1.32 1.94.37 1.7-1 1.25 1.55 1.95-.12.66 1.85 1.88.54-.02 1.95 1.46 1.3L22.5 12l1.32 1.45-.37 1.94 1 1.7-1.55 1.25.12 1.95-1.85.66-.54 1.88-1.95-.02-1.3 1.46L12 22.5l-1.45-1.32z" fill="var(--orange)"/>
+                <path d="M7.5 12.5L10.5 15.5L16.5 8.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
 
         <div class="vip-title">FLOY CERTIFIED</div>
         
@@ -92,17 +115,17 @@
             <span class="price-strike">15.00$</span> 10.00$ <span style="font-size:12px; color:#666;">/ mois</span>
         </div>
         
-        <button class="btn-rent" onclick="window.location.href='./recharge.html?amt=10.00'">LOUER MAINTENANT</button>
-        <p style="font-size: 11px; color: #555; margin-top: 15px;">Badge étoilé officiel, liens bio illimités et priorité algorithmique.</p>
+        <button class="btn-rent" onclick="window.location.href='./recharge.html?amt=10.00'">LOUER LE BADGE</button>
+        <p style="font-size: 11px; color: #555; margin-top: 15px;">Badge étoilé officiel, liens illimités et boost visibilité.</p>
     </div>
 
-    <div class="section-title">Recharger des jetons</div>
+    <div class="section-title">Acheter des jetons</div>
     <div class="pack-list">
         <div class="pack-card">
             <div><b style="display:block; font-size:16px;">100 Jetons</b><small style="color:#666;">Pack Starter</small></div>
             <button class="price-tag" onclick="window.location.href='./recharge.html?amt=0.99'">0.99$</button>
         </div>
-        <div class="pack-card" style="border: 1px solid rgba(255,122,26,0.2);">
+        <div class="pack-card">
             <div><b style="display:block; font-size:16px;">500 Jetons</b><small style="color:#666;">Pack Avancé</small></div>
             <button class="price-tag" onclick="window.location.href='./recharge.html?amt=4.49'">4.49$</button>
         </div>
@@ -115,21 +138,23 @@
     </nav>
 
     <script>
-        // Notification Flash après 1 seconde
+        // Notification Flash
         setTimeout(() => {
             const notif = document.getElementById('flashNotif');
             notif.style.top = '25px';
             setTimeout(() => { notif.style.top = '-100px'; }, 4000);
-        }, 1000);
+        }, 1200);
 
-        // Timer de 2h
+        // Timer de 2 heures
         function startTimer(duration, display) {
             var timer = duration, hours, minutes, seconds;
-            setInterval(() => {
+            setInterval(function () {
                 hours = parseInt(timer / 3600, 10);
                 minutes = parseInt((timer % 3600) / 60, 10);
                 seconds = parseInt(timer % 60, 10);
-                display.textContent = "Expire dans : " + (hours < 10 ? "0"+hours : hours) + ":" + (minutes < 10 ? "0"+minutes : minutes) + ":" + (seconds < 10 ? "0"+seconds : seconds);
+
+                display.textContent = "Expire dans : " + (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+
                 if (--timer < 0) timer = duration;
             }, 1000);
         }
