@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>➕</text></svg>">
+    <title>Créer - Floy</title>
+    <style>
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #1a1a1a; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+
+        /* HEADER */
+        .header { padding: 20px; display: flex; align-items: center; border-bottom: 1px solid var(--gris); }
+        .btn-close { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0 10px; }
+        .header h1 { font-size: 18px; margin: 0; flex-grow: 1; text-align: center; margin-right: 34px; }
+
+        /* MENU DE CRÉATION */
+        .create-options { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 0 30px; }
+        
+        .option-card { background: var(--gris); padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; transition: transform 0.2s, background 0.2s; border: 1px solid transparent; }
+        .option-card:active { transform: scale(0.98); background: #252525; border-color: var(--orange); }
+        
+        .icon-circle { width: 50px; height: 50px; background: rgba(255, 122, 26, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--orange); font-size: 24px; }
+        
+        .option-text b { display: block; font-size: 16px; margin-bottom: 4px; }
+        .option-text span { font-size: 13px; color: #888; }
+
+        /* NAV BAR (Pour pouvoir annuler) */
+        .nav-bar { height: 70px; border-top: 1px solid var(--gris); display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { color: #555; text-decoration: none; font-size: 24px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="btn-close" onclick="window.location.href='index.html'">✕</button>
+        <h1>Créer</h1>
+    </div>
+
+    <div class="create-options">
+        <a href="#" class="option-card" onclick="alert('Module Photo bientôt disponible !')">
+            <div class="icon-circle">🖼️</div>
+            <div class="option-text">
+                <b>Publication</b>
+                <span>Partagez une photo dans le flux</span>
+            </div>
+        </a>
+
+        <a href="#" class="option-card" onclick="alert('Module Story bientôt disponible !')">
+            <div class="icon-circle">📸</div>
+            <div class="option-text">
+                <b>Story</b>
+                <span>Visible pendant 24 heures</span>
+            </div>
+        </a>
+
+        <a href="live-stream.html" class="option-card">
+            <div class="icon-circle">🎥</div>
+            <div class="option-text">
+                <b>En direct</b>
+                <span>Lancez un live stream maintenant</span>
+            </div>
+        </a>
+    </div>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-item">🏠</a>
+        <a href="live-stream.html" class="nav-item">🎥</a>
+        <a href="create.html" class="nav-item" style="color: var(--orange)">➕</a>
+        <a href="messages.html" class="nav-item">💬</a>
+        <a href="profil.html" class="nav-item">👤</a>
+    </nav>
+
+</body>
+</html>
