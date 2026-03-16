@@ -2,121 +2,74 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Historique</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <title>Transactions - Floy</title>
     <style>
-        :root { 
-            --orange-floy: #FF7A1A; 
-            --binance-yellow: #F3BA2F; 
-            --noir: #000; 
-            --gris: #121212; 
-            --vert: #44ff44;
-            --rouge: #ff4444;
-        }
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; --vert: #2ecc71; --rouge: #e74c3c; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 30px; }
         
-        body { 
-            background: var(--noir); color: white; 
-            font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 30px;
-        }
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--bordure); background: var(--noir); position: sticky; top: 0; }
+        .back-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
 
-        .header { 
-            display: flex; align-items: center; padding: 20px; 
-            border-bottom: 1px solid #222; position: sticky; top: 0; background: var(--noir); z-index: 100;
-        }
-        .back-btn { font-size: 28px; cursor: pointer; margin-right: 20px; }
-
-        .filter-tabs {
-            display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto;
-        }
-        .tab {
-            background: #1a1a1a; border: 1px solid #333; padding: 8px 15px;
-            border-radius: 20px; font-size: 12px; white-space: nowrap; color: #888;
-        }
-        .tab.active { background: var(--orange-floy); color: black; border-color: var(--orange-floy); font-weight: bold; }
-
-        .transaction-list { padding: 0 20px; }
+        .history-container { padding: 10px 20px; }
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--bordure); }
         
-        .transaction-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 0; border-bottom: 1px solid #111;
-        }
+        .trans-info { display: flex; flex-direction: column; gap: 4px; }
+        .trans-title { font-weight: bold; font-size: 15px; }
+        .trans-date { font-size: 12px; color: #666; }
 
-        .tx-icon {
-            width: 40px; height: 40px; border-radius: 10px; background: #111;
-            display: flex; align-items: center; justify-content: center; margin-right: 15px;
-        }
+        .trans-amount { font-weight: 800; font-size: 16px; }
+        .amount-plus { color: var(--vert); }
+        .amount-minus { color: var(--rouge); }
 
-        .tx-info { flex-grow: 1; }
-        .tx-title { font-size: 14px; font-weight: bold; margin-bottom: 2px; }
-        .tx-date { font-size: 11px; color: #555; }
-
-        .tx-amount { text-align: right; }
-        .amount-val { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
-        .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; font-weight: 800; }
-        
-        .status-success { background: rgba(68, 255, 68, 0.1); color: var(--vert); }
-        .status-pending { background: rgba(243, 186, 47, 0.1); color: var(--binance-yellow); }
+        .empty-state { text-align: center; color: #444; margin-top: 50px; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="back-btn" onclick="window.location.href='withdraw-funds.html'">‹</div>
-        <span style="font-weight:bold; letter-spacing: 1px;">HISTORIQUE</span>
+        <button class="back-btn" onclick="window.location.href='./shop.html'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <span style="font-weight: bold; font-size: 18px;">Historique</span>
     </div>
 
-    <div class="filter-tabs">
-        <div class="tab active">Tout</div>
-        <div class="tab">Dépôts</div>
-        <div class="tab">Retraits</div>
-        <div class="tab">Gains</div>
-    </div>
-
-    <div class="transaction-list">
-        
+    <div class="history-container">
         <div class="transaction-item">
-            <div class="tx-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--binance-yellow)"><path d="M12 0L8.12 3.88L12 7.76L15.88 3.88L12 0Z"/><path d="M24 12L20.12 8.12L16.24 12L20.12 15.88L24 12Z"/><path d="M12 24L15.88 20.12L12 16.24L8.12 20.12L12 24Z"/><path d="M0 12L3.88 15.88L7.76 12L3.88 8.12L0 12Z"/><path d="M12 11.23L12.77 12L12 12.77L11.23 12L12 11.23Z"/><path d="M8.53 12L12 8.53L15.47 12L12 15.47L8.53 12Z"/></svg>
+            <div class="trans-info">
+                <span class="trans-title">Pack Moyen acheté</span>
+                <span class="trans-date">Aujourd'hui, 14:20</span>
             </div>
-            <div class="tx-info">
-                <div class="tx-title">Retrait vers Binance</div>
-                <div class="tx-date">Aujourd'hui, 14:20</div>
-            </div>
-            <div class="tx-amount">
-                <div class="amount-val" style="color: var(--rouge);">- 150.00 ◈</div>
-                <span class="status-badge status-pending">En attente</span>
-            </div>
+            <div class="trans-amount amount-plus">+500 F</div>
         </div>
 
         <div class="transaction-item">
-            <div class="tx-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            <div class="trans-info">
+                <span class="trans-title">Boost de Post</span>
+                <span class="trans-date">Hier, 21:05</span>
             </div>
-            <div class="tx-info">
-                <div class="tx-title">Dépôt par Carte</div>
-                <div class="tx-date">Hier, 09:15</div>
-            </div>
-            <div class="tx-amount">
-                <div class="amount-val" style="color: var(--vert);">+ 500.00 ◈</div>
-                <span class="status-badge status-success">Réussi</span>
-            </div>
+            <div class="trans-amount amount-minus">-50 F</div>
         </div>
 
         <div class="transaction-item">
-            <div class="tx-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--orange-floy)"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <div class="trans-info">
+                <span class="trans-title">Badge Certification</span>
+                <span class="trans-date">12 Mars 2026</span>
             </div>
-            <div class="tx-info">
-                <div class="tx-title">Gains Publication</div>
-                <div class="tx-date">12 Mars, 18:45</div>
-            </div>
-            <div class="tx-amount">
-                <div class="amount-val" style="color: var(--vert);">+ 12.50 ◈</div>
-                <span class="status-badge status-success">Réussi</span>
-            </div>
+            <div class="trans-amount amount-minus">-1000 F</div>
         </div>
 
+        <div class="transaction-item">
+            <div class="trans-info">
+                <span class="trans-title">Petit Pack acheté</span>
+                <span class="trans-date">10 Mars 2026</span>
+            </div>
+            <div class="trans-amount amount-plus">+100 F</div>
+        </div>
     </div>
+
+    <div class="empty-state">Fin de l'historique</div>
 
 </body>
 </html>
