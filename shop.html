@@ -7,62 +7,49 @@
     <title>Boutique - Floy</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 100px; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
         
-        /* MODULE WALLET */
-        .wallet-container { padding: 30px 20px; background: linear-gradient(180deg, #1a1a1a 0%, var(--noir) 100%); border-bottom: 1px solid var(--bordure); text-align: center; }
-        .wallet-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .wallet-container { padding: 40px 20px 30px; background: linear-gradient(180deg, #1a1a1a 0%, var(--noir) 100%); border-bottom: 1px solid var(--bordure); text-align: center; }
+        .wallet-label { font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 10px; }
         .wallet-balance { font-size: 36px; font-weight: 800; color: var(--orange); }
-        .wallet-balance span { font-size: 18px; margin-left: 5px; color: white; }
+        .btn-recharge { margin-top: 15px; background: rgba(255, 122, 26, 0.1); color: var(--orange); border: 1px solid var(--orange); padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+        .section-title { padding: 25px 20px 15px; font-size: 14px; color: #888; text-transform: uppercase; }
         
-        /* SECTION ARTICLES */
-        .section-title { padding: 25px 20px 15px; font-size: 14px; font-weight: bold; color: #888; text-transform: uppercase; }
-        
-        .item-card { background: var(--gris); margin: 0 20px 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--bordure); display: flex; align-items: center; justify-content: space-between; transition: 0.3s; }
-        .item-card:active { transform: scale(0.98); background: #1a1a1a; }
-        
+        .item-card { background: var(--gris); margin: 0 20px 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--bordure); display: flex; align-items: center; justify-content: space-between; }
         .item-info { display: flex; align-items: center; gap: 15px; }
-        .item-icon { width: 50px; height: 50px; background: rgba(255, 122, 26, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; fill: var(--orange); }
+        .item-icon { width: 45px; height: 45px; background: rgba(255, 122, 26, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; fill: var(--orange); }
         
         .item-text h3 { margin: 0; font-size: 16px; }
         .item-text p { margin: 5px 0 0; font-size: 12px; color: #aaa; }
+        .price-tag { background: var(--orange); color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        .price-tag { background: var(--orange); color: white; padding: 10px 18px; border-radius: 12px; font-weight: bold; font-size: 14px; cursor: pointer; border: none; box-shadow: 0 4px 10px rgba(255, 122, 26, 0.2); }
-
-        /* BANNIÈRE CERTIFICATION */
-        .cert-banner { background: linear-gradient(135deg, #FF7A1A, #b34f00); margin: 20px; padding: 25px; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .cert-banner h2 { margin: 0; font-size: 20px; display: flex; align-items: center; gap: 10px; }
-        .cert-banner p { margin: 10px 0 0; font-size: 13px; opacity: 0.9; line-height: 1.4; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { fill: #666; }
+        .nav-item.active { fill: var(--orange); }
     </style>
 </head>
 <body>
 
     <div class="wallet-container">
-        <div class="wallet-label">Solde actuel</div>
-        <div class="wallet-balance" id="balance">0.00<span>$</span></div>
+        <div class="wallet-label">Solde Floy</div>
+        <div class="wallet-balance">0.00$</div>
+        <button class="btn-recharge" onclick="window.location.href='./recharge.html'">+ RECHARGER</button>
     </div>
 
-    <div class="cert-banner">
-        <h2>
-            <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-            Badge de Certification
-        </h2>
-        <p>Affichez votre statut officiel et débloquez l'ajout de liens dans votre biographie.</p>
-    </div>
-
-    <div class="section-title">Services Floy</div>
+    <div class="section-title">Boutique Officielle</div>
 
     <div class="item-card">
         <div class="item-info">
             <div class="item-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
             </div>
             <div class="item-text">
                 <h3>Certification</h3>
-                <p>Abonnement mensuel VIP</p>
+                <p>Badge VIP & Liens bio</p>
             </div>
         </div>
-        <button class="price-tag" onclick="buy('cert')">10$/mois</button>
+        <button class="price-tag">10$</button>
     </div>
 
     <div class="item-card">
@@ -71,23 +58,26 @@
                 <svg width="24" height="24" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div class="item-text">
-                <h3>Boost de Post</h3>
-                <p>Visibilité prioritaire (24h)</p>
+                <h3>Boost Post</h3>
+                <p>Mise en avant (24h)</p>
             </div>
         </div>
-        <button class="price-tag" onclick="buy('boost')">3$</button>
+        <button class="price-tag">3$</button>
     </div>
 
-    <script>
-        // Simulation simple d'achat
-        function buy(type) {
-            if(type === 'cert') {
-                alert("Redirection vers le paiement de la certification (10$)");
-            } else {
-                alert("Activation du boost pour 24h (3$)");
-            }
-        }
-    </script>
-
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="window.location.href='./index.html'">
+            <svg width="28" height="28" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </div>
+        <div class="nav-item" onclick="window.location.href='./create.html'">
+            <svg width="28" height="28" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </div>
+        <div class="nav-item active">
+            <svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm10 15H4V9h16v11z"/></svg>
+        </div>
+        <div class="nav-item" onclick="window.location.href='./profil.html'">
+            <svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+    </nav>
 </body>
 </html>
