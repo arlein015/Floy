@@ -7,58 +7,56 @@
     <title>Boutique Floy</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; --rouge: #ff4444; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 90px; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
         
+        /* NOTIFICATION FLASH */
+        .notif-flash { 
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--orange); color: white; padding: 12px 25px; border-radius: 30px;
+            font-weight: 800; font-size: 13px; z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(255, 122, 26, 0.4); white-space: nowrap;
+        }
+
         /* HEADER */
-        .shop-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordure); background: var(--noir); }
-        .balance-box { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 20px; color: var(--orange); }
-        .history-btn { color: #666; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .shop-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordure); background: var(--noir); position: sticky; top: 0; z-index: 100; }
+        .balance-box { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 18px; color: var(--orange); }
 
-        /* BADGE HERO AVEC URGENCE */
+        /* SECTION HERO BADGE GÉANT */
         .vip-hero { 
-            margin: 20px; padding: 30px; border-radius: 28px; 
-            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); 
-            border: 1px solid rgba(255, 122, 26, 0.4);
-            position: relative; overflow: hidden; text-align: center;
+            margin: 15px; padding: 40px 20px; border-radius: 35px; 
+            background: radial-gradient(circle at top, rgba(255,122,26,0.15) 0%, var(--noir) 100%); 
+            border: 1px solid var(--bordure); position: relative; text-align: center;
         }
 
-        /* BANDEAU OFFRE LIMITÉE */
-        .promo-tag {
-            position: absolute; top: 15px; right: -30px;
-            background: var(--rouge); color: white; padding: 5px 40px;
-            font-size: 10px; font-weight: bold; transform: rotate(45deg);
-            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+        .giant-badge-container {
+            margin-bottom: 25px; filter: drop-shadow(0 0 25px rgba(255, 122, 26, 0.5));
+            animation: pulse 3s infinite ease-in-out;
         }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        .badge-visual {
-            width: 70px; height: 70px; background: rgba(255,122,26,0.1); 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 15px; border: 1px solid var(--orange);
-            box-shadow: 0 0 20px rgba(255,122,26,0.2);
-        }
-
-        /* COMPTE À REBOURS STYLE */
+        .vip-title { font-size: 26px; font-weight: 900; margin-bottom: 5px; color: white; letter-spacing: 1px; }
+        
         .countdown-box {
-            display: inline-flex; gap: 10px; background: rgba(255, 68, 68, 0.1);
-            border: 1px solid rgba(255, 68, 68, 0.3); padding: 8px 15px;
-            border-radius: 12px; margin-bottom: 20px; color: var(--rouge);
-            font-family: monospace; font-weight: bold; font-size: 14px;
+            display: inline-block; background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3); padding: 6px 15px;
+            border-radius: 10px; margin-bottom: 15px; color: var(--rouge);
+            font-family: monospace; font-weight: bold; font-size: 13px;
         }
 
-        .vip-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
-        .vip-price { font-size: 20px; font-weight: bold; color: white; margin-bottom: 15px; }
-        .price-strike { text-decoration: line-through; color: #666; font-size: 16px; margin-right: 8px; }
+        .vip-price { font-size: 22px; font-weight: 900; color: white; margin-bottom: 20px; }
+        .price-strike { text-decoration: line-through; color: #555; font-size: 16px; margin-right: 8px; }
         
         .btn-rent { 
-            background: var(--orange); color: white; border: none; padding: 14px; 
-            border-radius: 15px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%;
+            background: var(--orange); color: white; border: none; padding: 16px; 
+            border-radius: 18px; font-weight: 900; font-size: 16px; cursor: pointer; width: 100%;
+            box-shadow: 0 4px 15px rgba(255, 122, 26, 0.3);
         }
 
         /* LISTE JETONS */
-        .section-title { padding: 10px 20px; font-size: 12px; color: #666; text-transform: uppercase; font-weight: bold; }
-        .pack-list { padding: 0 20px; }
-        .pack-card { background: var(--gris); border: 1px solid var(--bordure); padding: 18px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .price-tag { background: #222; color: white; border: 1px solid #444; padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .section-title { padding: 20px 20px 10px; font-size: 12px; color: #666; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+        .pack-list { padding: 0 15px; }
+        .pack-card { background: var(--gris); border: 1px solid var(--bordure); padding: 20px; border-radius: 22px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .price-tag { background: white; color: black; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 900; cursor: pointer; }
 
         /* NAV BAS */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; }
@@ -68,44 +66,43 @@
 </head>
 <body>
 
+    <div id="flashNotif" class="notif-flash">🔥 OFFRE FLASH : -33% sur la certification !</div>
+
     <div class="shop-header">
         <div class="balance-box">
-            <span style="background:var(--orange); color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:14px;">F</span>
-            <span>550</span>
+            <span style="background:var(--orange); color:white; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:12px;">F</span>
+            <span id="solde">550</span>
         </div>
-        <a href="./transactions.html" class="history-btn">HISTORIQUE</a>
+        <a href="./transactions.html" style="color:#666; text-decoration:none; font-size:11px; font-weight:bold;">HISTORIQUE</a>
     </div>
 
     <div class="vip-hero">
-        <div class="promo-tag">OFFRE</div>
-        
-        <div class="badge-visual">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="var(--orange)">
+        <div class="giant-badge-container">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="var(--orange)">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
             </svg>
         </div>
 
         <div class="vip-title">FLOY CERTIFIED</div>
         
-        <div class="countdown-box" id="timer">
-            L'offre expire dans : 00:00:00
-        </div>
+        <div class="countdown-box" id="timer">Expire dans : 01:59:59</div>
 
         <div class="vip-price">
-            <span class="price-strike">15.00$</span> 10.00$ / mois
+            <span class="price-strike">15.00$</span> 10.00$ <span style="font-size:12px; color:#666;">/ mois</span>
         </div>
         
-        <button class="btn-rent" onclick="window.location.href='./recharge.html?amt=10.00'">PROFITER DE L'OFFRE</button>
+        <button class="btn-rent" onclick="window.location.href='./recharge.html?amt=10.00'">LOUER MAINTENANT</button>
+        <p style="font-size: 11px; color: #555; margin-top: 15px;">Badge bleu, liens bio illimités et priorité algorithmique.</p>
     </div>
 
     <div class="section-title">Recharger des jetons</div>
     <div class="pack-list">
         <div class="pack-card">
-            <div><b style="display:block;">100 Jetons</b><small style="color:#666;">Pack Découverte</small></div>
+            <div><b style="display:block; font-size:16px;">100 Jetons</b><small style="color:#666;">Pack Starter</small></div>
             <button class="price-tag" onclick="window.location.href='./recharge.html?amt=0.99'">0.99$</button>
         </div>
-        <div class="pack-card">
-            <div><b style="display:block;">500 Jetons</b><small style="color:#666;">Pack Boost</small></div>
+        <div class="pack-card" style="border: 1px solid rgba(255,122,26,0.2);">
+            <div><b style="display:block; font-size:16px;">500 Jetons</b><small style="color:#666;">Pack Avancé</small></div>
             <button class="price-tag" onclick="window.location.href='./recharge.html?amt=4.49'">4.49$</button>
         </div>
     </div>
@@ -117,32 +114,28 @@
     </nav>
 
     <script>
-        // LOGIQUE DU COMPTE À REBOURS (Timer de 2 heures qui se reset pour la démo)
+        // Notification Flash après 1 seconde
+        setTimeout(() => {
+            const notif = document.getElementById('flashNotif');
+            notif.style.top = '25px';
+            setTimeout(() => { notif.style.top = '-100px'; }, 4000);
+        }, 1000);
+
+        // Timer de 2h
         function startTimer(duration, display) {
             var timer = duration, hours, minutes, seconds;
-            setInterval(function () {
+            setInterval(() => {
                 hours = parseInt(timer / 3600, 10);
                 minutes = parseInt((timer % 3600) / 60, 10);
                 seconds = parseInt(timer % 60, 10);
-
-                hours = hours < 10 ? "0" + hours : hours;
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                display.textContent = "L'offre expire dans : " + hours + ":" + minutes + ":" + seconds;
-
-                if (--timer < 0) {
-                    timer = duration; // Reset pour la démo
-                }
+                display.textContent = "Expire dans : " + (hours < 10 ? "0"+hours : hours) + ":" + (minutes < 10 ? "0"+minutes : minutes) + ":" + (seconds < 10 ? "0"+seconds : seconds);
+                if (--timer < 0) timer = duration;
             }, 1000);
         }
 
         window.onload = function () {
-            var twoHours = 60 * 60 * 2;
-            var display = document.querySelector('#timer');
-            startTimer(twoHours, display);
+            startTimer(60 * 60 * 2, document.querySelector('#timer'));
         };
     </script>
-
 </body>
 </html>
