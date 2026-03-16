@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" type="image/png" href="./favicon.png">
-    <title>Floy - Réseau Social</title>
+    <title>Floy - Home</title>
     <style>
         :root { 
             --orange: #FF7A1A; 
@@ -16,93 +16,105 @@
         body { 
             background: var(--noir); 
             color: white; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             margin: 0; 
-            padding-bottom: 80px; /* Espace pour la nav bar */
-            overflow-x: hidden; 
+            padding-bottom: 80px; 
         }
 
-        /* HEADER */
+        /* HEADER MODERNE AVEC RECHERCHE */
         header {
             height: 60px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between; /* Espacement Logo - Recherche */
+            padding: 0 20px;
             border-bottom: 1px solid var(--bordure);
             position: sticky;
             top: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
             z-index: 1000;
         }
-        .logo { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1.5px; }
         .logo span { color: var(--orange); }
 
-        /* FLUX DE POSTS (SCROLL) */
-        #feed { padding: 10px; max-width: 500px; margin: 0 auto; }
+        .search-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: white;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        /* FEED CONTENEUR */
+        #feed { max-width: 500px; margin: 0 auto; padding-top: 5px; }
         
         .post {
-            background: var(--noir);
-            border: 1px solid var(--bordure);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            overflow: hidden;
+            border-bottom: 1px solid var(--bordure);
+            margin-bottom: 10px;
+            padding-bottom: 15px;
         }
+
         .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
-        .user-img { width: 35px; height: 35px; border-radius: 50%; background: #333; }
-        .username { font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 4px; }
+        .user-img { width: 38px; height: 38px; border-radius: 50%; background: #222; border: 1px solid var(--bordure); }
         
-        /* LE PETIT BADGE DANS LE FLUX */
-        .verified-badge { width: 14px; height: 14px; fill: var(--orange); }
+        .username { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .official-badge { width: 16px; height: 16px; }
 
-        .post-content img { width: 100%; display: block; background: #1a1a1a; }
-        .post-footer { padding: 12px; }
-        .post-caption { font-size: 14px; line-height: 1.4; color: #eee; }
+        .post-content img { width: 100%; display: block; background: #111; }
+        
+        .post-actions { padding: 12px; display: flex; gap: 18px; }
+        .post-actions svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; }
 
-        /* BARRE DE NAVIGATION MODERNE */
+        /* BARRE DE NAVIGATION AVEC BOUTON + */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 70px;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
+            position: fixed; bottom: 0; width: 100%; height: 70px;
+            background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
             border-top: 1px solid var(--bordure);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 9999;
-            padding-bottom: env(safe-area-inset-bottom);
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 10000; padding-bottom: env(safe-area-inset-bottom);
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #666;
-            transition: 0.2s;
-            flex: 1;
-        }
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-            margin-bottom: 4px;
-        }
-        .nav-item.active { color: var(--orange); }
-        .nav-item.active svg { filter: drop-shadow(0 0 5px rgba(255,122,26,0.3)); }
-        .nav-item span { font-size: 10px; font-weight: 600; }
 
-        /* LOADING SPINNER POUR SCROLL ILLIMITÉ */
-        .loader { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; color: #777; transition: 0.2s; flex: 1;
+        }
+        .nav-item svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .nav-item.active { color: white; }
+        .nav-item.active svg { stroke: var(--orange); }
+
+        /* BOUTON + CENTRAL */
+        .nav-plus {
+            background: var(--orange);
+            width: 48px; height: 48px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 122, 26, 0.4);
+            margin-bottom: 5px;
+        }
+        .nav-plus svg { stroke: white !important; width: 26px; height: 26px; }
+
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">FL<span>OY</span></div>
+        <button class="search-btn" onclick="window.location.href='./search.html'">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </button>
     </header>
 
     <main id="feed">
@@ -110,70 +122,57 @@
             <div class="post-header">
                 <div class="user-img"></div>
                 <div class="username">
-                    AdminFloy 
-                    <svg class="verified-badge" viewBox="0 0 24 24">
+                    FloyOfficial
+                    <svg class="official-badge" viewBox="0 0 24 24" fill="none">
                         <path d="M12 21.35l-1.45 1.32-1.94-.37-1.7 1-1.25-1.55-1.95.12-.66-1.85-1.88-.54.02-1.95-1.46-1.3L1.5 12l-1.32-1.45.37-1.94-1-1.7 1.55-1.25-.12-1.95 1.85-.66.54-1.88 1.95.02 1.3-1.46L12 1.5l1.45 1.32 1.94.37 1.7-1 1.25 1.55 1.95-.12.66 1.85 1.88.54-.02 1.95 1.46 1.3L22.5 12l1.32 1.45-.37 1.94 1 1.7-1.55 1.25.12 1.95-1.85.66-.54 1.88-1.95-.02-1.3 1.46L12 22.5l-1.45-1.32z" fill="var(--orange)"/>
-                        <path d="M7.5 12.5L10.5 15.5L16.5 8.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <path d="M7.5 12.5L10.5 15.5L16.5 8.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
             </div>
             <div class="post-content">
-                <img src="https://via.placeholder.com/500x500/121212/FF7A1A?text=Bienvenue+sur+Floy" alt="Post">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500" alt="Flux">
             </div>
-            <div class="post-footer">
-                <div class="post-caption"><b>AdminFloy</b> Prêt pour le lancement de demain ! 🚀</div>
+            <div class="post-actions">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-13.5 8.38 8.38 0 0 1 3.8.9L21 3z"></path></svg>
             </div>
         </article>
     </main>
 
-    <div class="loader" id="loader">Chargement de nouveaux posts...</div>
-
     <nav class="bottom-nav">
         <a href="./index.html" class="nav-item active">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span>Accueil</span>
         </a>
+
         <a href="./shop.html" class="nav-item">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-            <span>Boutique</span>
         </a>
+
+        <a href="./post.html" class="nav-item">
+            <div class="nav-plus">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+        </a>
+
         <a href="./messages.html" class="nav-item">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            <span>Messages</span>
         </a>
+
         <a href="./profil.html" class="nav-item">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span>Profil</span>
         </a>
     </nav>
 
     <script>
-        // LOGIQUE DU SCROLL ILLIMITÉ
+        // Scroll illimité simplifié
         window.onscroll = function() {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
-                loadMorePosts();
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+                const feed = document.getElementById('feed');
+                const clone = feed.firstElementChild.cloneNode(true);
+                feed.appendChild(clone);
             }
         };
-
-        function loadMorePosts() {
-            const feed = document.getElementById('feed');
-            // Simulation de chargement
-            const newPost = document.createElement('article');
-            newPost.className = 'post';
-            newPost.innerHTML = `
-                <div class="post-header">
-                    <div class="user-img"></div>
-                    <div class="username">Utilisateur_Floy</div>
-                </div>
-                <div class="post-content">
-                    <img src="https://via.placeholder.com/500x500/121212/333?text=Nouveau+Contenu" alt="Post">
-                </div>
-                <div class="post-footer">
-                    <div class="post-caption">Nouveau post chargé automatiquement !</div>
-                </div>
-            `;
-            feed.appendChild(newPost);
-        }
     </script>
+
 </body>
 </html>
