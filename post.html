@@ -3,165 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Créer un Post - Floy</title>
+    <title>Floy - Nouveau Post</title>
     <style>
-        :root { 
-            --orange: #FF7A1A; 
-            --noir: #000; 
-            --gris: #121212; 
-            --bordure: #262626; 
-            --texte-gris: #A8A8A8;
-        }
-        
-        body { 
-            background: var(--noir); color: white; 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; 
-            display: flex; flex-direction: column; height: 100vh;
-        }
-
-        /* HEADER */
-        .post-header {
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--bordure); background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-        }
-        .cancel-btn { color: white; text-decoration: none; font-size: 16px; }
-        .publish-btn { 
-            color: var(--orange); background: none; border: none; 
-            font-weight: 800; font-size: 16px; cursor: pointer; 
-        }
-        .publish-btn:disabled { color: #444; }
-
-        /* ZONE D'UPLOAD */
-        .upload-container {
-            padding: 20px; display: flex; justify-content: center;
-        }
-
-        #preview-container {
-            width: 100%; max-width: 400px; aspect-ratio: 1/1;
-            background: var(--gris); border-radius: 20px; border: 1px solid var(--bordure);
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            cursor: pointer;
-        }
-
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; }
+        .post-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordure); }
+        .publish-btn { color: var(--orange); background: none; border: none; font-weight: 800; font-size: 16px; cursor: pointer; }
+        .upload-container { padding: 20px; display: flex; justify-content: center; }
+        #preview-container { width: 100%; max-width: 400px; aspect-ratio: 1/1; background: var(--gris); border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--bordure); }
         #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-
-        .upload-icon { text-align: center; color: #666; }
-        .upload-icon svg { width: 40px; height: 40px; stroke: #666; fill: none; stroke-width: 1.5; margin-bottom: 8px; }
-
-        /* LÉGENDE */
-        .caption-area { padding: 0 20px; }
-        textarea {
-            width: 100%; background: none; border: none; color: white;
-            font-size: 16px; resize: none; outline: none; height: 80px;
-        }
-
-        /* RÉGLAGES D'AUDIENCE (CONFIDENTIALITÉ) */
-        .settings-list { padding: 10px 20px; border-top: 1px solid var(--bordure); margin-top: 10px; }
-        .setting-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 15px 0; border-bottom: 1px solid #1a1a1a;
-        }
-        .setting-info { display: flex; align-items: center; gap: 12px; }
-        .setting-info svg { width: 20px; height: 20px; stroke: var(--texte-gris); fill: none; stroke-width: 2; }
-        .setting-text b { display: block; font-size: 14px; }
-        .setting-text span { font-size: 12px; color: var(--texte-gris); }
-
-        select {
-            background: var(--gris); color: white; border: 1px solid var(--bordure);
-            padding: 8px 12px; border-radius: 10px; font-size: 13px; outline: none;
-        }
-
+        .caption-area { padding: 20px; }
+        textarea { width: 100%; background: none; border: none; color: white; font-size: 16px; outline: none; height: 100px; }
         #file-input { display: none; }
     </style>
 </head>
 <body>
-
     <header class="post-header">
-        <a href="./index.html" class="cancel-btn">Annuler</a>
-        <div style="font-weight: 900; font-size: 18px;">Nouveau Post</div>
-        <button id="btn-publier" class="publish-btn" disabled onclick="publierPost()">Publier</button>
+        <a href="index.html" style="color:white; text-decoration:none;">Annuler</a>
+        <div style="font-weight:900;">Nouveau Post</div>
+        <button id="btn-publier" class="publish-btn" onclick="publierPost()">Publier</button>
     </header>
 
     <div class="upload-container">
         <label id="preview-container" for="file-input">
-            <div class="upload-icon" id="icon-placeholder">
-                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                <p style="font-size: 13px; font-weight: bold;">Ajouter une photo</p>
-            </div>
-            <img id="preview-img" src="#" alt="Aperçu">
+            <div id="placeholder">📷 Ajouter une photo</div>
+            <img id="preview-img" src="#">
         </label>
         <input type="file" id="file-input" accept="image/*">
     </div>
 
     <div class="caption-area">
-        <textarea id="caption" placeholder="Écris une légende..."></textarea>
+        <textarea id="caption" placeholder="Ta légende..."></textarea>
     </div>
 
-    <div class="settings-list">
-        <div class="setting-item">
-            <div class="setting-info">
-                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                <div class="setting-text">
-                    <b>Audience</b>
-                    <span>Qui peut voir ce post ?</span>
-                </div>
-            </div>
-            <select id="privacy">
-                <option value="public">Tout le monde</option>
-                <option value="friends">Mes Amis</option>
-                <option value="private">Moi uniquement</option>
-            </select>
-        </div>
+    <script type="module">
+        import { db, storage } from './firebase-config.js';
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        <div class="setting-item">
-            <div class="setting-info">
-                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <div class="setting-text">
-                    <b>Lieu</b>
-                    <span>Ajouter une localisation</span>
-                </div>
-            </div>
-            <svg viewBox="0 0 24 24" style="width:16px; stroke:#444;"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-    </div>
-
-    <script>
         const fileInput = document.getElementById('file-input');
         const previewImg = document.getElementById('preview-img');
-        const placeholder = document.getElementById('icon-placeholder');
-        const btnPublier = document.getElementById('btn-publier');
+        const placeholder = document.getElementById('placeholder');
 
-        // Aperçu de l'image
-        fileInput.addEventListener('change', function() {
-            const file = this.files[0];
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    previewImg.style.display = 'block';
-                    placeholder.style.display = 'none';
-                    btnPublier.disabled = false;
-                }
-                reader.readAsDataURL(file);
+                previewImg.src = URL.createObjectURL(file);
+                previewImg.style.display = 'block';
+                placeholder.style.display = 'none';
             }
-        });
+        };
 
-        // Fonction de publication
-        function publierPost() {
-            const audience = document.getElementById('privacy').value;
-            const legende = document.getElementById('caption').value;
+        window.publierPost = async () => {
+            const file = fileInput.files[0];
+            if (!file) return alert("Choisis une image !");
             
-            btnPublier.innerText = "Publication...";
-            btnPublier.disabled = true;
+            document.getElementById('btn-publier').innerText = "Envoi...";
+            
+            try {
+                const imgRef = ref(storage, `posts/${Date.now()}`);
+                await uploadBytes(imgRef, file);
+                const url = await getDownloadURL(imgRef);
 
-            // Simulation de l'envoi
-            console.log("Post envoyé en mode : " + audience);
-            
-            setTimeout(() => {
-                alert("Ton post est en ligne ! 🚀");
-                window.location.href = './index.html';
-            }, 1200);
-        }
+                await addDoc(collection(db, "posts"), {
+                    imageUrl: url,
+                    caption: document.getElementById('caption').value,
+                    username: "User_Floy",
+                    createdAt: serverTimestamp(),
+                    likes: 0
+                });
+
+                window.location.href = "index.html";
+            } catch (err) {
+                alert("Erreur ! Vérifie tes Rules Firebase.");
+                console.error(err);
+            }
+        };
     </script>
 </body>
 </html>
