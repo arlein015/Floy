@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <title>Boost Floy</title>
+    <style>
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        
+        .boost-card { 
+            background: var(--gris); width: 90%; max-width: 350px; 
+            border-radius: 25px; border: 1px solid var(--bordure); 
+            padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .boost-icon { width: 60px; height: 60px; background: rgba(255,122,26,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; fill: var(--orange); }
+        h2 { margin: 0 0 10px; font-size: 20px; }
+        p { font-size: 14px; color: #aaa; margin-bottom: 25px; line-height: 1.4; }
+        
+        .btn-pay { width: 100%; background: var(--orange); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 15px; }
+        .btn-cancel { background: none; border: none; color: #666; font-size: 14px; cursor: pointer; text-decoration: none; }
+        .token-balance { font-size: 12px; color: var(--orange); margin-bottom: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="boost-card">
+        <div class="boost-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h2>Booster ce post ?</h2>
+        <div class="token-balance">Coût : 50 Jetons</div>
+        <p>Propulsez votre contenu en tête du feed et multipliez vos vues pendant 24h.</p>
+        
+        <button class="btn-pay" onclick="executeBoost()">Confirmer le Boost</button>
+        <br>
+        <a href="./index.html" class="btn-cancel">Annuler</a>
+    </div>
+
+    <script>
+        function executeBoost() {
+            alert("🚀 Boost activé ! Vos 50 jetons ont été utilisés.");
+            window.location.href = './index.html';
+        }
+    </script>
+
+</body>
+</html>
