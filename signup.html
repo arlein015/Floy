@@ -27,6 +27,39 @@
             localStorage.setItem('floy_isLoggedIn', 'true');
             window.location.href = 'verify.html';
         }
+        import { auth, db } from './firebase-config.js';
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+async function registerUser(email, password, username, fullName) {
+    try {
+        // 1. Création du compte dans Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 2. Création AUTOMATIQUE du profil dans Firestore
+        await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            email: email,
+            username: username.toLowerCase().replace(/\s/g, ''), // Nettoie le pseudo
+            name: fullName,
+            bio: "Bienvenue sur mon profil Floy !",
+            avatarUrl: "https://via.placeholder.com/150", // Photo par défaut
+            followersCount: 0,
+            followingCount: 0,
+            postsCount: 0,
+            isVerified: false, // Pas de badge au début
+            createdAt: new Date()
+        });
+
+        alert("Compte Floy créé avec succès !");
+        window.location.href = "index.html";
+
+    } catch (error) {
+        console.error("Erreur d'inscription :", error.message);
+        alert("Erreur : " + error.message);
+    }
+}
     </script>
 </body>
 </html>
