@@ -3,178 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Profil Personnel</title>
+    <title>Floy - Profil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #222; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
 
         /* HEADER NAV */
-        .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; position: sticky; top: 0; background: var(--noir); z-index: 100; }
-        .username-top { font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 5px; }
+        .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; position: sticky; top: 0; background: var(--noir); z-index: 100; border-bottom: 1px solid var(--bordure); }
         .nav-icons { display: flex; gap: 20px; font-size: 20px; }
+        .fa-bars, .fa-share-nodes { cursor: pointer; }
+
+        /* MENU LATÉRAL (DRAWER) */
+        .side-menu { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--gris); z-index: 2000; transition: 0.3s; padding: 20px; box-sizing: border-box; border-left: 1px solid var(--bordure); }
+        .side-menu.open { right: 0; }
+        .menu-item { padding: 15px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; }
 
         /* INFOS PROFIL */
         .profile-info { padding: 20px; }
-        .profile-main { display: flex; align-items: center; gap: 25px; margin-bottom: 15px; }
-        .avatar-container { position: relative; width: 85px; height: 85px; }
-        #p-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bordure); }
+        .profile-main { display: flex; align-items: center; gap: 20px; }
+        .avatar-wrapper { width: 85px; height: 85px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--orange), #ffcc00); }
+        #p-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: black; }
         
-        .stats { display: flex; gap: 20px; text-align: center; flex-grow: 1; justify-content: space-around; }
+        .stats { display: flex; flex-grow: 1; justify-content: space-around; text-align: center; }
         .stat-num { font-weight: bold; font-size: 18px; display: block; }
         .stat-label { font-size: 12px; color: #888; }
 
-        .bio-section { margin-top: 10px; }
-        #p-name { font-weight: bold; font-size: 16px; margin: 0; }
-        #p-bio { font-size: 14px; margin: 5px 0; color: #eee; }
-
-        /* BOUTONS D'ACTION */
-        .action-buttons { display: grid; grid-template-columns: 1fr 1fr 40px; gap: 10px; padding: 0 20px; margin-top: 15px; }
-        .btn { border: none; border-radius: 8px; padding: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-align: center; text-decoration: none; }
+        /* BOUTONS ACTIONS */
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr 45px; gap: 10px; padding: 0 20px; margin-top: 20px; }
+        .btn { border: none; border-radius: 10px; padding: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .btn-follow { background: var(--orange); color: white; }
-        .btn-msg { background: var(--gris); color: white; border: 1px solid var(--bordure); }
-        .btn-edit { background: var(--gris); color: white; border: 1px solid var(--bordure); }
+        .btn-follow.following { background: #333; color: white; } /* État quand on suit déjà */
+        .btn-msg, .btn-edit-icon { background: var(--gris); color: white; border: 1px solid var(--bordure); }
 
-        /* GRILLE DE PHOTOS */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 25px; }
-        .grid-item { aspect-ratio: 1/1; background: #222; overflow: hidden; }
+        /* GRILLE PHOTOS */
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 30px; }
+        .grid-item { aspect-ratio: 1/1; background: #1a1a1a; overflow: hidden; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* MODAL ÉDITION */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: var(--gris); padding: 20px; border-radius: 20px; border: 1px solid var(--orange); }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-
-        .badge-verified { color: var(--orange); font-size: 14px; }
+        /* MODAL ÉDITION COMPLET */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--noir); z-index: 3000; padding: 20px; box-sizing: border-box; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; color: #555; font-size: 12px; margin-bottom: 5px; }
+        input, textarea { width: 100%; background: #111; border: 1px solid var(--bordure); color: white; padding: 12px; border-radius: 10px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="side-menu" id="side-menu">
+        <h3 style="color:var(--orange)">Options</h3>
+        <div class="menu-item"><i class="fas fa-cog"></i> Paramètres</div>
+        <div class="menu-item"><i class="fas fa-chart-line"></i> Statistiques</div>
+        <div class="menu-item" onclick="logout()" style="color:red"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
+    </div>
+
     <div class="nav-header">
-        <div class="username-top">
-            <span id="top-username">FloyUser</span>
-            <i id="top-badge" class="fas fa-check-circle badge-verified" style="display:none;"></i>
-        </div>
+        <div style="font-weight:bold; font-size:18px;">@<span id="top-user">Chargement</span></div>
         <div class="nav-icons">
-            <i class="fas fa-share-alt" onclick="shareProfile()" title="Partager"></i>
-            <i class="fas fa-bars" onclick="toggleMenu()" title="Menu"></i>
+            <i class="fas fa-share-nodes" onclick="copyProfileLink()"></i>
+            <i class="fas fa-bars" onclick="toggleMenu()"></i>
         </div>
     </div>
 
     <div class="profile-info">
         <div class="profile-main">
-            <div class="avatar-container">
-                <img id="p-avatar" src="https://via.placeholder.com/150" alt="Avatar">
+            <div class="avatar-wrapper">
+                <img id="p-avatar" src="https://via.placeholder.com/150">
             </div>
             <div class="stats">
-                <div><span class="stat-num" id="count-posts">0</span><span class="stat-label">Posts</span></div>
-                <div><span class="stat-num" id="count-followers">0</span><span class="stat-label">Abonnés</span></div>
-                <div><span class="stat-num" id="count-following">0</span><span class="stat-label">Suivis</span></div>
+                <div><span class="stat-num" id="nb-posts">0</span><span class="stat-label">Posts</span></div>
+                <div><span class="stat-num" id="nb-followers">0</span><span class="stat-label">Abonnés</span></div>
+                <div><span class="stat-num" id="nb-following">0</span><span class="stat-label">Suivis</span></div>
             </div>
         </div>
-        <div class="bio-section">
-            <p id="p-name">Chargement...</p>
-            <p id="p-bio">...</p>
+        <div style="margin-top:15px;">
+            <b id="p-full-name">Nom de l'utilisateur</b>
+            <p id="p-bio" style="font-size:14px; margin:5px 0; color:#ccc;">Description...</p>
         </div>
     </div>
 
-    <div class="action-buttons">
-        <button id="btn-main-action" class="btn btn-follow">Suivre</button>
-        <a href="messages.html" class="btn btn-msg">Message</a>
-        <button onclick="openEdit()" class="btn btn-edit"><i class="fas fa-user-edit"></i></button>
+    <div class="action-btns">
+        <button id="btn-follow" class="btn btn-follow" onclick="handleFollow()">Suivre</button>
+        <button class="btn btn-msg" onclick="window.location.href='messages.html'">Message</button>
+        <button class="btn btn-edit-icon" onclick="openEdit()"><i class="fas fa-pen"></i></button>
     </div>
 
-    <div class="photo-grid" id="photo-grid">
-        </div>
+    <div class="photo-grid" id="photo-grid"></div>
 
     <div id="modal-edit" class="modal">
-        <div class="modal-content">
-            <h3>Modifier le profil</h3>
-            <input type="text" id="edit-name" placeholder="Nom complet">
-            <textarea id="edit-bio" placeholder="Bio"></textarea>
-            <button onclick="saveProfile()" class="btn btn-follow" style="width:100%">Enregistrer</button>
-            <button onclick="closeEdit()" class="btn btn-msg" style="width:100%; margin-top:10px;">Annuler</button>
-            <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
-            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; width:100%;">Se déconnecter</button>
+        <div class="modal-header">
+            <span onclick="closeEdit()" style="cursor:pointer">Annuler</span>
+            <b style="font-size:18px;">Modifier le profil</b>
+            <span onclick="saveChanges()" style="color:var(--orange); font-weight:bold; cursor:pointer">Terminé</span>
+        </div>
+        <div style="text-align:center; margin-bottom:30px;">
+            <img id="edit-preview" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+            <p style="color:var(--orange); font-size:14px; margin-top:10px;">Changer la photo de profil</p>
+        </div>
+        <div class="input-group">
+            <label>Nom d'affichage</label>
+            <input type="text" id="in-name">
+        </div>
+        <div class="input-group">
+            <label>Bio</label>
+            <textarea id="in-bio" rows="3"></textarea>
         </div>
     </div>
 
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, updateDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let currentUID = null;
+        let myID = null;
+        let isFollowing = false;
 
-        // 1. GESTION DE L'AUTHENTIFICATION
-        onAuthStateChanged(auth, (user) => {
+        // 1. GESTION CONNEXION
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                currentUID = user.uid;
-                loadProfile(user.uid);
-                loadUserPhotos(user.uid);
-            } else {
-                window.location.href = "login.html";
-            }
+                myID = user.uid;
+                loadData();
+            } else { window.location.href = "login.html"; }
         });
 
-        // 2. CHARGER LES DONNÉES DEPUIS FIREBASE
-        async function loadProfile(uid) {
-            const userDoc = await getDoc(doc(db, "users", uid));
+        // 2. CHARGEMENT DONNÉES
+        async function loadData() {
+            const userDoc = await getDoc(doc(db, "users", myID));
             if (userDoc.exists()) {
-                const data = userDoc.data();
-                document.getElementById('top-username').innerText = data.username;
-                document.getElementById('p-name').innerText = data.username;
-                document.getElementById('p-bio').innerText = data.bio || "Bienvenue sur mon Floy !";
-                document.getElementById('p-avatar').src = data.avatarUrl || "https://via.placeholder.com/150";
+                const d = userDoc.data();
+                document.getElementById('top-user').innerText = d.username;
+                document.getElementById('p-full-name').innerText = d.username;
+                document.getElementById('p-bio').innerText = d.bio || "Pas de bio";
+                document.getElementById('p-avatar').src = d.avatarUrl || "https://via.placeholder.com/150";
+                document.getElementById('edit-preview').src = d.avatarUrl || "https://via.placeholder.com/150";
                 
-                // Afficher le badge orange si vérifié
-                if (data.isVerified === true) {
-                    document.getElementById('top-badge').style.display = "inline";
-                }
-
-                // Pré-remplir le modal d'édition
-                document.getElementById('edit-name').value = data.username;
-                document.getElementById('edit-bio').value = data.bio || "";
+                // Pré-remplir le formulaire
+                document.getElementById('in-name').value = d.username;
+                document.getElementById('in-bio').value = d.bio || "";
             }
         }
 
-        // 3. CHARGER LES PHOTOS (GRILLE)
-        function loadUserPhotos(uid) {
-            const q = query(collection(db, "posts"), where("userId", "==", uid));
-            onSnapshot(q, (snapshot) => {
-                const grid = document.getElementById('photo-grid');
-                grid.innerHTML = "";
-                snapshot.forEach(doc => {
-                    const post = doc.data();
-                    if(post.imageUrl) {
-                        grid.innerHTML += `<div class="grid-item"><img src="${post.imageUrl}"></div>`;
-                    }
-                });
-            });
-        }
-
-        // 4. ACTIONS (PARTAGE, ÉDITION, LOGOUT)
-        window.shareProfile = () => {
-            const url = window.location.href;
-            navigator.share ? navigator.share({ title: 'Floy', url: url }) : alert("Lien copié : " + url);
+        // 3. MENU ET PARTAGE
+        window.toggleMenu = () => {
+            const menu = document.getElementById('side-menu');
+            const overlay = document.getElementById('overlay');
+            menu.classList.toggle('open');
+            overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
         };
 
+        window.copyProfileLink = () => {
+            const link = window.location.href;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Lien du profil copié !");
+            });
+        };
+
+        // 4. ÉDITION PROFIL
         window.openEdit = () => document.getElementById('modal-edit').style.display = "block";
         window.closeEdit = () => document.getElementById('modal-edit').style.display = "none";
 
-        window.saveProfile = async () => {
-            await updateDoc(doc(db, "users", currentUID), {
-                username: document.getElementById('edit-name').value,
-                bio: document.getElementById('edit-bio').value
+        window.saveChanges = async () => {
+            await updateDoc(doc(db, "users", myID), {
+                username: document.getElementById('in-name').value,
+                bio: document.getElementById('in-bio').value
             });
             location.reload();
         };
 
-        window.logout = () => { if(confirm("Quitter Floy ?")) signOut(auth); };
-
-        window.toggleMenu = () => {
-            alert("Paramètres Floy : \n- Compte\n- Sécurité\n- Aide");
+        // 5. BOUTON SUIVRE (ACTIF PERMANENT)
+        window.handleFollow = () => {
+            const btn = document.getElementById('btn-follow');
+            isFollowing = !isFollowing; // Bascule l'état
+            
+            if (isFollowing) {
+                btn.innerText = "Suivi";
+                btn.classList.add('following');
+            } else {
+                btn.innerText = "Suivre";
+                btn.classList.remove('following');
+            }
         };
+
+        window.logout = () => { if(confirm("Se déconnecter ?")) signOut(auth); };
     </script>
 </body>
 </html>
