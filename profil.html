@@ -3,202 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Profil Elite</title>
+    <title>Floy - Profil Officiel</title>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; --gris-bouton: #363636; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        :root { --orange: #FF7A1A; --noir: #000; --bordure: #262626; --gris: #8e8e8e; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
 
-        /* HEADER */
-        header { padding: 15px; border-bottom: 1px solid var(--bordure); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: black; z-index: 100; }
-        .username-header { font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        /* HEADER PROFIL */
+        .profile-header { padding: 20px 15px; border-bottom: 1px solid var(--bordure); }
+        .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .profile-pic { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); }
         
-        /* STYLE DU BADGE */
-        .badge-verify { width: 16px; height: 16px; fill: var(--orange); display: none; }
-        .is-verified .badge-verify { display: inline-block; }
+        .stats-container { display: flex; gap: 20px; text-align: center; flex-grow: 1; justify-content: center; }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-num { font-weight: bold; font-size: 18px; }
+        .stat-label { font-size: 13px; color: var(--gris); }
 
-        /* INFOS PROFIL */
-        .profile-header { padding: 20px 15px; }
-        .main-info { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .profile-info { margin-bottom: 15px; }
+        .profile-name { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 5px; }
+        .verify-badge { width: 16px; height: 16px; fill: var(--orange); }
+        .profile-bio { font-size: 14px; margin-top: 5px; color: #efefef; }
+
+        /* BOUTON ÉDITER */
+        .edit-btn { 
+            width: 100%; background: #1a1a1a; border: 1px solid var(--bordure); 
+            color: white; padding: 8px; border-radius: 8px; font-weight: bold; 
+            font-size: 14px; cursor: pointer; transition: 0.2s;
+        }
+        .edit-btn:active { background: #333; }
+
+        /* GRILLE DE POSTS */
+        .posts-tabs { display: flex; border-top: 1px solid var(--bordure); margin-top: 10px; }
+        .tab-item { flex: 1; padding: 12px; text-align: center; border-bottom: 2px solid transparent; }
+        .tab-item.active { border-bottom: 2px solid var(--orange); }
         
-        .avatar-container { position: relative; width: 85px; height: 85px; cursor: pointer; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--orange); }
-        .change-icon { position: absolute; bottom: 0; right: 0; background: var(--orange); border-radius: 50%; padding: 4px; border: 2px solid black; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); flex-grow: 1; text-align: center; }
-        .stat-val { font-weight: bold; font-size: 16px; display: block; }
-        .stat-label { font-size: 11px; color: #a8a8a8; }
-
-        .bio-section { margin-bottom: 20px; font-size: 14px; }
-        .bio-name { font-weight: bold; font-size: 15px; }
-        .bio-link { color: var(--orange); text-decoration: none; display: block; margin-top: 5px; }
-
-        /* BOUTONS ACTIONS */
-        .action-row { display: flex; gap: 8px; }
-        .btn { flex: 1; border: none; border-radius: 8px; padding: 9px; font-weight: bold; color: white; cursor: pointer; }
-        .btn-edit { background: var(--gris-bouton); }
-        .btn-follow { background: var(--orange); }
-        .btn-share { width: 40px; background: var(--gris-bouton); display: flex; justify-content: center; align-items: center; flex: none; }
-
-        /* GRILLE */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 15px; }
-        .grid-item { aspect-ratio: 1/1; background: #111; overflow: hidden; cursor: pointer; }
+        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .grid-item { aspect-ratio: 1/1; background: #111; position: relative; cursor: pointer; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
+        .grid-item .multi-icon { position: absolute; top: 5px; right: 5px; fill: white; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
 
-        /* NAV BAR (INDEX STYLE) */
+        /* NAV BAR */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-link { color: white; opacity: 0.6; text-decoration: none; }
+        .nav-link { color: white; opacity: 0.6; }
         .nav-link.active { opacity: 1; color: var(--orange); }
-        .nav-avatar { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid transparent; object-fit: cover; }
-        .active .nav-avatar { border-color: var(--orange); }
-
-        /* MODALE MODIFIER */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #1c1c1c; width: 85%; padding: 20px; border-radius: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid var(--bordure); color: white; border-radius: 10px; box-sizing: border-box; }
     </style>
 </head>
-<body id="profile-body">
-
-    <header>
-        <div style="width:24px"></div>
-        <div class="username-header" id="header-username">
-            <span>User_Floy</span>
-            <svg class="badge-verify" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6.4 13l1.5-1.5 2.2 2.2 4.8-4.8 1.5 1.5-6.3 6.3z"/></svg>
-        </div>
-        <a href="side-menu.html" class="menu-btn" style="color:white">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </a>
-    </header>
+<body>
 
     <div class="profile-header">
-        <div class="main-info">
-            <div class="avatar-container" onclick="document.getElementById('file-upload').click()">
-                <img id="main-avatar" class="avatar-img" src="https://via.placeholder.com/150">
-                <div class="change-icon">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                </div>
-                <input type="file" id="file-upload" style="display:none" accept="image/*">
-            </div>
-            <div class="stats-grid">
-                <div class="stat-item"><span class="stat-val" id="post-count">0</span><div class="stat-label">Posts</div></div>
-                <div class="stat-item"><span class="stat-val">1.2k</span><div class="stat-label">Followers</div></div>
-                <div class="stat-item"><span class="stat-val">450</span><div class="stat-label">Following</div></div>
-                <div class="stat-item"><span class="stat-val">8.9k</span><div class="stat-label">Likes</div></div>
+        <div class="top-row">
+            <img id="p-pic" class="profile-pic" src="https://via.placeholder.com/100">
+            <div class="stats-container">
+                <div class="stat-item"><span class="stat-num" id="count-posts">0</span><span class="stat-label">Posts</span></div>
+                <div class="stat-item"><span class="stat-num" id="count-followers">0</span><span class="stat-label">Abonnés</span></div>
+                <div class="stat-item"><span class="stat-num" id="count-following">0</span><span class="stat-label">Suivis</span></div>
             </div>
         </div>
-
-        <div class="bio-section">
-            <div class="bio-name" id="display-name">Nom complet</div>
-            <div id="display-bio">Ma bio Floy...</div>
-            <a href="#" class="bio-link" id="display-web">floy.app/lien</a>
+        
+        <div class="profile-info">
+            <div class="profile-name">
+                <span id="p-username">Chargement...</span>
+                <span id="p-badge"></span>
+            </div>
+            <div class="profile-bio" id="p-bio">Bienvenue sur mon profil Floy.</div>
         </div>
 
-        <div class="action-row">
-            <button class="btn btn-edit" onclick="document.getElementById('edit-modal').style.display='flex'">Modifier</button>
-            <button class="btn btn-follow">Suivre</button>
-            <button class="btn btn-share">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-            </button>
+        <button class="edit-btn" onclick="window.location.href='settings.html'">Modifier le profil</button>
+    </div>
+
+    <div class="posts-tabs">
+        <div class="tab-item active">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zM3 14h7v7H3v-7z"/></svg>
         </div>
     </div>
 
-    <div class="photo-grid" id="profile-gallery"></div>
-
-    <div class="modal" id="edit-modal">
-        <div class="modal-content">
-            <h3 style="text-align:center">Modifier le profil</h3>
-            <input type="text" id="in-username" placeholder="Nom d'utilisateur">
-            <input type="text" id="in-name" placeholder="Nom complet">
-            <input type="text" id="in-bio" placeholder="Bio">
-            <input type="text" id="in-web" placeholder="Lien Web">
-            <button class="btn btn-follow" style="width:100%" id="btn-save">Enregistrer</button>
-            <button style="background:none; border:none; color:grey; width:100%; margin-top:10px; cursor:pointer" onclick="document.getElementById('edit-modal').style.display='none'">Annuler</button>
+    <div class="profile-grid" id="profile-grid">
         </div>
-    </div>
 
     <nav class="nav-bar">
-        <a href="index.html" class="nav-link">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        </a>
-        <a href="explore.html" class="nav-link">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </a>
-        <a href="post.html" class="nav-link">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"></svg>
-        </a>
-        <a href="messages.html" class="nav-link">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-        </a>
-        <a href="profil.html" class="nav-link active">
-            <img id="nav-avatar" class="nav-avatar" src="https://via.placeholder.com/30">
-        </a>
+        <a href="index.html" class="nav-link"><svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>
+        <a href="explore.html" class="nav-link"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></a>
+        <a href="post.html" class="nav-link"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"></svg></a>
+        <a href="profil.html" class="nav-link active"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></a>
     </nav>
 
     <script type="module">
         import { db } from './firebase-config.js';
-        import { doc, setDoc, onSnapshot, collection, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, onSnapshot, collection, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const USER_KEY = "User_Floy_Account";
+        const MY_ID = "User_Floy_Account"; // Ton ID unique
 
-        // 1. CHANGEMENT MANUEL DE LA PHOTO
-        document.getElementById('file-upload').onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const base64 = event.target.result;
-                    document.getElementById('main-avatar').src = base64;
-                    document.getElementById('nav-avatar').src = base64;
-                    await setDoc(doc(db, "users", USER_KEY), { avatarUrl: base64 }, { merge: true });
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        // 2. CHARGEMENT AUTOMATIQUE (INCLUANT LE BADGE)
-        onSnapshot(doc(db, "users", USER_KEY), (s) => {
-            if(s.exists()){
-                const d = s.data();
-                document.getElementById('header-username').children[0].innerText = d.username || "User_Floy";
-                document.getElementById('display-name').innerText = d.name || "Nom";
-                document.getElementById('display-bio').innerText = d.bio || "Bio";
-                document.getElementById('display-web').innerText = d.web || "Lien";
-                if(d.avatarUrl) {
-                    document.getElementById('main-avatar').src = d.avatarUrl;
-                    document.getElementById('nav-avatar').src = d.avatarUrl;
-                }
+        // 1. Charger les infos du profil (Nom, Stats, Badge)
+        onSnapshot(doc(db, "users", MY_ID), (s) => {
+            if (s.exists()) {
+                const u = s.data();
+                document.getElementById('p-username').innerText = u.username || "Utilisateur";
+                document.getElementById('p-pic').src = u.avatarUrl || "https://via.placeholder.com/100";
+                document.getElementById('p-bio').innerText = u.bio || "Pas encore de bio.";
+                document.getElementById('count-followers').innerText = u.followersCount || 0;
+                document.getElementById('count-following').innerText = u.followingCount || 0;
                 
-                // GESTION DU BADGE : Si isVerified est true dans Firebase, le badge s'affiche
-                if(d.isVerified === true) {
-                    document.getElementById('header-username').classList.add('is-verified');
-                } else {
-                    document.getElementById('header-username').classList.remove('is-verified');
+                // Afficher le badge si certifié
+                if(u.isVerified) {
+                    document.getElementById('p-badge').innerHTML = `<svg class="verify-badge" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM10 17l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg>`;
                 }
             }
         });
 
-        // 3. ENREGISTRER
-        document.getElementById('btn-save').onclick = async () => {
-            await setDoc(doc(db, "users", USER_KEY), {
-                username: document.getElementById('in-username').value,
-                name: document.getElementById('in-name').value,
-                bio: document.getElementById('in-bio').value,
-                web: document.getElementById('in-web').value
-            }, { merge: true });
-            document.getElementById('edit-modal').style.display = 'none';
-        };
-
-        // 4. GALERIE
-        const q = query(collection(db, "posts"), where("username", "==", "User_Floy"));
+        // 2. Charger les posts de l'utilisateur uniquement
+        const q = query(collection(db, "posts"), where("userId", "==", MY_ID), orderBy("timestamp", "desc"));
         onSnapshot(q, (snaps) => {
-            const g = document.getElementById('profile-gallery');
-            g.innerHTML = "";
-            document.getElementById('post-count').innerText = snaps.size;
+            const grid = document.getElementById('profile-grid');
+            grid.innerHTML = "";
+            document.getElementById('count-posts').innerText = snaps.size;
+
             snaps.forEach(d => {
+                const p = d.data();
+                const firstImg = p.images[0]; // On prend la première image du tableau pour la grille
+                
                 const item = document.createElement('div');
                 item.className = 'grid-item';
-                item.innerHTML = `<img src="${d.data().imageUrl}">`;
-                g.appendChild(item);
+                item.onclick = () => window.location.href = `album.html?id=${d.id}`;
+                
+                let multiIcon = p.images.length > 1 ? `<svg class="multi-icon" width="18" height="18" viewBox="0 0 24 24"><path d="M19 2H9c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H9V4h10v10zM5 7H3v12c0 1.1.9 2 2 2h12v-2H5V7z"/></svg>` : "";
+                
+                item.innerHTML = `<img src="${firstImg}">${multiIcon}`;
+                grid.appendChild(item);
             });
         });
     </script>
