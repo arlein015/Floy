@@ -3,51 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Créer une Story</title>
+    <title>Floy - Créer une Story</title>
     <style>
-        body { background: #000; color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; justify-content: center; align-items: center; }
-        .preview-container { width: 90%; height: 70%; border: 2px dashed #333; border-radius: 20px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
-        #previewImg { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .btn-select { background: #FF7A1A; color: black; padding: 15px 30px; border-radius: 30px; font-weight: bold; border: none; margin-top: 20px; cursor: pointer; }
-        .btn-send { background: white; color: black; padding: 15px 50px; border-radius: 30px; font-weight: bold; border: none; margin-top: 20px; display: none; }
-        .close { position: absolute; top: 40px; left: 20px; font-size: 30px; color: white; text-decoration: none; }
+        :root { --orange: #FF7A1A; --noir: #000; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; }
+        
+        .header { display: flex; justify-content: space-between; padding: 20px; z-index: 10; }
+        .btn-close { color: white; text-decoration: none; font-size: 24px; }
+
+        .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; background: #111; position: relative; }
+        #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        
+        .upload-ui { text-align: center; }
+        .btn-select { background: var(--orange); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+
+        .footer { padding: 30px; text-align: center; }
+        .btn-send { background: white; color: black; border: none; padding: 15px 40px; border-radius: 30px; font-weight: bold; display: none; cursor: pointer; }
+        #status { font-size: 14px; color: var(--orange); margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <a href="messages.html" class="close">✕</a>
-
-    <div class="preview-container" id="dropZone">
-        <span id="placeholderText">Aperçu de ta story</span>
-        <img id="previewImg" src="">
+    <div class="header">
+        <a href="index.html" class="btn-close">✕</a>
     </div>
 
-    <input type="file" id="fileIn" hidden accept="image/*" onchange="preview(this)">
-    
-    <button class="btn-select" onclick="document.getElementById('fileIn').click()">Choisir une photo</button>
-    <button id="sendBtn" class="btn-send" onclick="publish()">Publier la story</button>
+    <div class="preview-container">
+        <div class="upload-ui" id="upload-ui">
+            <button class="btn-select" onclick="document.getElementById('file-input').click()">Choisir une photo</button>
+            <input type="file" id="file-input" style="display:none" accept="image/*">
+        </div>
+        <img id="preview-img">
+    </div>
 
-    <script>
-        function preview(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('previewImg').src = e.target.result;
-                    document.getElementById('previewImg').style.display = 'block';
-                    document.getElementById('placeholderText').style.display = 'none';
-                    document.getElementById('sendBtn').style.display = 'block';
-                };
-                reader.readAsDataURL(input.files[0]);
+    <div class="footer">
+        <div id="status"></div>
+        <button class="btn-send" id="send-btn">Partager dans ma Story</button>
+    </div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const CLOUD_URL = "https://api.cloudinary.com/v1_1/ds79k3f9g/image/upload";
+        const PRESET = "floy_preset";
+        const MY_ID = "User_Floy_Account";
+
+        const fileInput = document.getElementById('file-input');
+        const previewImg = document.getElementById('preview-img');
+        const sendBtn = document.getElementById('send-btn');
+        const status = document.getElementById('status');
+
+        let selectedFile = null;
+
+        fileInput.onchange = (e) => {
+            selectedFile = e.target.files[0];
+            if(selectedFile) {
+                previewImg.src = URL.createObjectURL(selectedFile);
+                previewImg.style.display = "block";
+                document.getElementById('upload-ui').style.display = "none";
+                sendBtn.style.display = "inline-block";
             }
-        }
+        };
 
-        function publish() {
-            const imgData = document.getElementById('previewImg').src;
-            localStorage.setItem('user_story_img', imgData);
-            localStorage.setItem('user_story_active', 'true');
-            alert("Story publiée !");
-            window.location.href = "messages.html";
-        }
+        sendBtn.onclick = async () => {
+            sendBtn.disabled = true;
+            status.innerText = "Envoi vers Floy...";
+
+            const fd = new FormData();
+            fd.append('file', selectedFile);
+            fd.append('upload_preset', PRESET);
+
+            try {
+                const res = await fetch(CLOUD_URL, { method: 'POST', body: fd });
+                const data = await res.json();
+
+                await addDoc(collection(db, "stories"), {
+                    userId: MY_ID,
+                    imageUrl: data.secure_url,
+                    timestamp: serverTimestamp(),
+                    expiresAt: Date.now() + (24 * 60 * 60 * 1000) // Expire dans 24h
+                });
+
+                window.location.href = "index.html";
+            } catch (err) {
+                alert("Erreur");
+                sendBtn.disabled = false;
+            }
+        };
     </script>
 </body>
 </html>
