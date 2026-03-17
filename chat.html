@@ -3,121 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Discussion - Floy</title>
+    <title>Floy - Discussion</title>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #1a1a1a; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-
-        /* HEADER */
-        .chat-header { display: flex; align-items: center; padding: 15px 20px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #222; z-index: 10; }
-        .back-btn { background: none; border: none; color: var(--orange); font-size: 28px; cursor: pointer; padding-right: 15px; text-decoration: none; }
-        .user-profile { display: flex; align-items: center; gap: 12px; flex: 1; }
-        .chat-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--orange); }
-        .chat-user-name { font-weight: bold; font-size: 16px; }
-
-        /* ZONE DES MESSAGES */
-        .messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #000; }
-        .msg { max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.4; }
-        .msg.received { align-self: flex-start; background: var(--gris); border-bottom-left-radius: 4px; }
-        .msg.sent { align-self: flex-end; background: var(--orange); color: black; border-bottom-right-radius: 4px; font-weight: 500; }
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #181818; --bordure: #262626; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* STYLE POUR LES PHOTOS DANS LE CHAT */
-        .msg-img { max-width: 100%; border-radius: 10px; margin-top: 5px; display: block; cursor: pointer; }
-        .msg-time { font-size: 10px; opacity: 0.6; margin-top: 5px; display: block; text-align: right; }
+        /* HEADER */
+        header { padding: 15px; border-bottom: 1px solid var(--bordure); display: flex; align-items: center; background: black; }
+        .back-btn { color: white; text-decoration: none; font-size: 20px; margin-right: 15px; }
+        
+        /* ZONE MESSAGES */
+        #chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 1.4; position: relative; }
+        .msg.me { align-self: flex-end; background: var(--orange); color: white; border-bottom-right-radius: 4px; }
+        .msg.other { align-self: flex-start; background: var(--gris); color: white; border-bottom-left-radius: 4px; }
+        .msg img, .msg video { width: 100%; border-radius: 10px; margin-top: 5px; }
 
         /* BARRE D'ENVOI */
-        .input-bar { padding: 15px 20px; background: #0a0a0a; border-top: 1px solid #222; display: flex; align-items: center; gap: 12px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
+        .input-area { padding: 10px; background: black; border-top: 1px solid var(--bordure); display: flex; align-items: center; gap: 10px; }
+        .input-box { flex: 1; background: var(--gris); border-radius: 20px; padding: 10px 15px; display: flex; align-items: center; }
+        input { background: none; border: none; color: white; flex: 1; outline: none; }
         
-        /* Bouton média */
-        .media-btn { background: #222; border: none; width: 40px; height: 40px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        
-        .input-wrapper { flex: 1; background: #1c1c1c; border-radius: 25px; padding: 10px 15px; display: flex; align-items: center; }
-        .input-wrapper input { background: none; border: none; color: white; flex: 1; outline: none; font-size: 15px; }
-        .send-btn { background: var(--orange); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .btn-icon { background: none; border: none; color: white; cursor: pointer; padding: 5px; }
+        .btn-icon.active { color: var(--orange); }
+        #record-status { font-size: 12px; color: var(--orange); display: none; margin-left: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="chat-header">
-        <a href="messages.html" class="back-btn">‹</a>
-        <div class="user-profile">
-            <img id="headerAvatar" src="" class="chat-avatar" onerror="this.src='https://ui-avatars.com/api/?name=User'">
-            <span class="chat-user-name" id="headerName">Chargement...</span>
-        </div>
-    </div>
+    <header>
+        <a href="messages.html" class="back-btn">←</a>
+        <b id="chat-with">Chargement...</b>
+    </header>
 
-    <div class="messages-container" id="msgBox">
-        <div class="msg received">
-            Salut ! Envoie-moi une photo pour tester.
-            <span class="msg-time">12:00</span>
-        </div>
-    </div>
+    <div id="chat-container"></div>
 
-    <div class="input-bar">
-        <input type="file" id="imgInput" hidden accept="image/*" onchange="sendPhoto(this)">
+    <div id="record-status">🔴 Enregistrement...</div>
+    <div class="input-area">
+        <button class="btn-icon" onclick="document.getElementById('media-input').click()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        </button>
         
-        <button class="media-btn" onclick="document.getElementById('imgInput').click()">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </button>
-
-        <div class="input-wrapper">
-            <input type="text" id="msgInput" placeholder="Message..." onkeypress="if(event.key==='Enter') sendText()">
+        <div class="input-box">
+            <input type="text" id="msg-input" placeholder="Message...">
         </div>
 
-        <button class="send-btn" onclick="sendText()">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        <button id="vocal-btn" class="btn-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </button>
+
+        <button class="btn-icon" id="send-btn" style="color: var(--orange);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
     </div>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const userId = params.get('id');
-        const msgBox = document.getElementById('msgBox');
+    <input type="file" id="media-input" accept="image/*,video/*" style="display: none;">
 
-        // Charger infos utilisateur
-        function loadChat() {
-            const contacts = JSON.parse(localStorage.getItem('floy_contacts') || "[]");
-            const user = contacts.find(c => c.id === userId);
-            if (user) {
-                document.getElementById('headerName').textContent = user.name;
-                document.getElementById('headerAvatar').src = user.img;
-            }
-        }
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Envoyer du texte
-        function sendText() {
-            const input = document.getElementById('msgInput');
-            if (!input.value.trim()) return;
-            addMessage(input.value, 'sent');
-            input.value = "";
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const chatID = urlParams.get('id');
+        const monID = "User_Floy";
+        const autreUser = chatID.replace(monID, "").replace("_", "");
+        
+        document.getElementById('chat-with').innerText = autreUser;
+        const container = document.getElementById('chat-container');
 
-        // Envoyer une photo
-        function sendPhoto(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgHtml = `<img src="${e.target.result}" class="msg-img">`;
-                    addMessage(imgHtml, 'sent');
+        // --- 1. AFFICHER LES MESSAGES EN TEMPS RÉEL ---
+        const q = query(collection(db, "chats", chatID, "messages"), orderBy("timestamp", "asc"));
+        onSnapshot(q, (snap) => {
+            container.innerHTML = "";
+            snap.forEach(d => {
+                const m = d.data();
+                const div = document.createElement('div');
+                div.className = `msg ${m.sender === monID ? 'me' : 'other'}`;
+                
+                if (m.type === "text") div.innerText = m.text;
+                if (m.type === "image") div.innerHTML = `<img src="${m.url}">`;
+                if (m.type === "video") div.innerHTML = `<video src="${m.url}" controls></video>`;
+                if (m.type === "audio") div.innerHTML = `<audio src="${m.url}" controls></audio>`;
+                
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+        });
+
+        // --- 2. ENVOYER DU TEXTE ---
+        document.getElementById('send-btn').onclick = async () => {
+            const txt = document.getElementById('msg-input').value;
+            if (!txt) return;
+            await envoyerVersFirebase({ type: "text", text: txt });
+            document.getElementById('msg-input').value = "";
+        };
+
+        // --- 3. ENVOYER PHOTO / VIDÉO (VIA CLOUDINARY) ---
+        document.getElementById('media-input').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'floy_preset');
+
+            const res = await fetch(`https://api.cloudinary.com/v1_1/ds79k3f9g/upload`, { method: 'POST', body: formData });
+            const data = await res.json();
+            
+            const type = file.type.startsWith('image') ? 'image' : 'video';
+            await envoyerVersFirebase({ type: type, url: data.secure_url });
+        };
+
+        // --- 4. ENVOYER VOCAL (BASE64 VERS FIREBASE) ---
+        let mediaRecorder;
+        let audioChunks = [];
+        const vocalBtn = document.getElementById('vocal-btn');
+
+        vocalBtn.onclick = async () => {
+            if (!mediaRecorder || mediaRecorder.state === "inactive") {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                vocalBtn.classList.add('active');
+                document.getElementById('record-status').style.display = 'block';
+
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    const reader = new FileReader();
+                    reader.readAsDataURL(audioBlob);
+                    reader.onloadend = async () => {
+                        await envoyerVersFirebase({ type: "audio", url: reader.result });
+                    };
+                    audioChunks = [];
                 };
-                reader.readAsDataURL(input.files[0]);
+            } else {
+                mediaRecorder.stop();
+                vocalBtn.classList.remove('active');
+                document.getElementById('record-status').style.display = 'none';
             }
-        }
+        };
 
-        // Fonction générique pour ajouter un message à l'écran
-        function addMessage(content, type) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const html = `
-                <div class="msg ${type}">
-                    ${content}
-                    <span class="msg-time">${time}</span>
-                </div>
-            `;
-            msgBox.insertAdjacentHTML('beforeend', html);
-            msgBox.scrollTop = msgBox.scrollHeight;
+        // FONCTION COMMUNE D'ENVOI
+        async function envoyerVersFirebase(data) {
+            const msgData = { ...data, sender: monID, timestamp: serverTimestamp() };
+            await addDoc(collection(db, "chats", chatID, "messages"), msgData);
+            
+            // Met à jour le dernier message pour la liste
+            await setDoc(doc(db, "chats", chatID), {
+                lastMessage: data.type === "text" ? data.text : `Un média a été envoyé`,
+                timestamp: serverTimestamp(),
+                users: chatID.split("_")
+            }, { merge: true });
         }
-
-        window.onload = loadChat;
     </script>
 </body>
 </html>
