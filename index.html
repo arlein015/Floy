@@ -45,8 +45,7 @@
 
         const postContainer = document.getElementById('post-container');
 
-        // On écoute la collection "posts" triée par date (plus récent en haut)
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+       const q = query(collection(db, "posts"));
 
         onSnapshot(q, (snapshot) => {
             postContainer.innerHTML = ""; // On vide pour mettre à jour
