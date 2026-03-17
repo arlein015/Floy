@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floy Admin - Gestionnaire de Paiements</title>
+    <style>
+        :root { --orange: #FF7A1A; --success: #28a745; --noir: #0b0b0b; }
+        body { background: var(--noir); color: white; font-family: sans-serif; padding: 20px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--orange); padding-bottom: 10px; }
+        
+        /* TABLEAU STYLE EXCEL */
+        .table-container { overflow-x: auto; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; background: #1a1a1a; min-width: 800px; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: left; font-size: 14px; }
+        th { background: var(--orange); color: black; text-transform: uppercase; font-size: 12px; }
+        tr:hover { background: #222; }
+
+        /* BOUTONS & BADGES */
+        .btn-validate { background: var(--success); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-validate:hover { transform: scale(1.05); }
+        .status { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .status-pending { background: #5a3d00; color: #ffc107; }
+        .status-paid { background: #1e3a1e; color: #44ff44; }
+
+        .loading { text-align: center; padding: 50px; color: var(--orange); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>📊 Tableau des Ventes Floy</h1>
+        <div id="total-revenue" style="font-size: 20px; font-weight: bold;">Revenus : 0 USDT</div>
+    </div>
+
+    <div class="table-container">
+        <table id="payments-table">
+            <thead>
+                <tr>
+                    <th>Date / Heure</th>
+                    <th>ID Utilisateur</th>
+                    <th>Offre</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                </tbody>
+        </table>
+        <div id="loader" class="loading">Chargement des transactions...</div>
+    </div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { collection, query, orderBy, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const tableBody = document.getElementById('table-body');
+        const loader = document.getElementById('loader');
+        const totalRevenueEl = document.getElementById('total-revenue');
+
+        // Charger les données en temps réel
+        const q = query(collection(db, "payments_logs"), orderBy("timestamp", "desc"));
+
+        onSnapshot(q, (snapshot) => {
+            tableBody.innerHTML = "";
+            loader.style.display = "none";
+            let total = 0;
+
+            snapshot.forEach((pDoc) => {
+                const p = pDoc.data();
+                const id = pDoc.id;
+                const date = p.timestamp ? new Date(p.timestamp.seconds * 1000).toLocaleString('fr-FR') : "Juste maintenant";
+                
+                if(p.status === "Payé") total += parseInt(p.amount);
+
+                const row = `
+                    <tr>
+                        <td>${date}</td>
+                        <td style="font-family: monospace; font-size: 12px; color: #888;">${p.userId}</td>
+                        <td>${p.type === 'badge' ? 'Certification 🟠' : 'Boost Post ⚡'}</td>
+                        <td><b>${p.amount}</b></td>
+                        <td><span class="status ${p.status === 'En attente' ? 'status-pending' : 'status-paid'}">${p.status}</span></td>
+                        <td>
+                            ${p.status === 'En attente' ? 
+                            `<button class="btn-validate" onclick="validerTransaction('${id}', '${p.userId}')">Valider & Certifier</button>` : 
+                            '✅ Validé'}
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+            totalRevenueEl.innerText = `Revenus : ${total} USDT`;
+        });
+
+        // FONCTION POUR ACTIVER LE BADGE ET MARQUER COMME PAYÉ
+        window.validerTransaction = async (logId, userId) => {
+            const confirmation = confirm("Confirmer la réception des fonds sur Binance pour l'utilisateur " + userId + " ?");
+            
+            if (confirmation) {
+                try {
+                    // 1. Mettre à jour le log de paiement
+                    await updateDoc(doc(db, "payments_logs", logId), { 
+                        status: "Payé" 
+                    });
+
+                    // 2. Activer le badge orange sur le compte de l'utilisateur
+                    await updateDoc(doc(db, "users", userId), { 
+                        isVerified: true,
+                        verifiedUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // Valide 30 jours
+                    });
+
+                    alert("Succès ! L'utilisateur est maintenant certifié 🟠");
+                } catch (error) {
+                    console.error("Erreur de validation :", error);
+                    alert("Erreur lors de la validation.");
+                }
+            }
+        };
+    </script>
+</body>
+</html>
