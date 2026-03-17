@@ -3,199 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Profil</title>
+    <title>Floy - Mon Profil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #222; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow-x: hidden; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
 
-        /* HEADER NAV */
-        .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; position: sticky; top: 0; background: var(--noir); z-index: 100; border-bottom: 1px solid var(--bordure); }
-        .nav-icons { display: flex; gap: 20px; font-size: 20px; }
-        .fa-bars, .fa-share-nodes { cursor: pointer; }
-
-        /* MENU LATÉRAL (DRAWER) */
-        .side-menu { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--gris); z-index: 2000; transition: 0.3s; padding: 20px; box-sizing: border-box; border-left: 1px solid var(--bordure); }
-        .side-menu.open { right: 0; }
-        .menu-item { padding: 15px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; }
-
-        /* INFOS PROFIL */
-        .profile-info { padding: 20px; }
-        .profile-main { display: flex; align-items: center; gap: 20px; }
-        .avatar-wrapper { width: 85px; height: 85px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--orange), #ffcc00); }
-        #p-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: black; }
+        /* UI ELEMENTS */
+        .nav-header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid var(--bordure); }
+        .profile-card { padding: 20px; }
+        .avatar-box { display: flex; align-items: center; gap: 20px; }
+        #p-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; }
         
-        .stats { display: flex; flex-grow: 1; justify-content: space-around; text-align: center; }
-        .stat-num { font-weight: bold; font-size: 18px; display: block; }
-        .stat-label { font-size: 12px; color: #888; }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr 45px; gap: 10px; margin-top: 20px; }
+        .btn { background: var(--gris); border: 1px solid var(--bordure); color: white; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-orange { background: var(--orange); border: none; }
 
-        /* BOUTONS ACTIONS */
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr 45px; gap: 10px; padding: 0 20px; margin-top: 20px; }
-        .btn { border: none; border-radius: 10px; padding: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .btn-follow { background: var(--orange); color: white; }
-        .btn-follow.following { background: #333; color: white; } /* État quand on suit déjà */
-        .btn-msg, .btn-edit-icon { background: var(--gris); color: white; border: 1px solid var(--bordure); }
+        /* SIDE MENU */
+        #side-menu { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 3000; transition: 0.3s; padding: 20px; box-sizing: border-box; }
+        #side-menu.open { right: 0; }
+        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2500; }
 
-        /* GRILLE PHOTOS */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 30px; }
-        .grid-item { aspect-ratio: 1/1; background: #1a1a1a; overflow: hidden; }
-        .grid-item img { width: 100%; height: 100%; object-fit: cover; }
+        /* MODAL EDIT */
+        #modal-edit { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--noir); z-index: 4000; padding: 20px; box-sizing: border-box; }
+        input, textarea { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; }
 
-        /* MODAL ÉDITION COMPLET */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--noir); z-index: 3000; padding: 20px; box-sizing: border-box; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; color: #555; font-size: 12px; margin-bottom: 5px; }
-        input, textarea { width: 100%; background: #111; border: 1px solid var(--bordure); color: white; padding: 12px; border-radius: 10px; box-sizing: border-box; }
+        /* RE-USE BOTTOM NAV FROM INDEX */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--bordure); }
+        .bottom-nav svg { width: 26px; height: 26px; fill: #888; }
+        .active svg { fill: white !important; }
     </style>
 </head>
 <body>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div id="overlay" onclick="window.toggleMenu()"></div>
 
-    <div class="side-menu" id="side-menu">
-        <h3 style="color:var(--orange)">Options</h3>
-        <div class="menu-item"><i class="fas fa-cog"></i> Paramètres</div>
-        <div class="menu-item"><i class="fas fa-chart-line"></i> Statistiques</div>
-        <div class="menu-item" onclick="logout()" style="color:red"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
+    <div id="side-menu">
+        <h2 style="color:var(--orange)">Menu</h2>
+        <div style="padding: 15px 0; border-bottom: 1px solid #222;" onclick="window.logout()">Déconnexion 🚪</div>
     </div>
 
     <div class="nav-header">
-        <div style="font-weight:bold; font-size:18px;">@<span id="top-user">Chargement</span></div>
-        <div class="nav-icons">
-            <i class="fas fa-share-nodes" onclick="copyProfileLink()"></i>
-            <i class="fas fa-bars" onclick="toggleMenu()"></i>
+        <b id="top-username">@Username</b>
+        <div style="display:flex; gap:20px; font-size:20px">
+            <i class="fas fa-share-nodes" onclick="window.copyLink()"></i>
+            <i class="fas fa-bars" onclick="window.toggleMenu()"></i>
         </div>
     </div>
 
-    <div class="profile-info">
-        <div class="profile-main">
-            <div class="avatar-wrapper">
-                <img id="p-avatar" src="https://via.placeholder.com/150">
-            </div>
-            <div class="stats">
-                <div><span class="stat-num" id="nb-posts">0</span><span class="stat-label">Posts</span></div>
-                <div><span class="stat-num" id="nb-followers">0</span><span class="stat-label">Abonnés</span></div>
-                <div><span class="stat-num" id="nb-following">0</span><span class="stat-label">Suivis</span></div>
+    <div class="profile-card">
+        <div class="avatar-box">
+            <img id="p-avatar" src="https://via.placeholder.com/150">
+            <div style="display:flex; flex-grow:1; justify-content:space-around; text-align:center">
+                <div><b>12</b><br><small>Posts</small></div>
+                <div><b>450</b><br><small>Abonnés</small></div>
             </div>
         </div>
-        <div style="margin-top:15px;">
-            <b id="p-full-name">Nom de l'utilisateur</b>
-            <p id="p-bio" style="font-size:14px; margin:5px 0; color:#ccc;">Description...</p>
+        <p><b id="p-name">Chargement...</b><br><span id="p-bio" style="color:#888">Bio...</span></p>
+
+        <div class="action-grid">
+            <button class="btn btn-orange" id="btn-follow" onclick="window.handleFollow()">Suivre</button>
+            <button class="btn" onclick="location.href='messages.html'">Message</button>
+            <button class="btn" onclick="window.openEdit()"><i class="fas fa-pen"></i></button>
         </div>
     </div>
 
-    <div class="action-btns">
-        <button id="btn-follow" class="btn btn-follow" onclick="handleFollow()">Suivre</button>
-        <button class="btn btn-msg" onclick="window.location.href='messages.html'">Message</button>
-        <button class="btn btn-edit-icon" onclick="openEdit()"><i class="fas fa-pen"></i></button>
+    <div id="modal-edit">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px">
+            <span onclick="window.closeEdit()">Annuler</span>
+            <b>Modifier Profil</b>
+            <b onclick="window.saveChanges()" style="color:var(--orange)">OK</b>
+        </div>
+        <input type="text" id="in-name" placeholder="Nom">
+        <textarea id="in-bio" placeholder="Bio"></textarea>
     </div>
 
-    <div class="photo-grid" id="photo-grid"></div>
-
-    <div id="modal-edit" class="modal">
-        <div class="modal-header">
-            <span onclick="closeEdit()" style="cursor:pointer">Annuler</span>
-            <b style="font-size:18px;">Modifier le profil</b>
-            <span onclick="saveChanges()" style="color:var(--orange); font-weight:bold; cursor:pointer">Terminé</span>
-        </div>
-        <div style="text-align:center; margin-bottom:30px;">
-            <img id="edit-preview" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
-            <p style="color:var(--orange); font-size:14px; margin-top:10px;">Changer la photo de profil</p>
-        </div>
-        <div class="input-group">
-            <label>Nom d'affichage</label>
-            <input type="text" id="in-name">
-        </div>
-        <div class="input-group">
-            <label>Bio</label>
-            <textarea id="in-bio" rows="3"></textarea>
-        </div>
-        <nav class="bottom-nav">
-        <i class="fas fa-home active-nav"></i>
-        <i class="fas fa-search"></i>
-        <i class="fas fa-plus-square" onclick="window.location.href='add-post.html'"></i>
-        <i class="fas fa-message"></i>
-        <i class="fas fa-user" onclick="window.location.href='profil.html'"></i>
+    <nav class="bottom-nav">
+        <div onclick="location.href='index.html'"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+        <div><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+        <div style="fill:var(--orange)"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+        <div><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></div>
+        <div class="active"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
     </nav>
-</div>
 
     <script type="module">
         import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let myID = null;
-        let isFollowing = false;
+        let uid = null;
 
-        // 1. GESTION CONNEXION
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                myID = user.uid;
-                loadData();
-            } else { window.location.href = "login.html"; }
+            if (user) { uid = user.uid; load(); } else { location.href='login.html'; }
         });
 
-        // 2. CHARGEMENT DONNÉES
-        async function loadData() {
-            const userDoc = await getDoc(doc(db, "users", myID));
-            if (userDoc.exists()) {
-                const d = userDoc.data();
-                document.getElementById('top-user').innerText = d.username;
-                document.getElementById('p-full-name').innerText = d.username;
-                document.getElementById('p-bio').innerText = d.bio || "Pas de bio";
+        async function load() {
+            const snap = await getDoc(doc(db, "users", uid));
+            if(snap.exists()) {
+                const d = snap.data();
+                document.getElementById('top-username').innerText = "@" + d.username;
+                document.getElementById('p-name').innerText = d.username;
+                document.getElementById('p-bio').innerText = d.bio || "";
                 document.getElementById('p-avatar').src = d.avatarUrl || "https://via.placeholder.com/150";
-                document.getElementById('edit-preview').src = d.avatarUrl || "https://via.placeholder.com/150";
-                
-                // Pré-remplir le formulaire
                 document.getElementById('in-name').value = d.username;
                 document.getElementById('in-bio').value = d.bio || "";
             }
         }
 
-        // 3. MENU ET PARTAGE
+        // ATTACH TO WINDOW FOR HTML ONCLICK
         window.toggleMenu = () => {
-            const menu = document.getElementById('side-menu');
-            const overlay = document.getElementById('overlay');
-            menu.classList.toggle('open');
-            overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
+            document.getElementById('side-menu').classList.toggle('open');
+            document.getElementById('overlay').style.display = document.getElementById('side-menu').classList.contains('open') ? 'block' : 'none';
         };
-
-        window.copyProfileLink = () => {
-            const link = window.location.href;
-            navigator.clipboard.writeText(link).then(() => {
-                alert("Lien du profil copié !");
-            });
-        };
-
-        // 4. ÉDITION PROFIL
         window.openEdit = () => document.getElementById('modal-edit').style.display = "block";
         window.closeEdit = () => document.getElementById('modal-edit').style.display = "none";
-
+        window.copyLink = () => { navigator.clipboard.writeText(window.location.href); alert("Lien copié !"); };
+        window.handleFollow = () => { 
+            const b = document.getElementById('btn-follow'); 
+            b.innerText = b.innerText === "Suivre" ? "Suivi" : "Suivre";
+            b.classList.toggle('btn-orange');
+        };
+        window.logout = () => signOut(auth);
         window.saveChanges = async () => {
-            await updateDoc(doc(db, "users", myID), {
+            await updateDoc(doc(db, "users", uid), {
                 username: document.getElementById('in-name').value,
                 bio: document.getElementById('in-bio').value
             });
             location.reload();
         };
-
-        // 5. BOUTON SUIVRE (ACTIF PERMANENT)
-        window.handleFollow = () => {
-            const btn = document.getElementById('btn-follow');
-            isFollowing = !isFollowing; // Bascule l'état
-            
-            if (isFollowing) {
-                btn.innerText = "Suivi";
-                btn.classList.add('following');
-            } else {
-                btn.innerText = "Suivre";
-                btn.classList.remove('following');
-            }
-        };
-
-        window.logout = () => { if(confirm("Se déconnecter ?")) signOut(auth); };
     </script>
 </body>
 </html>
