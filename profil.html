@@ -112,7 +112,14 @@
             <label>Bio</label>
             <textarea id="in-bio" rows="3"></textarea>
         </div>
-    </div>
+        <nav class="bottom-nav">
+        <i class="fas fa-home active-nav"></i>
+        <i class="fas fa-search"></i>
+        <i class="fas fa-plus-square" onclick="window.location.href='add-post.html'"></i>
+        <i class="fas fa-message"></i>
+        <i class="fas fa-user" onclick="window.location.href='profil.html'"></i>
+    </nav>
+</div>
 
     <script type="module">
         import { auth, db } from './firebase-config.js';
