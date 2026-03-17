@@ -2,143 +2,112 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Nouveau Post</title>
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding: 20px; }
         
-        /* HEADER */
-        header { 
-            padding: 15px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--bordure); 
-            background: black;
-        }
-        .btn-annuler { color: white; text-decoration: none; font-size: 24px; }
-        .titre { font-weight: 800; letter-spacing: 1px; font-size: 14px; }
-        .btn-publier { color: var(--orange); background: none; border: none; font-weight: 800; font-size: 16px; cursor: pointer; }
-        .btn-publier:disabled { color: #555; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .cancel { color: white; text-decoration: none; }
+        #publish-btn { background: var(--orange); border: none; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        #publish-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ZONE D'UPLOAD */
-        .upload-container { width: 100%; aspect-ratio: 1/1; background: var(--gris); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
-        #img-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .placeholder-text { text-align: center; color: #555; }
-        .placeholder-text svg { margin-bottom: 10px; }
-
-        /* ZONE TEXTE */
-        .caption-area { padding: 15px; }
-        textarea { 
-            width: 100%; 
-            background: none; 
-            border: none; 
-            color: white; 
-            font-size: 16px; 
-            outline: none; 
-            resize: none; 
-            height: 100px; 
-            font-family: inherit;
-        }
+        .upload-container { background: var(--gris); border-radius: 15px; padding: 20px; text-align: center; border: 2px dashed var(--bordure); margin-bottom: 20px; }
+        #preview-img { width: 100%; border-radius: 10px; display: none; margin-bottom: 15px; }
         
-        #file-input { display: none; }
+        textarea { width: 100%; background: none; border: none; color: white; font-size: 16px; resize: none; outline: none; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="index.html" class="btn-annuler">×</a>
-        <div class="titre">NOUVEAU POST</div>
-        <button id="btn-send" class="btn-publier" onclick="publierTout()">Publier</button>
-    </header>
+    <div class="header">
+        <a href="index.html" class="cancel">Annuler</a>
+        <button id="publish-btn">Publier</button>
+    </div>
 
     <div class="upload-container" onclick="document.getElementById('file-input').click()">
-        <div id="prompt-box" class="placeholder-text">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-            <div>Appuyez pour ajouter une photo</div>
+        <img id="preview-img" src="" alt="Aperçu">
+        <div id="upload-text">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:10px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            <p>Cliquez pour ajouter une photo</p>
         </div>
-        <img id="img-preview">
     </div>
 
-    <input type="file" id="file-input" accept="image/*">
-
-    <div class="caption-area">
-        <textarea id="caption-box" placeholder="Écrire une légende..."></textarea>
-    </div>
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+    <textarea id="caption-box" placeholder="Écris une légende..."></textarea>
 
     <script type="module">
         import { db } from './firebase-config.js';
         import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CONFIGURATION CLOUDINARY
-        const CLOUD_NAME = "ds79k3f9g";
-        const UPLOAD_PRESET = "floy_preset"; 
-
         const fileInput = document.getElementById('file-input');
-        const imgPreview = document.getElementById('img-preview');
-        const promptBox = document.getElementById('prompt-box');
-        const btnSend = document.getElementById('btn-send');
+        const previewImg = document.getElementById('preview-img');
+        const uploadText = document.getElementById('upload-text');
+        const publishBtn = document.getElementById('publish-btn');
+        const captionBox = document.getElementById('caption-box');
 
-        // Prévisualisation de l'image
+        let selectedFile = null;
+
+        // 1. Gérer l'aperçu de l'image
         fileInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    imgPreview.src = event.target.result;
-                    imgPreview.style.display = 'block';
-                    promptBox.style.display = 'none';
+                    previewImg.src = event.target.result;
+                    previewImg.style.display = 'block';
+                    uploadText.style.display = 'none';
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(selectedFile);
             }
         };
 
-        // Fonction de publication
-        window.publierTout = async () => {
-            const file = fileInput.files[0];
-            if (!file) {
+        // 2. Publier le post
+        publishBtn.onclick = async () => {
+            if (!selectedFile) {
                 alert("Veuillez choisir une image d'abord !");
                 return;
             }
 
-            btnSend.disabled = true;
-            btnSend.innerText = "Envoi...";
+            publishBtn.innerText = "Envoi...";
+            publishBtn.disabled = true;
 
             try {
-                // 1. Envoyer à Cloudinary
+                // A. Upload vers Cloudinary
                 const formData = new FormData();
-                formData.append('file', file);
-                formData.append('upload_preset', UPLOAD_PRESET);
+                formData.append('file', selectedFile);
+                formData.append('upload_preset', 'floy_preset'); // Ton preset Cloudinary
 
-                const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                const cloudResponse = await fetch(`https://api.cloudinary.com/v1_1/ds79k3f9g/upload`, {
                     method: 'POST',
                     body: formData
                 });
 
-                const cloudData = await cloudRes.json();
+                if (!cloudResponse.ok) throw new Error("Échec de l'upload Cloudinary");
                 
-                if (!cloudRes.ok) throw new Error("Erreur Cloudinary : " + cloudData.error.message);
+                const cloudData = await cloudResponse.json();
+                const imageFinale = cloudData.secure_url;
 
-                const finalImageUrl = cloudData.secure_url;
-
-                // 2. Enregistrer dans Firebase
+                // B. Enregistrement dans Firebase
                 await addDoc(collection(db, "posts"), {
-                    imageUrl: finalImageUrl,
-                    caption: document.getElementById('caption-box').value,
-                    username: "User_Floy",
+                    imageUrl: imageFinale,
+                    caption: captionBox.value.trim(),
+                    username: "User_Floy", // Tu pourras changer ça plus tard avec le login
                     createdAt: serverTimestamp(),
                     likes: 0
                 });
 
-                // Succès !
-                window.location.href = "index.html";
+                console.log("Post publié avec succès !");
+                window.location.href = "index.html"; // Retour au flux
 
-            } catch (err) {
-                console.error(err);
-                alert("Erreur : " + err.message);
-                btnSend.disabled = false;
-                btnSend.innerText = "Publier";
+            } catch (error) {
+                console.error("Erreur :", error);
+                alert("Erreur lors de la publication : " + error.message);
+                
+                // On débloque le bouton pour permettre de réessayer
+                publishBtn.innerText = "Publier";
+                publishBtn.disabled = false;
             }
         };
     </script>
