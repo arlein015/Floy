@@ -46,24 +46,29 @@
     <div id="main-feed" style="margin-top: 65px;">
         </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="location.href='index.html'">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        </div>
-        <div class="nav-item" onclick="location.href='explore.html'">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        </div>
-        <div class="nav-item plus-btn" onclick="location.href='add-post.html'">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        </div>
+   <nav class="bottom-nav">
+    <div class="nav-item active" onclick="location.href='index.html'">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </div>
+
+    <div class="nav-item" onclick="location.href='explore.html'">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    </div>
+
+    <div class="nav-item plus-btn" onclick="location.href='add-post.html'">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </div>
+
+    <div class="nav-item" onclick="location.href='messages.html'">
         <svg viewBox="0 0 24 24">
-            <path d="M12 2C6.477 2 2 6.145 2 11.25c0 2.458 1.011 4.683 2.662 6.302-.152.923-.591 2.37-1.42 3.535a.5.5 0 0 0 .591.737c1.74-.633 3.587-1.042 4.904-1.127.848.354 1.77.553 2.737.553 5.523 0 10-4.145 10-9.25S17.523 2 12 2zm0 16.5c-.864 0-1.693-.162-2.45-.457a.5.5 0 0 0-.414.032c-1.282.63-2.73 1.036-3.957 1.258.423-.84.774-1.875.92-2.825a.5.5 0 0 0-.17-.456C4.43 14.808 3.5 13.116 3.5 11.25 3.5 7.032 7.288 3.5 12 3.5s8.5 3.532 8.5 7.75-3.788 7.75-8.5 7.75z"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98 1 4.28L2.01 22l5.72-1c1.3.64 2.74 1 4.27 1 5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.38 0-2.68-.35-3.82-1l-.27-.15-3.41.6 1.01-3.21-.17-.28C4.69 14.83 4 13.48 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
         </svg>
-        </div>
-        <div class="nav-item" onclick="location.href='profil.html'">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        </div>
-    </nav>
+    </div>
+
+    <div class="nav-item" onclick="location.href='profil.html'">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+</nav>
 
     <script type="module">
         import { auth, db } from './firebase-config.js';
