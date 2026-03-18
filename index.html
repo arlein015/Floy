@@ -3,28 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Fil d'actualité</title>
+    <title>Floy - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root { --orange: #FF7A1A; --rouge-insta: #ed4956; }
         body { background-color: #000; color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 70px; }
+        
+        /* Header */
         .top-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; position: sticky; top: 0; background: #000; border-bottom: 1px solid #121212; z-index: 100; }
-        .logo { font-size: 24px; font-weight: bold; font-style: italic; color: #FF7A1A; }
+        .logo { font-size: 24px; font-weight: bold; font-style: italic; color: var(--orange); }
+
+        /* Feed */
         #feed { max-width: 500px; margin: 0 auto; }
         .post-card { border-bottom: 1px solid #121212; margin-bottom: 10px; }
         .post-header { padding: 10px; display: flex; align-items: center; gap: 10px; }
         .user-avatar { width: 32px; height: 32px; background: #333; border-radius: 50%; }
         .post-img { width: 100%; display: block; background: #050505; }
         
-        /* Actions */
-        .post-actions { padding: 10px; display: flex; gap: 15px; font-size: 22px; }
-        .fa-heart.active {color: #ed4956 !important; /* Rouge Instagram */animation: heartBeat 0.3s ease-in-out;}
-        @keyframes heartBeat { 0% { transform: scale(1); }50% { transform: scale(1.2); } 100% { transform: scale(1); }}
-        .bottom-nav i:active { transform: scale(0.9);opacity: 0.7;}
+        /* Actions & Like */
+        .post-actions { padding: 12px; display: flex; gap: 18px; font-size: 22px; }
+        .fa-heart.active { color: var(--rouge-insta) !important; animation: beat 0.3s ease; }
+        @keyframes beat { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
 
-        .post-info { padding: 0 10px 15px 10px; line-height: 1.4; }
-        
-        /* Menu du bas */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #121212; display: flex; justify-content: space-around; align-items: center; font-size: 22px; }
+        .post-info { padding: 0 12px 15px 12px; }
+        .likes-count { font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #121212; display: flex; justify-content: space-around; align-items: center; font-size: 22px; z-index: 100; }
+        .bottom-nav i { cursor: pointer; transition: 0.2s; }
+        .bottom-nav i:active { transform: scale(0.8); color: var(--orange); }
     </style>
 </head>
 <body>
@@ -33,21 +40,21 @@
         <div class="logo">Floy</div>
         <div style="display: flex; gap: 20px; font-size: 20px;">
             <i class="far fa-heart"></i>
-            <i class="fab fa-facebook-messenger"></i>
+            <i class="fab fa-facebook-messenger" onclick="location.href='messages.html'"></i>
         </div>
     </nav>
 
     <div id="feed">
-        <p style="text-align: center; color: #555; margin-top: 50px;">Chargement...</p>
+        <p style="text-align: center; color: #555; margin-top: 50px;">Chargement du fil...</p>
     </div>
 
     <nav class="bottom-nav">
-    <i class="fas fa-home" onclick="location.href='index.html'"></i>
-    <i class="fas fa-search" onclick="alert('Recherche bientôt disponible')"></i>
-    <i class="far fa-plus-square" onclick="location.href='create.html'"></i>
-    <i class="fas fa-video" onclick="alert('Reels bientôt disponibles')"></i>
-    <i class="far fa-user-circle" onclick="location.href='profile.html'"></i>
-</nav>
+        <i class="fas fa-home" onclick="location.href='index.html'"></i>
+        <i class="fas fa-search" onclick="alert('Recherche bientôt disponible')"></i>
+        <i class="far fa-plus-square" onclick="location.href='create.html'"></i>
+        <i class="fas fa-video" onclick="alert('Reels bientôt disponible')"></i>
+        <i class="far fa-user-circle" onclick="location.href='profile.html'"></i>
+    </nav>
 
     <script type="module">
         import { db } from './firebase-config.js'; 
@@ -57,7 +64,7 @@
         const auth = getAuth();
         const feedContainer = document.getElementById('feed');
 
-        // Fonction pour gérer le Like
+        // FONCTION LIKE (Simple clic)
         window.toggleLike = async (postId, isLiked) => {
             const user = auth.currentUser;
             if (!user) return alert("Connectez-vous pour liker !");
@@ -67,18 +74,10 @@
                 await updateDoc(postRef, {
                     likes: isLiked ? arrayRemove(user.uid) : arrayUnion(user.uid)
                 });
-            } catch (e) { console.error("Erreur Like:", e); }
+            } catch (e) { console.error(e); }
         };
 
-        // Fonction pour ouvrir les commentaires (simulation simple pour l'instant)
-        window.openComments = (postId) => {
-            const comment = prompt("Ajouter un commentaire :");
-            if (comment) {
-                alert("Commentaire envoyé : " + comment);
-                // On pourra ajouter la logique Firebase ici après
-            }
-        };
-
+        // ÉCOUTE DES POSTS
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
@@ -86,36 +85,37 @@
             feedContainer.innerHTML = ""; 
 
             snapshot.forEach((snapshotDoc) => {
-               // Dans ta boucle snapshot.forEach((snapshotDoc) => { ... })
                 const post = snapshotDoc.data();
                 const postId = snapshotDoc.id;
                 const user = auth.currentUser;
-
-                // On vérifie si l'utilisateur a liké
-                const isLiked = user && post.likes && post.likes.includes(user.uid);
-
-                // Choix de la classe : 'fas active' (plein rouge) ou 'far' (vide blanc)
+                
+                // Calcul du Like
+                const likesArray = post.likes || [];
+                const isLiked = user && likesArray.includes(user.uid);
                 const likeClass = isLiked ? "fas fa-heart active" : "far fa-heart";
 
                 const postHTML = `
                     <div class="post-card">
-                    <img src="${post.imageUrl}" class="post-img">
-        
-                    <div class="post-actions">
-                    <i class="${likeClass}" onclick="toggleLike('${postId}', ${isLiked})"></i>
-                    <i class="far fa-comment"></i>
-                    <i class="far fa-paper-plane"></i>
-                </div>
-            </div>
-    `;
+                        <div class="post-header">
+                            <div class="user-avatar"></div>
+                            <b>${post.username || "Utilisateur"}</b>
+                        </div>
+                        
+                        <img src="${post.imageUrl}" class="post-img" ondblclick="toggleLike('${postId}', ${isLiked})">
+                        
+                        <div class="post-actions">
+                            <i class="${likeClass}" onclick="toggleLike('${postId}', ${isLiked})"></i>
+                            <i class="far fa-comment" onclick="location.href='comments.html?id=${postId}'"></i>
+                            <i class="far fa-paper-plane" onclick="location.href='messages.html'"></i>
+                        </div>
                         
                         <div class="post-info">
-                            <div style="font-weight:bold; margin-bottom:5px;">${(post.likes ? post.likes.length : 0)} J'aime</div>
+                            <div class="likes-count">${likesArray.length} J'aime</div>
                             <b>${post.username || "Utilisateur"}</b> ${post.caption || ""}
                         </div>
                     </div>
                 `;
-                feedContainer.innerHTML += postElement;
+                feedContainer.innerHTML += postHTML;
             });
         });
     </script>
