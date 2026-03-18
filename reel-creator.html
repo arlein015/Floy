@@ -3,143 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Créer Reel</title>
+    <title>Floy - Créer un Reel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --bordure: #222;}
+        :root { --orange: #FF7A1A; --noir: #000; }
         body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; height: 100vh; }
 
-        /* HEADER */
-        .header-reel { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; box-sizing: border-box; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
-        .btn-post { background: var(--orange); color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; display: none; font-size: 14px;}
+        .header-reel { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; z-index: 100; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); }
+        .btn-share { background: var(--orange); color: white; border: none; padding: 8px 18px; border-radius: 20px; font-weight: bold; display: none; cursor: pointer;}
 
-        /* PREVIEW AREA (9:16 Vertical) */
-        .reel-preview-container { width: 100vw; height: 100vh; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;}
-        #preview-video { width: 100%; height: 100%; object-fit: cover; display: none; }
-        
-        .upload-placeholder { text-align: center; color: #888; z-index: 10; cursor: pointer; }
-        .upload-placeholder i { font-size: 50px; color: var(--orange); margin-bottom: 15px; }
+        .video-container { width: 100vw; height: 100vh; background: #050505; display: flex; align-items: center; justify-content: center; }
+        #preview-vid { width: 100%; height: 100%; object-fit: cover; display: none; }
 
-        /* FOOTER (Légende) */
-        .footer-reel { position: fixed; bottom: 0; width: 100%; padding: 25px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); z-index: 100; display: none; box-sizing: border-box;}
-        textarea { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid #444; color: white; padding: 15px; border-radius: 12px; resize: none; outline: none; font-family: inherit; font-size: 15px;}
+        .footer-reel { position: fixed; bottom: 80px; width: 100%; padding: 20px; z-index: 100; display: none; }
+        textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; padding: 12px; border-radius: 10px; resize: none; }
 
-        /* LOADER */
-        .loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 35px; height: 35px; border: 3px solid #333; border-top: 3px solid var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* BOTTOM NAV AVEC BRILLANCE */
+        .creation-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 1000;}
+        .nav-create-item { font-size: 12px; font-weight: bold; color: #555; text-transform: uppercase; cursor: pointer; opacity: 0.5; }
+        .nav-create-item.active { color: #ffffff; opacity: 1; text-shadow: 0 0 10px white; }
     </style>
 </head>
 <body>
 
-    <div class="loader" id="loader">
-        <div class="spinner"></div>
-        <p style="margin-top:20px; font-size:15px;" id="loader-text">Mise en ligne du Reel...</p>
-    </div>
-
     <div class="header-reel">
-        <i class="fas fa-arrow-left" onclick="location.href='create.html'" style="font-size: 20px; cursor: pointer;"></i>
-        <b style="font-size: 16px;">Nouveau Reel</b>
-        <button class="btn-post" id="btn-post" onclick="window.uploadReelReal()">Partager</button>
+        <i class="fas fa-times" onclick="location.href='index.html'"></i>
+        <b>Nouveau Reel</b>
+        <button class="btn-share" id="btn-share" onclick="window.uploadReel()">Partager</button>
     </div>
 
-    <div class="reel-preview-container" onclick="document.getElementById('file-in-reel').click()">
-        <div class="upload-placeholder" id="placeholder">
-            <i class="fas fa-video"></i>
-            <p style="font-weight:bold; margin-top:10px;">Sélectionner une vidéo</p>
-            <small style="opacity:0.6;">Format vertical (9:16) recommandé</small>
-        </div>
-        <video id="preview-video" loop muted playsinline></video>
+    <div class="video-container" onclick="document.getElementById('file-reel').click()">
+        <div id="placeholder" style="text-align:center"><i class="fas fa-video" style="font-size:50px; color:var(--orange)"></i><p>Choisir une vidéo</p></div>
+        <video id="preview-vid" loop muted playsinline></video>
     </div>
 
-    <div class="footer-reel" id="footer-reel">
-        <textarea id="caption" rows="3" placeholder="Écris une description accrocheuse pour ton Reel Floy..."></textarea>
+    <div class="footer-reel" id="caption-box">
+        <textarea id="caption" placeholder="Légende du reel..."></textarea>
     </div>
 
-    <input type="file" id="file-in-reel" accept="video/*" style="display: none;" onchange="window.handleReelPreviewReal()">
+    <input type="file" id="file-reel" accept="video/*" style="display:none" onchange="window.previewReel()">
 
-    <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <nav class="creation-nav">
+        <div class="nav-create-item" onclick="location.href='create.html'">Publier</div>
+        <div class="nav-create-item" onclick="location.href='story-creator.html'">Story</div>
+        <div class="nav-create-item active">Reel</div>
+    </nav>
 
-        // CONFIGURATION CLOUDINARY (🔥 REMPLACE ICI)
-        const CLOUD_NAME = "TON_CLOUD_NAME";
-        const UPLOAD_PRESET = "floy_unsigned"; // Ton preset non signé
-
-        let currentUser = null;
-        let videoFile = null;
-
-        // 🛡️ Authentification
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                currentUser = { uid: user.uid, ...userDoc.data() };
-            } else { location.href = "login.html"; }
-        });
-
-        // 🖼️ Prévisualisation Vidéo Réelle
-        window.handleReelPreviewReal = () => {
-    const file = document.getElementById('file-in-reel').files[0];
-    if (file) {
-        videoFile = file;
-        const url = URL.createObjectURL(file);
-        const video = document.getElementById('preview-video');
-        
-        video.src = url;
-        video.style.display = 'block';
-        
-        // Force l'affichage des éléments UI
-        document.getElementById('placeholder').style.display = 'none';
-        document.getElementById('btn-post').style.display = 'block'; // Le bouton de partage
-        document.getElementById('footer-reel').style.display = 'block'; // La zone de texte
-        
-        video.play();
-    }
-};
-
-        // ☁️ Publication Vidéo Réelle (Cloudinary Vidéo + Firebase)
-        window.uploadReelReal = async () => {
-            if (!videoFile || !currentUser) return;
-            
-            const loader = document.getElementById('loader');
-            const loaderText = document.getElementById('loader-text');
-            loader.style.display = 'flex';
-            loaderText.innerText = "Upload de la vidéo (cela peut prendre du temps)...";
-
-            try {
-                // 1. Upload vers Cloudinary (Spécifique VIDÉO)
-                const formData = new FormData();
-                formData.append('file', videoFile);
-                formData.append('upload_preset', UPLOAD_PRESET);
-
-                // 🔥 L'URL Cloudinary change pour les vidéos
-                const cloudinaryVideoUrl = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`;
-
-                const res = await fetch(cloudinaryVideoUrl, { method: 'POST', body: formData });
-                const cloudData = await res.json();
-                
-                if (!cloudData.secure_url) throw new Error("Upload vidéo échoué.");
-
-                // 2. Enregistrement dans Firebase (Collection 'reels')
-                loaderText.innerText = "Enregistrement de ton Reel...";
-                
-                await addDoc(collection(db, "reels"), {
-                    userId: currentUser.uid,
-                    username: currentUser.username,
-                    userAvatar: currentUser.avatarUrl || "",
-                    isVerified: currentUser.isVerified || false, // Ton badge orange
-                    videoUrl: cloudData.secure_url,
-                    caption: document.getElementById('caption').value,
-                    likes: [], // Tableau pour stocker les UIDs qui aiment
-                    views: 0, // Compteur de vues
-                    createdAt: serverTimestamp()
-                });
-
-                location.href = "index.html"; // Retour ou vers une page Reels dédiée
-            } catch (error) {
-                alert("Erreur lors de la publication du Reel : " + error.message);
-                loader.style.display = 'none';
+    <script>
+        window.previewReel = () => {
+            const file = document.getElementById('file-reel').files[0];
+            if(file) {
+                const vid = document.getElementById('preview-vid');
+                vid.src = URL.createObjectURL(file);
+                vid.style.display = 'block';
+                document.getElementById('placeholder').style.display = 'none';
+                document.getElementById('btn-share').style.display = 'block';
+                document.getElementById('caption-box').style.display = 'block';
+                vid.play();
             }
         };
     </script>
