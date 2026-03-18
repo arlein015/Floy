@@ -17,3 +17,15 @@ const app = initializeApp(firebaseConfig);
 
 // Export de la base de données pour l'utiliser ailleurs
 export const db = getFirestore(app);
+// firebase-config.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; // 🔥 OBLIGATOIRE
+
+const firebaseConfig = {
+    // COPIE TES INFOS FIREBASE ICI
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app); // 🔥 Exporte la base de données
