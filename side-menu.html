@@ -112,9 +112,18 @@
         </a>
     </div>
 
+    <i class="fas fa-bars" onclick="location.href='side-menu.html'"></i>
     <script type="module">
-        import { db } from './firebase-config.js';
-        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+       import { auth } from './firebase-config.js';
+       import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        window.logout = () => {
+        signOut(auth).then(() => {
+        location.href = 'login.html'; // Retour à la case départ
+        }).catch((error) => {
+        console.error("Erreur de déconnexion", error);
+        });
+    };
 
         const USER_KEY = "User_Floy_Account";
 
