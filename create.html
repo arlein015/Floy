@@ -81,6 +81,9 @@
         const CLOUD_NAME = "ds79k3f9g"; // Ton Cloud Name
         const UPLOAD_PRESET = "floy_unsigned"; // Ton preset (assure-toi qu'il est "Unsigned")
         let selectedFile = null;
+        window.publishNow = async () => {
+        if (!selectedFile) return;
+        document.getElementById('loader').style.display = "flex";
 
         // 1. Affichage de la photo
         window.handleFile = (e) => {
@@ -111,18 +114,39 @@
             document.getElementById('loader').style.display = "flex";
 
             try {
-                // A. Envoi à Cloudinary
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-                formData.append('upload_preset', UPLOAD_PRESET);
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('upload_preset', UPLOAD_PRESET);
 
-                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
+            // Envoi à Cloudinary
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+            method: 'POST',
+            body: formData
+            });
+        
+            const data = await res.json();
+
+            if (data.secure_url) {
+            // Enregistrement dans Firestore
+            const user = auth.currentUser;
+            await addDoc(collection(db, "posts"), {
+                username: user.displayName || "Anonyme",
+                imageUrl: data.secure_url,
+                caption: document.getElementById('caption').value,
+                createdAt: serverTimestamp()
+            });
 
                 if (!data.secure_url) throw new Error("Erreur stockage image");
+
+               ocation.href = 'index.html';
+        } else {
+            throw new Error("Erreur Cloudinary : " + data.error.message);
+        }
+    } catch (error) {
+        alert(error.message);
+        document.getElementById('loader').style.display = "none";
+    }
+}; 
 
                 // B. Récupérer l'utilisateur
                 const user = auth.currentUser;
