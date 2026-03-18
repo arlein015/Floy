@@ -2,128 +2,33 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Fil d'actualité</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --bordure: #262626; --gris: #8e8e8e; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
-
-        /* TOP BAR */
-        .header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 15px; position: sticky; top: 0; background: black; z-index: 1000;
-            border-bottom: 1px solid var(--bordure);
-        }
-        .logo { font-size: 24px; font-weight: bold; color: var(--orange); letter-spacing: -1px; }
-        .header-icons { display: flex; gap: 18px; }
-
-        /* POST STYLES */
-        .feed { max-width: 500px; margin: 0 auto; }
-        .post { border-bottom: 1px solid var(--bordure); padding-bottom: 15px; margin-bottom: 10px; }
-        
-        .post-header { display: flex; align-items: center; padding: 12px; gap: 10px; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--orange); object-fit: cover; }
-        .user-name { font-weight: bold; font-size: 14px; cursor: pointer; }
-
-        .post-img-container { width: 100%; aspect-ratio: 1/1; background: #111; }
-        .post-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .post-actions { display: flex; gap: 15px; padding: 12px; }
-        .action-btn { background: none; border: none; color: white; cursor: pointer; padding: 0; }
-        .action-btn svg { width: 26px; height: 26px; }
-        .btn-like.active svg { fill: var(--orange); stroke: var(--orange); }
-
-        .post-info { padding: 0 12px; }
-        .likes-count { font-weight: bold; font-size: 14px; margin-bottom: 5px; display: block; }
-        .post-caption { font-size: 14px; line-height: 1.4; }
-        .post-caption b { margin-right: 5px; }
-        .post-time { color: var(--gris); font-size: 10px; margin-top: 5px; text-transform: uppercase; }
-
-        /* NAV BAR BAS */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-link { color: white; opacity: 0.6; text-decoration: none; }
-        .nav-link.active { opacity: 1; color: var(--orange); }
+        .glass-effect { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .badge-glow { box-shadow: 0 0 10px #3b82f6; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 pb-20">
 
-    <header class="header">
-        <div class="logo">Floy</div>
-        <div class="header-icons">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-            <a href="messages.html" style="color: white;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
-        </div>
-    </header>
-
-    <main class="feed" id="main-feed">
-        </main>
-
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-link active"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a>
-        <a href="explore.html" class="nav-link"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></a>
-        <a href="post.html" class="nav-link"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></a>
-        <a href="messages.html" class="nav-link"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
-        <a href="profil.html" class="nav-link"><img id="nav-avatar" src="https://via.placeholder.com/30" style="width:26px; height:26px; border-radius:50%; object-fit:cover;"></a>
-    </nav>
-
-    <script type="module">
-        import { db } from './firebase-config.js';
-        import { collection, query, orderBy, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const feedContainer = document.getElementById('main-feed');
-
-        // 1. Écouter les posts en temps réel
-        const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+    <div class="max-w-md mx-auto bg-white mb-4 shadow-sm border-b md:rounded-xl md:mt-4 overflow-hidden">
         
-        onSnapshot(q, (snapshot) => {
-            feedContainer.innerHTML = "";
-            snapshot.forEach(async (postDoc) => {
-                const post = postDoc.data();
-                const postId = postDoc.id;
-                
-                // Créer l'élément post
-                const postElement = document.createElement('article');
-                postElement.className = 'post';
-                
-                // Récupérer les infos de l'auteur
-                const userSnap = await getDoc(doc(db, "users", post.userId));
-                const userData = userSnap.exists() ? userSnap.data() : { username: "Utilisateur", avatarUrl: "https://via.placeholder.com/30" };
+        <div class="flex items-center justify-between p-3">
+            <div class="flex items-center space-x-3">
+                <img src="https://via.placeholder.com/150" class="w-10 h-10 rounded-full border-2 border-blue-500" alt="Avatar">
+                <div>
+                    <div class="flex items-center">
+                        <span class="font-bold text-sm">NomUtilisateur</span>
+                        <span class="ml-1 text-blue-500 badge-glow rounded-full bg-blue-100 p-0.5 text-[10px]">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                    </div>
+                    <p class="text-gray-500 text-xs">Il y a 2h</p>
+                </div>
+            </div>
+            <button class="text-gray-400"><i class="fas fa-ellipsis-h"></i></button>
+        </div>
 
-                postElement.innerHTML = `
-                    <div class="post-header">
-                        <img src="${userData.avatarUrl}" class="user-avatar">
-                        <span class="user-name">${userData.username}</span>
-                    </div>
-                    <div class="post-img-container">
-                        <img src="${post.images[0]}" class="post-img" loading="lazy">
-                    </div>
-                    <div class="post-actions">
-                        <button class="action-btn btn-like">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                        </button>
-                        <button class="action-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                        </button>
-                        <button class="action-btn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        </button>
-                    </div>
-                    <div class="post-info">
-                        <span class="likes-count">${post.likesCount || 0} J'aime</span>
-                        <div class="post-caption"><b>${userData.username}</b>${post.caption || ""}</div>
-                        <div class="post-time">Il y a quelques instants</div>
-                    </div>
-                `;
-                feedContainer.appendChild(postElement);
-            });
-        });
-
-        // Charger l'avatar de la nav bar
-        // (À remplacer par auth.currentUser.uid plus tard)
-        const MY_ID = "User_Floy_Account";
-        onSnapshot(doc(db, "users", MY_ID), (s) => {
-            if(s.exists()) document.getElementById('nav-avatar').src = s.data().avatarUrl;
-        });
-    </script>
-</body>
-</html>
+        <div class="relative bg-black flex items-center justify-center min-h-[300px]">
+            <img src="https://via.placeholder.com/600x800" class="w-full object-contain" alt="Post Content">
