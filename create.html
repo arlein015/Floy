@@ -2,172 +2,97 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Créer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bleu: #0095f6; --noir: #000; --gris: #121212; --orange: #FF7A1A; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; height: 100vh; }
-        
-        .header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; position: fixed; top: 0; width: 100%; z-index: 10; background: var(--noir); box-sizing: border-box; }
-        .btn-action { color: var(--bleu); background: none; border: none; font-weight: bold; font-size: 16px; cursor: pointer; display: none; }
-
-        /* VUE 1 : GALERIE */
-        #gallery-view { margin-top: 60px; display: flex; flex-direction: column; height: calc(100vh - 130px); }
-        .main-preview { width: 100%; aspect-ratio: 1/1; background: #050505; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; }
+        body { background: #000; color: white; font-family: sans-serif; margin: 0; }
+        .header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; position: sticky; top: 0; background: #000; }
+        .main-preview { width: 100%; aspect-ratio: 1/1; background: #050505; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; flex-grow: 1; background: #000; overflow-y: auto; }
-        .grid-item { aspect-ratio: 1/1; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
-
-        /* VUE 2 : CONFIGURATION */
-        #config-view { display: none; margin-top: 80px; padding: 20px; }
-        .config-row { display: flex; gap: 15px; }
-        .mini-img { width: 60px; height: 60px; border-radius: 4px; object-fit: cover; }
-        textarea { flex: 1; background: none; border: none; color: white; outline: none; font-size: 16px; resize: none; }
-
-        /* NAV BAS */
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; gap: 30px; background: var(--noir); border-top: 1px solid #222; }
-        .nav-item { font-size: 12px; font-weight: bold; color: #555; transition: 0.3s; }
-        .nav-item.active { color: #fff; text-shadow: 0 0 8px #fff; }
-
-        /* LOADER */
-        .loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top: 3px solid var(--orange); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        #config-view { display: none; padding: 20px; }
+        .mini { width: 60px; height: 60px; border-radius: 5px; object-fit: cover; }
+        .loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
-    <div id="loader" class="loader"><div class="spinner"></div><p>Partage en cours...</p></div>
-
-    <div class="header">
-        <i class="fas fa-times" onclick="location.href='index.html'"></i>
-        <b id="title">Nouvelle publication</b>
-        <button id="btn-next" class="btn-action" onclick="goToConfig()">Suivant</button>
-        <button id="btn-share" class="btn-action" onclick="publishNow()">Partager</button>
-    </div>
+    <div id="loader" class="loader"><p>Publication en cours...</p></div>
 
     <div id="gallery-view">
+        <div class="header">
+            <i class="fas fa-times" onclick="location.href='index.html'"></i>
+            <b>Nouvelle publication</b>
+            <button id="btn-next" style="color:#0095f6; background:none; border:none; font-weight:bold; display:none;" onclick="showConfig()">Suivant</button>
+        </div>
         <div class="main-preview" onclick="document.getElementById('file-input').click()">
             <i id="cam-icon" class="fas fa-camera" style="font-size: 40px; color: #333;"></i>
             <img id="preview-img">
         </div>
-        <div style="padding:15px; font-weight:bold;">Récent <i class="fas fa-chevron-down"></i></div>
-        <div class="grid">
-            <div class="grid-item" onclick="document.getElementById('file-input').click()"><i class="fas fa-plus"></i></div>
-            <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
-        </div>
     </div>
 
     <div id="config-view">
-        <div class="config-row">
-            <img id="mini-preview" class="mini-img">
-            <textarea id="caption" placeholder="Écrire une légende..."></textarea>
+        <div class="header">
+            <i class="fas fa-arrow-left" onclick="location.reload()"></i>
+            <b>Légende</b>
+            <button style="color:#0095f6; background:none; border:none; font-weight:bold;" onclick="publishNow()">Partager</button>
+        </div>
+        <div style="display:flex; gap:15px; margin-top:20px;">
+            <img id="mini-img" class="mini">
+            <textarea id="caption" placeholder="Écrire une légende..." style="background:none; border:none; color:white; flex:1; outline:none;"></textarea>
         </div>
     </div>
 
-    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(event)">
-
-    <nav class="nav-bottom" id="nav-bottom">
-        <div class="nav-item active">PUBLIER</div>
-        <div class="nav-item">STORY</div>
-        <div class="nav-item">REEL</div>
-    </nav>
+    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleImage(event)">
 
     <script type="module">
         import { auth, db } from './firebase-config.js';
-        import { collection, addDoc, serverTimestamp, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const CLOUD_NAME = "ds79k3f9g"; // Ton Cloud Name
-        const UPLOAD_PRESET = "floy_unsigned"; // Ton preset (assure-toi qu'il est "Unsigned")
+        const CLOUD_NAME = "ds79k3f9g"; //
+        const UPLOAD_PRESET = "floy_preset"; //
         let selectedFile = null;
-        window.publishNow = async () => {
-        if (!selectedFile) return;
-        document.getElementById('loader').style.display = "flex";
 
-        // 1. Affichage de la photo
-        window.handleFile = (e) => {
-            const file = e.target.files[0];
+        window.handleImage = (event) => {
+            const file = event.target.files[0];
             if (file) {
                 selectedFile = file;
-                const url = URL.createObjectURL(file);
-                document.getElementById('preview-img').src = url;
+                document.getElementById('preview-img').src = URL.createObjectURL(file);
                 document.getElementById('preview-img').style.display = "block";
                 document.getElementById('cam-icon').style.display = "none";
                 document.getElementById('btn-next').style.display = "block";
             }
         };
 
-        // 2. Passage à la légende
-        window.goToConfig = () => {
+        window.showConfig = () => {
             document.getElementById('gallery-view').style.display = "none";
-            document.getElementById('nav-bottom').style.display = "none";
             document.getElementById('config-view').style.display = "block";
-            document.getElementById('btn-next').style.display = "none";
-            document.getElementById('btn-share').style.display = "block";
-            document.getElementById('mini-preview').src = document.getElementById('preview-img').src;
+            document.getElementById('mini-img').src = document.getElementById('preview-img').src;
         };
 
-        // 3. PUBLICATION RÉELLE
         window.publishNow = async () => {
-            if (!selectedFile) return;
             document.getElementById('loader').style.display = "flex";
-
             try {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('upload_preset', UPLOAD_PRESET);
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('upload_preset', UPLOAD_PRESET);
 
-            // Envoi à Cloudinary
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-            method: 'POST',
-            body: formData
-            });
-        
-            const data = await res.json();
-
-            if (data.secure_url) {
-            // Enregistrement dans Firestore
-            const user = auth.currentUser;
-            await addDoc(collection(db, "posts"), {
-                username: user.displayName || "Anonyme",
-                imageUrl: data.secure_url,
-                caption: document.getElementById('caption').value,
-                createdAt: serverTimestamp()
-            });
-
-                if (!data.secure_url) throw new Error("Erreur stockage image");
-
-               ocation.href = 'index.html';
-        } else {
-            throw new Error("Erreur Cloudinary : " + data.error.message);
-        }
-    } catch (error) {
-        alert(error.message);
-        document.getElementById('loader').style.display = "none";
-    }
-}; 
-
-                // B. Récupérer l'utilisateur
-                const user = auth.currentUser;
-                const snap = await getDoc(doc(db, "users", user.uid));
-                const userData = snap.data();
-
-                // C. Enregistrer dans Firebase
-                await addDoc(collection(db, "posts"), {
-                    userId: user.uid,
-                    username: userData.username,
-                    userAvatar: userData.avatarUrl || "",
-                    imageUrl: data.secure_url,
-                    caption: document.getElementById('caption').value,
-                    likes: [],
-                    createdAt: serverTimestamp()
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                    method: 'POST', body: formData
                 });
+                const data = await res.json();
 
-                location.href = 'index.html'; // Succès !
-
-            } catch (error) {
-                alert("Erreur : " + error.message);
+                if (data.secure_url) {
+                    await addDoc(collection(db, "posts"), {
+                        username: auth.currentUser?.displayName || "Utilisateur",
+                        imageUrl: data.secure_url,
+                        caption: document.getElementById('caption').value,
+                        createdAt: serverTimestamp()
+                    });
+                    location.href = 'index.html';
+                }
+            } catch (e) {
+                alert("Erreur : " + e.message);
                 document.getElementById('loader').style.display = "none";
             }
         };
