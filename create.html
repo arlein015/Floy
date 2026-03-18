@@ -11,7 +11,7 @@
 
         /* HEADER */
         .header { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: var(--noir); z-index: 1000; box-sizing: border-box; }
-        .btn-next { color: var(--bleu-insta); font-weight: bold; background: none; border: none; font-size: 16px; cursor: pointer; display: none; }
+        .btn-next {color: #0095f6; /* Bleu officiel */font-weight: bold; font-size: 16px;background: none; border: none;}
         .btn-share { color: var(--bleu-insta); font-weight: bold; background: none; border: none; font-size: 16px; cursor: pointer; display: none; }
 
         /* ZONE D'AFFICHAGE PRINCIPALE */
@@ -57,11 +57,12 @@
             <img id="preview-img">
         </div>
         
-        <div style="padding: 12px; font-weight: bold; font-size: 15px; background: #000; display:flex; justify-content:space-between;">
-            <span>Récent <i class="fas fa-chevron-down" style="font-size: 12px; margin-left: 5px;"></i></span>
-            <span style="color: var(--bleu-insta); font-size: 13px;">SÉLECTIONNER <i class="far fa-copy"></i></span>
-        </div>
-
+       <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #000;">
+        <span style="font-weight: bold;">Récent <i class="fas fa-chevron-down"></i></span>
+        <button style="background: #262626; color: white; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+            SÉLECTIONNER <i class="far fa-copy"></i>
+        </button>
+    </div>
         <div class="gallery-grid">
             <div class="grid-item" onclick="document.getElementById('file-input').click()"><i class="fas fa-plus"></i></div>
             <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
