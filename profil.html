@@ -3,45 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - Floy</title>
+    <title>Mon Profil - Floy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #000; color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 70px; }
-        .header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #121212; }
         
-        /* Infos Profil */
-        .profile-info { padding: 20px 15px; display: flex; align-items: center; gap: 30px; }
-        .avatar { width: 80px; height: 80px; border-radius: 50%; background: #222; object-fit: cover; }
-        .stats { display: flex; gap: 20px; flex: 1; justify-content: space-around; text-align: center; }
-        .stat-val { font-weight: bold; display: block; font-size: 18px; }
+        /* Header */
+        .profile-header { padding: 20px 15px; border-bottom: 1px solid #121212; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: bold; font-size: 18px; }
+        
+        /* Stats Section */
+        .user-stats-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .profile-pic { width: 77px; height: 77px; border-radius: 50%; background: #222; object-fit: cover; border: 2px solid #1a1a1a; }
+        .stats-container { display: flex; flex: 1; justify-content: space-around; text-align: center; }
+        .stat-val { font-weight: bold; font-size: 16px; display: block; }
         .stat-label { font-size: 12px; color: #888; }
 
-        /* Grille de photos */
-        .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 10px; }
-        .grid-item { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #111; }
+        /* Bio & Action */
+        .profile-bio { padding: 15px; font-size: 14px; }
+        .btn-edit { width: 100%; background: #1a1a1a; border: none; color: white; padding: 7px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+
+        /* Grid */
+        .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 20px; }
+        .grid-item { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #050505; }
 
         /* Nav Bar */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #121212; display: flex; justify-content: space-around; align-items: center; font-size: 22px; }
-        .active { color: #FF7A1A; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #121212; display: flex; justify-content: space-around; align-items: center; font-size: 22px; z-index: 100; }
+        .active-icon { color: #FF7A1A; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <b id="username-top">Profil</b>
-        <i class="fas fa-bars"></i>
-    </div>
+    <div class="profile-header">
+        <div class="top-bar">
+            <span id="user-title">Chargement...</span>
+            <i class="fas fa-plus-square" onclick="location.href='create.html'"></i>
+        </div>
 
-    <div class="profile-info">
-        <img id="profile-pic" class="avatar" src="https://via.placeholder.com/80">
-        <div class="stats">
-            <div><span class="stat-val" id="count-posts">0</span><span class="stat-label">Posts</span></div>
-            <div><span class="stat-val">0</span><span class="stat-label">Abonnés</span></div>
-            <div><span class="stat-val">0</span><span class="stat-label">Suivis</span></div>
+        <div class="user-stats-row">
+            <img id="profile-img" class="profile-pic" src="https://via.placeholder.com/80">
+            <div class="stats-container">
+                <div><span class="stat-val" id="posts-count">0</span><span class="stat-label">Posts</span></div>
+                <div><span class="stat-val">0</span><span class="stat-label">Abonnés</span></div>
+                <div><span class="stat-val">0</span><span class="stat-label">Suivis</span></div>
+            </div>
+        </div>
+        
+        <div class="profile-bio">
+            <b id="full-name-display">Utilisateur Floy</b>
+            <button class="btn-edit">Modifier le profil</button>
         </div>
     </div>
 
-    <div id="grid" class="posts-grid">
+    <div class="posts-grid" id="grid-container">
         </div>
 
     <nav class="bottom-nav">
@@ -49,37 +63,44 @@
         <i class="fas fa-search"></i>
         <i class="far fa-plus-square" onclick="location.href='create.html'"></i>
         <i class="fas fa-video"></i>
-        <i class="fas fa-user-circle active"></i>
+        <i class="fas fa-user-circle active-icon"></i>
     </nav>
 
     <script type="module">
-        // Import unique pour éviter l'erreur de double déclaration
+        // Importation depuis ton fichier de config unique pour éviter l'erreur de double déclaration
         import { auth, db } from './firebase-config.js';
         import { collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                document.getElementById('username-top').innerText = user.displayName || "Mon Profil";
+                // Mise à jour du nom en haut
+                document.getElementById('user-title').innerText = user.displayName || "Mon Profil";
                 
-                // On récupère tes posts uniquement
-                const q = query(
+                // On va chercher uniquement les posts créés par cet utilisateur (filtrage par userId)
+                const postsQuery = query(
                     collection(db, "posts"), 
                     where("userId", "==", user.uid), 
                     orderBy("createdAt", "desc")
                 );
 
-                const snapshot = await getDocs(q);
-                const grid = document.getElementById('grid');
-                grid.innerHTML = "";
-                document.getElementById('count-posts').innerText = snapshot.size;
+                try {
+                    const snapshot = await getDocs(postsQuery);
+                    const grid = document.getElementById('grid-container');
+                    grid.innerHTML = ""; // On vide la grille avant d'ajouter
+                    
+                    document.getElementById('posts-count').innerText = snapshot.size;
 
-                snapshot.forEach((doc) => {
-                    const post = doc.data();
-                    grid.innerHTML += `<img src="${post.imageUrl}" class="grid-item">`;
-                });
+                    snapshot.forEach((doc) => {
+                        const postData = doc.data();
+                        grid.innerHTML += `<img src="${postData.imageUrl}" class="grid-item">`;
+                    });
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des posts:", error);
+                }
             } else {
-                location.href = 'login.html'; // Redirection si non connecté
+                // Si l'utilisateur n'est pas connecté, retour à la connexion
+                location.href = 'login.html';
             }
         });
     </script>
