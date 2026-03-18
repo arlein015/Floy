@@ -189,6 +189,16 @@
                 document.getElementById('loader').style.display = 'none';
             }
         };
+        window.selectMode = (mode) => {
+    if (mode === 'story') {
+        location.href = 'story-creator.html';
+    } else if (mode === 'reel') {
+        location.href = 'reel-creator.html';
+    } else if (mode === 'live') {
+        // Rediriger vers live si tu crées le fichier plus tard
+        alert("Live bientôt disponible !");
+    }
+};
     </script>
 </body>
 </html>
