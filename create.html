@@ -2,156 +2,88 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Nouvelle publication</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floy - Créer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --orange: #FF7A1A; --bleu: #0095f6; --noir: #000; --gris: #121212; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-top: 60px; overflow: hidden; height: 100vh; }
-
-        /* HEADER */
-        .header { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: var(--noir); z-index: 1000; box-sizing: border-box; }
-        .btn-next { color: var(--bleu); font-weight: bold; background: none; border: none; font-size: 16px; cursor: pointer; display: none; }
-        .btn-share { color: var(--bleu); font-weight: bold; background: none; border: none; font-size: 16px; cursor: pointer; display: none; }
-
-        /* VUE GALERIE */
-        #gallery-view { height: calc(100vh - 130px); display: flex; flex-direction: column; }
-        .main-preview { width: 100%; aspect-ratio: 1/1; background: #050505; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: pointer; }
+        body { background: #000; color: white; font-family: sans-serif; margin: 0; }
+        .header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        .btn-next { color: #0095f6; background: none; border: none; font-weight: bold; font-size: 16px; display: none; }
+        
+        /* Zone Preview Noire */
+        .main-preview { width: 100%; aspect-ratio: 1/1; background: #050505; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
         
-        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 2px; overflow-y: auto; flex-grow: 1; background: #000; }
-        .grid-item { aspect-ratio: 1/1; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .gallery-area { padding: 15px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+        .grid-item { aspect-ratio: 1/1; background: #1a1a1a; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        /* VUE CONFIGURATION (LÉGENDE) */
-        #config-view { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
-        .config-header { display: flex; gap: 15px; align-items: flex-start; }
-        .mini-preview { width: 70px; height: 70px; border-radius: 4px; object-fit: cover; }
-        textarea { flex-grow: 1; background: transparent; border: none; color: white; font-size: 16px; outline: none; resize: none; font-family: inherit; }
-
-        /* MENU BAS BRILLANT */
-        .creation-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #050505; display: flex; justify-content: center; align-items: center; gap: 25px; border-top: 1px solid #222; }
-        .nav-item { font-size: 11px; font-weight: bold; color: #555; text-transform: uppercase; cursor: pointer; transition: 0.3s; opacity: 0.5; }
-        .nav-item.active { color: #ffffff; opacity: 1; text-shadow: 0 0 10px white; }
-
-        .loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; align-items: center; justify-content: center; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Page de configuration cachée */
+        #config-view { display: none; padding: 20px; }
+        .mini { width: 60px; height: 60px; border-radius: 5px; object-fit: cover; }
     </style>
 </head>
 <body>
 
-    <div class="loader" id="loader">
-        <div style="width:30px; height:30px; border:3px solid #333; border-top:3px solid var(--orange); border-radius:50%; animation: spin 1s linear infinite;"></div>
-        <p style="margin-top:15px;">Publication...</p>
-    </div>
-
-    <div class="header">
-        <i class="fas fa-times" onclick="location.href='index.html'" style="font-size: 22px; cursor: pointer;"></i>
-        <b id="header-title">Nouvelle publication</b>
-        <button class="btn-next" id="btn-next" onclick="window.showConfig()">Suivant</button>
-        <button class="btn-share" id="btn-share" onclick="window.publishPost()">Partager</button>
-    </div>
-
     <div id="gallery-view">
+        <div class="header">
+            <i class="fas fa-times" onclick="location.href='index.html'"></i>
+            <b>Nouvelle publication</b>
+            <button id="btn-next" class="btn-next" onclick="showConfig()">Suivant</button>
+        </div>
+
         <div class="main-preview" onclick="document.getElementById('file-input').click()">
-            <i id="camera-icon" class="fas fa-camera" style="font-size: 40px; color: #333;"></i>
+            <i id="cam-icon" class="fas fa-camera" style="font-size: 40px; color: #333;"></i>
             <img id="preview-img">
         </div>
-        
-        <div style="padding: 12px; display: flex; justify-content: space-between; align-items: center; background: #000;">
-            <span style="font-weight: bold; font-size: 15px;">Récent <i class="fas fa-chevron-down"></i></span>
-            <span style="color: var(--bleu); font-size: 13px; font-weight: bold;">SÉLECTIONNER <i class="far fa-copy"></i></span>
-        </div>
 
-        <div class="gallery-grid">
-            <div class="grid-item" onclick="document.getElementById('file-input').click()"><i class="fas fa-plus" style="color:#333"></i></div>
-            <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
+        <div class="gallery-area">Récent <i class="fas fa-chevron-down"></i></div>
+        
+        <div class="grid">
+            <div class="grid-item" onclick="document.getElementById('file-input').click()"><i class="fas fa-camera"></i></div>
             <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
         </div>
     </div>
 
     <div id="config-view">
-        <div class="config-header">
-            <img id="mini-preview" class="mini-preview">
-            <textarea id="caption" placeholder="Écrire une légende..."></textarea>
+        <div class="header">
+            <i class="fas fa-arrow-left" onclick="location.reload()"></i>
+            <b>Nouvelle publication</b>
+            <button style="color:#0095f6; background:none; border:none; font-weight:bold;" onclick="alert('Post lancé !')">Partager</button>
         </div>
-        <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
-        <p style="color: #888; font-size: 14px;">Identifier des personnes</p>
-        <p style="color: #888; font-size: 14px;">Ajouter un lieu</p>
+        <div style="display:flex; gap:15px; margin-top:20px;">
+            <img id="mini-img" class="mini">
+            <textarea placeholder="Écrire une légende..." style="background:none; border:none; color:white; flex:1; outline:none;"></textarea>
+        </div>
     </div>
 
-    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="window.handleFile(event)">
+    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleImage(event)">
 
-    <nav class="creation-nav" id="bottom-nav">
-        <div class="nav-item active">PUBLIER</div>
-        <div class="nav-item" onclick="location.href='story-creator.html'">STORY</div>
-        <div class="nav-item" onclick="location.href='reel-creator.html'">REEL</div>
-    </nav>
-
-    <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        let selectedFile = null;
-
-       // Étape A : On définit les fonctions DIRECTEMENT pour qu'elles soient visibles partout
-        function handleFile(event) {
-        const file = event.target.files[0];
-        console.log("Tentative d'affichage du fichier :", file ? file.name : "Aucun fichier");
-
-        if (file) {
-            const previewImg = document.getElementById('preview-img');
-            const cameraIcon = document.getElementById('camera-icon');
-            const btnNext = document.getElementById('btn-next');
-
-            // On crée l'URL de l'image
-            const imageURL = URL.createObjectURL(file);
-            
-            // ON FORCE L'AFFICHAGE (Le secret est ici)
-            previewImg.src = imageURL;
-            previewImg.style.display = "block";
-            previewImg.style.width = "100%";
-            previewImg.style.height = "100%";
-            previewImg.style.objectFit = "cover";
-
-            if (cameraIcon) cameraIcon.style.display = "none";
-            if (btnNext) btnNext.style.display = "block";
-            
-            console.log("L'image devrait être visible maintenant !");
-        }
-    }
-
-        // 2. PASSER À LA LÉGENDE
-       function showConfig() {
-        document.getElementById('gallery-view').style.display = 'none';
-        document.getElementById('bottom-nav').style.display = 'none';
-        document.getElementById('config-view').style.display = 'block';
-        
-        document.getElementById('btn-next').style.display = 'none';
-        document.getElementById('btn-share').style.display = 'block';
-        
-        // On récupère le fichier pour la petite miniature
-        const file = document.getElementById('file-input').files[0];
-        if(file) {
-            document.getElementById('mini-preview').src = URL.createObjectURL(file);
-        }
-    }
-
-        // 3. PUBLIER RÉELLEMENT
-        window.publishPost = async () => {
-            document.getElementById('loader').style.display = 'flex';
-            
-            // Note : Ici tu devrais normalement avoir ton code Cloudinary. 
-            // Pour l'instant, on simule l'enregistrement Firebase.
-            try {
-                setTimeout(() => {
-                    location.href = 'index.html';
-                }, 1500);
-            } catch (e) {
-                alert(e.message);
-                document.getElementById('loader').style.display = 'none';
+    <script>
+        function handleImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const preview = document.getElementById('preview-img');
+                const icon = document.getElementById('cam-icon');
+                const next = document.getElementById('btn-next');
+                
+                // On crée le lien de l'image
+                const url = URL.createObjectURL(file);
+                preview.src = url;
+                
+                // On affiche l'image et on cache l'icône
+                preview.style.display = "block";
+                icon.style.display = "none";
+                next.style.display = "block";
             }
-        };
+        }
+
+        function showConfig() {
+            document.getElementById('gallery-view').style.display = "none";
+            document.getElementById('config-view').style.display = "block";
+            // Copie l'image vers la miniature
+            document.getElementById('mini-img').src = document.getElementById('preview-img').src;
+        }
     </script>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </body>
 </html>
