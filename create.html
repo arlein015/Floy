@@ -92,51 +92,86 @@
     </nav>
 
     <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { auth, db } from './firebase-config.js';
+    import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let selectedFile = null;
+    // 🔥 CONFIGURATION CLOUDINARY - REMPLACE AVEC TES INFOS
+    const CLOUD_NAME = "TON_CLOUD_NAME"; 
+    const UPLOAD_PRESET = "floy_unsigned"; 
 
-        // 1. Gérer la sélection du fichier
-        window.handleFile = () => {
-            const file = document.getElementById('file-input').files[0];
-            if(file) {
-                selectedFile = file;
-                const url = URL.createObjectURL(file);
-                document.getElementById('preview-img').src = url;
-                document.getElementById('preview-img').style.display = 'block';
-                document.getElementById('empty-msg').style.display = 'none';
-                document.getElementById('btn-next').style.display = 'block'; // Affiche "Suivant"
-            }
-        };
+    let selectedFile = null;
+    let userData = null;
 
-        // 2. Passer à la page de configuration (Suivant)
-        window.showConfig = () => {
-            document.getElementById('gallery-view').style.display = 'none';
-            document.getElementById('bottom-nav').style.display = 'none';
-            document.getElementById('config-view').style.display = 'block';
-            
-            document.getElementById('btn-next').style.display = 'none';
-            document.getElementById('btn-share').style.display = 'block'; // Affiche "Partager"
-            document.getElementById('header-title').innerText = "Nouvelle publication";
-            
-            // Met l'image dans la petite preview à côté du texte
-            document.getElementById('mini-preview-img').src = URL.createObjectURL(selectedFile);
-        };
+    // Charger les infos de l'utilisateur pour le nom et le badge
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            userData = snap.data();
+        } else { location.href = 'login.html'; }
+    });
 
-        // 3. Upload final vers Cloudinary et Firebase
-        window.uploadFinal = async () => {
-            document.getElementById('loader').style.display = 'flex';
-            
-            try {
-                // Ici tu ajoutes ton code Cloudinary comme vu précédemment
-                // ...
-                alert("Post prêt à être envoyé !");
-                location.href = 'index.html';
-            } catch (e) {
-                document.getElementById('loader').style.display = 'none';
-            }
-        };
-    </script>
+    window.handleFile = () => {
+        const file = document.getElementById('file-input').files[0];
+        if(file) {
+            selectedFile = file;
+            document.getElementById('preview-img').src = URL.createObjectURL(file);
+            document.getElementById('preview-img').style.display = 'block';
+            document.getElementById('empty-msg').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+        }
+    };
+
+    window.showConfig = () => {
+        document.getElementById('gallery-view').style.display = 'none';
+        document.getElementById('bottom-nav').style.display = 'none';
+        document.getElementById('config-view').style.display = 'block';
+        document.getElementById('btn-next').style.display = 'none';
+        document.getElementById('btn-share').style.display = 'block';
+        document.getElementById('mini-preview-img').src = URL.createObjectURL(selectedFile);
+    };
+
+    // --- LA FONCTION DE POST RÉEL ---
+    window.uploadFinal = async () => {
+        if (!selectedFile || !userData) return;
+        
+        const loader = document.getElementById('loader');
+        loader.style.display = 'flex';
+
+        try {
+            // A. ENVOI À CLOUDINARY
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            const cloudData = await cloudRes.json();
+
+            if (!cloudData.secure_url) throw new Error("Erreur de stockage image");
+
+            // B. ENVOI À FIREBASE (DANS LA COLLECTION POSTS)
+            await addDoc(collection(db, "posts"), {
+                userId: auth.currentUser.uid,
+                username: userData.username,
+                userAvatar: userData.avatarUrl || "",
+                isVerified: userData.isVerified || false, // Ton badge Arlein orange
+                imageUrl: cloudData.secure_url,
+                caption: document.getElementById('caption').value,
+                likes: [],
+                commentsCount: 0,
+                createdAt: serverTimestamp()
+            });
+
+            // C. RETOUR À L'ACCUEIL
+            location.href = 'index.html';
+
+        } catch (error) {
+            alert("Erreur lors de la publication : " + error.message);
+            loader.style.display = 'none';
+        }
+    };
+</script>
 </body>
 </html>
