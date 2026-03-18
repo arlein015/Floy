@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Floy - Créer un Reel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #222; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; height: 100vh; }
+
+        /* HEADER */
+        .header-reel { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; z-index: 100; box-sizing: border-box; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
+        .btn-post { background: var(--orange); color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: none; }
+
+        /* CAMERA / PREVIEW AREA */
+        .reel-preview-container { width: 100vw; height: 100vh; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; }
+        #preview-video { width: 100%; height: 100%; object-fit: cover; display: none; }
+        
+        .upload-placeholder { text-align: center; color: #888; z-index: 10; }
+        .upload-placeholder i { font-size: 50px; color: var(--orange); margin-bottom: 15px; }
+
+        /* OVERLAY TOOLS (A droite comme sur TikTok/Reels) */
+        .reel-tools { position: absolute; right: 15px; top: 20%; display: flex; flex-direction: column; gap: 25px; z-index: 50; }
+        .tool-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; gap: 5px; cursor: pointer; }
+        .tool-item i { font-size: 22px; }
+
+        /* CAPTION BOX (En bas) */
+        .footer-reel { position: fixed; bottom: 0; width: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); z-index: 100; display: none; }
+        textarea { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid #444; color: white; padding: 12px; border-radius: 12px; resize: none; outline: none; }
+
+        /* LOADER */
+        .loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 35px; height: 35px; border: 3px solid #333; border-top: 3px solid var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p style="margin-top:15px; font-size:14px;">Mise en ligne du Reel...</p>
+    </div>
+
+    <div class="header-reel">
+        <i class="fas fa-arrow-left" onclick="history.back()" style="font-size: 20px; cursor: pointer;"></i>
+        <b style="font-size: 16px;">Nouveau Reel</b>
+        <button class="btn-post" id="btn-post" onclick="window.uploadReel()">Partager</button>
+    </div>
+
+    <div class="reel-preview-container" onclick="document.getElementById('file-input').click()">
+        <div class="upload-placeholder" id="placeholder">
+            <i class="fas fa-video"></i>
+            <p>Appuie pour sélectionner une vidéo</p>
+            <small style="opacity:0.6;">Format vertical recommandé</small>
+        </div>
+        <video id="preview-video" loop muted playsinline></video>
+    </div>
+
+    <div class="reel-tools" id="reel-tools" style="display:none;">
+        <div class="tool-item"><i class="fas fa-music"></i><span>Audio</span></div>
+        <div class="tool-item"><i class="fas fa-magic"></i><span>Filtres</span></div>
+        <div class="tool-item"><i class="fas fa-cut"></i><span>Couper</span></div>
+        <div class="tool-item" onclick="document.getElementById('file-input').click()"><i class="fas fa-sync"></i><span>Changer</span></div>
+    </div>
+
+    <div class="footer-reel" id="footer-reel">
+        <textarea id="caption" rows="2" placeholder="Ajoute une description à ton Reel..."></textarea>
+    </div>
+
+    <input type="file" id="file-input" accept="video/*" style="display: none;" onchange="window.handleVideoSelect()">
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+        let videoFile = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                currentUser = { uid: user.uid, ...userDoc.data() };
+            } else { location.href = "login.html"; }
+        });
+
+        window.handleVideoSelect = () => {
+            const file = document.getElementById('file-input').files[0];
+            if (file) {
+                videoFile = file;
+                const url = URL.createObjectURL(file);
+                const video = document.getElementById('preview-video');
+                
+                video.src = url;
+                video.style.display = 'block';
+                document.getElementById('placeholder').style.display = 'none';
+                document.getElementById('btn-post').style.display = 'block';
+                document.getElementById('reel-tools').style.display = 'flex';
+                document.getElementById('footer-reel').style.display = 'block';
+                video.play();
+            }
+        };
+
+        window.uploadReel = async () => {
+            if (!videoFile || !currentUser) return;
+            document.getElementById('loader').style.display = 'flex';
+
+            try {
+                // 1. Cloudinary Upload (Vidéo)
+                const formData = new FormData();
+                formData.append('file', videoFile);
+                formData.append('upload_preset', 'TON_PRESET'); // Remplace
+
+                const res = await fetch('https://api.cloudinary.com/v1_1/TON_CLOUD_NAME/video/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                // 2. Firebase
+                await addDoc(collection(db, "reels"), {
+                    userId: currentUser.uid,
+                    username: currentUser.username,
+                    userAvatar: currentUser.avatarUrl || "",
+                    isVerified: currentUser.isVerified || false,
+                    videoUrl: data.secure_url,
+                    caption: document.getElementById('caption').value,
+                    likes: [],
+                    views: 0,
+                    createdAt: serverTimestamp()
+                });
+
+                location.href = "index.html";
+            } catch (e) {
+                alert("Erreur upload Reel");
+                document.getElementById('loader').style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
