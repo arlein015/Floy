@@ -13,7 +13,8 @@
         .header span { color: var(--orange); font-weight: bold; cursor: pointer; }
 
         .edit-container { padding: 20px; text-align: center; }
-        
+        img { transition: opacity 0.3s ease-in; }
+        img[src=""] { opacity: 0; }
         .profile-pic-section { margin-bottom: 30px; }
         .current-pic { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background: #222; border: 1px solid #333; }
         .change-text { color: var(--orange); display: block; margin-top: 10px; font-weight: bold; cursor: pointer; font-size: 14px; }
@@ -95,53 +96,57 @@
             }
         });
 
-        // 3. Sauvegarde
-        document.getElementById('save-btn').addEventListener('click', async () => {
-            const user = auth.currentUser;
-            if(!user) return;
+        // Remplace toute la partie du bouton Save dans edit-profil.html
+document.getElementById('save-btn').onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
 
-            const newName = document.getElementById('edit-username').value;
-            const newBio = document.getElementById('edit-bio').value;
-            let photoUrl = user.photoURL;
+    const newName = document.getElementById('edit-username').value;
+    const newBio = document.getElementById('edit-bio').value;
+    let finalPhotoUrl = user.photoURL; // On garde l'ancienne par défaut
 
-            const btn = document.getElementById('save-btn');
-            btn.innerText = "Enregistrement...";
-            btn.style.opacity = "0.5";
+    const btn = document.getElementById('save-btn');
+    btn.innerText = "⏳...";
 
-            try {
-                // Upload Cloudinary si nouvelle photo
-                if (selectedFile) {
-                    const formData = new FormData();
-                    formData.append('file', selectedFile);
-                    formData.append('upload_preset', UPLOAD_PRESET);
+    try {
+        // ÉTAPE A : Si on a choisi une nouvelle photo
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('upload_preset', UPLOAD_PRESET);
 
-                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await res.json();
-                    photoUrl = data.secure_url;
-                }
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            finalPhotoUrl = data.secure_url; // On récupère la nouvelle URL
+        }
 
-                // Mise à jour Auth
-                await updateProfile(user, { displayName: newName, photoURL: photoUrl });
-
-                // Mise à jour Firestore
-                await updateDoc(doc(db, "users", user.uid), {
-                    username: newName,
-                    bio: newBio,
-                    avatarUrl: photoUrl
-                });
-
-                console.log("Mise à jour réussie !");
-                location.href = 'profil.html';
-            } catch (error) {
-                console.error("Erreur de sauvegarde :", error);
-                alert("Erreur lors de la sauvegarde.");
-                btn.innerText = "Terminé";
-                btn.style.opacity = "1";
-            }
+        // ÉTAPE B : Mise à jour de Firebase AUTH (Le compte)
+        await updateProfile(user, { 
+            displayName: newName, 
+            photoURL: finalPhotoUrl 
         });
+
+        // ÉTAPE C : Mise à jour de FIRESTORE (La base de données)
+        // C'est ICI que profil.html va lire les infos !
+        await setDoc(doc(db, "users", user.uid), {
+            username: newName,
+            bio: newBio,
+            avatarUrl: finalPhotoUrl,
+            userId: user.uid // Très important pour que tes posts ne disparaissent pas
+        }, { merge: true });
+
+        alert("Profil mis à jour !");
+        location.href = 'profil.html';
+
+    } catch (error) {
+        console.error("Erreur complète :", error);
+        alert("Erreur. Regarde la console (F12)");
+        btn.innerText = "Terminé";
+    }
+};
     </script>
 </body>
 </html>
