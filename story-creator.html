@@ -72,24 +72,30 @@
 
         // 🖼️ Prévisualisation Réelle
         window.handlePreviewReal = () => {
-            const file = document.getElementById('file-in').files[0];
-            if (file) {
-                selectedFile = file;
-                const url = URL.createObjectURL(file);
-                document.getElementById('upload-prompt').style.display = 'none';
-                document.getElementById('btn-send').style.display = 'block';
-                
-                if (file.type.startsWith('image/')) {
-                    document.getElementById('preview-img').src = url;
-                    document.getElementById('preview-img').style.display = 'block';
-                    document.getElementById('preview-vid').style.display = 'none';
-                } else {
-                    document.getElementById('preview-vid').src = url;
-                    document.getElementById('preview-vid').style.display = 'block';
-                    document.getElementById('preview-img').style.display = 'none';
-                }
-            }
-        };
+        window.handlePreviewReal = () => {
+    const file = document.getElementById('file-in').files[0];
+    if (file) {
+        selectedFile = file;
+        const url = URL.createObjectURL(file);
+        
+        // CACHER l'icône de sélection et AFFICHER le bouton Partager
+        document.getElementById('upload-prompt').style.display = 'none';
+        document.getElementById('btn-send').style.display = 'block'; // S'assure que ça s'affiche
+        
+        const img = document.getElementById('preview-img');
+        const vid = document.getElementById('preview-vid');
+
+        if (file.type.startsWith('image/')) {
+            img.src = url;
+            img.style.display = 'block';
+            vid.style.display = 'none';
+        } else {
+            vid.src = url;
+            vid.style.display = 'block';
+            img.style.display = 'none';
+        }
+    }
+};
 
         // ☁️ Publication Réelle (Cloudinary + Firebase)
         window.uploadStoryReal = async () => {
