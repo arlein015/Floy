@@ -2,144 +2,95 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Floy - Paramètres</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Floy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; }
+        :root { --orange: #FF7A1A; --bg-dark: #000; --card-dark: #121212; }
+        body { background: var(--bg-dark); color: white; font-family: -apple-system, sans-serif; margin: 0; }
 
-        /* HEADER */
-        header { 
-            padding: 15px; 
-            border-bottom: 1px solid var(--bordure); 
-            display: flex; 
-            align-items: center; 
-            gap: 15px;
-            position: sticky; 
-            top: 0; 
-            background: black; 
-            z-index: 100; 
-        }
-        .back-btn { cursor: pointer; color: white; text-decoration: none; display: flex; align-items: center; }
+        /* Header du menu */
+        .menu-header { padding: 20px; display: flex; align-items: center; border-bottom: 1px solid #222; }
+        .menu-header i { font-size: 20px; margin-right: 15px; cursor: pointer; }
 
-        /* LISTE DES OPTIONS */
+        /* Liste des options */
         .menu-list { padding: 10px 0; }
         .menu-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            padding: 15px 20px; 
-            text-decoration: none; 
-            color: white; 
-            transition: background 0.2s;
-            border-bottom: 1px solid #111;
+            display: flex; align-items: center; padding: 15px 20px; 
+            text-decoration: none; color: white; transition: 0.2s; cursor: pointer;
         }
         .menu-item:active { background: #1a1a1a; }
-        
-        .menu-icon { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; }
-        .menu-text { flex-grow: 1; font-size: 16px; }
-        .chevron { stroke: #555; width: 18px; }
+        .menu-item i { width: 30px; font-size: 20px; margin-right: 15px; color: #eee; }
+        .menu-item span { font-size: 16px; }
 
-        /* SECTION SPECIFIQUE BADGE */
-        .premium-box {
-            margin: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-            border: 1px solid var(--orange);
-            border-radius: 15px;
-            text-align: center;
-        }
-        .premium-box h3 { margin: 0 0 10px 0; color: var(--orange); }
-        .premium-box p { font-size: 13px; color: #a8a8a8; margin-bottom: 15px; }
-        .btn-verify { 
-            background: var(--orange); 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer;
-        }
+        /* Style spécial pour la déconnexion */
+        .logout { color: #ed4956 !important; border-top: 1px solid #222; margin-top: 10px; }
+        .logout i { color: #ed4956; }
 
-        /* DÉCONNEXION */
-        .logout { color: #ff3b30; border-top: 1px solid var(--bordure); margin-top: 20px; }
-        .logout .menu-icon { stroke: #ff3b30; }
+        /* Footer */
+        .menu-footer { position: fixed; bottom: 20px; width: 100%; text-align: center; color: #555; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="profil.html" class="back-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        </a>
-        <div style="font-weight:bold; font-size: 18px;">Réglages</div>
-    </header>
-
-    <div class="premium-box">
-        <h3>Badge de Certification</h3>
-        <p>Obtenez votre badge orange pour 10$/mois et boostez votre visibilité sur Floy.</p>
-        <button class="btn-verify" id="get-badge">S'abonner maintenant</button>
+    <div class="menu-header">
+        <i class="fas fa-arrow-left" onclick="history.back()"></i>
+        <b>Paramètres</b>
     </div>
 
     <div class="menu-list">
-        <a href="#" class="menu-item">
-            <svg class="menu-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-            <span class="menu-text">Votre activité</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </a>
+        <div class="menu-item" onclick="location.href='edit-profil.html'">
+            <i class="fas fa-user-edit"></i>
+            <span>Modifier le profil</span>
+        </div>
+        
+        <div class="menu-item" onclick="location.href='archive.html'">
+            <i class="fas fa-history"></i>
+            <span>Archive</span>
+        </div>
 
-        <a href="#" class="menu-item">
-            <svg class="menu-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-            <span class="menu-text">Statistiques professionnelles</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </a>
+        <div class="menu-item" onclick="location.href='activity.html'">
+            <i class="fas fa-heart"></i>
+            <span>Votre activité</span>
+        </div>
 
-        <a href="#" class="menu-item">
-            <svg class="menu-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            <span class="menu-text">Confidentialité</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </a>
+        <div class="menu-item" onclick="alert('QR Code bientôt disponible')">
+            <i class="fas fa-qrcode"></i>
+            <span>Code QR</span>
+        </div>
 
-        <a href="#" class="menu-item">
-            <svg class="menu-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-            <span class="menu-text">Amis proches</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </a>
+        <div class="menu-item" onclick="location.href='saved.html'">
+            <i class="far fa-bookmark"></i>
+            <span>Enregistré</span>
+        </div>
 
-        <a href="login.html" class="menu-item logout">
-            <svg class="menu-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-            <span class="menu-text">Déconnexion</span>
-        </a>
+        <div class="menu-item logout" id="btn-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Se déconnecter</span>
+        </div>
     </div>
 
-    <i class="fas fa-bars" onclick="location.href='side-menu.html'"></i>
+    <div class="menu-footer">
+        Floy App © 2026<br>Version 1.0.4
+    </div>
+
     <script type="module">
-       import { auth } from './firebase-config.js';
-       import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { auth } from './firebase-config.js';
+        import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        window.logout = () => {
-        signOut(auth).then(() => {
-        location.href = 'login.html'; // Retour à la case départ
-        }).catch((error) => {
-        console.error("Erreur de déconnexion", error);
-        });
-    };
+        const btnLogout = document.getElementById('btn-logout');
 
-        const USER_KEY = "User_Floy_Account";
-
-        // SIMULATION DU BADGE (Pour tes tests)
-        document.getElementById('get-badge').onclick = async () => {
-            const confirmAction = confirm("Voulez-vous activer le badge de certification pour 10$/mois ?");
-            if(confirmAction) {
-                try {
-                    await setDoc(doc(db, "users", USER_KEY), { isVerified: true }, { merge: true });
-                    alert("Félicitations ! Votre badge est maintenant actif sur votre profil.");
-                    window.location.href = "profil.html";
-                } catch (e) {
-                    alert("Erreur lors de l'activation.");
-                }
+        // Gestion de la déconnexion
+        btnLogout.addEventListener('click', () => {
+            if(confirm("Es-tu sûr de vouloir te déconnecter ?")) {
+                signOut(auth).then(() => {
+                    // Rediriger vers la page de connexion (vérifie le nom de ton fichier)
+                    location.href = 'connexion.html'; 
+                }).catch((error) => {
+                    alert("Erreur lors de la déconnexion : " + error.message);
+                });
             }
-        };
+        });
     </script>
 </body>
 </html>
