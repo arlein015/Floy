@@ -66,17 +66,31 @@
     </nav>
 
     <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { collection, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+       import { db } from './firebase-config.js';
+        import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const badgeArlein = `<svg class="badge-Arlein" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="black" stroke="#FF7A1A" stroke-width="0.5"/><path d="M10 15.5l-3-3 1.4-1.4 1.6 1.6 4-4 1.4 1.4z" fill="#FF7A1A"/></svg>`;
+        // On récupère les posts du plus récent au plus ancien
+        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
 
-        // Fonction Pop Sound
-        window.playPop = () => {
-            const sound = document.getElementById('pop-sound');
-            sound.currentTime = 0;
-            sound.play();
-        };
+        onSnapshot(q, (snapshot) => {
+        const feed = document.getElementById('feed'); // L'ID de ta zone de posts
+        if (!feed) return;
+    
+        feed.innerHTML = ""; // On vide pour mettre à jour
+    
+        snapshot.forEach((doc) => {
+        const post = doc.data();
+        feed.innerHTML += `
+            <div class="post-card" style="margin-bottom:20px; background:#000;">
+                <div style="padding:10px; font-weight:bold;">${post.username}</div>
+                <img src="${post.imageUrl}" style="width:100%; display:block;">
+                <div style="padding:10px;">
+                    <b>${post.username}</b> ${post.caption || ""}
+                </div>
+            </div>
+        `;
+    });
+});
 
         // 1. CHARGER LES STORIES
         onSnapshot(query(collection(db, "stories"), where("expiresAt", ">", Date.now())), (snap) => {
