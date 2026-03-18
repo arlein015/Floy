@@ -26,17 +26,35 @@
 </head>
 <body>
 
-    <div class="header-reel">
-        <i class="fas fa-times" onclick="location.href='index.html'"></i>
-        <b>Nouveau Reel</b>
-        <button class="btn-share" id="btn-share" onclick="window.uploadReel()">Partager</button>
-    </div>
+   <div class="header-reel">
+    <i class="fas fa-times" onclick="location.href='index.html'"></i>
+    <b>Nouveau reel</b>
+    <i class="fas fa-cog"></i>
+</div>
 
-    <div class="video-container" onclick="document.getElementById('file-reel').click()">
-        <div id="placeholder" style="text-align:center"><i class="fas fa-video" style="font-size:50px; color:var(--orange)"></i><p>Choisir une vidéo</p></div>
-        <video id="preview-vid" loop muted playsinline></video>
+    <div style="display: flex; gap: 10px; padding: 15px; margin-top: 60px;">
+    <div style="background: #262626; padding: 10px 20px; border-radius: 10px; flex: 1; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-clapperboard"></i> <b>Brouillons</b>
     </div>
+    <div style="background: #262626; padding: 10px 20px; border-radius: 10px; flex: 1; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-wand-magic-sparkles"></i> <b>Modèles</b>
+    </div>
+</div>
 
+    <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+    <span style="font-weight: bold;">Récent <i class="fas fa-chevron-down"></i></span>
+    <div style="background: #262626; border-radius: 20px; padding: 5px 15px; font-size: 12px;">
+        <i class="far fa-copy"></i> Sélectionner
+    </div>
+</div>
+
+<div class="gallery-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-item" style="aspect-ratio: 9/16; background: #1a1a1a;" onclick="document.getElementById('file-input').click()">
+        <i class="fas fa-camera"></i>
+    </div>
+    <div class="grid-item" style="aspect-ratio: 9/16;"></div>
+    <div class="grid-item" style="aspect-ratio: 9/16;"></div>
+</div>
     <div class="footer-reel" id="caption-box">
         <textarea id="caption" placeholder="Légende du reel..."></textarea>
     </div>
