@@ -7,60 +7,96 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #222; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 70px; }
+        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 75px; }
 
         /* HEADER */
-        .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--bordure); z-index: 1000; box-sizing: border-box; }
-        .logo { font-size: 22px; font-weight: bold; color: var(--orange); }
-        .search-bar { background: #1a1a1a; border-radius: 10px; padding: 8px 12px; width: 50%; display: flex; align-items: center; gap: 8px; }
-        .search-bar input { background: none; border: none; color: white; width: 100%; outline: none; font-size: 14px; }
+        .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--bordure); z-index: 1000; box-sizing: border-box; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--orange); letter-spacing: -1px; }
+
+        /* STORIES */
+        .stories-bar { display: flex; gap: 12px; padding: 15px; overflow-x: auto; margin-top: 60px; border-bottom: 1px solid var(--bordure); scrollbar-width: none; }
+        .stories-bar::-webkit-scrollbar { display: none; }
+        .story-item { display: flex; flex-direction: column; align-items: center; min-width: 70px; cursor: pointer; }
+        .avatar-ring { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366); display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+        .avatar-ring.me { background: #333; position: relative; }
+        .avatar-ring img { width: 62px; height: 62px; border-radius: 50%; border: 2px solid black; object-fit: cover; }
+        .plus-icon { position: absolute; bottom: 0; right: 0; background: var(--orange); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid black; font-size: 12px; }
+        .story-user { font-size: 11px; color: #aaa; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* POSTS */
-        .post { margin-bottom: 15px; border-bottom: 1px solid #111; }
+        .post { border-bottom: 1px solid var(--bordure); }
         .post-header { display: flex; align-items: center; padding: 12px; gap: 10px; }
-        .post-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid #333; }
+        .post-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
         .badge-Arlein { width: 16px; height: 16px; margin-left: 4px; vertical-align: middle; }
         .post-img { width: 100%; display: block; background: #050505; }
-        .post-actions { display: flex; gap: 18px; padding: 12px; }
-        .post-actions svg { width: 24px; height: 24px; fill: white; cursor: pointer; }
+        .post-actions { display: flex; gap: 20px; padding: 12px; }
+        .post-actions svg { width: 26px; height: 26px; fill: white; }
 
-        /* BOTTOM NAV SVG */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--noir); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--bordure); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-item svg { width: 26px; height: 26px; fill: #666; transition: 0.3s; }
+        /* BOTTOM NAV MODERNE */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--bordure); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item svg { width: 28px; height: 28px; fill: #666; transition: 0.2s; }
         .nav-item.active svg { fill: white; }
-        .plus-btn svg { fill: var(--orange) !important; width: 30px; height: 30px; }
+        .btn-create svg { fill: var(--orange) !important; width: 34px; height: 34px; }
     </style>
 </head>
 <body>
 
+    <audio id="pop-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
     <nav class="top-nav">
-        <div class="logo">Floy</div>
-        <div class="search-bar">
-            <svg width="14" height="14" fill="#555" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" placeholder="Rechercher...">
+        <div class="logo">FLOY</div>
+        <div style="display:flex; gap:20px; font-size:20px;">
+            <i class="far fa-heart"></i>
+            <i class="far fa-paper-plane" onclick="location.href='messages.html'"></i>
         </div>
-        <i class="far fa-paper-plane" style="font-size: 20px;"></i>
     </nav>
 
-    <div id="main-feed" style="margin-top: 65px;">
+    <div class="stories-bar" id="stories-bar">
+        </div>
+
+    <div id="main-feed">
         </div>
 
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="location.href='index.html'"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
         <div class="nav-item" onclick="location.href='explore.html'"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
-        <div class="nav-item plus-btn" onclick="window.location.assign('./create.html')">
-    <svg viewBox="0 0 24 24" style="fill:#FF7A1A; width:32px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        </div>
-        <div class="nav-item" onclick="location.href='messages.html'"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98 1 4.28L2.01 22l5.72-1c1.3.64 2.74 1 4.27 1 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
+        <div class="nav-item btn-create" onclick="location.href='create.html'"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+        <div class="nav-item" onclick="location.href='reels.html'"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98 1 4.28L2.01 22l5.72-1c1.3.64 2.74 1 4.27 1 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></div>
         <div class="nav-item" onclick="location.href='profil.html'"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
     </nav>
 
     <script type="module">
         import { auth, db } from './firebase-config.js';
-        import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        const badgeSVG = `<svg class="badge-Arlein" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="black" stroke="#FF7A1A" stroke-width="0.5"/><path d="M10 15.5l-3-3 1.4-1.4 1.6 1.6 4-4 1.4 1.4z" fill="#FF7A1A"/></svg>`;
+        import { collection, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        const badgeArlein = `<svg class="badge-Arlein" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="black" stroke="#FF7A1A" stroke-width="0.5"/><path d="M10 15.5l-3-3 1.4-1.4 1.6 1.6 4-4 1.4 1.4z" fill="#FF7A1A"/></svg>`;
+
+        // Fonction Pop Sound
+        window.playPop = () => {
+            const sound = document.getElementById('pop-sound');
+            sound.currentTime = 0;
+            sound.play();
+        };
+
+        // 1. CHARGER LES STORIES
+        onSnapshot(query(collection(db, "stories"), where("expiresAt", ">", Date.now())), (snap) => {
+            const bar = document.getElementById('stories-bar');
+            bar.innerHTML = `
+                <div class="story-item" onclick="location.href='story-creator.html'">
+                    <div class="avatar-ring me"><img src="${auth.currentUser?.photoURL || 'https://via.placeholder.com/60'}"><div class="plus-icon">+</div></div>
+                    <span class="story-user">Votre story</span>
+                </div>`;
+            snap.forEach(doc => {
+                const s = doc.data();
+                bar.innerHTML += `
+                    <div class="story-item" onclick="playPop(); setTimeout(()=>location.href='story-view.html?id=${doc.id}', 150)">
+                        <div class="avatar-ring"><img src="${s.userAvatar}"></div>
+                        <span class="story-user">${s.username}</span>
+                    </div>`;
+            });
+        });
+
+        // 2. CHARGER LE FEED (POSTS)
         onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snap) => {
             const feed = document.getElementById('main-feed');
             feed.innerHTML = "";
@@ -70,17 +106,20 @@
                     <div class="post">
                         <div class="post-header">
                             <img src="${p.userAvatar}" class="post-avatar">
-                            <b style="font-size:14px">${p.username} ${p.isVerified ? badgeSVG : ''}</b>
+                            <b style="font-size:14px">${p.username} ${p.isVerified ? badgeArlein : ''}</b>
                         </div>
                         <img src="${p.imageUrl}" class="post-img">
                         <div class="post-actions">
                             <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                            <svg viewBox="0 0 24 24" style="transform:rotate(-20deg)"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                        </div>
+                        <div style="padding:0 12px 15px 12px; font-size:14px;">
+                            <b>${p.username}</b> ${p.caption || ''}
                         </div>
                     </div>`;
             });
         });
     </script>
 </body>
-</html>
+        </html>
