@@ -76,9 +76,12 @@
         <a href="#" class="user-link" id="p-link">floy.app/user</a>
     </div>
 
-    <div class="action-buttons">
-        <button class="btn-follow">Suivre</button>
-        <button class="btn-message">Message</button>
-        <button class="btn-icon-small"><i class="fas fa-user-plus"></i></button>
-    </div>
+   <div class="action-buttons" id="p-actions">
+    <button id="follow-btn" class="btn-follow" onclick="toggleFollow(profileId)">
+        Suivre
+    </button>
+    <button class="btn-message" onclick="window.location.href='chat.html?id=' + profileId">
+        Message
+    </button>
+</div>
 </div>
