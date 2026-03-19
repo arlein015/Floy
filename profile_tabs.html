@@ -1,79 +1,22 @@
-<style>
-    .tabs-container {
-        display: flex;
-        position: relative;
-        border-top: 1px solid #1a1a1a;
-        background: #000;
-        margin-top: 10px;
-    }
-
-    .tab-item {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 0;
-        cursor: pointer;
-        color: #888;
-        transition: color 0.3s ease;
-        position: relative;
-    }
-
-    .tab-item.active {
-        color: white;
-    }
-
-    .tab-item i {
-        font-size: 20px;
-    }
-
-    /* La petite barre qui se déplace */
-    .tab-indicator {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 2px;
-        width: 50%; /* Car on a 2 onglets */
-        background: white;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-</style>
-
-<div class="tabs-container">
-    <div id="indicator" class="tab-indicator"></div>
-
-    <div id="tab-posts" class="tab-item active" onclick="setActiveTab('posts', 0)">
+<div style="display: flex; border-top: 1px solid #1a1a1a;">
+    <div id="t-posts" onclick="switchTab('posts')" style="flex:1; text-align:center; padding:15px; cursor:pointer; color:white; border-top:2px solid white;">
         <i class="fas fa-th"></i>
     </div>
-
-    <div id="tab-reels" class="tab-item" onclick="setActiveTab('reels', 1)">
+    <div id="t-reels" onclick="switchTab('reels')" style="flex:1; text-align:center; padding:15px; cursor:pointer; color:#888;">
         <i class="fas fa-play-circle"></i>
     </div>
 </div>
 
 <script>
-    // Fonction pour changer d'onglet visuellement et charger les données
-    window.setActiveTab = (type, index) => {
-        // 1. Déplacer l'indicateur (0% pour le premier, 100% pour le deuxième)
-        const indicator = document.getElementById('indicator');
-        indicator.style.transform = `translateX(${index * 100}%)`;
-
-        // 2. Gérer les classes actives pour les couleurs
-        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+    window.switchTab = (type) => {
+        const posts = document.getElementById('t-posts');
+        const reels = document.getElementById('t-reels');
+        posts.style.color = type === 'posts' ? 'white' : '#888';
+        posts.style.borderTop = type === 'posts' ? '2px solid white' : 'none';
+        reels.style.color = type === 'reels' ? 'white' : '#888';
+        reels.style.borderTop = type === 'reels' ? '2px solid white' : 'none';
         
-        if (type === 'posts') {
-            document.getElementById('tab-posts').classList.add('active');
-        } else {
-            document.getElementById('tab-reels').classList.add('active');
-        }
-
-        // 3. Appeler la fonction du module profile_grid pour rafraîchir les médias
-        // On passe l'ID du profil actuel (récupéré depuis l'URL ou auth)
-        const params = new URLSearchParams(window.location.search);
-        const profileId = params.get('id') || (window.firebaseUser ? window.firebaseUser.uid : null);
-        
-        if (window.loadGrid && profileId) {
-            window.loadGrid(type, profileId);
-        }
+        const uid = new URLSearchParams(window.location.search).get('id') || "TON_UID_PAR_DEFAUT";
+        if(window.loadGrid) window.loadGrid(type, uid);
     };
 </script>
