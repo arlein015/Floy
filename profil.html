@@ -3,44 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - Floy</title>
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>Mon Profil - Floy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        body { background-color: black; color: white; font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+    <link rel="icon" href="data:;base64,iVBORw0KGgo="> <style>
+        :root { --border: #262626; --bg: #000; --accent: #FF7A1A; }
+        body { background-color: var(--bg); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 50px; }
         
-        /* HEADER STYLE */
-        .profile-header { padding: 20px 15px; border-bottom: 1px solid #262626; }
+        /* HEADER SECTION */
+        .profile-header { padding: 20px 15px; }
         .header-top { display: flex; align-items: center; gap: 20px; }
         .avatar-wrapper { position: relative; width: 85px; height: 85px; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
-        .story-plus { 
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); }
+        .story-plus-badge { 
             position: absolute; bottom: 0; right: 0; background: #0095f6; 
-            color: white; border-radius: 50%; width: 22px; height: 22px; 
-            display: flex; align-items: center; justify-content: center; 
-            border: 2px solid black; font-size: 11px; cursor: pointer;
+            border-radius: 50%; width: 22px; height: 22px; display: flex; 
+            align-items: center; justify-content: center; border: 2px solid black; font-size: 10px;
         }
 
-        /* BOUTONS STYLE */
+        /* STATS & BUTTONS */
+        .username-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
         .btn-row { display: flex; gap: 8px; margin-top: 15px; }
         .btn-f { 
             flex: 1; height: 36px; border: none; border-radius: 8px; 
             font-weight: 600; font-size: 14px; cursor: pointer !important; 
-            background: #262626; color: white; display: flex; 
-            align-items: center; justify-content: center;
+            background: var(--border); color: white; transition: opacity 0.2s;
+        }
+        .btn-f:active { opacity: 0.7; }
+
+        /* HIGHLIGHTS SECTION */
+        .highlights-container { 
+            padding: 15px; display: flex; gap: 18px; overflow-x: auto; 
+            border-bottom: 1px solid var(--border); scrollbar-width: none;
+        }
+        .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 64px; }
+        .hl-circle { 
+            width: 64px; height: 64px; border-radius: 50%; border: 1px solid var(--border); 
+            display: flex; align-items: center; justify-content: center; font-size: 24px; color: #555;
         }
 
-        /* MODALE STYLE */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); display: none; align-items: center; 
-            justify-content: center; z-index: 10000;
+        /* TABS & GRID */
+        .tabs { display: flex; border-top: 1px solid var(--border); margin-top: 10px; }
+        .tab { flex: 1; text-align: center; padding: 12px; color: #8e8e8e; cursor: pointer; }
+        .tab.active { color: white; border-top: 2px solid white; }
+        
+        .post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+        .post-item { aspect-ratio: 1/1; background: #121212; position: relative; overflow: hidden; }
+        .post-item img, .post-item video { width: 100%; height: 100%; object-fit: cover; }
+        .video-icon { position: absolute; top: 8px; right: 8px; font-size: 12px; text-shadow: 0 0 2px black; }
+
+        /* MODALE */
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); display: none; align-items: center; 
+            justify-content: center; z-index: 10000; 
         }
-        .modal-box { background: #262626; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden; }
-        .edit-input { 
+        .modal-content { background: #262626; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden; }
+        .modal-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #363636; }
+        .edit-field { 
             width: 100%; background: #121212; border: 1px solid #363636; 
-            border-radius: 8px; padding: 12px; color: white; margin-top: 10px; box-sizing: border-box;
+            padding: 12px; color: white; border-radius: 8px; margin-top: 10px; box-sizing: border-box;
         }
     </style>
 </head>
@@ -50,96 +71,148 @@
         <div class="header-top">
             <div class="avatar-wrapper">
                 <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
-                <div class="story-plus"><i class="fas fa-plus"></i></div>
+                <div class="story-plus-badge"><i class="fas fa-plus"></i></div>
             </div>
             <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <h2 id="h-username" style="margin:0; font-size: 20px;">Chargement...</h2>
-                    <i class="fas fa-check-circle" style="color:#FF7A1A;"></i>
+                <div class="username-row">
+                    <h2 id="h-username" style="margin:0; font-size: 20px;">...</h2>
+                    <i id="h-verify" class="fas fa-check-circle" style="color: var(--accent); display:none;"></i>
                 </div>
-                <div style="display: flex; gap: 15px; font-size: 14px; margin-top: 5px;">
-                    <span><b>0</b> publications</span>
-                    <span><b>0</b> followers</span>
+                <div style="display: flex; gap: 15px; font-size: 14px;">
+                    <span><b id="c-posts">0</b> publications</span>
+                    <span><b id="c-followers">0</b> followers</span>
                 </div>
             </div>
         </div>
-
-        <p id="h-bio" style="margin-top: 15px; font-size: 14px;"></p>
-
+        <p id="h-bio" style="margin-top: 15px; font-size: 14px; white-space: pre-wrap;"></p>
+        
         <div class="btn-row">
             <button onclick="openEditModal()" class="btn-f">Modifier le profil</button>
             <button onclick="copyProfileLink()" class="btn-f">Partager le profil</button>
         </div>
     </div>
 
-    <div id="edit-profile-modal" class="modal-overlay">
-        <div class="modal-box">
-            <div style="display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #363636; align-items: center;">
-                <span onclick="closeEditModal()" style="cursor: pointer; color: #a8a8a8;">Annuler</span>
-                <b style="font-size: 16px;">Modifier le profil</b>
-                <span id="btn-save" style="cursor: pointer; color: #0095f6; font-weight: 600;">Terminé</span>
+    <div class="highlights-container">
+        <div class="highlight-item" onclick="alert('Bientôt disponible !')">
+            <div class="hl-circle"><i class="fas fa-plus"></i></div>
+            <span style="font-size: 12px;">Nouveau</span>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active"><i class="fas fa-grid-3x3"></i></div>
+        <div class="tab"><i class="far fa-bookmark"></i></div>
+        <div class="tab"><i class="far fa-id-badge"></i></div>
+    </div>
+
+    <div id="post-grid" class="post-grid"></div>
+    <div id="loader" style="text-align:center; padding: 20px; display:none;">
+        <i class="fas fa-spinner fa-spin" style="color: var(--accent);"></i>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span onclick="closeEditModal()" style="cursor:pointer; color:#a8a8a8;">Annuler</span>
+                <b>Modifier le profil</b>
+                <span id="btn-save" style="cursor:pointer; color:#0095f6; font-weight:600;">Terminé</span>
             </div>
             <div style="padding: 20px;">
                 <label style="font-size: 12px; color: #a8a8a8;">Bio</label>
-                <textarea id="inp-bio-modal" class="edit-input" rows="3" placeholder="Ta nouvelle bio..."></textarea>
-                
-                <label style="font-size: 12px; color: #a8a8a8; margin-top: 15px; display: block;">URL de l'image</label>
-                <input type="text" id="inp-avatar-url" class="edit-input" placeholder="https://...">
+                <textarea id="inp-bio" class="edit-field" rows="3"></textarea>
+                <label style="font-size: 12px; color: #a8a8a8; margin-top:15px; display:block;">URL de la Photo</label>
+                <input type="text" id="inp-avatar" class="edit-field">
             </div>
         </div>
     </div>
 
     <script type="module">
         import { db, auth } from './firebase-config.js';
-        import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, onSnapshot, updateDoc, collection, query, where, orderBy, limit, getDocs, startAfter } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // EXPORT GLOBAL POUR ONCLICK (Règle l'erreur ReferenceError)
-        window.openEditModal = () => {
-            document.getElementById('edit-profile-modal').style.display = 'flex';
-        };
+        let lastDoc = null;
+        let isFetching = false;
 
-        window.closeEditModal = () => {
-            document.getElementById('edit-profile-modal').style.display = 'none';
-        };
-
+        // FONCTIONS GLOBALES (Accessibles via onclick)
+        window.openEditModal = () => document.getElementById('edit-modal').style.display = 'flex';
+        window.closeEditModal = () => document.getElementById('edit-modal').style.display = 'none';
         window.copyProfileLink = () => {
             navigator.clipboard.writeText(window.location.href);
-            alert("Lien du profil copié !");
+            alert("Lien copié !");
         };
 
-        // GESTION DES DONNÉES FIREBASE
+        // CHARGEMENT DES DONNÉES UTILISATEUR
         auth.onAuthStateChanged(user => {
             if (user) {
                 const userRef = doc(db, "users", user.uid);
-
-                // Synchronisation en temps réel
-                onSnapshot(userRef, (snap) => {
+                
+                // Temps réel Header
+                onSnapshot(userRef, snap => {
                     if (snap.exists()) {
-                        const data = snap.data();
-                        document.getElementById('h-username').innerText = data.username || "Utilisateur";
-                        document.getElementById('h-bio').innerText = data.bio || "";
-                        document.getElementById('h-avatar').src = data.avatarUrl || "https://via.placeholder.com/150";
+                        const d = snap.data();
+                        document.getElementById('h-username').innerText = d.username || "User";
+                        document.getElementById('h-bio').innerText = d.bio || "";
+                        document.getElementById('h-avatar').src = d.avatarUrl || "https://via.placeholder.com/150";
+                        document.getElementById('c-posts').innerText = d.postsCount || 0;
+                        document.getElementById('c-followers').innerText = d.followersCount || 0;
+                        document.getElementById('h-verify').style.display = d.isVerified ? 'inline' : 'none';
                         
-                        // Pré-remplir la modale
-                        document.getElementById('inp-bio-modal').value = data.bio || "";
-                        document.getElementById('inp-avatar-url').value = data.avatarUrl || "";
+                        document.getElementById('inp-bio').value = d.bio || "";
+                        document.getElementById('inp-avatar').value = d.avatarUrl || "";
                     }
                 });
 
-                // Sauvegarde lors du clic sur "Terminé"
+                // Sauvegarde
                 document.getElementById('btn-save').onclick = async () => {
-                    try {
-                        await updateDoc(userRef, {
-                            bio: document.getElementById('inp-bio-modal').value,
-                            avatarUrl: document.getElementById('inp-avatar-url').value
-                        });
-                        window.closeEditModal();
-                    } catch (e) {
-                        alert("Erreur de mise à jour");
-                    }
+                    await updateDoc(userRef, {
+                        bio: document.getElementById('inp-bio').value,
+                        avatarUrl: document.getElementById('inp-avatar').value
+                    });
+                    closeEditModal();
                 };
+
+                // Lancer le chargement des posts
+                loadPosts(user.uid);
             }
         });
+
+        // CHARGEMENT INFINI DES POSTS
+        async function loadPosts(uid) {
+            if (isFetching) return;
+            isFetching = true;
+            const grid = document.getElementById('post-grid');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+
+            let q = query(collection(db, "posts"), where("userId", "==", uid), orderBy("createdAt", "desc"), limit(12));
+            if (lastDoc) q = query(collection(db, "posts"), where("userId", "==", uid), orderBy("createdAt", "desc"), startAfter(lastDoc), limit(12));
+
+            const snap = await getDocs(q);
+            if (!snap.empty) {
+                lastDoc = snap.docs[snap.docs.length - 1];
+                snap.forEach(doc => {
+                    const post = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'post-item';
+                    
+                    if (post.type === 'video') {
+                        div.innerHTML = `<video src="${post.url}"></video><i class="fas fa-play video-icon"></i>`;
+                    } else {
+                        div.innerHTML = `<img src="${post.url}">`;
+                    }
+                    grid.appendChild(div);
+                });
+            }
+            isFetching = false;
+            loader.style.display = 'none';
+        }
+
+        // SCROLL DETECTION
+        window.onscroll = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+                if(auth.currentUser) loadPosts(auth.currentUser.uid);
+            }
+        };
     </script>
 </body>
 </html>
