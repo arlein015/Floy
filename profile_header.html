@@ -1,35 +1,32 @@
 <style>
-    /* Design général style Insta/Floy */
     .profile-header { padding: 20px 15px; color: white; background: #000; }
-    .header-top { display: flex; align-items: center; gap: 25px; }
-    .avatar-container { width: 85px; height: 85px; border-radius: 50%; border: 1px solid #262626; object-fit: cover; }
+    .header-top { display: flex; align-items: center; gap: 20px; }
+    .avatar-img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
     
-    /* Stats Row */
-    .stats-container { display: flex; gap: 15px; margin: 15px 0; font-size: 14px; }
-    .stats-container b { color: white; margin-right: 3px; }
-    .stats-container span { color: #eee; }
+    .stats-row { display: flex; gap: 15px; margin: 12px 0; font-size: 14px; }
+    .stats-row b { color: white; margin-right: 3px; }
+    .stats-row span { color: #aaa; }
 
-    /* Boutons */
-    .btn-row { display: flex; gap: 8px; margin-top: 15px; }
-    .btn-base { 
-        flex: 1; height: 35px; border: none; border-radius: 8px; 
+    .btn-container { display: flex; gap: 8px; margin-top: 15px; }
+    .btn-f { 
+        flex: 1; height: 36px; border: none; border-radius: 8px; 
         font-weight: 600; font-size: 14px; cursor: pointer; 
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-gray { background: #363636; color: white; } /* Style Sombre Archive/Suivi */
-    .btn-white { background: #efefef; color: black; } /* Style clair pour Modifier */
-    .btn-orange { background: #FF7A1A; color: white; } /* Style Floy pour Contacter/Message */
+    .btn-edit-view { background: #efefef; color: black; } /* Pour l'utilisateur connecté */
+    .btn-contact-view { background: #FF7A1A; color: white; } /* Pour les visiteurs */
+    .btn-secondary { background: #363636; color: white; }
 </style>
 
 <div class="profile-header">
     <div class="header-top">
-        <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-container">
+        <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
         <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 400;">...</h2>
-                <i class="fas fa-cog" id="settings-icon"></i>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 500;">...</h2>
+                <i class="fas fa-cog" id="h-settings" style="cursor:pointer; display:none;"></i>
             </div>
-            <div class="stats-container">
+            <div class="stats-row">
                 <div><b id="c-posts">0</b><span>publications</span></div>
                 <div><b id="c-followers">0</b><span>followers</span></div>
                 <div><b id="c-following">0</b><span>suivi(e)s</span></div>
@@ -37,13 +34,13 @@
         </div>
     </div>
 
-    <div style="margin-top: 10px;">
-        <span id="h-fullname" style="font-weight: 600; font-size: 14px;">...</span>
-        <p id="h-bio" style="margin: 2px 0; font-size: 14px; color: white;"></p>
-        <a id="h-link" href="#" style="color: #e0e0e0; font-size: 14px; text-decoration: none; display: none;"></a>
+    <div style="margin-top: 12px;">
+        <span id="h-fullname" style="font-weight: 600; font-size: 14px; display: block;">...</span>
+        <p id="h-bio" style="margin: 2px 0; font-size: 14px; line-height: 1.4;"></p>
+        <a id="h-link" href="#" style="color: #3897f0; font-size: 14px; text-decoration: none; display: none; margin-top: 5px;"></a>
     </div>
 
-    <div id="h-btn-zone" class="btn-row"></div>
+    <div id="h-buttons" class="btn-container"></div>
 </div>
 
 <script type="module">
@@ -55,37 +52,36 @@
             if (!snap.exists()) return;
             const data = snap.data();
             
-            // Remplissage des infos
-            document.getElementById('h-username').innerText = data.username || "user";
+            document.getElementById('h-username').innerText = data.username || "utilisateur";
             document.getElementById('h-fullname').innerText = data.fullName || data.username;
             document.getElementById('h-bio').innerText = data.bio || "";
             if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
             
             if(data.website) {
                 const link = document.getElementById('h-link');
-                link.innerText = data.website;
+                link.innerText = data.website.replace(/^https?:\/\//, '');
                 link.href = data.website;
                 link.style.display = 'block';
             }
 
-            const btnZone = document.getElementById('h-btn-zone');
-            
-            // --- LOGIQUE DE VUE ---
+            const btnZone = document.getElementById('h-buttons');
+            const settingsIcon = document.getElementById('h-settings');
+
             if (profileId === myId) {
-                // VUE MON APPAREIL (Ton image de droite)
+                // MA VUE (Boutons gris/blanc)
+                settingsIcon.style.display = 'block';
                 btnZone.innerHTML = `
-                    <button onclick="openEditModal()" class="btn-base btn-white">Modifier le profil</button>
-                    <button class="btn-base btn-white">Voir l'archive</button>
+                    <button onclick="openEditModal()" class="btn-f btn-edit-view">Modifier le profil</button>
+                    <button class="btn-f btn-edit-view">Voir l'archive</button>
                 `;
-                document.getElementById('settings-icon').style.display = 'block';
             } else {
-                // VUE AUTRES UTILISATEURS (Ton image de gauche)
+                // VUE VISITEUR (Bouton Orange Contacter)
+                settingsIcon.style.display = 'none';
                 btnZone.innerHTML = `
-                    <button id="follow-btn" class="btn-base btn-gray">Suivi(e) <i class="fas fa-chevron-down"></i></button>
-                    <button onclick="location.href='chat.html?id=${profileId}'" class="btn-base btn-orange">Contacter</button>
-                    <button style="width:40px; flex:none;" class="btn-base btn-gray"><i class="fas fa-user-plus"></i></button>
+                    <button class="btn-f btn-secondary">Suivi(e) <i class="fas fa-chevron-down"></i></button>
+                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-contact-view">Contacter</button>
+                    <button style="width:40px; flex:none;" class="btn-f btn-secondary"><i class="fas fa-user-plus"></i></button>
                 `;
-                document.getElementById('settings-icon').style.display = 'none';
             }
         });
     };
