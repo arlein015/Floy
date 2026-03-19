@@ -37,14 +37,14 @@
         <span id="s-posts" class="stat-value">0</span>
         <span class="stat-label">publications</span>
     </div>
-    <div class="stat-box">
-        <span id="s-followers" class="stat-value">0</span>
-        <span class="stat-label">abonnés</span>
-    </div>
-    <div class="stat-box">
-        <span id="s-following" class="stat-value">0</span>
-        <span class="stat-label">abonnements</span>
-    </div>
+    <div class="stat-box" onclick="openFollowersModal('followers', profileId)">
+    <span id="s-followers" class="stat-value">0</span>
+    <span class="stat-label">abonnés</span>
+</div>
+<div class="stat-box" onclick="openFollowersModal('following', profileId)">
+    <span id="s-following" class="stat-value">0</span>
+    <span class="stat-label">abonnements</span>
+</div>
 </div>
 
 <script type="module">
