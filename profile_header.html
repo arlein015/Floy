@@ -1,108 +1,75 @@
-<style>
-    .header-main { padding: 20px 15px; background: #000; color: white; font-family: sans-serif; }
-    
-    /* Ligne du haut : Photo à gauche, Stats à droite */
-    .header-top-row { 
-        display: flex; 
-        align-items: center; 
-        justify-content: flex-start; 
-        gap: 35px; 
-        margin-bottom: 15px; 
-    }
-    
-    .profile-pic-box { position: relative; width: 85px; height: 85px; flex-shrink: 0; }
-    .profile-pic-box img { 
-        width: 100%; height: 100%; border-radius: 50%; 
-        object-fit: cover; border: 2px solid #FF7A1A; 
-    }
-
-    .stats-right { display: flex; gap: 20px; flex-grow: 1; justify-content: flex-start; }
-    .stat-item { text-align: center; cursor: pointer; min-width: 65px; }
-    .stat-item b { display: block; font-size: 18px; color: white; }
-    .stat-item span { font-size: 12px; color: #8e8e8e; }
-
-    /* Infos utilisateur SOUS la photo */
-    .user-info-bottom { margin-top: 10px; }
-    .name-badge-row {
-        display: flex;
-        align-items: center; /* Aligne verticalement le texte et le badge */
-        gap: 6px; /* Espace entre le nom et le badge */
-        margin-bottom: 2px;
-    }
-    #p-username {
-        font-weight: bold;
-        font-size: 18px;
-        margin: 0;
-        color: white;
-    }
-
-    .rosette-badge {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .user-email { color: #FF7A1A; font-size: 13px; margin-bottom: 4px; display: block; text-decoration: none; }
-    .bio-text { font-size: 14px; color: #ffffff; margin: 2px 0; line-height: 1.4; }
-
-    /* Boutons d'actions */
-    .action-bar { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
-    
-    /* Suivre en Orange */
-    .btn-follow { 
-        background: #FF7A1A; color: white; border: none; 
-        flex: 2; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; 
-    }
-    
-    /* Message en Blanc */
-    .btn-msg { 
-        background: #ffffff; color: #000; border: none; 
-        flex: 2; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; 
-    }
-
-    /* Icônes SVG (Paramètres et Partage) */
-    .btn-icon-svg { 
-        background: #262626; border: none; padding: 10px; 
-        border-radius: 8px; color: white; cursor: pointer; 
-        display: flex; align-items: center; justify-content: center;
-    }
-    .btn-icon-svg svg { width: 18px; height: 18px; fill: white; }
-</style>
-
-<div class="header-main">
-    <div class="header-top-row">
-        <div class="profile-pic-box">
-            <img id="p-img" src="https://via.placeholder.com/150">
+<div class="profile-header-container" style="padding: 20px; background: #000;">
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div id="p-avatar-frame" style="position: relative; width: 85px; height: 85px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #FF7A1A, #feb47b);">
+            <img id="p-avatar" src="https://via.placeholder.com/150" 
+                 style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #000; background: #222;">
         </div>
-        <div class="stats-right">
-            <div class="stat-item"><b id="s-posts">0</b><span>publications</span></div>
-            <div class="stat-item" onclick="openFollowersModal('followers', profileId)"><b id="s-followers">0</b><span>abonnés</span></div>
-            <div class="stat-item" onclick="openFollowersModal('following', profileId)"><b id="s-following">0</b><span>abonnements</span></div>
-        </div>
-    </div>
 
-    <div class="user-info-bottom">
-    <div class="name-badge-row">
-        <span id="p-username">Arlein</span>
-            <div class="user-info-bottom">
-    <div class="name-badge-row">
-        <span id="p-username">Arlein</span>
+        <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <h2 id="p-display-name" style="margin: 0; font-size: 18px; font-weight: bold; color: white;">Chargement...</h2>
+                <div id="badge-slot"></div> 
             </div>
+            <p id="p-display-bio" style="margin: 5px 0 0 0; font-size: 13px; color: #aaa; line-height: 1.4;"></p>
         </div>
-        <a id="p-email" class="user-email">email@chargement.com</a>
-        <p id="p-bio" class="bio-text">...</p>
     </div>
 
-    <div class="action-bar" id="p-actions">
-        <button id="follow-btn" class="btn-follow" onclick="handleFollowClick()">Suivre</button>
-        <button class="btn-msg">Message</button>
-        
-        <button class="btn-icon-svg" onclick="copyProfileLink()">
-            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
-        </button>
-        
-        <button class="btn-icon-svg" onclick="openEditModal()">
-            <svg viewBox="0 0 24 24"><path d="M12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5zm7.43-2.53l1.19-.93c.11-.08.14-.24.07-.37l-1.13-1.96a.296.296 0 0 0-.36-.13l-1.39.56c-.29-.22-.61-.41-.94-.55l-.21-1.48a.295.295 0 0 0-.29-.24h-2.26a.29.29 0 0 0-.29.24l-.21 1.48c-.33.14-.65.33-.94.55l-1.39-.56a.296.296 0 0 0-.36.13l-1.13 1.96c-.08.13-.04.29.07.37l1.13 1.96c.07.13.22.18.36.13l1.39-.56c.29.22.61.41.94.55l.21 1.48c.03.14.16.24.3.24h2.26c.14 0 .26-.1.29-.24l.21-1.48c.33-.14.65-.33.94-.55l1.39.56c.14.05.3.01.36-.13l1.13-1.96c.07-.13.04-.29-.07-.37l-1.19-.93z"/></svg>
-        </button>
-    </div>
+    <div id="p-actions-area" style="margin-top: 20px; display: flex; gap: 10px;">
+        </div>
 </div>
+
+<script type="module">
+    import { db } from './firebase-config.js';
+    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Fonction globale appelée par profil.html
+    window.loadHeader = (profileId, currentUserId) => {
+        const userRef = doc(db, "users", profileId);
+
+        // Écoute en temps réel des changements du profil
+        onSnapshot(userRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // 1. Mise à jour des textes
+                document.getElementById('p-display-name').innerText = data.username || "Utilisateur Floy";
+                document.getElementById('p-display-bio').innerText = data.bio || "Bienvenue sur mon profil Floy !";
+                
+                // 2. Mise à jour de la photo (avec fallback si vide)
+                if (data.avatarUrl) {
+                    document.getElementById('p-avatar').src = data.avatarUrl;
+                } else {
+                    document.getElementById('p-avatar').src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                }
+
+                // 3. Gestion intelligente des boutons
+                const actionsArea = document.getElementById('p-actions-area');
+                if (profileId === currentUserId) {
+                    // C'est MON profil
+                    actionsArea.innerHTML = `
+                        <button onclick="window.openEditModal()" style="flex: 1; height: 36px; background: #262626; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                            Modifier le profil
+                        </button>
+                        <button style="width: 36px; height: 36px; background: #262626; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    `;
+                } else {
+                    // C'est le profil de QUELQU'UN D'AUTRE
+                    actionsArea.innerHTML = `
+                        <button id="btn-follow" style="flex: 1; height: 36px; background: #FF7A1A; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                            Suivre
+                        </button>
+                        <button onclick="location.href='chat.html?id=${profileId}'" style="flex: 1; height: 36px; background: #262626; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                            Message
+                        </button>
+                    `;
+                }
+            } else {
+                document.getElementById('p-display-name').innerText = "Profil introuvable";
+            }
+        }, (error) => {
+            console.error("Erreur Header Firestore:", error);
+        });
+    };
+</script>
