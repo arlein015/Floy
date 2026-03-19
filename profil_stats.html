@@ -1,16 +1,7 @@
-<div style="display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; background: #000; color: white; text-align: center;">
-    <div>
-        <span id="s-posts" style="display: block; font-weight: bold; font-size: 16px;">0</span>
-        <span style="font-size: 11px; color: #888;">Publications</span>
-    </div>
-    <div style="cursor: pointer;">
-        <span id="s-followers" style="display: block; font-weight: bold; font-size: 16px;">0</span>
-        <span style="font-size: 11px; color: #888;">Abonnés</span>
-    </div>
-    <div style="cursor: pointer;">
-        <span id="s-following" style="display: block; font-weight: bold; font-size: 16px;">0</span>
-        <span style="font-size: 11px; color: #888;">Abonnements</span>
-    </div>
+<div style="display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; text-align: center;">
+    <div><b id="s-posts" style="display:block;">0</b><span style="color:#888; font-size:12px;">Posts</span></div>
+    <div><b id="s-followers" style="display:block;">0</b><span style="color:#888; font-size:12px;">Abonnés</span></div>
+    <div><b id="s-following" style="display:block;">0</b><span style="color:#888; font-size:12px;">Abonnements</span></div>
 </div>
 
 <script type="module">
@@ -18,19 +9,8 @@
     import { collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     window.loadStats = (uid) => {
-        // Compteur Posts
-        onSnapshot(query(collection(db, "posts"), where("userId", "==", uid)), s => {
-            document.getElementById('s-posts').innerText = s.size;
-        });
-
-        // Compteur Abonnés
-        onSnapshot(query(collection(db, "followers"), where("followingId", "==", uid)), s => {
-            document.getElementById('s-followers').innerText = s.size;
-        });
-
-        // Compteur Abonnements
-        onSnapshot(query(collection(db, "followers"), where("followerId", "==", uid)), s => {
-            document.getElementById('s-following').innerText = s.size;
-        });
+        onSnapshot(query(collection(db, "posts"), where("userId", "==", uid)), s => document.getElementById('s-posts').innerText = s.size);
+        onSnapshot(query(collection(db, "followers"), where("followingId", "==", uid)), s => document.getElementById('s-followers').innerText = s.size);
+        onSnapshot(query(collection(db, "followers"), where("followerId", "==", uid)), s => document.getElementById('s-following').innerText = s.size);
     };
 </script>
