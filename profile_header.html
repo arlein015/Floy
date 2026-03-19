@@ -57,17 +57,43 @@
 </div>
 
 <script type="module">
-    import { db } from './firebase-config.js';
-    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { db, auth } from './firebase-config.js';
+    import { doc, updateDoc, increment, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Fonction pour copier le lien
-    window.copyProfileLink = () => {
-        const profileUrl = window.location.href;
-        navigator.clipboard.writeText(profileUrl).then(() => {
-            const toast = document.getElementById('copy-toast');
-            toast.style.opacity = '1';
-            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
-        });
+    // 1. FONCTION SUIVRE (Temps Réel)
+    window.toggleFollow = async (profileId) => {
+        const myId = auth.currentUser.uid;
+        const userRef = doc(db, "users", profileId);
+        const myRef = doc(db, "users", myId);
+        
+        const btn = document.getElementById('btn-main');
+        const isFollowing = btn.getAttribute('data-following') === 'true';
+
+        if (!isFollowing) {
+            // Ajouter un follower
+            await updateDoc(userRef, { followersCount: increment(1), followersList: arrayUnion(myId) });
+            await updateDoc(myRef, { followingCount: increment(1) });
+        } else {
+            // Retirer un follower
+            await updateDoc(userRef, { followersCount: increment(-1), followersList: arrayRemove(myId) });
+            await updateDoc(myRef, { followingCount: increment(-1) });
+        }
+    };
+
+    // 2. FONCTION MESSAGE (Afficher la bulle)
+    window.openMessageBubble = (profileId) => {
+        // Cette fonction doit appeler ton composant "Quick-Chat"
+        // Si tu as un élément id="quick-chat-container", on l'affiche :
+        const chatBox = document.getElementById('quick-chat-container');
+        if (chatBox) {
+            chatBox.style.display = 'block';
+            // On peut aussi charger les messages ici
+            if (window.loadQuickChat) window.loadQuickChat(profileId);
+        } else {
+            // Si la bulle n'existe pas encore, on redirige ou on affiche une alerte
+            console.log("Ouverture du chat pour : " + profileId);
+            // location.href = `messages.html?id=${profileId}`; 
+        }
     };
 
     window.loadHeader = (profileId, myId) => {
@@ -75,35 +101,30 @@
             if (!snap.exists()) return;
             const data = snap.data();
             
-            document.getElementById('h-username').innerText = data.username || "";
-            document.getElementById('h-fullname').innerText = data.fullName || "";
-            document.getElementById('h-bio').innerText = data.bio || "";
-            if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
-
-            const badgeCont = document.getElementById('h-badge-container');
-            badgeCont.innerHTML = data.isVerified ? `<i class="fas fa-check-circle" style="color:#FF7A1A; font-size:16px;"></i>` : '';
+            // Mise à jour des compteurs en TEMPS RÉEL
+            document.getElementById('c-followers').innerText = data.followersCount || 0;
+            document.getElementById('c-posts').innerText = data.postsCount || 0;
 
             const actionsZone = document.getElementById('dynamic-actions-zone');
-            const plusIcon = document.getElementById('h-plus-icon');
-
             actionsZone.innerHTML = "";
 
             if (profileId === myId) {
-                // MOI : "Modifier" + "Partager" (Copie lien) + "Paramètres"
-                plusIcon.style.display = 'flex';
+                // ... (Code pour ton propre profil : Modifier / Partager)
                 actionsZone.innerHTML = `
                     <button onclick="openEditModal()" class="btn-f btn-gray">Modifier le profil</button>
                     <button onclick="copyProfileLink()" class="btn-f btn-gray">Partager le profil</button>
-                    <button class="btn-icon-svg" onclick="openEditModal()">
-                        <svg viewBox="0 0 24 24"><path d="M19.91 15.51a1.29 1.29 0 0 1-1.02-1.46l.16-1.14a1.29 1.29 0 0 1 1.02-1.46l.94-.13a1.29 1.29 0 0 0 1.02-1.46l-1.06-4.25a1.29 1.29 0 0 0-1.02-1.46l-.94-.13a1.29 1.29 0 0 1-1.02-1.46l-.16-1.14a1.29 1.29 0 0 0-1.02-1.46l-4.25 1.06a1.29 1.29 0 0 0-1.02 1.46l-.16 1.14a1.29 1.29 0 0 1-1.02 1.46l-.94.13a1.29 1.29 0 0 0-1.02 1.46l1.06 4.25a1.29 1.29 0 0 0 1.02 1.46l.94.13a1.29 1.29 0 0 1 1.02 1.46l.16 1.14a1.29 1.29 0 0 0 1.02 1.46l4.25-1.06a1.29 1.29 0 0 0 1.02-1.46l-.16-1.14z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </button>
                 `;
             } else {
-                // AUTRES : "Suivre" + "Message" + "Partager" (Copie lien)
-                plusIcon.style.display = 'none';
+                // VUE AUTRE UTILISATEUR
+                const isFollowing = data.followersList?.includes(myId);
+                const followText = isFollowing ? "Suivi(e)" : "Suivre";
+                const followClass = isFollowing ? "btn-gray" : "btn-orange";
+
                 actionsZone.innerHTML = `
-                    <button class="btn-f btn-orange">Suivre</button>
-                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-gray">Message</button>
+                    <button id="btn-main" data-following="${isFollowing}" onclick="toggleFollow('${profileId}')" class="btn-f ${followClass}">
+                        ${followText}
+                    </button>
+                    <button onclick="openMessageBubble('${profileId}')" class="btn-f btn-gray">Message</button>
                     <button class="btn-icon-svg" onclick="copyProfileLink()">
                         <svg viewBox="0 0 24 24"><path d="M12 2.75a.75.75 0 0 1 .75.75V15a.75.75 0 0 1-1.5 0V3.5a.75.75 0 0 1 .75-.75Z"/><path d="M7.22 5.53a.75.75 0 0 1 1.06 0L12 9.25l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L7.22 6.59a.75.75 0 0 1 0-1.06Z"/><path d="M3.75 13.25a.75.75 0 0 1 .75.75v5.5c0 .414.336.75.75.75h13.5a.75.75 0 0 0 .75-.75V14a.75.75 0 0 1 1.5 0v5.5A2.25 2.25 0 0 1 18.75 21.75H5.25A2.25 2.25 0 0 1 3 19.5V14a.75.75 0 0 1 .75-.75Z"/></svg>
                     </button>
