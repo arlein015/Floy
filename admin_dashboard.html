@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Console Administrateur | NETWORK</title>
+</head>
+<body class="bg-slate-950 text-slate-200 font-mono">
+
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-slate-900 border-r border-white/5 p-6">
+            <h1 class="text-xl font-bold text-red-500 mb-10 tracking-widest">ADMIN.CTRL</h1>
+            <nav class="space-y-4 text-sm">
+                <a href="#" class="block text-white font-bold p-2 bg-white/5 rounded">Tableau de bord</a>
+                <a href="#" class="block opacity-50 p-2 hover:opacity-100">Modération Contenu</a>
+                <a href="#" class="block opacity-50 p-2 hover:opacity-100">Logs Système</a>
+                <a href="#" class="block opacity-50 p-2 hover:opacity-100 text-red-400">Sécurité (Bcrypt)</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-10">
+            <div class="grid grid-cols-3 gap-6 mb-10">
+                <div class="bg-slate-900 p-6 rounded-xl border border-white/5">
+                    <p class="text-xs uppercase opacity-50 mb-2">Utilisateurs Totaux</p>
+                    <p class="text-4xl font-bold text-white">{{ total_users }}</p>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-xl border border-white/5">
+                    <p class="text-xs uppercase opacity-50 mb-2">Publications</p>
+                    <p class="text-4xl font-bold text-white">{{ total_posts }}</p>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-xl border border-white/5">
+                    <p class="text-xs uppercase opacity-50 mb-2">Revenus Estimez (10$ Sub)</p>
+                    <p class="text-4xl font-bold text-green-400">En calcul...</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold mb-6">Utilisateurs Récents</h3>
+            <div class="bg-slate-900 rounded-xl overflow-hidden border border-white/5">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-white/5 text-xs uppercase opacity-50">
+                        <tr>
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Pseudo</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        {% for u in users %}
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition">
+                            <td class="p-4">#{{ u.id }}</td>
+                            <td class="p-4 font-bold">{{ u.username }}</td>
+                            <td class="p-4">
+                                {% if u.is_verified %}
+                                <span class="text-blue-400 text-xs bg-blue-400/10 px-2 py-1 rounded">VIP</span>
+                                {% else %}
+                                <span class="opacity-50 text-xs">Standard</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 text-right">
+                                <form action="{{ url_for('admin.ban_user', user_id=u.id) }}" method="POST">
+                                    <button class="text-red-500 hover:bg-red-500/10 px-3 py-1 rounded transition">Bannir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
