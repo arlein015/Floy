@@ -6,23 +6,30 @@
     <title>Floy | Profil Certifié</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
         .orange-text { color: #FF6B00; }
         .bg-orange { background-color: #FF6B00; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* BADGE DENTELÉ MODERNE (Précision chirurgicale) */
+        /* NOUVEAU BADGE DENTELÉ MODERNE */
         .verified-badge {
             color: #0095f6;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            filter: drop-shadow(0 0 2px rgba(0, 149, 246, 0.3));
+            filter: drop-shadow(0 0 5px rgba(0, 149, 246, 0.5));
+            animation: pulse-blue 3s infinite;
         }
 
-        /* SYSTÈME DES 15 ÉTOILES (Effet Premium) */
-        .stars-container { position: absolute; inset: -12px; pointer-events: none; }
+        @keyframes pulse-blue {
+            0% { filter: drop-shadow(0 0 2px rgba(0, 149, 246, 0.3)); }
+            50% { filter: drop-shadow(0 0 8px rgba(0, 149, 246, 0.6)); }
+            100% { filter: drop-shadow(0 0 2px rgba(0, 149, 246, 0.3)); }
+        }
+
+        /* SYSTÈME DES 15 ÉTOILES */
+        .stars-container { position: absolute; inset: -10px; pointer-events: none; }
         .star {
             position: absolute;
             background: white;
@@ -32,18 +39,18 @@
         }
         @keyframes flash {
             0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 0.8; transform: scale(1.1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.92); align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
         .modal.active { display: flex; }
     </style>
 </head>
 <body class="antialiased">
 
     <nav class="sticky top-0 z-40 bg-black/95 px-6 py-4 flex justify-between items-center border-b border-white/5">
-        <div class="flex items-center space-x-5">
+        <div class="flex items-center space-x-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             <div class="flex items-center space-x-1.5">
                 <h1 class="font-bold text-lg tracking-tight">zoeyiso</h1>
@@ -56,15 +63,12 @@
                 </div>
             </div>
         </div>
-        <div class="flex items-center space-x-5">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-            <svg class="w-1 h-6 text-gray-400" fill="currentColor" viewBox="0 0 4 24"><circle cx="2" cy="4" r="1.5"/><circle cx="2" cy="12" r="1.5"/><circle cx="2" cy="20" r="1.5"/></svg>
-        </div>
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
     </nav>
 
     <main class="max-w-2xl mx-auto pt-6 px-4">
         <header class="flex items-center space-x-8 mb-8">
-            <div class="w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-[#FF6B00] to-[#FF3D00]">
+            <div class="w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-[#FF6B00] to-[#FF3D00] shadow-[0_0_15px_rgba(255,107,0,0.3)]">
                 <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200" class="w-full h-full rounded-full object-cover border-2 border-black">
             </div>
             <div class="flex-1 flex justify-around text-center font-bold">
@@ -75,14 +79,14 @@
         </header>
 
         <div class="flex space-x-2.5 mb-8">
-            <button id="btn-suivre" onclick="toggleSuivre()" class="flex-1 bg-orange text-black font-black py-2.5 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-all">Suivre</button>
+            <button id="btn-suivre" onclick="toggleSuivre()" class="flex-1 bg-orange text-black font-black py-2.5 rounded-xl text-xs uppercase tracking-widest transition-all active:scale-95">Suivre</button>
             <button onclick="toggleModal(true)" class="flex-1 glass font-black py-2.5 rounded-xl text-xs uppercase tracking-widest active:scale-95">Message</button>
         </div>
 
         <section class="mb-8 border-t border-white/5 pt-6">
             <div id="stories-list" class="flex space-x-6 overflow-x-auto no-scrollbar">
                 <div onclick="document.getElementById('file-up').click()" class="flex flex-col items-center space-y-1.5 flex-shrink-0 cursor-pointer group">
-                    <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-700 flex items-center justify-center text-gray-500 group-hover:border-orange-500 group-hover:text-orange-500 transition-colors">
+                    <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-700 flex items-center justify-center text-gray-500 group-hover:border-orange-500 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                     </div>
                     <span class="text-[10px] text-gray-500 font-bold uppercase">New</span>
@@ -91,50 +95,42 @@
             </div>
         </section>
 
-        <div class="grid grid-cols-3 gap-0.5 md:gap-1">
-            <div class="aspect-square bg-gray-900"><img src="https://picsum.photos/500/500?random=10" class="w-full h-full object-cover"></div>
-            <div class="aspect-square bg-gray-900"><img src="https://picsum.photos/500/500?random=11" class="w-full h-full object-cover"></div>
-            <div class="aspect-square bg-gray-900"><img src="https://picsum.photos/500/500?random=12" class="w-full h-full object-cover"></div>
+        <div class="grid grid-cols-3 gap-0.5">
+            <div class="aspect-square bg-gray-900 overflow-hidden"><img src="https://picsum.photos/500/500?random=20" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition"></div>
+            <div class="aspect-square bg-gray-900 overflow-hidden"><img src="https://picsum.photos/500/500?random=21" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition"></div>
+            <div class="aspect-square bg-gray-900 overflow-hidden"><img src="https://picsum.photos/500/500?random=22" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition"></div>
         </div>
     </main>
 
     <div id="modal-msg" class="modal px-6" onclick="toggleModal(false)">
-        <div class="glass w-full max-w-sm p-8 rounded-3xl shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="font-black text-center mb-6 uppercase text-sm tracking-widest orange-text">Envoyer un message</h3>
-            <textarea placeholder="Ecrivez votre message ici..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 h-32 outline-none text-sm focus:border-orange-500 transition-colors mb-4"></textarea>
-            <button class="w-full bg-white text-black font-black py-4 rounded-2xl text-xs uppercase tracking-widest" onclick="toggleModal(false)">Envoyer</button>
+        <div class="glass w-full max-w-sm p-8 rounded-3xl" onclick="event.stopPropagation()">
+            <h3 class="font-black text-center mb-6 uppercase text-sm orange-text">Envoyer un message</h3>
+            <textarea placeholder="Votre message..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 h-32 outline-none text-sm mb-4"></textarea>
+            <button class="w-full bg-white text-black font-black py-4 rounded-2xl text-xs uppercase" onclick="toggleModal(false)">Envoyer</button>
         </div>
     </div>
 
     <script>
-        // 1. GÉNÉRATION DES 15 ÉTOILES
+        // Génération des 15 étoiles
         const starBox = document.getElementById('stars-box');
         for (let i = 0; i < 15; i++) {
             const star = document.createElement('div');
             star.className = 'star';
-            star.style.width = (Math.random() * 2.5 + 0.5) + 'px';
+            star.style.width = (Math.random() * 2 + 1) + 'px';
             star.style.height = star.style.width;
             star.style.top = Math.random() * 100 + '%';
             star.style.left = Math.random() * 100 + '%';
-            star.style.setProperty('--duration', (Math.random() * 1.8 + 0.6) + 's');
+            star.style.setProperty('--duration', (Math.random() * 1.5 + 0.5) + 's');
             starBox.appendChild(star);
         }
 
-        // 2. SUIVRE ACTIF
         function toggleSuivre() {
             const btn = document.getElementById('btn-suivre');
-            if(btn.classList.contains('bg-orange')) {
-                btn.classList.replace('bg-orange', 'glass');
-                btn.classList.replace('text-black', 'text-white');
-                btn.innerText = 'Suivi';
-            } else {
-                btn.classList.replace('glass', 'bg-orange');
-                btn.classList.replace('text-white', 'text-black');
-                btn.innerText = 'Suivre';
-            }
+            const followed = btn.classList.contains('bg-orange');
+            btn.className = followed ? 'flex-1 glass font-black py-2.5 rounded-xl text-xs uppercase tracking-widest' : 'flex-1 bg-orange text-black font-black py-2.5 rounded-xl text-xs uppercase tracking-widest';
+            btn.innerText = followed ? 'Suivi' : 'Suivre';
         }
 
-        // 3. MODALE & STORIES
         function toggleModal(s) { document.getElementById('modal-msg').classList.toggle('active', s); }
         
         function addStory(e) {
@@ -142,11 +138,8 @@
             if(f) {
                 const r = new FileReader();
                 r.onload = (ev) => {
-                    const html = `
-                    <div class="flex flex-col items-center space-y-1.5 flex-shrink-0">
-                        <div class="w-16 h-16 rounded-full border-2 border-orange-500 p-0.5">
-                            <img src="${ev.target.result}" class="w-full h-full rounded-full object-cover">
-                        </div>
+                    const html = `<div class="flex flex-col items-center space-y-1.5 flex-shrink-0 animate-bounce">
+                        <div class="w-16 h-16 rounded-full border-2 border-orange-500 p-0.5"><img src="${ev.target.result}" class="w-full h-full rounded-full object-cover"></div>
                         <span class="text-[10px] text-white font-black uppercase">Maintenant</span>
                     </div>`;
                     document.getElementById('stories-list').insertAdjacentHTML('afterbegin', html);
