@@ -1,54 +1,38 @@
 import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-async function injectModule(id, file) {
-    try {
-        const response = await fetch(file);
-        if (!response.ok) {
-            console.warn(`⚠️ Module manquant : ${file}. Vérifie qu'il est bien sur GitHub.`);
-            return false; 
-        }
-        const html = await response.text();
-        const element = document.getElementById(id);
-        if (element) {
-            element.innerHTML = html;
-            return true;
-        }
-    } catch (e) { 
-        console.error("Erreur injection:", e);
-        return false;
-    }
-}
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 onAuthStateChanged(auth, async (user) => {
-    if (!user) { window.location.href = 'connexion.html'; return; }
+    if (user) {
+        // profileId est soit celui dans l'URL, soit l'utilisateur connecté
+        const params = new URLSearchParams(window.location.search);
+        const profileId = params.get('id') || user.uid;
 
-    const params = new URLSearchParams(window.location.search);
-    const profileId = params.get('id') || user.uid;
-
-    // On attend que les injections soient finies
-    const results = await Promise.all([
-        injectModule('header-module', 'profile_header.html'),
-        injectModule('stats-module', 'profile_stats.html'),
-        injectModule('tabs-module', 'profile_tabs.html'),
-        injectModule('grid-module', 'profile_grid.html'),
-        injectModule('modal-module', 'profile_edit_modal.html')
-    ]);
-
-    // SECURITÉ : On ne lance les fonctions que si l'élément existe vraiment
-    setTimeout(() => {
-        if(document.getElementById('p-username') && window.loadHeader) {
-            window.loadHeader(profileId, user.uid);
+        try {
+            // Récupération des données dans la collection "users"
+            const userDoc = await getDoc(doc(db, "users", profileId));
+            
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                
+                // Injection dynamique du NOM et de l'EMAIL
+                document.getElementById('p-username').innerText = data.username || "Utilisateur Floy";
+                document.getElementById('p-email').innerText = data.email || user.email;
+                document.getElementById('p-bio').innerText = data.bio || "Pas encore de bio.";
+                
+                if (data.avatarUrl) {
+                    document.getElementById('p-img').src = data.avatarUrl;
+                }
+            }
+        } catch (error) {
+            console.error("Erreur Firestore :", error);
         }
-        if(document.getElementById('s-posts') && window.loadStats) {
-            window.loadStats(profileId);
-        }
-        if(window.loadGrid) {
-            window.loadGrid('posts', profileId);
-        }
-
-        // FORCE le retrait du chargement même s'il y a une petite erreur
+        
+        // On cache le loader une fois les données prêtes
         const loader = document.getElementById('main-loader');
         if(loader) loader.style.display = 'none';
-    }, 500); 
+    } else {
+        // Redirection si non connecté
+        window.location.href = 'connexion.html';
+    }
 });
