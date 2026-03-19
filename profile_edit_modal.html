@@ -1,39 +1,43 @@
-<div id="edit-profile-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999;">
-    <div style="background: #262626; width: 90%; max-width: 400px; border-radius: 12px; color: white; overflow: hidden;">
+<div id="edit-profile-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: #262626; width: 90%; max-width: 400px; border-radius: 12px; color: white; overflow: hidden; font-family: sans-serif;">
         <div style="display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #363636; align-items: center;">
-            <span onclick="closeEditModal()" style="cursor: pointer; color: #a8a8a8;">Annuler</span>
+            <span onclick="closeEditModal()" style="cursor: pointer; color: #a8a8a8; font-size: 14px;">Annuler</span>
             <b style="font-size: 16px;">Modifier le profil</b>
-            <span onclick="saveProfileData()" style="cursor: pointer; color: #0095f6; font-weight: 600;">Terminé</span>
+            <span onclick="saveProfileData()" style="cursor: pointer; color: #0095f6; font-weight: 600; font-size: 14px;">Terminé</span>
         </div>
 
         <div style="padding: 20px;">
             <div style="text-align: center; margin-bottom: 20px;">
-                <img id="preview-img" src="https://via.placeholder.com/150" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid #444;">
-                <p style="color: #0095f6; font-size: 14px; margin-top: 10px; cursor: pointer;">Modifier la photo</p>
+                <img id="preview-img-modal" src="" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid #444;">
+                <input type="text" id="inp-avatar-url" placeholder="Lien de la photo" style="width: 100%; background: #121212; border: 1px solid #363636; border-radius: 8px; padding: 10px; color: white; margin-top: 10px; font-size: 12px;">
             </div>
 
-            <label style="font-size: 12px; color: #a8a8a8;">Nom complet</label>
-            <input type="text" id="inp-fullname" style="width: 100%; background: #121212; border: 1px solid #363636; border-radius: 8px; padding: 10px; color: white; margin-bottom: 15px;">
-
             <label style="font-size: 12px; color: #a8a8a8;">Bio</label>
-            <textarea id="inp-bio" rows="3" style="width: 100%; background: #121212; border: 1px solid #363636; border-radius: 8px; padding: 10px; color: white;"></textarea>
+            <textarea id="inp-bio-modal" rows="3" style="width: 100%; background: #121212; border: 1px solid #363636; border-radius: 8px; padding: 10px; color: white; margin-top: 5px; resize: none;"></textarea>
         </div>
     </div>
 </div>
 
-<script>
-    function closeEditModal() {
-        document.getElementById('edit-profile-modal').style.display = 'none';
-    }
+<script type="module">
+    import { db, auth } from './firebase-config.js';
+    import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    async function saveProfileData() {
-        // Logique Firebase pour enregistrer
-        const newBio = document.getElementById('inp-bio').value;
-        const newName = document.getElementById('inp-fullname').value;
-        
-        console.log("Sauvegarde de :", newName, newBio);
-        // Ici tu ajoutes ton updateDoc Firestore
-        
-        closeEditModal();
-    }
+    window.closeEditModal = () => {
+        document.getElementById('edit-profile-modal').style.display = 'none';
+    };
+
+    window.saveProfileData = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            await updateDoc(doc(db, "users", user.uid), {
+                bio: document.getElementById('inp-bio-modal').value,
+                avatarUrl: document.getElementById('inp-avatar-url').value
+            });
+            window.closeEditModal();
+        } catch (e) {
+            alert("Erreur lors de la mise à jour");
+        }
+    };
 </script>
