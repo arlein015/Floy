@@ -1,46 +1,54 @@
 <style>
     .profile-header { padding: 20px 15px; color: white; background: #000; }
     .header-top { display: flex; align-items: center; gap: 20px; }
-    .avatar-img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
     
-    .stats-row { display: flex; gap: 15px; margin: 12px 0; font-size: 14px; }
-    .stats-row b { color: white; margin-right: 3px; }
-    .stats-row span { color: #aaa; }
-
-    .btn-container { display: flex; gap: 8px; margin-top: 15px; }
-    .btn-f { 
-        flex: 1; height: 36px; border: none; border-radius: 8px; 
-        font-weight: 600; font-size: 14px; cursor: pointer; 
-        display: flex; align-items: center; justify-content: center; gap: 8px;
+    /* Conteneur Photo avec le bouton + */
+    .avatar-wrapper { position: relative; width: 85px; height: 85px; cursor: pointer; }
+    .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
+    .story-plus { 
+        position: absolute; bottom: 0; right: 0; background: #0095f6; 
+        color: white; border-radius: 50%; width: 24px; height: 24px; 
+        display: flex; align-items: center; justify-content: center; 
+        border: 2px solid black; font-size: 12px; 
     }
-    .btn-edit-view { background: #efefef; color: black; } /* Pour l'utilisateur connecté */
-    .btn-contact-view { background: #FF7A1A; color: white; } /* Pour les visiteurs */
-    .btn-secondary { background: #363636; color: white; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 15px; }
+    .btn-f { 
+        flex: 1; height: 34px; border: none; border-radius: 8px; 
+        font-weight: 600; font-size: 14px; cursor: pointer; 
+    }
+    .btn-orange { background: #FF7A1A; color: white; }
+    .btn-gray { background: #363636; color: white; }
+    .icon-settings { font-size: 20px; color: white; cursor: pointer; padding: 5px; }
 </style>
 
 <div class="profile-header">
     <div class="header-top">
-        <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
+        <div class="avatar-wrapper" onclick="location.href='add_story.html'">
+            <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
+            <div class="story-plus" id="h-plus-icon"><i class="fas fa-plus"></i></div>
+        </div>
+
         <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 500;">...</h2>
-                <i class="fas fa-cog" id="h-settings" style="cursor:pointer; display:none;"></i>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 400;">...</h2>
+                <div id="h-badge"></div>
+                <i class="fas fa-cog icon-settings" id="h-settings" onclick="openEditModal()" style="display:none;"></i>
             </div>
-            <div class="stats-row">
-                <div><b id="c-posts">0</b><span>publications</span></div>
-                <div><b id="c-followers">0</b><span>followers</span></div>
-                <div><b id="c-following">0</b><span>suivi(e)s</span></div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 14px;">
+                <span><b id="c-posts">0</b> publications</span>
+                <span><b id="c-followers">0</b> followers</span>
             </div>
         </div>
     </div>
 
-    <div style="margin-top: 12px;">
-        <span id="h-fullname" style="font-weight: 600; font-size: 14px; display: block;">...</span>
-        <p id="h-bio" style="margin: 2px 0; font-size: 14px; line-height: 1.4;"></p>
-        <a id="h-link" href="#" style="color: #3897f0; font-size: 14px; text-decoration: none; display: none; margin-top: 5px;"></a>
+    <div style="margin-top: 15px;">
+        <span id="h-fullname" style="font-weight: 600; font-size: 14px;">...</span>
+        <p id="h-bio" style="margin: 3px 0; font-size: 14px;"></p>
     </div>
 
-    <div id="h-buttons" class="btn-container"></div>
+    <div id="h-btn-zone" class="btn-row"></div>
 </div>
 
 <script type="module">
@@ -52,35 +60,34 @@
             if (!snap.exists()) return;
             const data = snap.data();
             
-            document.getElementById('h-username').innerText = data.username || "utilisateur";
-            document.getElementById('h-fullname').innerText = data.fullName || data.username;
+            document.getElementById('h-username').innerText = data.username || "user";
+            document.getElementById('h-fullname').innerText = data.fullName || "";
             document.getElementById('h-bio').innerText = data.bio || "";
             if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
-            
-            if(data.website) {
-                const link = document.getElementById('h-link');
-                link.innerText = data.website.replace(/^https?:\/\//, '');
-                link.href = data.website;
-                link.style.display = 'block';
-            }
 
-            const btnZone = document.getElementById('h-buttons');
+            // Affichage du Badge
+            const badge = document.getElementById('h-badge');
+            badge.innerHTML = data.isVerified ? `<i class="fas fa-check-circle" style="color:#FF7A1A;"></i>` : '';
+
+            const btnZone = document.getElementById('h-btn-zone');
             const settingsIcon = document.getElementById('h-settings');
+            const plusIcon = document.getElementById('h-plus-icon');
 
             if (profileId === myId) {
-                // MA VUE (Boutons gris/blanc)
+                // MON PROFIL
                 settingsIcon.style.display = 'block';
+                plusIcon.style.display = 'flex'; // Je peux ajouter une story
                 btnZone.innerHTML = `
-                    <button onclick="openEditModal()" class="btn-f btn-edit-view">Modifier le profil</button>
-                    <button class="btn-f btn-edit-view">Voir l'archive</button>
+                    <button onclick="openEditModal()" class="btn-f btn-gray">Modifier le profil</button>
+                    <button class="btn-f btn-gray">Partager le profil</button>
                 `;
             } else {
-                // VUE VISITEUR (Bouton Orange Contacter)
+                // PROFIL DES AUTRES
                 settingsIcon.style.display = 'none';
+                plusIcon.style.display = 'none'; // On ne peut pas ajouter de story chez les autres
                 btnZone.innerHTML = `
-                    <button class="btn-f btn-secondary">Suivi(e) <i class="fas fa-chevron-down"></i></button>
-                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-contact-view">Contacter</button>
-                    <button style="width:40px; flex:none;" class="btn-f btn-secondary"><i class="fas fa-user-plus"></i></button>
+                    <button class="btn-f btn-orange">Suivre</button>
+                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-gray">Contacter</button>
                 `;
             }
         });
