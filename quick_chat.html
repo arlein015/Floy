@@ -1,0 +1,55 @@
+<div id="quick-chat-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:3000; align-items:flex-end; justify-content:center;">
+    <div style="width:100%; max-width:450px; background:white; border-radius:15px 15px 0 0; display:flex; flex-direction:column; height:80vh; color:black;">
+        
+        <div style="padding:15px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
+            <i class="fas fa-chevron-left" onclick="closeQuickChat()" style="cursor:pointer;"></i>
+            <div style="text-align:center;">
+                <img id="qc-avatar-mini" src="" style="width:30px; height:30px; border-radius:50%; vertical-align:middle;">
+                <b id="qc-username" style="margin-left:8px; font-size:14px;">...</b>
+            </div>
+            <i class="fas fa-times" onclick="closeQuickChat()" style="cursor:pointer;"></i>
+        </div>
+
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px;">
+            <img id="qc-avatar-large" src="" style="width:100px; height:100px; border-radius:50%; margin-bottom:15px;">
+            <h3 id="qc-name-large" style="margin:0;">...</h3>
+            <p id="qc-id-small" style="color:#888; font-size:13px; margin:5px 0 20px 0;"></p>
+            <button id="qc-view-profile" style="background:#efefef; border:none; padding:8px 20px; border-radius:8px; font-weight:600; cursor:pointer;">Voir profil</button>
+        </div>
+
+        <div style="padding:15px; border-top:1px solid #eee;">
+            <div style="background:#f0f0f0; border-radius:25px; display:flex; align-items:center; padding:5px 15px;">
+                <i class="far fa-smile" style="font-size:20px; margin-right:10px;"></i>
+                <input type="text" id="qc-input" placeholder="Votre message..." style="flex:1; border:none; background:transparent; padding:10px; outline:none;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { db, auth } from './firebase-config.js';
+    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    window.closeQuickChat = () => {
+        document.getElementById('quick-chat-overlay').style.display = 'none';
+    }
+
+    // Fonction pour envoyer le message
+    document.getElementById('qc-input').addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter' && e.target.value.trim() !== "") {
+            const targetId = document.getElementById('qc-view-profile').getAttribute('data-uid');
+            const message = e.target.value;
+            
+            await addDoc(collection(db, "chats"), {
+                senderId: auth.currentUser.uid,
+                receiverId: targetId,
+                text: message,
+                timestamp: serverTimestamp()
+            });
+
+            e.target.value = "";
+            alert("Message envoyé !");
+            closeQuickChat();
+        }
+    });
+</script>
