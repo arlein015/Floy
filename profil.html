@@ -4,87 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil | Floy</title>
-    <link rel="stylesheet" href="profil.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body style="background-color: #000; margin: 0; color: white;">
+    <style>
+        body { background-color: #000; color: white; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .profile-container { padding: 20px 15px; }
 
-    <div id="main-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center; z-index:9999;">
-        <div style="width:40px; height:40px; border:4px solid #FF7A1A; border-top:4px solid transparent; border-radius:50%; animation: spin 1s linear infinite;"></div>
-    </div>
-    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        /* Header Layout */
+        .header-top { display: flex; align-items: center; gap: 30px; margin-bottom: 15px; }
+        .profile-pic { width: 85px; height: 85px; border-radius: 50%; border: 2px solid #FF7A1A; object-fit: cover; }
+        .stats { display: flex; gap: 20px; flex-grow: 1; }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-item b { display: block; font-size: 18px; }
+        .stat-item span { font-size: 12px; color: #8e8e8e; }
+
+        /* User Info */
+        .name-row { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+        .username { font-weight: bold; font-size: 18px; }
+        .email { color: #FF7A1A; font-size: 13px; display: block; margin: 2px 0; }
+        .bio { font-size: 14px; margin-top: 5px; }
+
+        /* Buttons */
+        .action-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-follow { background: #FF7A1A; color: white; border: none; flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-msg { background: #fff; color: #000; border: none; flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-icon { background: #262626; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 25px; border-top: 1px solid #262626; padding-top: 10px; }
+        .grid-placeholder { text-align: center; color: #8e8e8e; grid-column: 1 / -1; margin-top: 50px; }
+    </style>
+</head>
+<body>
 
     <div class="profile-container">
-        <div id="header-module"></div>
+        <div class="header-top">
+            <img src="https://via.placeholder.com/150" class="profile-pic" id="profile-img">
+            <div class="stats">
+                <div class="stat-item"><b id="count-pubs">0</b><span>pubs</span></div>
+                <div class="stat-item"><b id="count-followers">0</b><span>abonnés</span></div>
+                <div class="stat-item"><b id="count-following">0</b><span>abos</span></div>
+            </div>
+        </div>
 
-        <div id="tabs-module"></div>
+        <div class="name-row">
+            <span class="username" id="display-name">Arlein</span>
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#007bff" d="M23.16 11.19a3 3 0 0 0-2.35-2.35l.48-1.28a3 3 0 0 0-.48-3.67 3 3 0 0 0-3.67-.48l-1.28.48a3 3 0 0 0-2.35-2.35L12 .48a3 3 0 0 0-1.66 0l-1.36 1.05a3 3 0 0 0-2.35 2.35l-1.28-.48a3 3 0 0 0-3.67.48 3 3 0 0 0-.48 3.67l.48 1.28A3 3 0 0 0 .48 11.19L.48 12.86a3 3 0 0 0 2.35 2.35l-.48 1.28a3 3 0 0 0 .48 3.67 3 3 0 0 0 3.67.48l1.28-.48a3 3 0 0 0 2.35 2.35l1.36 1.05a3 3 0 0 0 1.66 0L12 23.52a3 3 0 0 0 1.66 0l1.36-1.05a3 3 0 0 0 2.35-2.35l1.28.48a3 3 0 0 0 3.67-.48 3 3 0 0 0 .48-3.67l-.48-1.28a3 3 0 0 0 2.35-2.35L23.52 12.86a3 3 0 0 0-.36-1.67z"/>
+                <path fill="white" d="M10 16.5l-4.5-4.5l1.41-1.41L10 13.67l7.59-7.59L19 7.5l-9 9z"/>
+            </svg>
+        </div>
+        <span class="email" id="display-email">rachehua45@gmail.com</span>
+        <p class="bio" id="display-bio">Zah bgs aiii</p>
 
-        <div id="grid-module"></div>
+        <div class="action-buttons">
+            <button class="btn-follow" id="follow-btn" onclick="followUser()">Suivre</button>
+            <button class="btn-msg">Message</button>
+            <button class="btn-icon" onclick="copyLink()"><i class="fas fa-share"></i></button>
+        </div>
+
+        <div class="grid" id="post-grid">
+            <div class="grid-placeholder">Aucune publication pour le moment</div>
+        </div>
     </div>
 
-    <nav style="position:fixed; bottom:0; width:100%; background:#000; display:flex; justify-content:space-around; padding:15px 0; border-top:1px solid #262626;">
-        <i class="fas fa-home" onclick="location.href='index.html'"></i>
-        <i class="fas fa-search"></i>
-        <div style="background:#FF7A1A; width:35px; height:35px; border-radius:10px; display:flex; justify-content:center; align-items:center;">
-            <i class="fas fa-plus" style="color:white;"></i>
-        </div>
-        <i class="fas fa-comment"></i>
-        <i class="fas fa-user" style="color:#FF7A1A;"></i>
-    </nav>
-
-    <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Chargement forcé des modules
-        async function loadComponent(id, file) {
-            const r = await fetch(file + '?v=' + Date.now()); // Date.now évite le cache
-            const html = await r.text();
-            document.getElementById(id).innerHTML = html;
+    <script>
+        function followUser() {
+            const btn = document.getElementById('follow-btn');
+            const count = document.getElementById('count-followers');
+            if (btn.innerText === "Suivre") {
+                btn.innerText = "Abonné";
+                btn.style.background = "#262626";
+                count.innerText = parseInt(count.innerText) + 1;
+            } else {
+                btn.innerText = "Suivre";
+                btn.style.background = "#FF7A1A";
+                count.innerText = Math.max(0, parseInt(count.innerText) - 1);
+            }
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = 'login.html'; return; }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const profileId = urlParams.get('id') || user.uid;
-
-            await loadComponent('header-module', 'profile_header.html');
-            await loadComponent('grid-module', 'profile_grid.html');
-
-            // Initialisation des fonctions globales après chargement
-            window.profileId = profileId;
-            setupProfileActions(profileId, user.uid);
-            
-            document.getElementById('main-loader').style.display = 'none';
-        });
-
-        // Logique Suivre + Compteur + Partage
-        function setupProfileActions(pId, myId) {
-            // 1. Bouton Suivre
-            window.handleFollowClick = async () => {
-                const btn = document.getElementById('follow-btn');
-                const countEl = document.getElementById('s-followers');
-                let count = parseInt(countEl.innerText);
-
-                if (btn.innerText === "Suivre") {
-                    btn.innerText = "Abonné";
-                    btn.style.background = "#262626"; // Gris
-                    countEl.innerText = count + 1;
-                    // Logique Firebase ici (updateDoc...)
-                } else {
-                    btn.innerText = "Suivre";
-                    btn.style.background = "#FF7A1A"; // Orange
-                    countEl.innerText = Math.max(0, count - 1);
-                }
-            };
-
-            // 2. Copier le lien
-            window.copyProfileLink = () => {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Lien du profil copié !");
-            };
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Lien du profil copié !");
         }
     </script>
 </body>
