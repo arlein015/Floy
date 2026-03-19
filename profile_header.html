@@ -1,12 +1,42 @@
-<div class="profile-header" style="background: #000; color: white; padding: 20px;">
-    <div class="header-top" style="display: flex; align-items: center; gap: 20px;">
-        <div class="avatar-wrapper" style="position: relative;">
-            <img id="h-avatar" src="https://via.placeholder.com/150" style="width: 85px; height: 85px; border-radius: 50%; object-fit: cover;">
+<style>
+    .profile-header { padding: 20px 15px; color: white; background: #000; font-family: sans-serif; }
+    .header-top { display: flex; align-items: center; gap: 20px; }
+    
+    .avatar-wrapper { position: relative; width: 85px; height: 85px; }
+    .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
+    .story-plus { 
+        position: absolute; bottom: 0; right: 0; background: #0095f6; 
+        color: white; border-radius: 50%; width: 22px; height: 22px; 
+        display: flex; align-items: center; justify-content: center; 
+        border: 2px solid black; font-size: 11px; cursor: pointer; z-index: 5;
+    }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 15px; position: relative; z-index: 10; }
+    .btn-f { 
+        flex: 1; height: 36px; border: none; border-radius: 8px; 
+        font-weight: 600; font-size: 14px; cursor: pointer !important; 
+        background: #262626; color: white; display: flex; 
+        align-items: center; justify-content: center; pointer-events: auto;
+    }
+
+    #copy-toast {
+        position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+        background: #333; color: white; padding: 10px 20px; border-radius: 20px;
+        font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000;
+    }
+</style>
+
+<div class="profile-header">
+    <div id="copy-toast">Lien copié !</div>
+    <div class="header-top">
+        <div class="avatar-wrapper">
+            <img id="h-avatar" src="" class="avatar-img">
+            <div class="story-plus" id="h-plus-icon" style="display:none;"><i class="fas fa-plus"></i></div>
         </div>
-        <div class="user-info">
+        <div style="flex: 1;">
             <div style="display: flex; align-items: center; gap: 8px;">
-                <h2 id="h-username" style="margin: 0;">Arlein</h2>
-                <i class="fas fa-check-circle" style="color: #FF7A1A;"></i>
+                <h2 id="h-username" style="margin:0; font-size: 20px;">...</h2>
+                <div id="h-badge"></div>
             </div>
             <div style="display: flex; gap: 15px; font-size: 14px; margin-top: 5px;">
                 <span><b id="c-posts">0</b> publications</span>
@@ -15,32 +45,59 @@
         </div>
     </div>
 
-    <div class="bio-section" style="margin-top: 15px;">
-        <p id="h-bio" style="font-size: 14px;">Zah bgs aiii</p>
+    <div style="margin-top: 12px;">
+        <p id="h-bio" style="margin: 3px 0; font-size: 14px;"></p>
     </div>
 
-    <div class="actions" style="display: flex; gap: 10px; margin-top: 15px;">
-        <button onclick="openEditModal()" style="flex: 1; background: #262626; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-            Modifier le profil
-        </button>
-        <button onclick="copyProfileLink()" style="flex: 1; background: #262626; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-            Partager le profil
-        </button>
-    </div>
+    <div id="dynamic-actions-zone" class="btn-row">
+        </div>
 </div>
 
-<div id="modal-container"></div>
+<script type="module">
+    import { db, auth } from './firebase-config.js';
+    import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<script>
-    // Charger le fichier de la modale dynamiquement
-    fetch('profile_edit_modal.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('modal-container').innerHTML = data;
-        });
-
-    function openEditModal() {
+    // Rendre les fonctions accessibles au clic (HTML)
+    window.openEditModal = () => {
         const modal = document.getElementById('edit-profile-modal');
         if (modal) modal.style.display = 'flex';
-    }
+    };
+
+    window.copyProfileLink = () => {
+        navigator.clipboard.writeText(window.location.href);
+        const toast = document.getElementById('copy-toast');
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 2000);
+    };
+
+    window.loadHeader = (profileId, myId) => {
+        onSnapshot(doc(db, "users", profileId), (snap) => {
+            if (!snap.exists()) return;
+            const data = snap.data();
+            
+            document.getElementById('h-username').innerText = data.username || "";
+            document.getElementById('h-bio').innerText = data.bio || "";
+            document.getElementById('h-avatar').src = data.avatarUrl || "https://via.placeholder.com/150";
+            document.getElementById('c-posts').innerText = data.postsCount || 0;
+            document.getElementById('c-followers').innerText = data.followersCount || 0;
+            
+            document.getElementById('h-badge').innerHTML = data.isVerified ? 
+                `<i class="fas fa-check-circle" style="color:#FF7A1A;"></i>` : '';
+
+            const zone = document.getElementById('dynamic-actions-zone');
+            if (profileId === myId) {
+                document.getElementById('h-plus-icon').style.display = 'flex';
+                zone.innerHTML = `
+                    <button onclick="openEditModal()" class="btn-f">Modifier le profil</button>
+                    <button onclick="copyProfileLink()" class="btn-f">Partager le profil</button>
+                `;
+            } else {
+                document.getElementById('h-plus-icon').style.display = 'none';
+                zone.innerHTML = `
+                    <button class="btn-f" style="background:#FF7A1A;">Suivre</button>
+                    <button class="btn-f">Message</button>
+                `;
+            }
+        });
+    };
 </script>
