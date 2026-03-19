@@ -2,53 +2,56 @@
     .profile-header { padding: 20px 15px; color: white; background: #000; }
     .header-top { display: flex; align-items: center; gap: 20px; }
     
-    /* Conteneur Photo avec le bouton + */
+    /* Photo avec le + */
     .avatar-wrapper { position: relative; width: 85px; height: 85px; cursor: pointer; }
     .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
     .story-plus { 
         position: absolute; bottom: 0; right: 0; background: #0095f6; 
-        color: white; border-radius: 50%; width: 24px; height: 24px; 
+        color: white; border-radius: 50%; width: 22px; height: 22px; 
         display: flex; align-items: center; justify-content: center; 
-        border: 2px solid black; font-size: 12px; 
+        border: 2px solid black; font-size: 11px; 
     }
 
+    /* Boutons */
     .btn-row { display: flex; gap: 8px; margin-top: 15px; }
     .btn-f { 
         flex: 1; height: 34px; border: none; border-radius: 8px; 
         font-weight: 600; font-size: 14px; cursor: pointer; 
+        display: flex; align-items: center; justify-content: center; gap: 6px;
     }
-    .btn-orange { background: #FF7A1A; color: white; }
-    .btn-gray { background: #363636; color: white; }
-    .icon-settings { font-size: 20px; color: white; cursor: pointer; padding: 5px; }
+    .btn-orange { background: #FF7A1A; color: white; } /* Couleur Floy */
+    .btn-gray { background: #262626; color: white; } /* Style sombre pro */
+
+    .icon-settings { font-size: 18px; color: white; cursor: pointer; margin-left: auto; }
 </style>
 
 <div class="profile-header">
     <div class="header-top">
-        <div class="avatar-wrapper" onclick="location.href='add_story.html'">
+        <div class="avatar-wrapper">
             <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
             <div class="story-plus" id="h-plus-icon"><i class="fas fa-plus"></i></div>
         </div>
 
-        <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 400;">...</h2>
-                <div id="h-badge"></div>
-                <i class="fas fa-cog icon-settings" id="h-settings" onclick="openEditModal()" style="display:none;"></i>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <h2 id="h-username" style="margin:0; font-size: 19px; font-weight: 500;">...</h2>
+                <div id="h-badge"></div> <i class="fas fa-cog icon-settings" id="h-settings" onclick="openEditModal()"></i>
             </div>
             
-            <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 14px;">
+            <div style="display: flex; gap: 15px; font-size: 13px;">
                 <span><b id="c-posts">0</b> publications</span>
                 <span><b id="c-followers">0</b> followers</span>
             </div>
         </div>
     </div>
 
-    <div style="margin-top: 15px;">
-        <span id="h-fullname" style="font-weight: 600; font-size: 14px;">...</span>
-        <p id="h-bio" style="margin: 3px 0; font-size: 14px;"></p>
+    <div style="margin-top: 12px;">
+        <span id="h-fullname" style="font-weight: 600; font-size: 14px; display: block;">...</span>
+        <p id="h-bio" style="margin: 3px 0; font-size: 14px; color: #efefef;"></p>
     </div>
 
-    <div id="h-btn-zone" class="btn-row"></div>
+    <div id="h-btn-zone" class="btn-row">
+        </div>
 </div>
 
 <script type="module">
@@ -65,29 +68,29 @@
             document.getElementById('h-bio').innerText = data.bio || "";
             if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
 
-            // Affichage du Badge
+            // Badge Floy Orange
             const badge = document.getElementById('h-badge');
-            badge.innerHTML = data.isVerified ? `<i class="fas fa-check-circle" style="color:#FF7A1A;"></i>` : '';
+            badge.innerHTML = data.isVerified ? `<i class="fas fa-check-circle" style="color:#FF7A1A; font-size:15px;"></i>` : '';
 
             const btnZone = document.getElementById('h-btn-zone');
             const settingsIcon = document.getElementById('h-settings');
             const plusIcon = document.getElementById('h-plus-icon');
 
             if (profileId === myId) {
-                // MON PROFIL
-                settingsIcon.style.display = 'block';
-                plusIcon.style.display = 'flex'; // Je peux ajouter une story
+                // --- VUE MON PROFIL ---
+                settingsIcon.style.display = 'block'; // Paramètres visibles
+                plusIcon.style.display = 'flex';      // Plus de story visible
                 btnZone.innerHTML = `
                     <button onclick="openEditModal()" class="btn-f btn-gray">Modifier le profil</button>
                     <button class="btn-f btn-gray">Partager le profil</button>
                 `;
             } else {
-                // PROFIL DES AUTRES
-                settingsIcon.style.display = 'none';
-                plusIcon.style.display = 'none'; // On ne peut pas ajouter de story chez les autres
+                // --- VUE VISITEUR ---
+                settingsIcon.style.display = 'none';  // Pas de paramètres chez les autres
+                plusIcon.style.display = 'none';      // Pas de + chez les autres
                 btnZone.innerHTML = `
                     <button class="btn-f btn-orange">Suivre</button>
-                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-gray">Contacter</button>
+                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-gray">Message</button>
                 `;
             }
         });
