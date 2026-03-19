@@ -3,142 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy | Social Network</title>
+    <title>{{ user.username }} | Network Orange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Design Noir Profond */
-        body { background-color: #000000; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        .grid-item:hover .overlay { opacity: 1; }
+        /* Palette de couleurs personnalisée */
+        :root {
+            --orange-main: #FF6B00;
+            --orange-hover: #E65F00;
+            --black-bg: #0A0A0A;
+            --black-card: #141414;
+        }
+
+        body { 
+            background-color: var(--black-bg); 
+            color: #FFFFFF; 
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Effet de glassmorphism orange pour les éléments actifs */
+        .orange-glass {
+            background: rgba(255, 107, 0, 0.05);
+            border: 1px solid rgba(255, 107, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
         .aspect-square { aspect-ratio: 1 / 1; }
-        /* Masquer la scrollbar */
-        ::-webkit-scrollbar { display: none; }
+        
+        /* Animation subtile sur les photos */
+        .post-zoom:hover img {
+            transform: scale(1.05);
+            transition: transform 0.4s ease;
+        }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-4 py-3 flex justify-between items-center md:hidden">
-        <span class="font-bold text-lg">Floy</span>
-        <div class="flex space-x-5">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    <nav class="sticky top-0 z-50 bg-black/90 border-b border-[#FF6B00]/20 px-6 py-4 flex justify-between items-center md:hidden">
+        <h1 class="text-[#FF6B00] font-black text-xl tracking-tighter">ORANGE<span class="text-white">.</span></h1>
+        <div class="flex space-x-4">
+            <svg class="w-6 h-6 text-[#FF6B00]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto pb-20">
+    <main class="max-w-4xl mx-auto pt-8 pb-24 px-4">
         
-        <header class="p-4 md:py-10 border-b border-white/10">
-            <div class="flex items-center">
-                <div class="w-20 h-20 md:w-40 md:h-40 flex-shrink-0 relative group cursor-pointer">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-600 rounded-full p-[2px]">
-                        <img src="{{ user.profile_pic or '/static/default.png' }}" 
-                             class="w-full h-full rounded-full object-cover border-2 border-black">
-                    </div>
+        <header class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-16 mb-12">
+            
+            <div class="relative group">
+                <div class="w-32 h-32 md:w-44 md:h-44 rounded-full p-[3px] bg-gradient-to-tr from-[#FF6B00] to-[#FF9E00] shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+                    <img src="{{ user.profile_pic or '/static/default.png' }}" 
+                         class="w-full h-full rounded-full object-cover border-4 border-[#0A0A0A]">
                 </div>
-
-                <div class="ml-8 flex-1">
-                    <div class="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-5">
-                        <div class="flex items-center">
-                            <h2 class="text-2xl font-light tracking-wide">Floy</h2>
-        
-                            <svg class="w-5 h-5 ml-2 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
-                            </svg>
-                        
-                        </div>
-                        
-                        <div class="flex space-x-2">
-                            <button id="btn-follow" onclick="toggleFollow()" 
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-1.5 rounded-lg text-sm font-bold transition-all active:scale-95">
-                                Suivre
-                            </button>
-                            <button class="bg-white/10 hover:bg-white/20 px-5 py-1.5 rounded-lg text-sm font-bold transition">
-                                Message
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="hidden md:flex space-x-10 mt-8 text-sm">
-                        <span><strong class="text-white">0</strong> publications</span>
-                        <span><strong id="followers-desktop" class="text-white">0</strong> abonnés</span>
-                        <span><strong class="text-white">0</strong> abonnements</span>
-                    </div>
-
-                    <div class="hidden md:block mt-5">
-                        <p class="font-bold text-gray-200">Floy</p>
-                        <p class="text-sm text-gray-400 leading-relaxed">floy02</p>
-                    </div>
+                <div class="absolute -bottom-2 -right-2 bg-[#FF6B00] p-1.5 rounded-full border-4 border-[#0A0A0A]">
+                    <svg class="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"></path></svg>
                 </div>
             </div>
 
-            <div class="mt-6 md:hidden px-2">
-                <p class="font-bold text-sm">Floy</p>
-                <p class="text-sm text-gray-400 mt-1 whitespace-pre-line">floy02</p>
+            <div class="flex-1 text-center md:text-left">
+                <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mb-6">
+                    <h2 class="text-3xl font-bold tracking-tight">{{ user.username }}</h2>
+                    
+                    {% if is_verified %}
+                    <span class="text-[#FF6B00]">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+                    </span>
+                    {% endif %}
+
+                    <div class="flex space-x-3">
+                        <button class="bg-[#FF6B00] hover:bg-[#E65F00] text-black font-extrabold px-8 py-2 rounded-full transition transform active:scale-95">
+                            SUIVRE
+                        </button>
+                        <button class="bg-transparent border-2 border-white/20 hover:border-[#FF6B00] px-6 py-2 rounded-full font-bold transition">
+                            MESSAGE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center md:justify-start space-x-10 mb-8 font-medium">
+                    <div class="text-center md:text-left"><span class="text-[#FF6B00] font-black text-lg">{{ posts|length }}</span> <span class="opacity-50 text-xs block">POSTS</span></div>
+                    <div class="text-center md:text-left"><span class="text-[#FF6B00] font-black text-lg">{{ stats.followers }}</span> <span class="opacity-50 text-xs block">ABONNÉS</span></div>
+                    <div class="text-center md:text-left"><span class="text-[#FF6B00] font-black text-lg">{{ stats.following }}</span> <span class="opacity-50 text-xs block">SUIVIS</span></div>
+                </div>
+
+                <div class="orange-glass p-5 rounded-2xl text-left border-l-4 border-l-[#FF6B00]">
+                    <p class="font-bold text-white mb-1">{{ user.full_name }}</p>
+                    <p class="text-sm text-gray-400 leading-relaxed">{{ user.bio }}</p>
+                </div>
             </div>
         </header>
 
-        <div class="flex justify-around border-b border-white/10 py-4 md:hidden text-center bg-white/5">
-            <div><p class="font-bold text-white">0</p><p class="text-gray-500 text-[10px] uppercase tracking-widest">posts</p></div>
-            <div><p id="followers-mobile" class="font-bold text-white">0</p><p class="text-gray-500 text-[10px] uppercase tracking-widest">abonnés</p></div>
-            <div><p class="font-bold text-white">0</p><p class="text-gray-500 text-[10px] uppercase tracking-widest">suivis</p></div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-1 mt-1 md:gap-6 md:p-4">
-
-            <div class="grid-item aspect-square relative cursor-pointer overflow-hidden bg-white/5">
-                <img src="{{ post.image_url }}" class="w-full h-full object-cover">
-                <div class="overlay absolute inset-0 bg-black/40 opacity-0 flex items-center justify-center transition-opacity">
-                    <div class="flex space-x-4">
-                        <span class="flex items-center text-white font-bold">
-                            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg> 
-                        
-                        </span>
-                    </div>
+        <div class="grid grid-cols-3 gap-2 md:gap-4 mt-10">
+            {% for post in posts %}
+            <div class="post-zoom relative aspect-square rounded-xl overflow-hidden bg-[#141414] border border-white/5 group cursor-pointer">
+                <img src="{{ post.image_url }}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 bg-[#FF6B00]/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <span class="bg-black/60 px-3 py-1 rounded-full text-xs font-bold text-[#FF6B00]">VOIR</span>
                 </div>
             </div>
-            
+            {% endfor %}
         </div>
+
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 px-8 py-4 flex justify-between items-center md:hidden z-50">
-        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-        <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <div class="w-8 h-8 rounded-full border-2 border-white/20 overflow-hidden">
-            <img src="{{ user.profile_pic }}" class="w-full h-full object-cover">
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm orange-glass py-4 px-10 rounded-full flex justify-between items-center z-50">
+        <svg class="w-6 h-6 text-[#FF6B00]" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+        <div class="w-10 h-10 bg-[#FF6B00] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(255,107,0,0.5)]">
+            <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
         </div>
+        <img src="{{ user.profile_pic }}" class="w-7 h-7 rounded-full border border-[#FF6B00]">
     </nav>
 
-    <script>
-        let isFollowing = false;
-        let followerCount = {{ stats.followers }};
-
-        function toggleFollow() {
-            const btn = document.getElementById('btn-follow');
-            const mobileCount = document.getElementById('followers-mobile');
-            const desktopCount = document.getElementById('followers-desktop');
-
-            if (!isFollowing) {
-                // Passage à l'état "Suivi"
-                isFollowing = true;
-                btn.innerText = "Suivi";
-                btn.classList.replace('bg-blue-600', 'bg-white/10');
-                btn.classList.add('border', 'border-white/20');
-                followerCount++;
-            } else {
-                // Retour à l'état "Suivre"
-                isFollowing = false;
-                btn.innerText = "Suivre";
-                btn.classList.replace('bg-white/10', 'bg-blue-600');
-                btn.classList.remove('border', 'border-white/20');
-                followerCount--;
-            }
-
-            // Mise à jour visuelle immédiate
-            mobileCount.innerText = followerCount;
-            desktopCount.innerText = followerCount;
-
-            // Ici tu pourrais appeler ton API Python en background (fetch)
-            // fetch('/api/follow/{{ user.id }}', { method: 'POST' });
-        }
-    </script>
 </body>
 </html>
