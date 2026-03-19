@@ -3,111 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - Floy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>{{ user.username }} | Profil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; margin: 0; padding-bottom: 80px; font-family: -apple-system, sans-serif; color: white; overflow-x: hidden; }
-        .module-container { width: 100%; max-width: 600px; margin: 0 auto; min-height: 100vh; }
-        
-        /* Loader de démarrage */
-        #main-loader { 
-            position: fixed; inset: 0; background: #000; 
-            display: flex; align-items: center; justify-content: center; z-index: 9999; 
-        }
-
-        /* Barre de Navigation Basse */
-        .nav-bottom { 
-            position: fixed; bottom: 0; width: 100%; height: 65px; 
-            background: #000; border-top: 1px solid #1a1a1a; 
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000; 
-        }
-        .nav-bottom i { font-size: 20px; color: white; cursor: pointer; }
-        .nav-active { color: #FF7A1A !important; }
+        /* Masquer la scrollbar pour un look application mobile */
+        body::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; background-color: #fafafa; }
+        .aspect-square { aspect-ratio: 1 / 1; }
     </style>
 </head>
-<body>
+<body class="text-gray-900">
 
-    <div id="main-loader">
-        <i class="fas fa-circle-notch fa-spin" style="color: #FF7A1A; font-size: 35px;"></i>
+    <nav class="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center md:hidden">
+        <div class="font-bold text-lg">{{ user.username }}</div>
+        <div class="flex space-x-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto bg-white min-h-screen">
+        
+        <header class="p-4 md:py-8 border-b border-gray-100">
+            <div class="flex items-center">
+                <div class="w-20 h-20 md:w-36 md:h-36 flex-shrink-0 relative">
+                    <img src="{{ user.profile_pic or '/static/default.png' }}" 
+                         class="w-full h-full rounded-full object-cover border border-gray-200 p-1">
+                </div>
+
+                <div class="ml-6 flex-1">
+                    <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                        <div class="flex items-center">
+                            <h2 class="text-xl font-light">{{ user.username }}</h2>
+                            {% if user.is_verified %}
+                            <svg class="w-5 h-5 ml-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm font-semibold">Suivre</button>
+                            <button class="bg-gray-100 px-4 py-1.5 rounded-lg text-sm font-semibold">Message</button>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:flex space-x-8 mt-6">
+                        <span><strong>{{ posts|length }}</strong> publications</span>
+                        <span><strong>{{ stats.followers }}</strong> abonnés</span>
+                        <span><strong>{{ stats.following }}</strong> abonnements</span>
+                    </div>
+
+                    <div class="hidden md:block mt-4">
+                        <p class="font-bold">{{ user.full_name }}</p>
+                        <p class="text-sm">{{ user.bio }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 md:hidden">
+                <p class="font-bold text-sm">{{ user.full_name }}</p>
+                <p class="text-sm leading-tight">{{ user.bio }}</p>
+            </div>
+        </header>
+
+        <div class="flex justify-around border-b border-gray-100 py-3 md:hidden">
+            <div class="text-center"><p class="font-bold text-sm">{{ posts|length }}</p><p class="text-gray-400 text-xs">posts</p></div>
+            <div class="text-center"><p class="font-bold text-sm">{{ stats.followers }}</p><p class="text-gray-400 text-xs">abonnés</p></div>
+            <div class="text-center"><p class="font-bold text-sm">{{ stats.following }}</p><p class="text-gray-400 text-xs">abonnements</p></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-0.5 md:gap-4 md:p-4">
+            {% for post in posts %}
+            <div class="aspect-square relative group bg-gray-200">
+                <img src="{{ post.image_url }}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white space-x-4 transition">
+                    <span class="flex items-center"><svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg> {{ post.likes }}</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-span-3 py-20 text-center text-gray-400">
+                <p>Aucune publication pour le moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex justify-between md:hidden">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+        <svg class="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <div class="w-7 h-7 rounded-full bg-gray-300"></div>
     </div>
 
-    <div class="module-container">
-        <div id="header-module"></div>
-        <div id="stats-module"></div>
-        <div id="tabs-module"></div>
-        <div id="grid-module"></div>
-    </div>
-
-    <div id="modal-module"></div>
-
-    <div class="nav-bottom">
-        <i class="fas fa-home" onclick="location.href='index.html'"></i>
-        <i class="fas fa-search"></i>
-        <i class="fas fa-plus-square" onclick="location.href='create.html'"></i>
-        <i class="fas fa-comment" onclick="location.href='message-list.html'"></i>
-        <i class="fas fa-user nav-active"></i>
-    </div>
-
-    <script type="module">
-        import { auth } from './firebase-config.js';
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // Fonction pour charger dynamiquement les fichiers HTML
-        async function loadModule(file, elementId) {
-            try {
-                const response = await fetch(file);
-                if (!response.ok) throw new Error(`Erreur 404: ${file}`);
-                const html = await response.text();
-                const target = document.getElementById(elementId);
-                
-                if (target) {
-                    target.innerHTML = html;
-                    // Exécution des scripts contenus dans les modules
-                    const scripts = target.querySelectorAll("script");
-                    scripts.forEach(oldScript => {
-                        const newScript = document.createElement("script");
-                        newScript.type = oldScript.type || "text/javascript";
-                        newScript.textContent = oldScript.textContent;
-                        document.body.appendChild(newScript);
-                    });
-                }
-            } catch (err) {
-                console.error("Erreur de chargement du module:", err);
-            }
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { location.href = 'connexion.html'; return; }
-
-            const params = new URLSearchParams(window.location.search);
-            const profileId = params.get('id') || user.uid;
-
-            // Chargement de TOUS les modules en parallèle pour la vitesse
-            await Promise.all([
-                loadModule('profile_header.html', 'header-module'),
-                loadModule('profile_stats.html', 'stats-module'),
-                loadModule('profile_tabs.html', 'tabs-module'),
-                loadModule('profile_grid.html', 'grid-module'),
-                loadModule('profile_edit_modal.html', 'modal-module'),
-                loadModule('badge_verification.html', 'header-module')
-            ]);
-
-            // Petit délai de sécurité pour laisser le DOM respirer
-            setTimeout(() => {
-                try {
-                    // Initialisation des fonctions contenues dans les modules
-                    if(window.loadHeader) window.loadHeader(profileId, user.uid);
-                    if(window.loadStats) window.loadStats(profileId);
-                    if(window.loadGrid) window.loadGrid('posts', profileId);
-                    if(window.loadBadge) window.loadBadge(profileId);
-                    
-                    // On retire le loader une fois que tout est prêt
-                    document.getElementById('main-loader').style.display = "none";
-                } catch (e) {
-                    console.warn("Certaines fonctions de modules ne sont pas encore prêtes :", e);
-                }
-            }, 200);
-        });
+    <script>
+        console.log("Profil chargé pour : {{ user.username }}");
+        // Ton code realtime_sync.js peut être ajouté ici directement
     </script>
 </body>
 </html>
