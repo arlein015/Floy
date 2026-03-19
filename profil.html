@@ -6,114 +6,114 @@
     <title>Profil | Floy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --floy-orange: #FF7A1A; --floy-black: #000; --floy-gray: #1a1a1a; }
-        body { background: var(--floy-black); margin: 0; padding-bottom: 70px; font-family: -apple-system, sans-serif; color: white; }
+        :root { --floy-orange: #FF7A1A; --floy-black: #000; }
+        body { background: var(--floy-black); margin: 0; font-family: -apple-system, sans-serif; color: white; overflow-x: hidden; }
         
-        /* Conteneur principal */
-        .profile-container { width: 100%; max-width: 500px; margin: 0 auto; }
-
-        /* Loader plein écran */
-        #loader-overlay { 
-            position: fixed; inset: 0; background: #000; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; 
+        /* LOADER FLOY - S'affiche en premier */
+        #floy-loader {
+            position: fixed; inset: 0; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.5s ease;
         }
-
-        /* Navigation Basse */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; max-width: 500px; height: 60px; 
-            background: rgba(0,0,0,0.9); border-top: 1px solid var(--floy-gray); 
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000; 
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(255, 122, 26, 0.1);
+            border-top: 3px solid var(--floy-orange);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
         }
-        .bottom-nav i { font-size: 22px; color: #555; cursor: pointer; }
+        .floy-logo-text {
+            margin-top: 20px; color: white; font-size: 14px;
+            letter-spacing: 5px; text-transform: uppercase; font-weight: 300;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Conteneur de l'application */
+        .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
+        
+        /* Navigation basse */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 500px; height: 65px;
+            background: rgba(0,0,0,0.95); border-top: 1px solid #1a1a1a;
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        }
+        .nav-bar i { font-size: 22px; color: #555; }
         .nav-active { color: var(--floy-orange) !important; }
     </style>
 </head>
 <body>
 
-    <div id="loader-overlay">
-        <i class="fas fa-circle-notch fa-spin" style="color: var(--floy-orange); font-size: 40px; margin-bottom: 15px;"></i>
-        <p style="font-size: 12px; letter-spacing: 2px; color: #888;">FLOY</p>
+    <div id="floy-loader">
+        <div class="spinner"></div>
+        <div class="floy-logo-text">Floy</div>
     </div>
 
-    <div class="profile-container">
-        <div id="module-header"></div>
-        <div id="module-stats"></div>
-        <div id="module-tabs"></div>
-        <div id="module-edit"></div>
-        <div id="module-partage"></div>
-        <div id="module-handler"></div>
-        <div id="module-grid"></div>
+    <div class="app-container">
+        <div id="header-zone"></div>
+        <div id="stats-zone"></div>
+        <div id="tabs-zone"></div>
+        <div id="grid-zone"></div>
     </div>
 
-    <div id="module-modal"></div>
+    <div id="modal-zone"></div>
 
-    <div class="bottom-nav">
+    <nav class="nav-bar">
         <i class="fas fa-home" onclick="location.href='index.html'"></i>
-        <i class="fas fa-search"></i>
+        <i class="fas fa-découvrir"></i>
         <i class="fas fa-plus-square"></i>
         <i class="fas fa-message"></i>
         <i class="fas fa-user nav-active"></i>
-    </div>
+    </nav>
 
     <script type="module">
         import { auth } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Moteur de chargement des modules avec gestion d'erreur
-        async function injectModule(fileName, targetId) {
+        // Fonction d'injection sécurisée
+        async function loadModule(file, targetId) {
             try {
-                const response = await fetch(fileName);
-                if (!response.ok) throw new Error(`Fichier ${fileName} manquant`);
-                const html = await response.text();
+                const res = await fetch(file);
+                if (!res.ok) return;
+                const html = await res.text();
                 const container = document.getElementById(targetId);
+                container.innerHTML = html;
                 
-                if (container) {
-                    container.innerHTML = html;
-                    // On force l'exécution des scripts à l'intérieur du module
-                    const scripts = container.querySelectorAll("script");
-                    for (let oldScript of scripts) {
-                        const newScript = document.createElement("script");
-                        newScript.type = "module"; // Important pour Firebase
-                        newScript.textContent = oldScript.textContent;
-                        document.body.appendChild(newScript);
-                    }
-                }
-            } catch (err) {
-                console.error("⚠️ Erreur Floy:", err.message);
-                // On affiche une petite erreur discrète si un module manque
-                document.getElementById(targetId).innerHTML = `<p style="color:red; font-size:10px; text-align:center;">Erreur: ${fileName} introuvable</p>`;
-            }
+                // Exécution des scripts du module
+                const scripts = container.querySelectorAll("script");
+                scripts.forEach(s => {
+                    const newScript = document.createElement("script");
+                    newScript.type = "module";
+                    newScript.textContent = s.textContent;
+                    document.body.appendChild(newScript);
+                });
+            } catch (e) { console.error("Erreur module:", file, e); }
         }
 
-        // Vérification de l'utilisateur et lancement
         onAuthStateChanged(auth, async (user) => {
-            if (!user) { 
-                window.location.href = 'connexion.html'; 
-                return; 
-            }
+            if (!user) { window.location.href = 'connexion.html'; return; }
 
-            // Récupération de l'ID à afficher (le mien ou celui d'un autre)
             const urlParams = new URLSearchParams(window.location.search);
-            const targetUID = urlParams.get('id') || user.uid;
+            const viewId = urlParams.get('id') || user.uid;
 
-            // Chargement de la structure (Ordre important)
-            await injectModule('profile_header.html', 'module-header');
-            await injectModule('profile_stats.html', 'module-stats');
-            await injectModule('profile_tabs.html', 'module-tabs');
-            await injectModule('profile_grid.html', 'module-grid');
-            await injectModule('profile_edit_modal.html', 'module-modal');
-            await injectModule('badge_verification.html', 'module-header');
+            // Chargement de tous les modules
+            await Promise.all([
+                loadModule('profile_header.html', 'header-zone'),
+                loadModule('profile_stats.html', 'stats-zone'),
+                loadModule('profile_tabs.html', 'tabs-zone'),
+                loadModule('profile_grid.html', 'grid-zone'),
+                loadModule('profile_edit_modal.html', 'modal-zone')
+            ]);
 
-            // Une fois que tout est injecté, on initialise les données
+            // Initialisation des données après injection
             setTimeout(() => {
-                if (window.loadHeader) window.loadHeader(targetUID, user.uid);
-                if (window.loadStats) window.loadStats(targetUID);
-                if (window.loadGrid) window.loadGrid('posts', targetUID);
-                if (window.loadBadge) window.loadBadge(targetUID);
+                if(window.loadHeader) window.loadHeader(viewId, user.uid);
+                if(window.loadStats) window.loadStats(viewId);
+                if(window.loadGrid) window.loadGrid('posts', viewId);
                 
-                // On cache le loader
-                document.getElementById('loader-overlay').style.display = 'none';
-            }, 300);
+                // Cacher le loader Floy avec transition
+                const loader = document.getElementById('floy-loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }, 400);
         });
     </script>
 </body>
