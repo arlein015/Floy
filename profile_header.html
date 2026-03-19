@@ -111,9 +111,13 @@
             if (profileId === myId) {
                 // ... (Code pour ton propre profil : Modifier / Partager)
                 actionsZone.innerHTML = `
-                    <button onclick="openEditModal()" class="btn-f btn-gray">Modifier le profil</button>
-                    <button onclick="copyProfileLink()" class="btn-f btn-gray">Partager le profil</button>
-                `;
+    <button onclick="window.location.href='edit_profile.html'" class="btn-f btn-gray">
+        Modifier le profil
+    </button>
+    <button onclick="copyProfileLink()" class="btn-f btn-gray">
+        Partager le profil
+    </button>
+`;
             } else {
                 // VUE AUTRE UTILISATEUR
                 const isFollowing = data.followersList?.includes(myId);
