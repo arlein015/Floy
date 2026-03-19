@@ -3,166 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Floy | Élite VIP</title>
+    <title>Floy | Profil Certifié</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
         .orange-text { color: #FF6B00; }
         .bg-orange { background-color: #FF6B00; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* 1. BADGE ÉTOILÉ (12 pointes) AVEC LUEUR ORANGE */
-        .premium-badge {
-            color: #0095f6;
-            filter: drop-shadow(0 0 8px rgba(0, 149, 246, 0.9));
-            position: relative;
+        /* LE BADGE EXACT DE TA CAPTURE (image_31b15e.png) */
+        .verified-badge {
+            color: #0095f6; /* Le bleu officiel */
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
-        /* 2. SYSTÈME DE 15 MICRO-ÉTOILES (ORBITAL) */
-        .verified-container { position: relative; display: inline-flex; }
-        
-        .orbit-star { 
-            position: absolute; 
-            background: #fff; 
-            border-radius: 50%; 
-            opacity: 0; 
-            animation: twinkle var(--d) infinite; 
-            pointer-events: none; 
+        /* SYSTÈME DES 15 ÉTOILES SCINTILLANTES */
+        .stars-container { position: absolute; inset: -15px; pointer-events: none; }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: flash var(--duration) infinite;
+        }
+        @keyframes flash {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
-        @keyframes twinkle { 
-            0%, 100% { opacity: 0; transform: scale(0.3) translateY(0); } 
-            50% { opacity: 1; transform: scale(1) translateY(-10px); } 
-        }
-
-        /* Classes utilitaires JS */
-        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
     </style>
 </head>
 <body class="antialiased">
 
-    <nav class="sticky top-0 z-40 bg-black/90 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-white/5">
-        <div class="flex items-center space-x-4">
+    <nav class="sticky top-0 z-40 bg-black px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-6">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-            <h1 class="font-black text-xl tracking-tighter italic">floy_elite</h1>
+            <div class="flex items-center space-x-2">
+                <h1 class="font-bold text-xl tracking-tight">zoeyiso</h1>
+                <div class="verified-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.5 12.5c0-1.58-.8-3.04-2.12-3.88.24-1.58-.16-3.2-.12-4.52s-2.94-1.36-4.52-1.12c-.84-1.32-2.3-2.12-3.88-2.12s-3.04.8-3.88 2.12c-1.58-.24-3.2.16-4.52.12s-1.36 2.94-1.12 4.52c-1.32.84-2.12 2.3-2.12 3.88s.8 3.04 2.12 3.88c-.24 1.58.16 3.2.12 4.52s2.94 1.36 4.52 1.12c.84 1.32 2.3 2.12 3.88 2.12s3.04-.8 3.88-2.12c1.58.24 3.2-.16 4.52-.12s1.36-2.94 1.12-4.52c1.32-.84 2.12-2.3 2.12-3.88zm-11.8 4.6l-3.8-3.8 1.4-1.4 2.4 2.4 5.6-5.6 1.4 1.4-7 7z"></path>
+                    </svg>
+                    <div id="stars-box" class="stars-container"></div>
+                </div>
+            </div>
         </div>
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
+        <div class="flex items-center space-x-6">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <svg class="w-1 h-6" fill="currentColor" viewBox="0 0 4 24"><circle cx="2" cy="4" r="2"/><circle cx="2" cy="12" r="2"/><circle cx="2" cy="20" r="2"/></svg>
+        </div>
     </nav>
 
-    <main class="max-w-2xl mx-auto pt-6 px-4">
+    <main class="max-w-2xl mx-auto pt-4 px-4">
         
-        <header class="flex flex-col items-center md:items-start md:flex-row md:space-x-10 mb-8">
-            <div class="w-24 h-24 md:w-32 md:h-32 rounded-full p-[3px] bg-gradient-to-tr from-[#FF6B00] to-[#FF3D00] mb-4 shadow-[0_0_20px_rgba(255,107,0,0.25)]">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400" class="w-full h-full rounded-full object-cover border-4 border-black">
+        <header class="flex items-center space-x-8 mb-8">
+            <div class="w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-[#FF6B00] to-[#FF3D00]">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200" class="w-full h-full rounded-full object-cover border-2 border-black">
             </div>
-
-            <div class="flex-1 text-center md:text-left">
-                <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
-                    <h2 class="text-2xl font-black tracking-tight">Floy</h2>
-                    
-                    <div class="verified-container">
-                        <span class="premium-badge">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M22.5 12.5c0-1.58-.8-3.04-2.12-3.88.24-1.58-.16-3.2-.12-4.52s-2.94-1.36-4.52-1.12c-.84-1.32-2.3-2.12-3.88-2.12s-3.04.8-3.88 2.12c-1.58-.24-3.2.16-4.52.12s-1.36 2.94-1.12 4.52c-1.32.84-2.12 2.3-2.12 3.88s.8 3.04 2.12 3.88c-.24 1.58.16 3.2.12 4.52s2.94 1.36 4.52 1.12c.84 1.32 2.3 2.12 3.88 2.12s3.04-.8 3.88-2.12c1.58.24 3.2-.16 4.52-.12s1.36-2.94 1.12-4.52c1.32-.84 2.12-2.3 2.12-3.88zm-11.8 4.6l-3.8-3.8 1.4-1.4 2.4 2.4 5.6-5.6 1.4 1.4-7 7z"></path>
-                            </svg>
-                        </span>
-                        </div>
-                </div>
-
-                <div class="flex justify-center md:justify-start space-x-10 mb-6 font-bold text-sm tracking-tight">
-                    <div class="text-center"><span class="block text-xl">12.5k</span><span class="text-gray-500 text-[10px] uppercase">Abonnés</span></div>
-                    <div class="text-center"><span class="block text-xl">480</span><span class="text-gray-500 text-[10px] uppercase">Suivis</span></div>
-                    <div class="text-center"><span class="block text-xl">85k</span><span class="text-gray-500 text-[10px] uppercase">Likes</span></div>
-                </div>
-
-                <div class="flex flex-wrap justify-center md:justify-start gap-3 items-center">
-                    <button id="btn-suivre" onclick="toggleSuivre()" class="bg-orange text-black font-black px-12 py-2.5 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-all">
-                        Suivre
-                    </button>
-                    <button onclick="toggleModal(true)" class="glass px-6 py-2.5 rounded-xl font-bold text-xs uppercase hover:bg-white/10 transition active:scale-95">
-                        Message
-                    </button>
-                </div>
+            <div class="flex-1 flex justify-around text-center">
+                <div><span class="block font-bold text-lg">12</span><span class="text-xs text-gray-400">Posts</span></div>
+                <div><span class="block font-bold text-lg">12.5k</span><span class="text-xs text-gray-400">Abonnés</span></div>
+                <div><span class="block font-bold text-lg">480</span><span class="text-xs text-gray-400">Suivis</span></div>
             </div>
         </header>
 
-        <section class="mb-8 border-t border-white/5 pt-6">
-            <div id="stories-container" class="flex space-x-6 overflow-x-auto no-scrollbar pb-2 px-2">
-                
-                <div class="flex flex-col items-center space-y-2 flex-shrink-0">
-                    <div class="w-16 h-16 rounded-full p-[2px] border-2 border-[#FF6B00] bg-black">
-                        <img src="https://picsum.photos/200/200?random=1" class="w-full h-full rounded-full object-cover grayscale">
-                    </div>
-                    <span class="text-[10px] font-black text-gray-600 uppercase">Network</span>
-                </div>
+        <div class="flex space-x-2 mb-8">
+            <button id="btn-suivre" onclick="toggleSuivre()" class="flex-1 bg-orange text-black font-bold py-2 rounded-lg text-sm transition-all active:scale-95">Suivre</button>
+            <button onclick="toggleModal(true)" class="flex-1 glass font-bold py-2 rounded-lg text-sm active:scale-95">Message</button>
+        </div>
 
-                <div onclick="triggerGallery()" class="flex flex-col items-center space-y-2 flex-shrink-0 cursor-pointer group">
-                    <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-600 flex items-center justify-center group-hover:border-[#FF6B00] transition active:scale-90">
-                        <svg class="w-6 h-6 text-gray-600 group-hover:text-[#FF6B00]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <section class="mb-8 border-t border-white/5 pt-6">
+            <div id="stories-list" class="flex space-x-6 overflow-x-auto no-scrollbar">
+                <div onclick="document.getElementById('file-up').click()" class="flex flex-col items-center space-y-1 flex-shrink-0 cursor-pointer">
+                    <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-700 flex items-center justify-center text-gray-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     </div>
-                    <span class="text-[10px] font-bold text-gray-500 uppercase group-hover:text-white">New</span>
-                    <input type="file" id="gallery-input" accept="image/*" class="hidden" onchange="previewStory(event)">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase">New</span>
+                    <input type="file" id="file-up" class="hidden" accept="image/*" onchange="addStory(event)">
                 </div>
             </div>
         </section>
 
-        <div id="grid-content" class="grid grid-cols-3 gap-1 md:gap-2 pb-24 mt-2 border-t border-white/10 pt-4">
-            <div class="aspect-square bg-white/5 overflow-hidden"><img src="https://picsum.photos/600/600?random=1" class="w-full h-full object-cover opacity-60 hover:opacity-100 transition"></div>
-            <div class="aspect-square bg-white/5 overflow-hidden"><img src="https://picsum.photos/600/600?random=2" class="w-full h-full object-cover opacity-60 hover:opacity-100 transition"></div>
-            <div class="aspect-square bg-white/5 overflow-hidden"><img src="https://picsum.photos/600/600?random=3" class="w-full h-full object-cover opacity-60 hover:opacity-100 transition"></div>
+        <div class="grid grid-cols-3 gap-1">
+            <div class="aspect-square bg-gray-900"><img src="https://picsum.photos/400/400?random=1" class="w-full h-full object-cover"></div>
+            <div class="aspect-square bg-gray-900"><img src="https://picsum.photos/400/400?random=2" class="w-full h-full object-cover"></div>
+            <div class="aspect-square bg-gray-900"><img src="https://picsum.photos/400/400?random=3" class="w-full h-full object-cover"></div>
         </div>
-
     </main>
 
     <div id="modal-msg" class="modal px-6" onclick="toggleModal(false)">
-        <div class="glass w-full max-w-sm p-8 rounded-3xl" onclick="event.stopPropagation()">
-            <h3 class="font-black text-xl mb-6 orange-text uppercase text-center tracking-tighter">Nouveau Message</h3>
-            <textarea placeholder="Votre message..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 h-32 outline-none focus:border-[#FF6B00] mb-4 text-sm"></textarea>
-            <button class="w-full bg-white text-black font-black py-4 rounded-xl uppercase text-sm" onclick="toggleModal(false)">Envoyer</button>
+        <div class="glass w-full max-w-sm p-6 rounded-2xl" onclick="event.stopPropagation()">
+            <h3 class="font-bold text-center mb-4">Contacter zoeyiso</h3>
+            <textarea placeholder="Ecrivez ici..." class="w-full bg-white/5 border border-white/10 rounded-xl p-3 h-24 outline-none text-sm mb-4"></textarea>
+            <button class="w-full bg-white text-black font-bold py-3 rounded-xl text-sm" onclick="toggleModal(false)">Envoyer</button>
         </div>
     </div>
 
     <script>
-        // --- 1. GÉNÉRATION DES 15 MICRO-ÉTOILES ---
-        function generateStars() {
-            const container = document.querySelector('.verified-container');
-            if (!container) return;
-
-            for (let i = 0; i < 15; i++) {
-                const star = document.createElement('div');
-                star.className = 'orbit-star';
-                
-                // Position aléatoire autour du badge
-                const size = Math.random() < 0.5 ? 1 : 2; // w-1 ou w-[2px]
-                const top = (Math.random() * 40 - 20) + 'px'; // -20 à +20px
-                const left = (Math.random() * 40 - 10) + 'px'; // -10 à +30px
-                
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.top = top;
-                star.style.left = left;
-                
-                // Délai d'animation aléatoire
-                star.style.setProperty('--d', (Math.random() * 2 + 1) + 's');
-                
-                container.appendChild(star);
-            }
+        // 1. GÉNÉRATION DES 15 ÉTOILES
+        const starBox = document.getElementById('stars-box');
+        for (let i = 0; i < 15; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = (Math.random() * 3 + 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (Math.random() * 1.5 + 0.5) + 's');
+            starBox.appendChild(star);
         }
-        document.addEventListener('DOMContentLoaded', generateStars);
 
-
-        // --- 2. INTERACTVITÉ : SUIVRE & MODALE ---
+        // 2. SUIVRE ACTIF
         function toggleSuivre() {
             const btn = document.getElementById('btn-suivre');
-            const estSuivi = btn.classList.contains('bg-orange');
-            if (estSuivi) {
+            if(btn.classList.contains('bg-orange')) {
                 btn.classList.replace('bg-orange', 'glass');
                 btn.classList.replace('text-black', 'text-white');
                 btn.innerText = 'Suivi';
@@ -173,37 +133,22 @@
             }
         }
 
-        function toggleModal(show) { document.getElementById('modal-msg').classList.toggle('active', show); }
-
-
-        // --- 3. GESTION DYNAMIQUE DES STORIES (Galerie Active) ---
-        function triggerGallery() { document.getElementById('gallery-input').click(); }
-
-        function previewStory(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const container = document.getElementById('stories-container');
-                
-                // Création du nouvel élément de story
-                const newStory = document.createElement('div');
-                newStory.className = "flex flex-col items-center space-y-2 flex-shrink-0 fade-in";
-                newStory.innerHTML = `
-                    <div class="w-16 h-16 rounded-full p-[2px] border-2 border-[#FF6B00] bg-black">
-                        <img src="${e.target.result}" class="w-full h-full rounded-full object-cover">
-                    </div>
-                    <span class="text-[10px] font-black text-white uppercase tracking-tighter">Maintenant</span>
-                `;
-                
-                // Insertion au début de la liste (après le bouton d'ajout si désiré)
-                container.insertBefore(newStory, container.firstChild);
-                
-                // LOGIQUE : ICI tu appelles ton backend Python pour sauvegarder en DB
-                console.log("Image envoyée vers le serveur via AJAX...");
-            };
-            reader.readAsDataURL(file);
+        // 3. MODALE & STORIES
+        function toggleModal(s) { document.getElementById('modal-msg').classList.toggle('active', s); }
+        
+        function addStory(e) {
+            const f = e.target.files[0];
+            if(f) {
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    const html = `<div class="flex flex-col items-center space-y-1 flex-shrink-0 animate-pulse">
+                        <div class="w-16 h-16 rounded-full border-2 border-[#FF6B00] p-0.5"><img src="${ev.target.result}" class="w-full h-full rounded-full object-cover"></div>
+                        <span class="text-[10px] text-white font-bold">Maintenant</span>
+                    </div>`;
+                    document.getElementById('stories-list').insertAdjacentHTML('afterbegin', html);
+                };
+                r.readAsDataURL(f);
+            }
         }
     </script>
 </body>
