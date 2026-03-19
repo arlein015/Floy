@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy | Profil Influenceur</title>
+    <title>Floy | Profil Élite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
@@ -11,22 +11,17 @@
         .bg-orange { background-color: #FF6B00; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Badge Bleu Constellation (Plus d'étoiles) */
-        .badge-container { position: relative; display: inline-flex; align-items: center; }
-        .badge-blue { color: #38bdf8; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8)); z-index: 10; }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: twinkle var(--d) infinite; }
-        @keyframes twinkle { 
-            0%, 100% { opacity: 0; transform: scale(0.2) translateY(0); } 
-            50% { opacity: 1; transform: scale(1) translateY(-5px); } 
+        /* Badge Officiel Exact (Sceau bleu) */
+        .verified-badge {
+            color: #0095f6; /* Le bleu officiel */
+            display: inline-block;
+            vertical-align: middle;
+            filter: drop-shadow(0 0 2px rgba(0, 149, 246, 0.3));
         }
 
-        /* Tabs Navigation */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         .nav-tab { opacity: 0.3; transition: 0.3s; padding-bottom: 12px; border-bottom: 2px solid transparent; }
         .nav-tab.active { opacity: 1; border-bottom: 2px solid #FF6B00; color: #FF6B00; }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
     </style>
 </head>
 <body class="antialiased">
@@ -34,7 +29,7 @@
     <nav class="sticky top-0 z-40 bg-black/90 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-white/5">
         <h1 class="font-black text-2xl tracking-tighter">Floy<span class="orange-text">.</span></h1>
         <div class="flex items-center space-x-6">
-            <button class="active:scale-90 transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></button>
+            <button><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></button>
             <button onclick="toggleMenu(true)"><svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" d="M4 8h16M4 16h10"/></svg></button>
         </div>
     </nav>
@@ -47,17 +42,14 @@
             </div>
 
             <div class="flex-1 text-center md:text-left">
-                <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
-                    <h2 id="display-name" class="text-2xl font-black">Floy</h2>
+                <div class="flex items-center justify-center md:justify-start space-x-2 mb-4">
+                    <h2 class="text-2xl font-black">Floy</h2>
                     
-                    <div class="badge-container">
-                        <svg class="w-6 h-6 badge-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
-                        <div class="star w-1 h-1" style="top:-8px; left:4px; --d:1.5s"></div>
-                        <div class="star w-1 h-1" style="top:-2px; right:-6px; --d:2s"></div>
-                        <div class="star w-[2px] h-[2px]" style="bottom:-5px; left:10px; --d:1.2s"></div>
-                        <div class="star w-[2px] h-[2px]" style="top:10px; left:-8px; --d:2.5s"></div>
-                        <div class="star w-1 h-1" style="bottom:2px; right:-4px; --d:1.8s"></div>
-                    </div>
+                    <span class="verified-badge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.5 12.5c0-1.58-.8-3.04-2.12-3.88.24-1.58-.16-3.2-.12-4.52s-2.94-1.36-4.52-1.12c-.84-1.32-2.3-2.12-3.88-2.12s-3.04.8-3.88 2.12c-1.58-.24-3.2.16-4.52.12s-1.36 2.94-1.12 4.52c-1.32.84-2.12 2.3-2.12 3.88s.8 3.04 2.12 3.88c-.24 1.58.16 3.2.12 4.52s2.94 1.36 4.52 1.12c.84 1.32 2.3 2.12 3.88 2.12s3.04-.8 3.88-2.12c1.58.24 3.2-.16 4.52-.12s1.36-2.94 1.12-4.52c1.32-.84 2.12-2.3 2.12-3.88zm-11.8 4.6l-3.8-3.8 1.4-1.4 2.4 2.4 5.6-5.6 1.4 1.4-7 7z"></path>
+                        </svg>
+                    </span>
                 </div>
 
                 <div class="flex justify-center md:justify-start space-x-8 mb-6 text-sm">
@@ -67,120 +59,52 @@
                 </div>
 
                 <div class="mb-6">
-                    <p id="display-bio" class="text-sm font-medium text-gray-200">Entrepreneur & Développeur. Bâtir l'indépendance numérique. 🚀</p>
-                    <a id="display-link" href="#" class="text-sm text-blue-400 font-bold hover:underline mt-1 block">www.floy-network.com</a>
+                    <p class="text-sm font-medium text-gray-200">Entrepreneur & Développeur. Bâtir l'indépendance numérique. 🚀</p>
+                    <a href="#" class="text-sm text-blue-400 font-bold hover:underline mt-1 block">www.floy-network.com</a>
                 </div>
 
                 <div class="flex flex-wrap justify-center md:justify-start gap-3 items-center">
-                    <button id="follow-btn" onclick="handleFollow()" class="bg-orange text-black font-black px-10 py-2.5 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition">Suivre</button>
-                    <button onclick="toggleModal('modal-msg', true)" class="glass px-6 py-2.5 rounded-xl font-bold text-xs uppercase">Message</button>
-                    <button onclick="toggleModal('modal-edit', true)" class="p-2.5 glass rounded-xl hover:border-[#FF6B00] active:scale-90 transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
-                    </button>
+                    <button class="bg-orange text-black font-black px-10 py-2.5 rounded-xl text-xs uppercase tracking-widest">Suivre</button>
+                    <button class="glass px-6 py-2.5 rounded-xl font-bold text-xs uppercase">Message</button>
                 </div>
             </div>
         </header>
 
-        <section class="mb-8 border-t border-white/5 pt-8">
-            <div id="stories-container" class="flex space-x-6 overflow-x-auto no-scrollbar pb-2">
-                <div class="flex flex-col items-center space-y-2 flex-shrink-0 cursor-pointer group">
-                    <div class="w-16 h-16 rounded-full p-[2px] border-2 border-[#FF6B00] bg-black">
-                        <img src="https://picsum.photos/200/200?random=20" class="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0">
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-tighter">Projets</span>
-                </div>
-                <div class="flex flex-col items-center space-y-2 flex-shrink-0 cursor-pointer group">
-                    <div class="w-16 h-16 rounded-full p-[2px] border-2 border-[#FF6B00] bg-black">
-                        <img src="https://picsum.photos/200/200?random=21" class="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0">
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-tighter">Life</span>
-                </div>
-                <div class="flex flex-col items-center space-y-2 flex-shrink-0 cursor-pointer group">
-                    <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-700 flex items-center justify-center text-gray-600 hover:border-[#FF6B00] hover:text-[#FF6B00]">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-600 uppercase tracking-tighter">Nouveau</span>
-                </div>
-            </div>
-        </section>
-
         <div class="flex border-t border-white/5">
-            <button onclick="switchTab('photos')" id="tab-photos" class="nav-tab active flex-1 flex justify-center py-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-            </button>
-            <button onclick="switchTab('videos')" id="tab-videos" class="nav-tab flex-1 flex justify-center py-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <button class="nav-tab active flex-1 flex justify-center py-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
         </div>
 
-        <div id="grid-content" class="grid grid-cols-3 gap-1 md:gap-4 pb-20 mt-2">
+        <div id="grid-content" class="grid grid-cols-3 gap-1 md:gap-2 pb-20 mt-2">
+            <div class="aspect-square bg-gray-900 overflow-hidden">
+                <img src="https://picsum.photos/600/600?random=1" class="w-full h-full object-cover">
             </div>
+            <div class="aspect-square bg-gray-900 overflow-hidden">
+                <img src="https://picsum.photos/600/600?random=2" class="w-full h-full object-cover">
+            </div>
+            <div class="aspect-square bg-gray-900 overflow-hidden">
+                <img src="https://picsum.photos/600/600?random=3" class="w-full h-full object-cover">
+            </div>
+            <div class="aspect-square bg-gray-900 overflow-hidden">
+                <img src="https://picsum.photos/600/600?random=4" class="w-full h-full object-cover">
+            </div>
+        </div>
 
     </main>
 
-    <div id="modal-edit" class="modal">
-        <div class="glass w-[90%] max-w-md p-8 rounded-3xl relative">
-            <button onclick="toggleModal('modal-edit', false)" class="absolute top-4 right-6 opacity-40">✕</button>
-            <h3 class="text-xl font-black mb-6 orange-text uppercase tracking-tighter">Configuration Profil</h3>
-            <div class="space-y-4">
-                <input id="input-name" type="text" placeholder="Nom complet" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-[#FF6B00]">
-                <textarea id="input-bio" placeholder="Bio" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 h-24 outline-none focus:border-[#FF6B00]"></textarea>
-                <input id="input-link" type="text" placeholder="Lien (URL)" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-[#FF6B00]">
-                <button onclick="saveProfile()" class="w-full bg-orange text-black font-black py-4 rounded-xl uppercase tracking-tighter shadow-lg shadow-orange-600/20 active:scale-95 transition">Sauvegarder</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-msg" class="modal">
-        <div class="glass w-[90%] max-w-sm p-6 rounded-2xl relative">
-            <button onclick="toggleModal('modal-msg', false)" class="absolute top-4 right-6 opacity-40">✕</button>
-            <p class="font-black mb-4 uppercase text-xs tracking-widest orange-text">Nouveau Message</p>
-            <textarea class="w-full bg-white/5 border border-white/10 p-4 h-32 rounded-xl outline-none mb-4 text-sm focus:border-[#FF6B00]"></textarea>
-            <button class="w-full bg-white text-black font-black py-3 rounded-xl text-sm uppercase">Envoyer</button>
-        </div>
-    </div>
-
     <script>
-        function toggleModal(id, s) { document.getElementById(id).classList.toggle('active', s); }
-
-        function handleFollow() {
-            const b = document.getElementById('follow-btn');
-            const following = b.classList.toggle('glass');
-            b.classList.toggle('bg-orange');
-            b.classList.toggle('text-black');
-            b.classList.toggle('text-white');
-            b.innerText = following ? "SUIVI" : "SUIVRE";
-        }
-
-        function saveProfile() {
-            const n = document.getElementById('input-name').value;
-            const b = document.getElementById('input-bio').value;
-            const l = document.getElementById('input-link').value;
-            if(n) document.getElementById('display-name').innerText = n;
-            if(b) document.getElementById('display-bio').innerText = b;
-            if(l) {
-                const el = document.getElementById('display-link');
-                el.innerText = l.replace('https://','');
-                el.href = l.startsWith('http') ? l : 'https://'+l;
-            }
-            toggleModal('modal-edit', false);
-        }
-
-        function switchTab(type) {
-            const tp = document.getElementById('tab-photos');
-            const tv = document.getElementById('tab-videos');
-            const grid = document.getElementById('grid-content');
-            tp.classList.toggle('active', type === 'photos');
-            tv.classList.toggle('active', type === 'videos');
-            grid.innerHTML = '';
-            for(let i=1; i<=9; i++) {
-                grid.innerHTML += `
-                    <div class="aspect-square bg-white/5 rounded-lg overflow-hidden border border-white/5">
-                        <img src="https://picsum.photos/400/400?random=${i + (type==='videos'?50:0)}" class="w-full h-full object-cover opacity-60 hover:opacity-100 transition duration-500">
-                    </div>`;
-            }
-        }
-        switchTab('photos');
+        // Si tu utilises Jinja2 (Python/Flask) pour ta grille réelle, utilise ce format :
+        /*
+        const grid = document.getElementById('grid-content');
+        grid.innerHTML = `
+            {% for post in posts %}
+            <div class="aspect-square bg-gray-900 overflow-hidden">
+                <img src="{{ post.image_url }}" class="w-full h-full object-cover" onerror="this.src='/static/img/default.jpg'">
+            </div>
+            {% endfor %}
+        `;
+        */
     </script>
 </body>
 </html>
