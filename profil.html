@@ -6,35 +6,27 @@
     <title>Floy | Network Elite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
         .orange-text { color: #FF6B00; }
         .bg-orange { background-color: #FF6B00; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Badge Bleu avec Étoiles */
-        .badge-container { position: relative; display: inline-block; }
-        .badge-blue { color: #38bdf8; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5)); }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: twinkle 2s infinite; }
-        @keyframes twinkle { 
-            0%, 100% { opacity: 0; transform: scale(0.3); } 
-            50% { opacity: 1; transform: scale(1); } 
-        }
+        /* Badge Bleu Étoilé */
+        .badge-blue { color: #38bdf8; filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6)); }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 2s infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.3); } 50% { opacity: 1; transform: scale(1); } }
 
-        /* Menu Latéral */
-        #side-menu { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); }
-        #side-menu.open { transform: translateX(0); }
-
-        /* Fenêtres Modales */
-        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+        /* Modale */
+        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
         .modal.active { display: flex; }
     </style>
 </head>
 <body class="antialiased">
 
     <nav class="sticky top-0 z-40 bg-black/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-white/5">
-        <h1 class="font-black text-xl tracking-tighter cursor-pointer">Floy<span class="orange-text">.</span></h1>
+        <h1 class="font-black text-xl tracking-tighter">Floy<span class="orange-text">.</span></h1>
         <div class="flex items-center space-x-5">
-            <button class="opacity-80 hover:opacity-100"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></button>
+            <button class="opacity-70 hover:opacity-100 transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg></button>
             <button onclick="toggleMenu(true)"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg></button>
         </div>
     </nav>
@@ -47,65 +39,85 @@
 
             <div class="flex-1 text-center md:text-left">
                 <div class="flex items-center justify-center md:justify-start space-x-2 mb-5">
-                    <h2 class="text-2xl font-bold">Floy</h2>
-                    <div class="badge-container">
+                    <h2 id="display-name" class="text-2xl font-bold">Floy</h2>
+                    <div class="relative inline-block">
                         <svg class="w-5 h-5 badge-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
-                        <div class="star w-1 h-1" style="top:-5px; left:5px; animation-delay: 0.2s;"></div>
-                        <div class="star w-[2px] h-[2px]" style="top:5px; right:-5px; animation-delay: 0.5s;"></div>
-                        <div class="star w-1 h-1" style="bottom:-3px; left:10px; animation-delay: 0.8s;"></div>
+                        <div class="star w-1 h-1" style="top:-3px; left:12px;"></div>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-8">
-                    <button class="bg-orange text-black font-black px-8 py-2 rounded-lg text-xs uppercase">Suivre</button>
-                    <button onclick="toggleModal('modal-edit', true)" class="glass px-6 py-2 rounded-lg font-bold text-xs hover:bg-white/10 transition">Modifier le profil</button>
-                    <button onclick="toggleModal('modal-msg', true)" class="glass px-6 py-2 rounded-lg font-bold text-xs hover:border-[#FF6B00] transition">Message</button>
+                <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-8 items-center">
+                    <button id="follow-btn" onclick="handleFollow()" class="bg-orange text-black font-black px-8 py-2 rounded-lg text-xs uppercase transition-all active:scale-90">Suivre</button>
+                    <button onclick="toggleModal('modal-msg', true)" class="glass px-6 py-2 rounded-lg font-bold text-xs">Message</button>
+                    
+                    <button onclick="toggleModal('modal-edit', true)" class="p-2 glass rounded-lg hover:border-[#FF6B00] transition-colors">
+                        <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="max-w-xs mx-auto md:mx-0"><p class="text-sm text-gray-400 border-l-2 border-[#FF6B00] pl-4">CEO @ Floy Network. <br>Bâtir l'indépendance numérique. 🚀</p></div>
+                <div class="max-w-xs mx-auto md:mx-0 space-y-2">
+                    <p id="display-bio" class="text-sm text-gray-400 border-l-2 border-[#FF6B00] pl-4 italic">CEO @ Floy Network.🚀</p>
+                    <a id="display-link" href="#" class="text-xs text-blue-400 font-bold block hover:underline"></a>
+                </div>
             </div>
         </header>
     </main>
 
-    <div id="side-menu" class="fixed inset-y-0 right-0 w-64 bg-[#0A0A0A] border-l border-white/10 z-[60] p-6 shadow-2xl">
-        <button onclick="toggleMenu(false)" class="mb-8 opacity-50 font-bold">Fermer ✕</button>
-        <nav class="space-y-6">
-            <a href="#" class="block text-lg font-bold hover:text-[#FF6B00]">Paramètres</a>
-            <a href="#" class="block text-lg font-bold hover:text-[#FF6B00]">Monétisation</a>
-            <a href="#" class="block text-lg font-bold hover:text-[#FF6B00]">Statistiques</a>
-            <div class="pt-10 border-t border-white/5">
-                <a href="#" class="block text-sm text-red-500">Déconnexion</a>
-            </div>
-        </nav>
-    </div>
-
     <div id="modal-edit" class="modal">
         <div class="glass w-[90%] max-w-md p-8 rounded-3xl relative">
-            <button onclick="toggleModal('modal-edit', false)" class="absolute top-4 right-6 opacity-50">✕</button>
-            <h3 class="text-xl font-black mb-6">Éditer Profil</h3>
+            <button onclick="toggleModal('modal-edit', false)" class="absolute top-4 right-6 opacity-40 hover:opacity-100">✕</button>
+            <h3 class="text-xl font-black mb-6 orange-text">Configuration Profil</h3>
             <div class="space-y-4">
-                <input type="text" placeholder="Nom complet" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-[#FF6B00]">
-                <textarea placeholder="Bio" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 h-24 outline-none"></textarea>
-                <button class="w-full bg-orange text-black font-black py-3 rounded-xl uppercase">Enregistrer</button>
+                <input id="input-name" type="text" placeholder="Nouveau Nom" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-blue-500 transition">
+                <textarea id="input-bio" placeholder="Modifier la Bio" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 h-24 outline-none focus:border-blue-500"></textarea>
+                <input id="input-link" type="text" placeholder="Lien (ex: https://...)" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none focus:border-blue-500">
+                <button onclick="saveProfile()" class="w-full bg-orange text-black font-black py-3 rounded-xl uppercase tracking-tighter">Mettre à jour</button>
             </div>
         </div>
     </div>
 
     <div id="modal-msg" class="modal">
-        <div class="glass w-[90%] max-w-sm p-6 rounded-2xl relative border-[#FF6B00]/30 shadow-[0_0_50px_rgba(255,107,0,0.1)]">
-            <button onclick="toggleModal('modal-msg', false)" class="absolute top-4 right-6 opacity-50">✕</button>
-            <div class="flex items-center space-x-3 mb-4">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100" class="w-10 h-10 rounded-full">
-                <p class="font-bold">Message à Floy</p>
-            </div>
-            <textarea placeholder="Écrire un message..." class="w-full bg-transparent border-b border-white/20 p-2 h-32 outline-none text-sm mb-4"></textarea>
-            <button class="w-full bg-[#FF6B00] text-black font-bold py-2 rounded-lg text-sm">Envoyer</button>
+        <div class="glass w-[90%] max-w-sm p-6 rounded-2xl relative border-[#FF6B00]/20">
+            <button onclick="toggleModal('modal-msg', false)" class="absolute top-4 right-6 opacity-40">✕</button>
+            <p class="font-bold mb-4">Envoyer un message à Floy</p>
+            <textarea class="w-full bg-white/5 border border-white/10 p-3 h-32 rounded-xl outline-none mb-4 text-sm"></textarea>
+            <button class="w-full bg-white text-black font-bold py-2 rounded-lg text-sm">Envoyer</button>
         </div>
     </div>
 
     <script>
-        function toggleMenu(show) { document.getElementById('side-menu').classList.toggle('open', show); }
         function toggleModal(id, show) { document.getElementById(id).classList.toggle('active', show); }
+
+        // LOGIQUE SUIVRE (Comme avant)
+        let following = false;
+        function handleFollow() {
+            const btn = document.getElementById('follow-btn');
+            following = !following;
+            btn.innerText = following ? "Suivi" : "Suivre";
+            btn.className = following ? "glass text-white font-black px-8 py-2 rounded-lg text-xs uppercase" : "bg-orange text-black font-black px-8 py-2 rounded-lg text-xs uppercase";
+        }
+
+        // LOGIQUE MISE À JOUR EN DIRECT
+        function saveProfile() {
+            const newName = document.getElementById('input-name').value;
+            const newBio = document.getElementById('input-bio').value;
+            const newLink = document.getElementById('input-link').value;
+
+            // On met à jour le profil instantanément
+            if(newName) document.getElementById('display-name').innerText = newName;
+            if(newBio) document.getElementById('display-bio').innerText = newBio;
+            if(newLink) {
+                const linkEl = document.getElementById('display-link');
+                linkEl.innerText = newLink;
+                linkEl.href = newLink.startsWith('http') ? newLink : 'https://' + newLink;
+            }
+
+            // Fermer la modale
+            toggleModal('modal-edit', false);
+        }
     </script>
 </body>
 </html>
