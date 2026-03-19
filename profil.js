@@ -1,28 +1,49 @@
 import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Fonction pour charger les morceaux de HTML (modules)
-async function loadComponent(id, file) {
-    const res = await fetch(file);
-    const html = await res.text();
-    document.getElementById(id).innerHTML = html;
+// Fonction d'injection des modules HTML
+async function injectModule(id, file) {
+    try {
+        const response = await fetch(file);
+        if (!response.ok) return;
+        const html = await response.text();
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerHTML = html;
+            // Relancer les scripts internes au module
+            element.querySelectorAll("script").forEach(s => {
+                const newS = document.createElement("script");
+                newS.type = s.type || "text/javascript";
+                newS.textContent = s.textContent;
+                document.body.appendChild(newS);
+            });
+        }
+    } catch (e) { console.error("Erreur module:", file); }
 }
 
 onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-        window.location.href = 'connexion.html';
-        return;
-    }
+    if (!user) { window.location.href = 'connexion.html'; return; }
 
-    // On charge les composants
+    const params = new URLSearchParams(window.location.search);
+    const profileId = params.get('id') || user.uid;
+
+    // Chargement de la structure
     await Promise.all([
-        loadComponent('header-module', 'profile_header.html'),
-        loadComponent('stats-module', 'profile_stats.html'),
-        loadComponent('tabs-module', 'profile_tabs.html'),
-        loadComponent('grid-module', 'profile_grid.html')
+        injectModule('header-module', 'profile_header.html'),
+        injectModule('stats-module', 'profile_stats.html'),
+        injectModule('tabs-module', 'profile_tabs.html'),
+        injectModule('grid-module', 'profile_grid.html'),
+        injectModule('modal-module', 'profile_edit_modal.html')
     ]);
 
-    // Une fois chargés, on lance la data
-    console.log("Profil de " + user.displayName + " chargé !");
-    // Appelle ici tes fonctions loadHeader(user.uid), etc.
+    // Initialisation des données (avec petit délai pour être sûr que le HTML est là)
+    setTimeout(() => {
+        if(window.loadHeader) window.loadHeader(profileId, user.uid);
+        if(window.loadStats) window.loadStats(profileId);
+        if(window.loadGrid) window.loadGrid('posts', profileId);
+        if(window.loadBadge) window.loadBadge(profileId);
+        
+        // Cacher le loader
+        document.getElementById('main-loader').style.display = 'none';
+    }, 200);
 });
