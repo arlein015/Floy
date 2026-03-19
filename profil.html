@@ -6,106 +6,107 @@
     <title>Profil - Floy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #000; margin: 0; padding-bottom: 80px; font-family: -apple-system, sans-serif; color: white; }
-        .module-container { width: 100%; max-width: 600px; margin: 0 auto; }
-        #main-loader { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        body { background: #000; margin: 0; padding-bottom: 80px; font-family: -apple-system, sans-serif; color: white; overflow-x: hidden; }
+        .module-container { width: 100%; max-width: 600px; margin: 0 auto; min-height: 100vh; }
+        
+        /* Loader plein écran */
+        #main-loader { 
+            position: fixed; inset: 0; background: #000; 
+            display: flex; align-items: center; justify-content: center; z-index: 9999; 
+            transition: opacity 0.4s ease;
+        }
+
+        /* Barre de Navigation Basse */
+        .nav-bottom { 
+            position: fixed; bottom: 0; width: 100%; height: 65px; 
+            background: #000; border-top: 1px solid #1a1a1a; 
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000; 
+        }
+        .nav-bottom i { font-size: 20px; color: white; cursor: pointer; }
+        .nav-active { color: #FF7A1A !important; }
     </style>
 </head>
 <body>
 
     <div id="main-loader">
-        <i class="fas fa-circle-notch fa-spin" style="color: #FF7A1A; font-size: 30px;"></i>
+        <i class="fas fa-circle-notch fa-spin" style="color: #FF7A1A; font-size: 35px;"></i>
     </div>
 
     <div class="module-container">
         <div id="header-module"></div>
-        
         <div id="stats-module"></div>
-        
         <div id="tabs-module"></div>
-        
         <div id="grid-module"></div>
     </div>
 
     <div id="modal-module"></div>
 
-    <div style="position: fixed; bottom: 0; width: 100%; height: 65px; background: #000; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-around; align-items: center; z-index: 1000;">
+    <div class="nav-bottom">
         <i class="fas fa-home" onclick="location.href='index.html'"></i>
         <i class="fas fa-search"></i>
         <i class="fas fa-plus-square" onclick="location.href='create.html'"></i>
         <i class="fas fa-comment" onclick="location.href='message-list.html'"></i>
-        <i class="fas fa-user" style="color: #FF7A1A;"></i>
+        <i class="fas fa-user nav-active"></i>
     </div>
 
     <script type="module">
         import { auth } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Fonction pour charger un fichier HTML dans un div
+        // Fonction pour charger les modules HTML
         async function loadModule(file, elementId) {
-            const response = await fetch(file);
-            const html = await response.text();
-            document.getElementById(elementId).innerHTML = html;
-            
-            // Exécuter les scripts contenus dans le module chargé
-            const scripts = document.getElementById(elementId).querySelectorAll("script");
-            scripts.forEach(oldScript => {
-                const newScript = document.createElement("script");
-                newScript.type = oldScript.type || "text/javascript";
-                newScript.textContent = oldScript.textContent;
-                document.body.appendChild(newScript);
-            });
+            try {
+                const response = await fetch(file);
+                if (!response.ok) throw new Error(`Erreur 404: ${file} introuvable`);
+                const html = await response.text();
+                document.getElementById(elementId).innerHTML = html;
+                
+                // Extraire et exécuter les scripts du module
+                const scripts = document.getElementById(elementId).querySelectorAll("script");
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    newScript.type = oldScript.type || "text/javascript";
+                    newScript.textContent = oldScript.textContent;
+                    document.body.appendChild(newScript);
+                });
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) { location.href = 'connexion.html'; return; }
 
-            // Récupérer l'ID du profil à afficher (soi-même ou un autre)
             const params = new URLSearchParams(window.location.search);
             const profileId = params.get('id') || user.uid;
 
-            try {
-                // Chargement en parallèle de tous les modules
-                await Promise.all([
-                    loadModule('profile_header.html', 'header-module'),
-                    loadModule('profile_stats.html', 'stats-module'),
-                    loadModule('profile_tabs.html', 'tabs-module'),
-                    loadModule('profile_grid.html', 'grid-module'),
-                    loadModule('profile_edit_modal.html', 'modal-module'),
-                    loadModule('badge_verification.html', 'header-module') // Ajoute le badge dans le header
-                ]);
+            // Chargement de tous les composants un par un
+            await Promise.all([
+                loadModule('profile_header.html', 'header-module'),
+                loadModule('profile_stats.html', 'stats-module'),
+                loadModule('profile_tabs.html', 'tabs-module'),
+                loadModule('profile_grid.html', 'grid-module'),
+                loadModule('profile_edit_modal.html', 'modal-module'),
+                loadModule('badge_verification.html', 'header-module')
+            ]);
 
-                // Initialisation des données dans les modules
-                if(window.loadHeader) window.loadHeader(profileId, user.uid);
-                if(window.loadStats) window.loadStats(profileId);
-                if(window.loadGrid) window.loadGrid('posts', profileId);
-                if(window.loadBadge) window.loadBadge(profileId);
-
-                // Cacher le loader
-                document.getElementById('main-loader').style.fadeOut = "0.3s";
-                setTimeout(() => document.getElementById('main-loader').style.display = "none", 300);
-
-            } catch (error) {
-                console.error("Erreur de chargement des modules:", error);
-            }
+            // SÉCURITÉ : On attend 100ms que le navigateur "dessine" les éléments
+            setTimeout(() => {
+                try {
+                    if(window.loadHeader) window.loadHeader(profileId, user.uid);
+                    if(window.loadStats) window.loadStats(profileId);
+                    if(window.loadGrid) window.loadGrid('posts', profileId);
+                    if(window.loadBadge) window.loadBadge(profileId);
+                    
+                    // Fin du chargement, on cache le loader
+                    const loader = document.getElementById('main-loader');
+                    loader.style.opacity = "0";
+                    setTimeout(() => loader.style.display = "none", 400);
+                } catch (e) {
+                    console.error("Erreur d'initialisation des modules:", e);
+                }
+            }, 100);
         });
-        // Remplace ton bloc d'initialisation par celui-ci qui est plus "sécurisé"
-    const initProfile = async () => {
-    await Promise.all([
-        loadModule('profile_header.html', 'header-module'),
-        loadModule('profile_stats.html', 'stats-module'),
-        loadModule('profile_tabs.html', 'tabs-module'),
-        loadModule('profile_grid.html', 'grid-module'),
-        loadModule('profile_edit_modal.html', 'modal-module')
-    ]);
-
-    // On attend un tout petit peu (100ms) que le DOM s'actualise
-    setTimeout(() => {
-        if(window.loadHeader) window.loadHeader(profileId, user.uid);
-        if(window.loadStats) window.loadStats(profileId);
-        if(window.loadGrid) window.loadGrid('posts', profileId);
-    }, 100);
-};
     </script>
 </body>
 </html>
