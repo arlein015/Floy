@@ -11,17 +11,26 @@
         border: 2px solid black; font-size: 11px; 
     }
 
-    /* La nouvelle ligne d'actions */
     .btn-row { display: flex; gap: 8px; margin-top: 15px; align-items: center; }
-    .btn-f { flex: 1; height: 34px; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-f { flex: 1; height: 34px; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
     .btn-orange { background: #FF7A1A; color: white; }
     .btn-gray { background: #262626; color: white; }
+    .btn-gray:active { background: #333; }
 
     .btn-icon-svg { width: 34px; height: 34px; background: #262626; border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
     .btn-icon-svg svg { fill: white; width: 18px; height: 18px; }
+
+    /* Notification de copie */
+    #copy-toast {
+        position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+        background: #333; color: white; padding: 10px 20px; border-radius: 20px;
+        font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000; pointer-events: none;
+    }
 </style>
 
 <div class="profile-header">
+    <div id="copy-toast">Lien copié !</div>
+
     <div class="header-top">
         <div class="avatar-wrapper">
             <img id="h-avatar" src="" class="avatar-img">
@@ -51,6 +60,16 @@
     import { db } from './firebase-config.js';
     import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // Fonction pour copier le lien
+    window.copyProfileLink = () => {
+        const profileUrl = window.location.href;
+        navigator.clipboard.writeText(profileUrl).then(() => {
+            const toast = document.getElementById('copy-toast');
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        });
+    };
+
     window.loadHeader = (profileId, myId) => {
         onSnapshot(doc(db, "users", profileId), (snap) => {
             if (!snap.exists()) return;
@@ -61,33 +80,31 @@
             document.getElementById('h-bio').innerText = data.bio || "";
             if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
 
-            // Badge
             const badgeCont = document.getElementById('h-badge-container');
             badgeCont.innerHTML = data.isVerified ? `<i class="fas fa-check-circle" style="color:#FF7A1A; font-size:16px;"></i>` : '';
 
             const actionsZone = document.getElementById('dynamic-actions-zone');
             const plusIcon = document.getElementById('h-plus-icon');
 
-            // On vide tout pour être sûr que les anciens boutons disparaissent
             actionsZone.innerHTML = "";
 
             if (profileId === myId) {
-                // MA VUE (Moi-même)
+                // MOI : "Modifier" + "Partager" (Copie lien) + "Paramètres"
                 plusIcon.style.display = 'flex';
                 actionsZone.innerHTML = `
                     <button onclick="openEditModal()" class="btn-f btn-gray">Modifier le profil</button>
-                    <button class="btn-f btn-gray">Partager le profil</button>
+                    <button onclick="copyProfileLink()" class="btn-f btn-gray">Partager le profil</button>
                     <button class="btn-icon-svg" onclick="openEditModal()">
                         <svg viewBox="0 0 24 24"><path d="M19.91 15.51a1.29 1.29 0 0 1-1.02-1.46l.16-1.14a1.29 1.29 0 0 1 1.02-1.46l.94-.13a1.29 1.29 0 0 0 1.02-1.46l-1.06-4.25a1.29 1.29 0 0 0-1.02-1.46l-.94-.13a1.29 1.29 0 0 1-1.02-1.46l-.16-1.14a1.29 1.29 0 0 0-1.02-1.46l-4.25 1.06a1.29 1.29 0 0 0-1.02 1.46l-.16 1.14a1.29 1.29 0 0 1-1.02 1.46l-.94.13a1.29 1.29 0 0 0-1.02 1.46l1.06 4.25a1.29 1.29 0 0 0 1.02 1.46l.94.13a1.29 1.29 0 0 1 1.02 1.46l.16 1.14a1.29 1.29 0 0 0 1.02 1.46l4.25-1.06a1.29 1.29 0 0 0 1.02-1.46l-.16-1.14z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                 `;
             } else {
-                // VUE VISITEUR (Les autres)
+                // AUTRES : "Suivre" + "Message" + "Partager" (Copie lien)
                 plusIcon.style.display = 'none';
                 actionsZone.innerHTML = `
                     <button class="btn-f btn-orange">Suivre</button>
                     <button onclick="openQuickChat('${profileId}')" class="btn-f btn-gray">Message</button>
-                    <button class="btn-icon-svg">
+                    <button class="btn-icon-svg" onclick="copyProfileLink()">
                         <svg viewBox="0 0 24 24"><path d="M12 2.75a.75.75 0 0 1 .75.75V15a.75.75 0 0 1-1.5 0V3.5a.75.75 0 0 1 .75-.75Z"/><path d="M7.22 5.53a.75.75 0 0 1 1.06 0L12 9.25l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L7.22 6.59a.75.75 0 0 1 0-1.06Z"/><path d="M3.75 13.25a.75.75 0 0 1 .75.75v5.5c0 .414.336.75.75.75h13.5a.75.75 0 0 0 .75-.75V14a.75.75 0 0 1 1.5 0v5.5A2.25 2.25 0 0 1 18.75 21.75H5.25A2.25 2.25 0 0 1 3 19.5V14a.75.75 0 0 1 .75-.75Z"/></svg>
                     </button>
                 `;
