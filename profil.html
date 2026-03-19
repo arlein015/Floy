@@ -2,108 +2,143 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Profil | Floy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Floy</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --floy-orange: #FF7A1A; --floy-black: #000; }
-        body { background: var(--floy-black); margin: 0; font-family: -apple-system, sans-serif; color: white; overflow-x: hidden; }
+        body { background-color: black; color: white; font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
         
-        /* LOADER FLOY */
-        #floy-loader {
-            position: fixed; inset: 0; background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; transition: opacity 0.5s ease;
+        /* HEADER STYLE */
+        .profile-header { padding: 20px 15px; border-bottom: 1px solid #262626; }
+        .header-top { display: flex; align-items: center; gap: 20px; }
+        .avatar-wrapper { position: relative; width: 85px; height: 85px; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
+        .story-plus { 
+            position: absolute; bottom: 0; right: 0; background: #0095f6; 
+            color: white; border-radius: 50%; width: 22px; height: 22px; 
+            display: flex; align-items: center; justify-content: center; 
+            border: 2px solid black; font-size: 11px; cursor: pointer;
         }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid rgba(255, 122, 26, 0.1);
-            border-top: 3px solid var(--floy-orange);
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-        .floy-logo-text { margin-top: 20px; color: white; font-size: 14px; letter-spacing: 5px; text-transform: uppercase; font-weight: 300; }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
-        
-        /* Nav Basse */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; max-width: 500px; height: 65px;
-            background: rgba(0,0,0,0.95); border-top: 1px solid #1a1a1a;
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        /* BOUTONS STYLE */
+        .btn-row { display: flex; gap: 8px; margin-top: 15px; }
+        .btn-f { 
+            flex: 1; height: 36px; border: none; border-radius: 8px; 
+            font-weight: 600; font-size: 14px; cursor: pointer !important; 
+            background: #262626; color: white; display: flex; 
+            align-items: center; justify-content: center;
         }
-        .nav-bar i { font-size: 22px; color: #555; cursor: pointer; }
-        .nav-active { color: var(--floy-orange) !important; }
+
+        /* MODALE STYLE */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: none; align-items: center; 
+            justify-content: center; z-index: 10000;
+        }
+        .modal-box { background: #262626; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden; }
+        .edit-input { 
+            width: 100%; background: #121212; border: 1px solid #363636; 
+            border-radius: 8px; padding: 12px; color: white; margin-top: 10px; box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
 
-    <div id="floy-loader">
-        <div class="spinner"></div>
-        <div class="floy-logo-text">Floy</div>
+    <div class="profile-header">
+        <div class="header-top">
+            <div class="avatar-wrapper">
+                <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
+                <div class="story-plus"><i class="fas fa-plus"></i></div>
+            </div>
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <h2 id="h-username" style="margin:0; font-size: 20px;">Chargement...</h2>
+                    <i class="fas fa-check-circle" style="color:#FF7A1A;"></i>
+                </div>
+                <div style="display: flex; gap: 15px; font-size: 14px; margin-top: 5px;">
+                    <span><b>0</b> publications</span>
+                    <span><b>0</b> followers</span>
+                </div>
+            </div>
+        </div>
+
+        <p id="h-bio" style="margin-top: 15px; font-size: 14px;"></p>
+
+        <div class="btn-row">
+            <button onclick="openEditModal()" class="btn-f">Modifier le profil</button>
+            <button onclick="copyProfileLink()" class="btn-f">Partager le profil</button>
+        </div>
     </div>
 
-    <div class="app-container">
-        <div id="header-zone"></div>
-        <div id="stats-zone"></div>
-        <div id="tabs-zone"></div>
-        <div id="grid-zone"></div>
+    <div id="edit-profile-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #363636; align-items: center;">
+                <span onclick="closeEditModal()" style="cursor: pointer; color: #a8a8a8;">Annuler</span>
+                <b style="font-size: 16px;">Modifier le profil</b>
+                <span id="btn-save" style="cursor: pointer; color: #0095f6; font-weight: 600;">Terminé</span>
+            </div>
+            <div style="padding: 20px;">
+                <label style="font-size: 12px; color: #a8a8a8;">Bio</label>
+                <textarea id="inp-bio-modal" class="edit-input" rows="3" placeholder="Ta nouvelle bio..."></textarea>
+                
+                <label style="font-size: 12px; color: #a8a8a8; margin-top: 15px; display: block;">URL de l'image</label>
+                <input type="text" id="inp-avatar-url" class="edit-input" placeholder="https://...">
+            </div>
+        </div>
     </div>
-
-    <div id="modal-zone"></div> <nav class="nav-bar">
-        <i class="fas fa-home" onclick="location.href='index.html'"></i>
-        <i class="fas fa-search"></i>
-        <i class="fas fa-plus-square"></i>
-        <i class="fas fa-comment"></i>
-        <i class="fas fa-user nav-active"></i>
-    </nav>
 
     <script type="module">
-        import { auth } from './firebase-config.js';
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { db, auth } from './firebase-config.js';
+        import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        async function loadModule(file, targetId) {
-            try {
-                const res = await fetch(file);
-                if (!res.ok) throw new Error(file + " introuvable");
-                const html = await res.text();
-                const container = document.getElementById(targetId);
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-                container.appendChild(tempDiv);
-                
-                const scripts = tempDiv.querySelectorAll("script");
-                scripts.forEach(s => {
-                    const newScript = document.createElement("script");
-                    newScript.type = "module";
-                    newScript.textContent = s.textContent;
-                    document.body.appendChild(newScript);
+        // EXPORT GLOBAL POUR ONCLICK (Règle l'erreur ReferenceError)
+        window.openEditModal = () => {
+            document.getElementById('edit-profile-modal').style.display = 'flex';
+        };
+
+        window.closeEditModal = () => {
+            document.getElementById('edit-profile-modal').style.display = 'none';
+        };
+
+        window.copyProfileLink = () => {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Lien du profil copié !");
+        };
+
+        // GESTION DES DONNÉES FIREBASE
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                const userRef = doc(db, "users", user.uid);
+
+                // Synchronisation en temps réel
+                onSnapshot(userRef, (snap) => {
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        document.getElementById('h-username').innerText = data.username || "Utilisateur";
+                        document.getElementById('h-bio').innerText = data.bio || "";
+                        document.getElementById('h-avatar').src = data.avatarUrl || "https://via.placeholder.com/150";
+                        
+                        // Pré-remplir la modale
+                        document.getElementById('inp-bio-modal').value = data.bio || "";
+                        document.getElementById('inp-avatar-url').value = data.avatarUrl || "";
+                    }
                 });
-            } catch (e) { console.error(e); }
-        }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = 'connexion.html'; return; }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const viewId = urlParams.get('id') || user.uid;
-
-            // Chargement séquentiel pour éviter les conflits
-            await loadModule('profile_header.html', 'header-zone');
-            await loadModule('profile_stats.html', 'stats-zone');
-            await loadModule('profile_tabs.html', 'tabs-zone');
-            await loadModule('profile_grid.html', 'grid-zone');
-            await loadModule('profile_edit_modal.html', 'modal-zone');
-            await loadModule('quick_chat.html', 'modal-zone');
-
-            setTimeout(() => {
-                if(window.loadHeader) window.loadHeader(viewId, user.uid);
-                const loader = document.getElementById('floy-loader');
-                if(loader) {
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.remove(), 500);
-                }
-            }, 600);
+                // Sauvegarde lors du clic sur "Terminé"
+                document.getElementById('btn-save').onclick = async () => {
+                    try {
+                        await updateDoc(userRef, {
+                            bio: document.getElementById('inp-bio-modal').value,
+                            avatarUrl: document.getElementById('inp-avatar-url').value
+                        });
+                        window.closeEditModal();
+                    } catch (e) {
+                        alert("Erreur de mise à jour");
+                    }
+                };
+            }
         });
     </script>
 </body>
