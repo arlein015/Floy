@@ -9,6 +9,10 @@
 </head>
 <body>
 
+    <div id="main-loader" class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
+
     <div class="profile-container">
         <header class="header">
             <div class="avatar-wrapper">
@@ -16,9 +20,10 @@
             </div>
             <div class="user-info">
                 <div class="username-row">
-                    <h2 id="p-username">Utilisateur</h2>
+                    <h2 id="p-username">...</h2>
                     <div id="badge-container"></div>
                 </div>
+                <p id="p-email" class="email-display"></p>
                 <p id="p-bio">Chargement de la bio...</p>
             </div>
         </header>
@@ -35,11 +40,11 @@
         </section>
 
         <nav class="tabs">
-            <div class="tab active" onclick="switchTab('posts')"><i class="fas fa-th"></i></div>
-            <div class="tab" onclick="switchTab('reels')"><i class="fas fa-play-circle"></i></div>
+            <div class="tab active"><i class="fas fa-th"></i></div>
+            <div class="tab"><i class="fas fa-play-circle"></i></div>
         </nav>
 
-        <main id="grid-module" class="photo-grid">
+        <main id="media-grid" class="photo-grid">
             <div class="empty-msg">Aucune publication pour le moment</div>
         </main>
     </div>
