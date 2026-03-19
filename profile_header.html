@@ -1,5 +1,5 @@
 <style>
-    .profile-header { padding: 20px 15px; color: white; background: #000; }
+    .profile-header { padding: 20px 15px; color: white; background: #000; font-family: -apple-system, sans-serif; }
     .header-top { display: flex; align-items: center; gap: 20px; }
     
     /* Photo avec le + Story */
@@ -17,29 +17,39 @@
     .stats-text b { color: white; }
     .stats-text span { color: #aaa; }
 
-    /* Boutons de profil */
-    .btn-row { display: flex; gap: 8px; margin-top: 15px; }
+    /* Ligne des Boutons */
+    .btn-row { display: flex; gap: 8px; margin-top: 15px; align-items: center; }
+    
+    /* Boutons Principaux (Suivre / Message) */
     .btn-f { 
-        flex: 1; height: 36px; border: none; border-radius: 8px; 
+        flex: 1; height: 34px; border: none; border-radius: 8px; 
         font-weight: 600; font-size: 14px; cursor: pointer; 
         display: flex; align-items: center; justify-content: center;
     }
-    .btn-orange { background: #FF7A1A; color: white; } /* Bouton Suivre */
-    .btn-gray { background: #262626; color: white; }   /* Bouton Message / Modifier */
+    .btn-orange { background: #FF7A1A; color: white; }
+    .btn-gray { background: #262626; color: white; }
+
+    /* Boutons Icones SVG (Paramètres / Partage) */
+    .btn-icon {
+        width: 34px; height: 34px; background: #262626; border: none; 
+        border-radius: 8px; display: flex; align-items: center; 
+        justify-content: center; cursor: pointer; flex-shrink: 0;
+    }
+    .btn-icon svg { fill: white; width: 18px; height: 18px; }
 </style>
 
 <div class="profile-header">
     <div class="header-top">
-        <div class="avatar-wrapper" id="p-avatar-click">
+        <div class="avatar-wrapper">
             <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-img">
             <div class="story-plus" id="h-plus-icon"><i class="fas fa-plus"></i></div>
         </div>
 
         <div style="flex: 1;">
             <div style="display: flex; align-items: center; gap: 8px;">
-                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 500;">...</h2>
-                <div id="h-badge"></div> </div>
-            
+                <h2 id="h-username" style="margin:0; font-size: 19px; font-weight: 500;">...</h2>
+                <div id="h-badge"></div>
+            </div>
             <div class="stats-text">
                 <div><b id="c-posts">0</b> <span>publications</span></div>
                 <div><b id="c-followers">0</b> <span>followers</span></div>
@@ -47,12 +57,24 @@
         </div>
     </div>
 
-    <div style="margin-top: 15px;">
+    <div style="margin-top: 12px;">
         <span id="h-fullname" style="font-weight: 600; font-size: 14px; display: block;">...</span>
         <p id="h-bio" style="margin: 3px 0; font-size: 14px; color: #efefef;"></p>
     </div>
 
-    <div id="h-btn-zone" class="btn-row"></div>
+    <div class="btn-row">
+        <button class="btn-f btn-orange" id="btn-main-action">Suivre</button>
+        
+        <button class="btn-f btn-gray" id="btn-secondary-action">Message</button>
+
+        <button class="btn-icon" title="Partager">
+            <svg viewBox="0 0 24 24"><path d="M12 2.75a.75.75 0 0 1 .75.75V15a.75.75 0 0 1-1.5 0V3.5a.75.75 0 0 1 .75-.75Z"/><path d="M7.22 5.53a.75.75 0 0 1 1.06 0L12 9.25l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L7.22 6.59a.75.75 0 0 1 0-1.06Z"/><path d="M3.75 13.25a.75.75 0 0 1 .75.75v5.5c0 .414.336.75.75.75h13.5a.75.75 0 0 0 .75-.75V14a.75.75 0 0 1 1.5 0v5.5A2.25 2.25 0 0 1 18.75 21.75H5.25A2.25 2.25 0 0 1 3 19.5V14a.75.75 0 0 1 .75-.75Z"/></svg>
+        </button>
+
+        <button class="btn-icon" onclick="openEditModal()" id="h-settings-btn">
+            <svg viewBox="0 0 24 24"><path d="M19.91 15.51a1.29 1.29 0 0 1-1.02-1.46l.16-1.14a1.29 1.29 0 0 1 1.02-1.46l.94-.13a1.29 1.29 0 0 0 1.02-1.46l-1.06-4.25a1.29 1.29 0 0 0-1.02-1.46l-.94-.13a1.29 1.29 0 0 1-1.02-1.46l-.16-1.14a1.29 1.29 0 0 0-1.02-1.46l-4.25 1.06a1.29 1.29 0 0 0-1.02 1.46l-.16 1.14a1.29 1.29 0 0 1-1.02 1.46l-.94.13a1.29 1.29 0 0 0-1.02 1.46l1.06 4.25a1.29 1.29 0 0 0 1.02 1.46l.94.13a1.29 1.29 0 0 1 1.02 1.46l.16 1.14a1.29 1.29 0 0 0 1.02 1.46l4.25-1.06a1.29 1.29 0 0 0 1.02-1.46l-.16-1.14z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+    </div>
 </div>
 
 <script type="module">
@@ -69,27 +91,30 @@
             document.getElementById('h-bio').innerText = data.bio || "";
             if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
 
-            // Badge Orange Floy
+            // Badge Floy
             const badge = document.getElementById('h-badge');
             badge.innerHTML = data.isVerified ? `<i class="fas fa-check-circle" style="color:#FF7A1A; font-size:16px;"></i>` : '';
 
-            const btnZone = document.getElementById('h-btn-zone');
+            const btnMain = document.getElementById('btn-main-action');
+            const btnSec = document.getElementById('btn-secondary-action');
+            const settingsBtn = document.getElementById('h-settings-btn');
             const plusIcon = document.getElementById('h-plus-icon');
 
+            // Logique de visibilité
             if (profileId === myId) {
-                // --- VUE MON PROFIL (Toi) ---
-                plusIcon.style.display = 'flex'; // Tu vois le +
-                btnZone.innerHTML = `
-                    <button onclick="openEditModal()" class="btn-f btn-gray">Modifier le profil</button>
-                    <button class="btn-f btn-gray">Partager le profil</button>
-                `;
+                plusIcon.style.display = 'flex';
+                settingsBtn.style.display = 'flex';
+                btnMain.innerText = "Modifier le profil";
+                btnMain.className = "btn-f btn-gray"; // Gris pour soi-même
+                btnMain.onclick = () => openEditModal();
+                btnSec.innerText = "Partager";
             } else {
-                // --- VUE VISITEUR (Les autres) ---
-                plusIcon.style.display = 'none'; // Pas de + pour les autres
-                btnZone.innerHTML = `
-                    <button class="btn-f btn-orange">Suivre</button>
-                    <button onclick="openQuickChat('${profileId}')" class="btn-f btn-gray">Message</button>
-                `;
+                plusIcon.style.display = 'none';
+                settingsBtn.style.display = 'none'; // Pas d'accès aux paramètres des autres
+                btnMain.innerText = "Suivre";
+                btnMain.className = "btn-f btn-orange"; // Orange pour attirer l'oeil
+                btnSec.innerText = "Message";
+                btnSec.onclick = () => openQuickChat(profileId);
             }
         });
     };
