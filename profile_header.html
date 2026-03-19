@@ -1,125 +1,89 @@
 <style>
-    .header-wrapper {
-        padding: 20px 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        background-color: #000;
-    }
+    .header-main { padding: 20px 15px; color: white; background: #000; }
+    
+    /* Ligne du haut : Photo à gauche, Stats à droite */
+    .header-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+    
+    .profile-pic-box { position: relative; width: 85px; height: 85px; }
+    .profile-pic-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #FF7A1A; }
 
-    .header-top {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
+    .stats-right { display: flex; gap: 20px; flex: 1; justify-content: center; }
+    .stat-item { text-align: center; cursor: pointer; }
+    .stat-item b { display: block; font-size: 18px; }
+    .stat-item span { font-size: 12px; color: #8e8e8e; }
 
-    .profile-pic-container {
-        position: relative;
-        width: 85px;
-        height: 85px;
-        border-radius: 50%;
-        background: linear-gradient(45deg, #FF7A1A, #ff9d4d);
-        padding: 3px; /* Effet de bordure orange Floy */
-    }
+    /* Infos en bas de la photo */
+    .user-details { margin-top: 10px; }
+    .name-badge { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 16px; }
+    .verification-blue { color: #0095f6; font-size: 14px; } /* Badge bleu */
+    .bio-text { font-size: 14px; margin: 5px 0; color: #efefef; }
+    .user-link { color: #FF7A1A; text-decoration: none; font-size: 14px; font-weight: 500; }
 
-    .profile-pic-container img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #000;
-    }
-
-    .user-text-info {
-        flex: 1;
-    }
-
-    .username-badge-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    #p-username {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 700;
-        color: #fff;
-    }
-
-    #p-email {
-        margin: 2px 0;
-        font-size: 13px;
-        color: #FF7A1A; /* Email en Orange Floy */
-        font-weight: 500;
-    }
-
-    #p-bio {
-        margin-top: 8px;
-        font-size: 14px;
-        line-height: 1.4;
-        color: #efefef;
-        white-space: pre-wrap; /* Respecte les retours à la ligne de la bio */
-    }
-
-    /* Badge de vérification Floy */
-    .verification-badge {
-        color: #FF7A1A;
-        font-size: 16px;
-    }
+    /* Boutons d'actions */
+    .action-bar { display: flex; gap: 8px; margin-top: 15px; align-items: center; }
+    .btn-follow { background: #FF7A1A; color: white; border: none; flex: 1; padding: 8px; border-radius: 8px; font-weight: bold; }
+    .btn-msg { background: #262626; color: white; border: none; flex: 1; padding: 8px; border-radius: 8px; font-weight: bold; }
+    .icon-btn { background: #262626; border: none; padding: 8px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; }
+    .icon-btn svg { width: 18px; height: 18px; fill: white; }
 </style>
 
-<div class="header-wrapper">
-    <div class="header-top">
-        <div class="profile-pic-container">
-            <img id="p-img" src="https://via.placeholder.com/150" alt="Photo de profil">
+<div class="header-main">
+    <div class="header-top-row">
+        <div class="profile-pic-box">
+            <img id="p-img" src="https://via.placeholder.com/150">
         </div>
-        
-        <div class="user-text-info">
-            <div class="username-badge-row">
-                <h2 id="p-username">Chargement...</h2>
-                <div id="badge-container"></div>
-            </div>
-            <p id="p-email"></p>
+
+        <div class="stats-right">
+            <div class="stat-item" onclick="openFollowersModal('posts')"><b id="s-posts">0</b><span>Pubs</span></div>
+            <div class="stat-item" onclick="openFollowersModal('followers')"><b id="s-followers">0</b><span>Abonnés</span></div>
+            <div class="stat-item" onclick="openFollowersModal('following')"><b id="s-following">0</b><span>Abos</span></div>
         </div>
     </div>
 
-    <div class="header-bio-section">
-        <p id="p-bio">Chargement de la biographie...</p>
+    <div class="user-details">
+        <div class="name-badge">
+            <span id="p-username">Chargement...</span>
+            <i class="fas fa-certificate verification-blue"></i> </div>
+        <p class="bio-text" id="p-bio">...</p>
+        <a href="#" class="user-link" id="p-link">lien_ici.com</a>
     </div>
+
+    <div class="action-bar" id="p-actions">
+        </div>
 </div>
 
 <script type="module">
     import { auth, db } from './firebase-config.js';
     import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Fonction pour remplir les données du header
     window.loadHeader = (uid, currentUid) => {
-        if (!uid) return;
-
-        const userRef = doc(db, "users", uid);
-        
-        // Écoute en temps réel des changements du profil
-        onSnapshot(userRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                
-                // Injection du Nom, Email et Bio
+        onSnapshot(doc(db, "users", uid), (snap) => {
+            if (snap.exists()) {
+                const data = snap.data();
                 document.getElementById('p-username').innerText = data.username || "Utilisateur";
-                document.getElementById('p-email').innerText = data.email || "";
-                document.getElementById('p-bio').innerText = data.bio || "Bienvenue sur mon profil Floy !";
-                
-                // Photo de profil
-                if (data.avatarUrl) {
-                    document.getElementById('p-img').src = data.avatarUrl;
-                }
+                document.getElementById('p-bio').innerText = data.bio || "";
+                document.getElementById('p-link').innerText = data.link || "";
+                document.getElementById('p-link').href = data.link || "#";
+                if (data.avatarUrl) document.getElementById('p-img').src = data.avatarUrl;
 
-                // Affichage du badge si vérifié
-                const badgeBox = document.getElementById('badge-container');
-                if (data.isVerified) {
-                    badgeBox.innerHTML = '<i class="fas fa-check-circle verification-badge"></i>';
+                const actions = document.getElementById('p-actions');
+                if (uid === currentUid) {
+                    // Si c'est MON profil : Paramètres et Partage en SVG
+                    actions.innerHTML = `
+                        <button class="btn-msg" onclick="openEditModal()" style="flex:3">Modifier le profil</button>
+                        <button class="icon-btn" title="Paramètres">
+                            <svg viewBox="0 0 24 24"><path d="M12 1L10.5 3.5H13.5L12 1ZM12 23L13.5 20.5H10.5L12 23ZM23 12L20.5 13.5V10.5L23 12ZM1 12L3.5 10.5V13.5L1 12Z"/><circle cx="12" cy="12" r="3" stroke="white" fill="none" stroke-width="2"/><path d="M19.4 15.1L21.5 18.2L18.2 21.5L15.1 19.4" stroke="white" stroke-width="2"/></svg>
+                        </button>
+                        <button class="icon-btn" title="Partager">
+                            <svg viewBox="0 0 24 24"><path d="M18 16.08C17.24 16.08 16.56 16.38 16.04 16.85L8.91 12.7C8.96 12.47 9 12.24 9 12C9 11.76 8.96 11.53 8.91 11.3L15.96 7.19C16.5 7.69 17.21 8 18 8C19.66 8 21 6.66 21 5C21 3.34 19.66 2 18 2C16.34 2 15 3.34 15 5C15 5.24 15.04 5.47 15.09 5.7L8.04 9.81C7.5 9.31 6.79 9 6 9C4.34 9 3 10.34 3 12C3 13.66 4.34 15 6 15C6.79 15 7.5 14.69 8.04 14.19L15.16 18.35C15.11 18.58 15.1 18.81 15.1 19.05C15.1 20.66 16.44 22 18.05 22C19.66 22 21 20.66 21 19.05C21 17.44 19.66 16.1 18.05 16.1L18 16.08Z"/></svg>
+                        </button>
+                    `;
                 } else {
-                    badgeBox.innerHTML = '';
+                    // Profil d'un autre : Suivre et Message
+                    actions.innerHTML = `
+                        <button class="btn-follow">Suivre</button>
+                        <button class="btn-msg">Message</button>
+                    `;
                 }
             }
         });
