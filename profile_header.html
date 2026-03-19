@@ -1,103 +1,333 @@
 <style>
-    .profile-header { padding: 20px 15px; color: white; background: #000; font-family: sans-serif; }
-    .header-top { display: flex; align-items: center; gap: 20px; }
-    
-    .avatar-wrapper { position: relative; width: 85px; height: 85px; }
-    .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #262626; }
-    .story-plus { 
-        position: absolute; bottom: 0; right: 0; background: #0095f6; 
-        color: white; border-radius: 50%; width: 22px; height: 22px; 
-        display: flex; align-items: center; justify-content: center; 
-        border: 2px solid black; font-size: 11px; cursor: pointer; z-index: 5;
+    :root {
+        --floy-accent: #FF7A1A;
+        --floy-bg: #000000;
+        --floy-border: #262626;
+        --floy-text: #ffffff;
+        --floy-dim: #a8a8a8;
+        --insta-blue: #0095f6;
+        --story-gradient: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
     }
 
-    .btn-row { display: flex; gap: 8px; margin-top: 15px; position: relative; z-index: 10; }
-    .btn-f { 
-        flex: 1; height: 36px; border: none; border-radius: 8px; 
-        font-weight: 600; font-size: 14px; cursor: pointer !important; 
-        background: #262626; color: white; display: flex; 
-        align-items: center; justify-content: center; pointer-events: auto;
+    /* --- CONTENEUR PRINCIPAL --- */
+    .header-master {
+        width: 100%;
+        max-width: 935px;
+        margin: 0 auto;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        animation: fadeInHeader 0.8s ease-out;
     }
 
-    #copy-toast {
-        position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-        background: #333; color: white; padding: 10px 20px; border-radius: 20px;
-        font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 10000;
+    @keyframes fadeInHeader {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- SECTION AVATAR ET STORY --- */
+    .header-top-row {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .avatar-outer-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .avatar-outer-wrapper:active {
+        transform: scale(0.92);
+    }
+
+    /* Le cercle dégradé (2ème couche) */
+    .story-ring-layer {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: var(--story-gradient);
+        border-radius: 50%;
+        padding: 3px;
+        display: none; /* Activé par Firebase */
+        animation: ringRotate 4s linear infinite;
+    }
+
+    @keyframes ringRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .avatar-main-img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--floy-bg); /* Séparateur */
+        z-index: 5;
+        background: #121212;
+    }
+
+    .badge-add-story {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: var(--insta-blue);
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid var(--floy-bg);
+        z-index: 10;
+        font-size: 14px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* --- INFOS UTILISATEUR --- */
+    .user-info-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .username-action-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .h-username-text {
+        font-size: 24px;
+        font-weight: 300;
+        color: var(--floy-text);
+        margin: 0;
+    }
+
+    .h-verify-badge {
+        color: var(--floy-accent);
+        font-size: 20px;
+        display: none;
+    }
+
+    .h-btn-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .h-btn {
+        background: var(--floy-border);
+        color: var(--floy-text);
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .h-btn:hover { background: #363636; }
+    .h-btn:active { transform: scale(0.96); }
+
+    /* --- STATS --- */
+    .h-stats-row {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .h-stats-row li {
+        font-size: 16px;
+        color: var(--floy-text);
+    }
+
+    .h-stats-row b {
+        font-weight: 600;
+        color: #fff;
+    }
+
+    /* --- BIO ET LIENS --- */
+    .h-bio-section {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .h-full-name {
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .h-bio-content {
+        font-size: 15px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+    }
+
+    .h-custom-link {
+        color: #e0f1ff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .h-custom-link i { font-size: 12px; }
+
+    /* Mobile Responsive Logic */
+    @media (max-width: 768px) {
+        .header-top-row { gap: 20px; }
+        .avatar-outer-wrapper { width: 90px; height: 90px; }
+        .avatar-main-img { width: 80px; height: 80px; }
+        .h-username-text { font-size: 20px; }
+        .h-stats-row { justify-content: space-around; border-top: 1px solid var(--floy-border); padding: 10px 0; margin-top: 15px; }
     }
 </style>
 
-<div class="profile-header">
-    <div id="copy-toast">Lien copié !</div>
-    <div class="header-top">
-        <div class="avatar-wrapper">
-            <img id="h-avatar" src="" class="avatar-img">
-            <div class="story-plus" id="h-plus-icon" style="display:none;"><i class="fas fa-plus"></i></div>
-        </div>
-        <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <h2 id="h-username" style="margin:0; font-size: 20px;">...</h2>
-                <div id="h-badge"></div>
+<div class="header-master">
+    <div class="header-top-row">
+        <div class="avatar-outer-wrapper" onclick="window.triggerProfileGallery()">
+            <div id="h-story-ring" class="story-ring-layer"></div>
+            <img id="h-avatar-img" src="" class="avatar-main-img" onerror="this.src='https://via.placeholder.com/150'">
+            <div class="badge-add-story" onclick="event.stopPropagation(); window.triggerStoryGallery()">
+                <i class="fas fa-plus"></i>
             </div>
-            <div style="display: flex; gap: 15px; font-size: 14px; margin-top: 5px;">
-                <span><b id="c-posts">0</b> publications</span>
-                <span><b id="c-followers">0</b> followers</span>
+        </div>
+
+        <div class="user-info-column">
+            <div class="username-action-row">
+                <h2 id="h-username-display" class="h-username-text">Chargement...</h2>
+                <i id="h-v-badge" class="fas fa-check-circle h-verify-badge"></i>
+                
+                <div class="h-btn-group">
+                    <button class="h-btn" onclick="window.openEditModal()">Modifier le profil</button>
+                    <button class="h-btn" onclick="window.shareFloyProfile()"><i class="fas fa-share"></i></button>
+                </div>
+            </div>
+
+            <ul class="h-stats-row">
+                <li><b id="h-posts-num">0</b> publications</li>
+                <li><b id="h-followers-num">0</b> abonnés</li>
+                <li><b id="h-following-num">0</b> abonnements</li>
+            </ul>
+
+            <div class="h-bio-section">
+                <span id="h-full-name-display" class="h-full-name"></span>
+                <div id="h-bio-text" class="h-bio-content"></div>
+                <a id="h-link-display" href="#" target="_blank" class="h-custom-link">
+                    <i class="fas fa-link"></i> <span></span>
+                </a>
             </div>
         </div>
     </div>
-
-    <div style="margin-top: 12px;">
-        <p id="h-bio" style="margin: 3px 0; font-size: 14px;"></p>
-    </div>
-
-    <div id="dynamic-actions-zone" class="btn-row">
-        </div>
 </div>
 
 <script type="module">
     import { db, auth } from './firebase-config.js';
     import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Rendre les fonctions accessibles au clic (HTML)
-    window.openEditModal = () => {
-        const modal = document.getElementById('edit-profile-modal');
-        if (modal) modal.style.display = 'flex';
-    };
+    /**
+     * SYSTÈME DE SYNCHRONISATION MAÎTRE
+     * Écoute chaque champ individuellement pour éviter les sauts d'affichage
+     */
+    const syncHeaderUI = (user) => {
+        const userRef = doc(db, "users", user.uid);
 
-    window.copyProfileLink = () => {
-        navigator.clipboard.writeText(window.location.href);
-        const toast = document.getElementById('copy-toast');
-        toast.style.opacity = '1';
-        setTimeout(() => toast.style.opacity = '0', 2000);
-    };
-
-    window.loadHeader = (profileId, myId) => {
-        onSnapshot(doc(db, "users", profileId), (snap) => {
-            if (!snap.exists()) return;
-            const data = snap.data();
-            
-            document.getElementById('h-username').innerText = data.username || "";
-            document.getElementById('h-bio').innerText = data.bio || "";
-            document.getElementById('h-avatar').src = data.avatarUrl || "https://via.placeholder.com/150";
-            document.getElementById('c-posts').innerText = data.postsCount || 0;
-            document.getElementById('c-followers').innerText = data.followersCount || 0;
-            
-            document.getElementById('h-badge').innerHTML = data.isVerified ? 
-                `<i class="fas fa-check-circle" style="color:#FF7A1A;"></i>` : '';
-
-            const zone = document.getElementById('dynamic-actions-zone');
-            if (profileId === myId) {
-                document.getElementById('h-plus-icon').style.display = 'flex';
-                zone.innerHTML = `
-                    <button onclick="openEditModal()" class="btn-f">Modifier le profil</button>
-                    <button onclick="copyProfileLink()" class="btn-f">Partager le profil</button>
-                `;
-            } else {
-                document.getElementById('h-plus-icon').style.display = 'none';
-                zone.innerHTML = `
-                    <button class="btn-f" style="background:#FF7A1A;">Suivre</button>
-                    <button class="btn-f">Message</button>
-                `;
+        onSnapshot(userRef, (snap) => {
+            if (!snap.exists()) {
+                console.warn("Profil non trouvé dans Firestore.");
+                return;
             }
+
+            const data = snap.data();
+
+            // 1. Mise à jour de l'Identité
+            document.getElementById('h-username-display').textContent = data.username || "Utilisateur";
+            document.getElementById('h-full-name-display').textContent = data.fullName || "";
+            
+            // 2. Gestion du Badge de Vérification (Orange Signature)
+            const vBadge = document.getElementById('h-v-badge');
+            vBadge.style.display = data.isVerified ? 'inline-block' : 'none';
+
+            // 3. Gestion de l'Avatar et de la Story Ring
+            const avatar = document.getElementById('h-avatar-img');
+            const ring = document.getElementById('h-story-ring');
+            
+            if (data.avatarUrl) {
+                avatar.src = data.avatarUrl;
+            }
+
+            // Si hasActiveStory est vrai, on affiche la 2ème couche dégradée
+            ring.style.display = data.hasActiveStory ? 'block' : 'none';
+
+            // 4. Mise à jour des Stats
+            document.getElementById('h-posts-num').textContent = data.postsCount || 0;
+            document.getElementById('h-followers-num').textContent = data.followersCount || 0;
+            document.getElementById('h-following-num').textContent = data.followingCount || 0;
+
+            // 5. Bio et Lien Web permanent
+            const bioBox = document.getElementById('h-bio-text');
+            bioBox.textContent = data.bio || "";
+            
+            const linkTag = document.getElementById('h-link-display');
+            if (data.webLink && data.webLink.trim() !== "") {
+                linkTag.style.display = 'flex';
+                linkTag.href = data.webLink.startsWith('http') ? data.webLink : `https://${data.webLink}`;
+                linkTag.querySelector('span').textContent = data.webLink.replace(/^https?:\/\//, '');
+            } else {
+                linkTag.style.display = 'none';
+            }
+        }, (error) => {
+            console.error("Erreur Sync Header:", error);
         });
+    };
+
+    // Initialisation au changement d'état Auth
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            syncHeaderUI(user);
+        }
+    });
+
+    /**
+     * ACTIONS GLOBALES EXPORTÉES AU WINDOW
+     * Garantit que les clics fonctionnent même si le module est chargé dynamiquement
+     */
+    window.shareFloyProfile = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Profil Floy',
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Lien du profil copié !");
+        }
+    };
+
+    // Ces fonctions appellent les inputs cachés définis dans le fichier parent
+    window.triggerProfileGallery = () => {
+        const input = document.getElementById('file-profile');
+        if(input) input.click();
+    };
+
+    window.triggerStoryGallery = () => {
+        const input = document.getElementById('file-story');
+        if(input) input.click();
     };
 </script>
