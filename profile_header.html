@@ -1,72 +1,49 @@
 <style>
-    .btn-floy-main {
-        flex: 1;
-        height: 35px;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: pointer;
-        transition: opacity 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    /* Bouton Modifier (Gris foncé/Noir style Insta) */
-    .btn-edit { background: #efefef; color: black; } /* Pour le mode clair, ou #262626 pour le mode sombre */
+    /* Design général style Insta/Floy */
+    .profile-header { padding: 20px 15px; color: white; background: #000; }
+    .header-top { display: flex; align-items: center; gap: 25px; }
+    .avatar-container { width: 85px; height: 85px; border-radius: 50%; border: 1px solid #262626; object-fit: cover; }
     
-    /* Bouton Message (Orange Floy) */
-    .btn-message { background: #FF7A1A; color: white; }
+    /* Stats Row */
+    .stats-container { display: flex; gap: 15px; margin: 15px 0; font-size: 14px; }
+    .stats-container b { color: white; margin-right: 3px; }
+    .stats-container span { color: #eee; }
 
-    .profile-stats-row {
-        display: flex;
-        gap: 20px;
-        margin: 15px 0;
+    /* Boutons */
+    .btn-row { display: flex; gap: 8px; margin-top: 15px; }
+    .btn-base { 
+        flex: 1; height: 35px; border: none; border-radius: 8px; 
+        font-weight: 600; font-size: 14px; cursor: pointer; 
+        display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .stat-item { font-size: 14px; color: white; }
-    .stat-item b { display: inline-block; margin-right: 4px; }
+    .btn-gray { background: #363636; color: white; } /* Style Sombre Archive/Suivi */
+    .btn-white { background: #efefef; color: black; } /* Style clair pour Modifier */
+    .btn-orange { background: #FF7A1A; color: white; } /* Style Floy pour Contacter/Message */
 </style>
 
-<div style="padding: 20px 15px; color: white; background: #000;">
-    <div style="display: flex; align-items: center; gap: 25px;">
-        <div style="position: relative;">
-            <img id="header-avatar" src="https://via.placeholder.com/150" 
-                 style="width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 1px solid #262626;">
-            <div style="position: absolute; bottom: 0; right: 0; background: #0095f6; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: 2px solid black; font-size: 12px;">
-                <i class="fas fa-plus"></i>
-            </div>
-        </div>
-        
+<div class="profile-header">
+    <div class="header-top">
+        <img id="h-avatar" src="https://via.placeholder.com/150" class="avatar-container">
         <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <h2 id="header-name" style="margin:0; font-size: 20px; font-weight: 400;">...</h2>
-                <i class="fas fa-cog" style="font-size: 18px; cursor: pointer;"></i>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h2 id="h-username" style="margin:0; font-size: 20px; font-weight: 400;">...</h2>
+                <i class="fas fa-cog" id="settings-icon"></i>
             </div>
-            <div id="badge-container"></div>
+            <div class="stats-container">
+                <div><b id="c-posts">0</b><span>publications</span></div>
+                <div><b id="c-followers">0</b><span>followers</span></div>
+                <div><b id="c-following">0</b><span>suivi(e)s</span></div>
+            </div>
         </div>
     </div>
 
-    <div style="margin-top: 15px;">
-        <span id="header-fullname" style="font-weight: 600; font-size: 14px; display: block;">...</span>
-        <p id="header-bio" style="margin: 2px 0; font-size: 14px; font-weight: 400; line-height: 1.4;"></p>
+    <div style="margin-top: 10px;">
+        <span id="h-fullname" style="font-weight: 600; font-size: 14px;">...</span>
+        <p id="h-bio" style="margin: 2px 0; font-size: 14px; color: white;"></p>
+        <a id="h-link" href="#" style="color: #e0e0e0; font-size: 14px; text-decoration: none; display: none;"></a>
     </div>
 
-    <div class="profile-stats-row">
-        <div class="stat-item"><b id="count-posts">0</b> publications</div>
-        <div class="stat-item"><b id="count-followers">0</b> followers</div>
-        <div class="stat-item"><b id="count-following">0</b> suivi(e)s</div>
-    </div>
-
-    <div id="header-btn-zone" style="display: flex; gap: 8px; margin-top: 15px;">
-        <button onclick="openEditModal()" class="btn-floy-main btn-edit">
-            Modifier le profil
-        </button>
-        
-        <button onclick="location.href='messages.html'" class="btn-floy-main btn-message">
-            <i class="fas fa-paper-plane"></i> Messages
-        </button>
-    </div>
+    <div id="h-btn-zone" class="btn-row"></div>
 </div>
 
 <script type="module">
@@ -78,15 +55,37 @@
             if (!snap.exists()) return;
             const data = snap.data();
             
-            document.getElementById('header-name').innerText = data.username || "utilisateur";
-            document.getElementById('header-fullname').innerText = data.fullName || data.username;
-            document.getElementById('header-bio').innerText = data.bio || "";
-            if(data.avatarUrl) document.getElementById('header-avatar').src = data.avatarUrl;
+            // Remplissage des infos
+            document.getElementById('h-username').innerText = data.username || "user";
+            document.getElementById('h-fullname').innerText = data.fullName || data.username;
+            document.getElementById('h-bio').innerText = data.bio || "";
+            if(data.avatarUrl) document.getElementById('h-avatar').src = data.avatarUrl;
+            
+            if(data.website) {
+                const link = document.getElementById('h-link');
+                link.innerText = data.website;
+                link.href = data.website;
+                link.style.display = 'block';
+            }
 
-            // Gestion du badge Floy (Orange)
-            const bCont = document.getElementById('badge-container');
-            if(bCont && data.isVerified) {
-                bCont.innerHTML = `<span style="color: #FF7A1A; font-size: 12px; font-weight: 600;">CERTIFIÉ FLOY</span>`;
+            const btnZone = document.getElementById('h-btn-zone');
+            
+            // --- LOGIQUE DE VUE ---
+            if (profileId === myId) {
+                // VUE MON APPAREIL (Ton image de droite)
+                btnZone.innerHTML = `
+                    <button onclick="openEditModal()" class="btn-base btn-white">Modifier le profil</button>
+                    <button class="btn-base btn-white">Voir l'archive</button>
+                `;
+                document.getElementById('settings-icon').style.display = 'block';
+            } else {
+                // VUE AUTRES UTILISATEURS (Ton image de gauche)
+                btnZone.innerHTML = `
+                    <button id="follow-btn" class="btn-base btn-gray">Suivi(e) <i class="fas fa-chevron-down"></i></button>
+                    <button onclick="location.href='chat.html?id=${profileId}'" class="btn-base btn-orange">Contacter</button>
+                    <button style="width:40px; flex:none;" class="btn-base btn-gray"><i class="fas fa-user-plus"></i></button>
+                `;
+                document.getElementById('settings-icon').style.display = 'none';
             }
         });
     };
