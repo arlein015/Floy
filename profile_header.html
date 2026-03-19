@@ -13,7 +13,7 @@
             <p id="p-display-bio" style="margin: 5px 0 0 0; font-size: 13px; color: #aaa; line-height: 1.4;"></p>
         </div>
     </div>
-
+    <div id="badge-container"></div>
     <div id="p-actions-area" style="margin-top: 20px; display: flex; gap: 10px;">
         </div>
 </div>
@@ -72,4 +72,13 @@
             console.error("Erreur Header Firestore:", error);
         });
     };
+    window.loadBadge = (uid) => {
+    onSnapshot(doc(db, "users", uid), (snap) => {
+        const container = document.getElementById('badge-container');
+        // On vérifie si le container existe AVANT de toucher au innerHTML
+        if (container && snap.exists() && snap.data().isVerified) {
+            container.innerHTML = `<span class="badge-floy"><i class="fas fa-check"></i></span>`;
+        }
+    });
+};
 </script>
