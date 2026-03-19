@@ -2,126 +2,131 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Home</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Floy | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --orange: #FF7A1A; --rouge-insta: #ed4956; }
-        body { background-color: #000; color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 70px; }
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .orange-text { color: #FF6B00; }
+        .bg-orange { background-color: #FF6B00; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Header */
-        .top-nav { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; position: sticky; top: 0; background: #000; border-bottom: 1px solid #121212; z-index: 100; }
-        .logo { font-size: 24px; font-weight: bold; font-style: italic; color: var(--orange); }
-
-        /* Feed */
-        #feed { max-width: 500px; margin: 0 auto; }
-        .post-card { border-bottom: 1px solid #121212; margin-bottom: 10px; }
-        .post-header { padding: 10px; display: flex; align-items: center; gap: 10px; }
-        .user-avatar { width: 32px; height: 32px; background: #333; border-radius: 50%; }
-        .post-img { width: 100%; display: block; background: #050505; }
-        
-        /* Actions & Like */
-        .post-actions { padding: 12px; display: flex; gap: 18px; font-size: 22px; }
-        .fa-heart.active { color: var(--rouge-insta) !important; animation: beat 0.3s ease; }
-        @keyframes beat { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
-
-        .post-info { padding: 0 12px 15px 12px; }
-        .likes-count { font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #121212; display: flex; justify-content: space-around; align-items: center; font-size: 22px; z-index: 100; }
-        .bottom-nav i { cursor: pointer; transition: 0.2s; }
-        .bottom-nav i:active { transform: scale(0.8); color: var(--orange); }
+        /* Animation du cercle de story lors de l'ajout */
+        .story-ring { padding: 2px; background: linear-gradient(45deg, #FF6B00, #FF3D00, #f62d14); border-radius: 9999px; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <nav class="top-nav">
-        <div class="logo">Floy</div>
-        <div style="display: flex; gap: 20px; font-size: 20px;">
-            <i class="far fa-heart"></i>
-            <i class="fab fa-facebook-messenger" onclick="location.href='messages.html'"></i>
+    <nav class="sticky top-0 z-50 bg-black/90 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-white/5">
+        <h1 class="font-black text-2xl italic tracking-tighter">Floy<span class="orange-text">.</span></h1>
+        <div class="flex items-center space-x-5">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <div class="relative">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                <span class="absolute -top-1 -right-1 bg-orange text-black text-[10px] font-black px-1 rounded-full">3</span>
+            </div>
         </div>
     </nav>
 
-    <div id="feed">
-        <p style="text-align: center; color: #555; margin-top: 50px;">Chargement du fil...</p>
-    </div>
-
-   <nav class="bottom-nav">
-    <i class="fas fa-home" onclick="location.href='index.html'"></i>
-    <i class="fas fa-search"></i>
-    <i class="far fa-plus-square" onclick="location.href='create.html'"></i>
-    <i class="fas fa-video"></i>
-    <i class="far fa-user-circle" onclick="location.href='profil.html'"></i>
-</nav>
-
-    <script type="module">
-        import { db } from './firebase-config.js'; 
-        import { collection, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const auth = getAuth();
-        const feedContainer = document.getElementById('feed');
-
-        // FONCTION LIKE (Simple clic)
-        window.toggleLike = async (postId, isLiked) => {
-            const user = auth.currentUser;
-            if (!user) return alert("Connectez-vous pour liker !");
-            
-            const postRef = doc(db, "posts", postId);
-            try {
-                await updateDoc(postRef, {
-                    likes: isLiked ? arrayRemove(user.uid) : arrayUnion(user.uid)
-                });
-            } catch (e) { console.error(e); }
-        };
-
-        // ÉCOUTE DES POSTS
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-
-        onSnapshot(q, (snapshot) => {
-            if (!feedContainer) return;
-            feedContainer.innerHTML = ""; 
-
-            const firebaseConfig = {apiKey: "AIzaSyD3cL4MokpURYKydVTugXArXC3-krQCAIc", // <--- VÉRIFIE BIEN QU'ELLE EST ENTIÈRE ICI authDomain: "floy-2a96d.firebaseapp.com",
-            projectId: "floy-2a96d",storageBucket: "floy-2a96d.firebasestorage.app",  messagingSenderId: "360277317372",appId: "1:360277317372:web:1b068a460ecc343022a9", measurementId: "G-QV8DVCRY1Q"};
-
- 
-            snapshot.forEach((snapshotDoc) => {
-                const post = snapshotDoc.data();
-                const postId = snapshotDoc.id;
-                const user = auth.currentUser;
+    <main class="max-w-2xl mx-auto">
+        
+        <section class="py-6 border-b border-white/5 overflow-hidden">
+            <div id="home-stories" class="flex space-x-5 overflow-x-auto no-scrollbar px-6 items-center">
                 
-                // Calcul du Like
-                const likesArray = post.likes || [];
-                const isLiked = user && likesArray.includes(user.uid);
-                const likeClass = isLiked ? "fas fa-heart active" : "far fa-heart";
-
-                const postHTML = `
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div class="user-avatar"></div>
-                            <b>${post.username || "Utilisateur"}</b>
-                        </div>
-                        
-                        <img src="${post.imageUrl}" class="post-img" ondblclick="toggleLike('${postId}', ${isLiked})">
-                        
-                        <div class="post-actions">
-                            <i class="${likeClass}" onclick="toggleLike('${postId}', ${isLiked})"></i>
-                            <i class="far fa-comment" onclick="location.href='comments.html?id=${postId}'"></i>
-                            <i class="far fa-paper-plane" onclick="location.href='messages.html'"></i>
-                        </div>
-                        
-                        <div class="post-info">
-                            <div class="likes-count">${likesArray.length} J'aime</div>
-                            <b>${post.username || "Utilisateur"}</b> ${post.caption || ""}
+                <div onclick="document.getElementById('home-gallery').click()" class="flex flex-col items-center space-y-2 flex-shrink-0 cursor-pointer">
+                    <div class="relative w-16 h-16">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100" class="w-full h-full rounded-full border-2 border-gray-800 object-cover">
+                        <div class="absolute bottom-0 right-0 bg-orange rounded-full p-1 border-2 border-black">
+                            <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="4" d="M12 5v14M5 12h14"/></svg>
                         </div>
                     </div>
-                `;
-                feedContainer.innerHTML += postHTML;
-            });
-        });
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">Ma Story</span>
+                    <input type="file" id="home-gallery" accept="image/*" class="hidden" onchange="uploadStory(event)">
+                </div>
+
+                <div class="flex flex-col items-center space-y-2 flex-shrink-0">
+                    <div class="story-ring w-16 h-16">
+                        <div class="w-full h-full rounded-full border-2 border-black overflow-hidden">
+                            <img src="https://picsum.photos/200/200?random=50" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold text-gray-400">zoeyiso</span>
+                </div>
+
+                <div class="flex flex-col items-center space-y-2 flex-shrink-0">
+                    <div class="story-ring w-16 h-16">
+                        <div class="w-full h-full rounded-full border-2 border-black overflow-hidden">
+                            <img src="https://picsum.photos/200/200?random=51" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold text-gray-400">dev_king</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-24">
+            <div class="p-4 border-b border-white/5">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-orange"></div>
+                        <span class="font-bold text-sm">Floy_official</span>
+                    </div>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                </div>
+                <div class="aspect-video bg-gray-900 rounded-2xl overflow-hidden mb-4">
+                    <img src="https://picsum.photos/800/450?random=99" class="w-full h-full object-cover">
+                </div>
+                <div class="flex space-x-4 mb-2">
+                    <svg class="w-6 h-6 orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863-9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                </div>
+                <p class="text-xs text-gray-400 font-bold uppercase">85,230 Likes</p>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 inset-x-0 bg-black/95 backdrop-blur-xl border-t border-white/5 px-8 py-5 flex justify-between items-center z-50">
+        <svg class="w-7 h-7 orange-text" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <div class="w-8 h-8 rounded-full border border-white/20 overflow-hidden" onclick="window.location.href='profile.html'">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100" class="w-full h-full object-cover">
+        </div>
+    </nav>
+
+    <script>
+        // FONCTION D'UPLOAD ET AFFICHAGE IMMÉDIAT
+        function uploadStory(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.getElementById('home-stories');
+                    
+                    // Création de la nouvelle story HTML
+                    const newStory = document.createElement('div');
+                    newStory.className = "flex flex-col items-center space-y-2 flex-shrink-0 fade-in";
+                    newStory.innerHTML = `
+                        <div class="story-ring w-16 h-16">
+                            <div class="w-full h-full rounded-full border-2 border-black overflow-hidden">
+                                <img src="${e.target.result}" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-black text-white uppercase tracking-tighter">Maintenant</span>
+                    `;
+                    
+                    // Insérer après le bouton "Ma Story"
+                    container.insertBefore(newStory, container.children[1]);
+
+                    // LOGIQUE : Ici, tu appelles ton module story.js pour sauvegarder en DB
+                    console.log("Envoi du fichier vers le serveur via AJAX...");
+                    // fetch('/api/upload_story', { method: 'POST', body: formData });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 </html>
