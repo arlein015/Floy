@@ -1,0 +1,74 @@
+<div id="edit-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #1c1c1c; width: 100%; max-width: 400px; border-radius: 20px; overflow: hidden; border: 1px solid #333;">
+        
+        <div style="padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center;">
+            <span onclick="closeEditModal()" style="color: #888; cursor: pointer;">Annuler</span>
+            <b style="font-size: 16px;">Modifier le profil</b>
+            <span id="save-loader" style="color: #FF7A1A; font-weight: bold; cursor: pointer;" onclick="saveProfileChanges()">Terminé</span>
+        </div>
+
+        <div style="padding: 20px;">
+            <div style="margin-bottom: 20px;">
+                <label style="color: #888; font-size: 12px; display: block; margin-bottom: 5px;">Nom d'utilisateur</label>
+                <input type="text" id="edit-name-input" 
+                       style="width: 100%; background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="color: #888; font-size: 12px; display: block; margin-bottom: 5px;">Bio</label>
+                <textarea id="edit-bio-input" rows="4" 
+                          style="width: 100%; background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; outline: none; resize: none;"></textarea>
+            </div>
+            
+            <p style="font-size: 11px; color: #555; text-align: center;">Les modifications sont visibles immédiatement sur votre profil Floy.</p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Ouvrir la modal et pré-remplir les champs
+    window.openEditModal = async () => {
+        const user = auth.currentUser;
+        if(!user) return;
+
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if(snap.exists()){
+            document.getElementById('edit-name-input').value = snap.data().username || "";
+            document.getElementById('edit-bio-input').value = snap.data().bio || "";
+            document.getElementById('edit-modal').style.display = 'flex';
+        }
+    };
+
+    window.closeEditModal = () => {
+        document.getElementById('edit-modal').style.display = 'none';
+    };
+
+    // Sauvegarder les changements
+    window.saveProfileChanges = async () => {
+        const btn = document.getElementById('save-loader');
+        const user = auth.currentUser;
+        const newName = document.getElementById('edit-name-input').value;
+        const newBio = document.getElementById('edit-bio-input').value;
+
+        if(!newName.trim()) return alert("Le nom ne peut pas être vide.");
+
+        btn.innerText = "Chargement...";
+        
+        try {
+            await updateDoc(doc(db, "users", user.uid), {
+                username: newName,
+                bio: newBio
+            });
+            
+            closeEditModal();
+            btn.innerText = "Terminé";
+        } catch (e) {
+            console.error(e);
+            alert("Erreur lors de la mise à jour.");
+            btn.innerText = "Terminé";
+        }
+    };
+</script>
