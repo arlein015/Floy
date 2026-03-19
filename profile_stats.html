@@ -1,0 +1,76 @@
+<style>
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        padding: 15px 0;
+        border-top: 1px solid #262626;
+        border-bottom: 1px solid #262626;
+        background-color: #000;
+    }
+
+    .stat-box {
+        text-align: center;
+        flex: 1;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff; /* Chiffres en blanc */
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #8e8e8e; /* Texte "abonnés" en gris */
+        text-transform: lowercase;
+    }
+
+    /* Animation au chargement du chiffre */
+    .stat-value.loading {
+        color: #FF7A1A;
+    }
+</style>
+
+<div class="stats-container">
+    <div class="stat-box">
+        <span id="s-posts" class="stat-value">0</span>
+        <span class="stat-label">publications</span>
+    </div>
+    <div class="stat-box">
+        <span id="s-followers" class="stat-value">0</span>
+        <span class="stat-label">abonnés</span>
+    </div>
+    <div class="stat-box">
+        <span id="s-following" class="stat-value">0</span>
+        <span class="stat-label">abonnements</span>
+    </div>
+</div>
+
+<script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Fonction globale pour charger les stats
+    window.loadStats = (uid) => {
+        if (!uid) return;
+
+        // 1. Compter les publications (Posts)
+        const qPosts = query(collection(db, "posts"), where("userId", "==", uid));
+        onSnapshot(qPosts, (snapshot) => {
+            document.getElementById('s-posts').innerText = snapshot.size;
+        });
+
+        // 2. Compter les Abonnés (Followers)
+        const qFollowers = query(collection(db, "followers"), where("followingId", "==", uid));
+        onSnapshot(qFollowers, (snapshot) => {
+            document.getElementById('s-followers').innerText = snapshot.size;
+        });
+
+        // 3. Compter les Abonnements (Following)
+        const qFollowing = query(collection(db, "followers"), where("followerId", "==", uid));
+        onSnapshot(qFollowing, (snapshot) => {
+            document.getElementById('s-following').innerText = snapshot.size;
+        });
+    };
+</script>
