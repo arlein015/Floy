@@ -7,92 +7,85 @@
     <link rel="stylesheet" href="profil.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body style="background-color: #000; margin: 0; color: white;">
 
-    <div id="main-loader" class="loader-overlay">
-        <div class="spinner"></div>
+    <div id="main-loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center; z-index:9999;">
+        <div style="width:40px; height:40px; border:4px solid #FF7A1A; border-top:4px solid transparent; border-radius:50%; animation: spin 1s linear infinite;"></div>
     </div>
+    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
 
-    <div class="profile-main-wrapper">
-        
+    <div class="profile-container">
         <div id="header-module"></div>
 
         <div id="tabs-module"></div>
 
-        <main id="grid-module" class="photo-grid">
-            </main>
-
+        <div id="grid-module"></div>
     </div>
 
-    <div id="modal-edit-container"></div>
-    <div id="modal-followers-container"></div>
-
-    <nav class="bottom-nav">
+    <nav style="position:fixed; bottom:0; width:100%; background:#000; display:flex; justify-content:space-around; padding:15px 0; border-top:1px solid #262626;">
         <i class="fas fa-home" onclick="location.href='index.html'"></i>
-        <i class="fas fa-search" onclick="location.href='explore.html'"></i>
-        <div class="nav-add-btn" onclick="location.href='create.html'">
-            <i class="fas fa-plus"></i>
+        <i class="fas fa-search"></i>
+        <div style="background:#FF7A1A; width:35px; height:35px; border-radius:10px; display:flex; justify-content:center; align-items:center;">
+            <i class="fas fa-plus" style="color:white;"></i>
         </div>
-        <i class="fas fa-comment" onclick="location.href='messages.html'"></i>
-        <i class="fas fa-user nav-active"></i>
+        <i class="fas fa-comment"></i>
+        <i class="fas fa-user" style="color:#FF7A1A;"></i>
     </nav>
 
     <script type="module">
-        import { auth } from './firebase-config.js';
+        import { auth, db } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Fonction pour injecter les composants HTML
+        // Chargement forcé des modules
         async function loadComponent(id, file) {
-            try {
-                const response = await fetch(file);
-                if (!response.ok) throw new Error("Erreur 404 sur " + file);
-                const html = await response.text();
-                const target = document.getElementById(id);
-                if (target) {
-                    target.innerHTML = html;
-                    // Exécuter les scripts <script> contenus dans les fichiers injectés
-                    const scripts = target.querySelectorAll("script");
-                    scripts.forEach(oldScript => {
-                        const newScript = document.createElement("script");
-                        newScript.type = "module";
-                        newScript.textContent = oldScript.textContent;
-                        document.body.appendChild(newScript);
-                    });
-                }
-            } catch (err) {
-                console.warn(err.message);
-            }
+            const r = await fetch(file + '?v=' + Date.now()); // Date.now évite le cache
+            const html = await r.text();
+            document.getElementById(id).innerHTML = html;
         }
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = 'connexion.html';
-                return;
-            }
+            if (!user) { window.location.href = 'login.html'; return; }
 
-            const params = new URLSearchParams(window.location.search);
-            const profileId = params.get('id') || user.uid;
+            const urlParams = new URLSearchParams(window.location.search);
+            const profileId = urlParams.get('id') || user.uid;
 
-            // 1. Charger tous les modules HTML
-            await Promise.all([
-                loadComponent('header-module', 'profile_header.html'),
-                loadComponent('tabs-module', 'profile_tabs.html'),
-                loadComponent('grid-module', 'profile_grid.html'),
-                loadComponent('modal-edit-container', 'profile_edit_modal.html'),
-                loadComponent('modal-followers-container', 'modal_followers.html')
-            ]);
+            await loadComponent('header-module', 'profile_header.html');
+            await loadComponent('grid-module', 'profile_grid.html');
 
-            // 2. Activer les fonctions une fois que le HTML est chargé
-            setTimeout(() => {
-                if (window.loadHeader) window.loadHeader(profileId, user.uid);
-                if (window.loadGrid) window.loadGrid('posts', profileId);
-                
-                // On retire enfin le loader orange
-                const loader = document.getElementById('main-loader');
-                if(loader) loader.style.display = 'none';
-            }, 300);
+            // Initialisation des fonctions globales après chargement
+            window.profileId = profileId;
+            setupProfileActions(profileId, user.uid);
+            
+            document.getElementById('main-loader').style.display = 'none';
         });
-    </script>
 
+        // Logique Suivre + Compteur + Partage
+        function setupProfileActions(pId, myId) {
+            // 1. Bouton Suivre
+            window.handleFollowClick = async () => {
+                const btn = document.getElementById('follow-btn');
+                const countEl = document.getElementById('s-followers');
+                let count = parseInt(countEl.innerText);
+
+                if (btn.innerText === "Suivre") {
+                    btn.innerText = "Abonné";
+                    btn.style.background = "#262626"; // Gris
+                    countEl.innerText = count + 1;
+                    // Logique Firebase ici (updateDoc...)
+                } else {
+                    btn.innerText = "Suivre";
+                    btn.style.background = "#FF7A1A"; // Orange
+                    countEl.innerText = Math.max(0, count - 1);
+                }
+            };
+
+            // 2. Copier le lien
+            window.copyProfileLink = () => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Lien du profil copié !");
+            };
+        }
+    </script>
 </body>
 </html>
