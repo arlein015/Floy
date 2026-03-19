@@ -6,168 +6,88 @@
     <title>Profil - Floy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --orange: #FF7A1A; --bg: #000; }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
-        
-        /* Header Stats */
-        .profile-top { padding: 20px; display: flex; align-items: center; gap: 25px; }
-        .avatar-wrapper { position: relative; width: 85px; height: 85px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--orange), #feb47b); }
-        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #111; border: 2px solid black; }
-        
-        .stats-container { flex: 1; display: flex; justify-content: space-around; text-align: center; }
-        .stat-v { font-weight: bold; font-size: 18px; display: block; }
-        .stat-l { font-size: 12px; color: #888; }
-
-        .info { padding: 0 20px 15px; }
-        .name { font-weight: bold; font-size: 15px; margin-bottom: 3px; }
-        .bio { font-size: 13px; color: #eee; line-height: 1.4; }
-
-        /* Actions */
-        .actions { display: flex; gap: 8px; padding: 0 20px 20px; }
-        .btn { flex: 1; padding: 9px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; color: white; }
-        .btn-follow { background: var(--orange); }
-        .btn-edit { background: #262626; }
-        .btn-msg { background: #262626; }
-
-        /* Grid */
-        .tabs { display: flex; border-top: 1px solid #222; }
-        .tab { flex: 1; text-align: center; padding: 12px; color: #888; cursor: pointer; font-size: 20px; }
-        .tab.active { color: white; border-top: 2px solid white; }
-        
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-        .grid-item { aspect-ratio: 1/1; background: #111; overflow: hidden; }
-        .grid-item img, .grid-item video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Nav Bar */
-        .nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; }
-        .nav i { font-size: 22px; color: white; }
-        .nav .active { color: var(--orange); }
-
-        /* Modal Message */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-c { background: #1c1c1c; width: 85%; padding: 20px; border-radius: 15px; }
-        textarea { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; margin: 15px 0; box-sizing: border-box; }
+        body { background: #000; margin: 0; padding-bottom: 80px; font-family: -apple-system, sans-serif; color: white; }
+        .module-container { width: 100%; max-width: 600px; margin: 0 auto; }
+        #main-loader { position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999; }
     </style>
 </head>
 <body>
 
-    <div class="profile-top">
-        <div class="avatar-wrapper">
-            <img id="p-img" class="avatar" src="https://via.placeholder.com/150">
-        </div>
-        <div class="stats-container">
-            <div><span class="stat-v" id="c-posts">0</span><span class="stat-l">Posts</span></div>
-            <div><span class="stat-v" id="c-followers">0</span><span class="stat-l">Abonnés</span></div>
-            <div><span class="stat-v" id="c-following">0</span><span class="stat-l">Suivis</span></div>
-        </div>
+    <div id="main-loader">
+        <i class="fas fa-circle-notch fa-spin" style="color: #FF7A1A; font-size: 30px;"></i>
     </div>
 
-    <div class="info">
-        <div class="name" id="p-name">Chargement...</div>
-        <div class="bio" id="p-bio">...</div>
+    <div class="module-container">
+        <div id="header-module"></div>
+        
+        <div id="stats-module"></div>
+        
+        <div id="tabs-module"></div>
+        
+        <div id="grid-module"></div>
     </div>
 
-    <div class="actions" id="p-actions">
-        </div>
+    <div id="modal-module"></div>
 
-    <div class="tabs">
-        <div class="tab active"><i class="fas fa-th"></i></div>
-        <div class="tab"><i class="fas fa-play"></i></div>
-    </div>
-
-    <div class="grid" id="p-grid"></div>
-
-    <div class="nav">
+    <div style="position: fixed; bottom: 0; width: 100%; height: 65px; background: #000; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-around; align-items: center; z-index: 1000;">
         <i class="fas fa-home" onclick="location.href='index.html'"></i>
         <i class="fas fa-search"></i>
         <i class="fas fa-plus-square" onclick="location.href='create.html'"></i>
-        <i class="fas fa-message" onclick="location.href='message-list.html'"></i>
-        <i class="fas fa-user active"></i>
-    </div>
-
-    <div id="m-modal" class="modal">
-        <div class="modal-c">
-            <h3 style="margin:0">Message privé</h3>
-            <textarea id="m-text" rows="3" placeholder="Écris ici..."></textarea>
-            <button id="m-send" class="btn btn-follow" style="width:100%">Envoyer</button>
-            <p onclick="document.getElementById('m-modal').style.display='none'" style="text-align:center; color:gray; cursor:pointer; margin-top:10px;">Annuler</p>
-        </div>
+        <i class="fas fa-comment" onclick="location.href='message-list.html'"></i>
+        <i class="fas fa-user" style="color: #FF7A1A;"></i>
     </div>
 
     <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { doc, onSnapshot, getDoc, setDoc, addDoc, collection, query, where, getDocs, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { auth } from './firebase-config.js';
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        const params = new URLSearchParams(window.location.search);
-        let profileId = params.get('id');
+        // Fonction pour charger un fichier HTML dans un div
+        async function loadModule(file, elementId) {
+            const response = await fetch(file);
+            const html = await response.text();
+            document.getElementById(elementId).innerHTML = html;
+            
+            // Exécuter les scripts contenus dans le module chargé
+            const scripts = document.getElementById(elementId).querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                newScript.type = oldScript.type || "text/javascript";
+                newScript.textContent = oldScript.textContent;
+                document.body.appendChild(newScript);
+            });
+        }
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) return;
-            if (!profileId) profileId = user.uid;
+            if (!user) { location.href = 'connexion.html'; return; }
 
-            // 1. Infos Profil
-            onSnapshot(doc(db, "users", profileId), (snap) => {
-                if(snap.exists()){
-                    const d = snap.data();
-                    document.getElementById('p-name').innerText = d.username || "Utilisateur";
-                    document.getElementById('p-bio').innerText = d.bio || "";
-                    if(d.avatarUrl) document.getElementById('p-img').src = d.avatarUrl;
-                }
-            });
+            // Récupérer l'ID du profil à afficher (soi-même ou un autre)
+            const params = new URLSearchParams(window.location.search);
+            const profileId = params.get('id') || user.uid;
 
-            // 2. Gestion des Boutons (Suivre ou Modifier)
-            const actionsDiv = document.getElementById('p-actions');
-            if(profileId === user.uid) {
-                actionsDiv.innerHTML = `<button class="btn btn-edit" onclick="location.href='edit-profil.html'">Modifier le profil</button>`;
-            } else {
-                actionsDiv.innerHTML = `
-                    <button id="btn-f" class="btn btn-follow">Suivre</button>
-                    <button class="btn btn-msg" onclick="document.getElementById('m-modal').style.display='flex'">Message</button>
-                `;
-                
-                // Logique Suivre
-                const fId = `${user.uid}_${profileId}`;
-                onSnapshot(doc(db, "followers", fId), (s) => {
-                    const btnF = document.getElementById('btn-f');
-                    if(s.exists()){
-                        btnF.innerText = "Abonné(e)"; btnF.style.background = "#262626";
-                        btnF.onclick = () => deleteDoc(doc(db, "followers", fId));
-                    } else {
-                        btnF.innerText = "Suivre"; btnF.style.background = "#FF7A1A";
-                        btnF.onclick = () => setDoc(doc(db, "followers", fId), { followerId: user.uid, followingId: profileId });
-                    }
-                });
+            try {
+                // Chargement en parallèle de tous les modules
+                await Promise.all([
+                    loadModule('profile_header.html', 'header-module'),
+                    loadModule('profile_stats.html', 'stats-module'),
+                    loadModule('profile_tabs.html', 'tabs-module'),
+                    loadModule('profile_grid.html', 'grid-module'),
+                    loadModule('profile_edit_modal.html', 'modal-module'),
+                    loadModule('badge_verification.html', 'header-module') // Ajoute le badge dans le header
+                ]);
+
+                // Initialisation des données dans les modules
+                if(window.loadHeader) window.loadHeader(profileId, user.uid);
+                if(window.loadStats) window.loadStats(profileId);
+                if(window.loadGrid) window.loadGrid('posts', profileId);
+                if(window.loadBadge) window.loadBadge(profileId);
+
+                // Cacher le loader
+                document.getElementById('main-loader').style.fadeOut = "0.3s";
+                setTimeout(() => document.getElementById('main-loader').style.display = "none", 300);
+
+            } catch (error) {
+                console.error("Erreur de chargement des modules:", error);
             }
-
-            // 3. Envoi Message (ID unique ID1_ID2)
-            document.getElementById('m-send').onclick = async () => {
-                const text = document.getElementById('m-text').value.trim();
-                if(!text) return;
-                const chatId = user.uid < profileId ? `${user.uid}_${profileId}` : `${profileId}_${user.uid}`;
-                
-                await setDoc(doc(db, "chats", chatId), {
-                    users: [user.uid, profileId],
-                    lastMessage: text,
-                    lastUpdate: serverTimestamp()
-                }, { merge: true });
-
-                await addDoc(collection(db, "chats", chatId, "messages"), {
-                    text: text, senderId: user.uid, createdAt: serverTimestamp()
-                });
-
-                document.getElementById('m-modal').style.display = 'none';
-                alert("Message envoyé !");
-            };
-
-            // 4. Grille (Photos/Vidéos)
-            const q = query(collection(db, "posts"), where("userId", "==", profileId));
-            const snapPosts = await getDocs(q);
-            const grid = document.getElementById('p-grid');
-            document.getElementById('c-posts').innerText = snapPosts.size;
-            snapPosts.forEach(d => {
-                grid.innerHTML += `<div class="grid-item"><img src="${d.data().imageUrl}"></div>`;
-            });
         });
     </script>
 </body>
