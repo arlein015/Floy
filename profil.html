@@ -89,6 +89,23 @@
                 console.error("Erreur de chargement des modules:", error);
             }
         });
+        // Remplace ton bloc d'initialisation par celui-ci qui est plus "sécurisé"
+    const initProfile = async () => {
+    await Promise.all([
+        loadModule('profile_header.html', 'header-module'),
+        loadModule('profile_stats.html', 'stats-module'),
+        loadModule('profile_tabs.html', 'tabs-module'),
+        loadModule('profile_grid.html', 'grid-module'),
+        loadModule('profile_edit_modal.html', 'modal-module')
+    ]);
+
+    // On attend un tout petit peu (100ms) que le DOM s'actualise
+    setTimeout(() => {
+        if(window.loadHeader) window.loadHeader(profileId, user.uid);
+        if(window.loadStats) window.loadStats(profileId);
+        if(window.loadGrid) window.loadGrid('posts', profileId);
+    }, 100);
+};
     </script>
 </body>
 </html>
