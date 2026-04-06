@@ -1,10 +1,9 @@
-// Importation des modules Firebase via CDN (version compatible navigateur)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-// Tes vraies informations de configuration (issues de ta capture)
+// Configuration basée sur ta capture d'écran pour le projet floy-9f9a1
 const firebaseConfig = {
   apiKey: "AIzaSyD264JpNws08p7exXOLRZdWUkBKBdviw8c",
   authDomain: "floy-9f9a1.firebaseapp.com",
@@ -15,10 +14,10 @@ const firebaseConfig = {
   measurementId: "G-YSGGQ4Q4TV"
 };
 
-// Initialisation de Firebase
+// Initialisation
 const app = initializeApp(firebaseConfig);
 
-// Exportation des services pour tes autres fichiers
+// Export des services pour tes autres fichiers (auth, profile-edit, etc.)
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
