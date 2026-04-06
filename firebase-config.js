@@ -3,14 +3,13 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  // J'ai recopié la clé complète de ton image
-  apiKey: "AIzaSyD3cL4MokpURYKydVTugXArXC3-krQCAIc", 
-  authDomain: "floy-2a96d.firebaseapp.com",
-  projectId: "floy-2a96d",
-  storageBucket: "floy-2a96d.firebasestorage.app",
-  messagingSenderId: "360277317372",
-  appId: "1:360277317372:web:1b068a460ecc343022a9",
-  measurementId: "G-QV8DVCRY1Q"
+  apiKey: "AIzaSyD264JpNWs08p7exXOLRZdWUkbKBdviw8c",
+  authDomain: "floy-9f9a1.firebaseapp.com",
+  projectId: "floy-9f9a1",
+  storageBucket: "floy-9f9a1.firebasestorage.app",
+  messagingSenderId: "401063236997",
+  appId: "1:401063236997:web:ba53cf61961acd977b20ec",
+  measurementId: "G-YSGGQ4Q4TV"
 };
 
 const app = initializeApp(firebaseConfig);
