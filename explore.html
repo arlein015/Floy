@@ -2,135 +2,115 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Floy - Explorer</title>
     <style>
-        :root { --orange: #FF7A1A; --noir: #000; --gris: #121212; --bordure: #262626; }
-        body { background: var(--noir); color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
-
-        /* RECHERCHE */
-        .search-header { padding: 15px; position: sticky; top: 0; background: black; z-index: 100; }
-        .search-box { position: relative; display: flex; align-items: center; }
-        .search-input { 
-            width: 100%; background: #262626; border: none; padding: 12px 15px 12px 40px; 
-            border-radius: 10px; color: white; outline: none; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .search-icon { position: absolute; left: 12px; stroke: #888; }
-
-        /* RÉSULTATS */
-        #results-container { padding: 0 15px; }
-        .user-card { 
-            display: flex; align-items: center; gap: 12px; padding: 12px 0; 
-            text-decoration: none; color: white; border-bottom: 1px solid #111; 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
         }
-        .user-card img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid var(--bordure); }
-        .u-name { font-weight: bold; display: flex; align-items: center; gap: 4px; }
-        .u-handle { color: #888; font-size: 13px; }
         
-        .badge-orange { width: 14px; height: 14px; fill: var(--orange); display: none; }
-        .is-verified .badge-orange { display: inline-block; }
-
-        /* GRILLE PHOTOS */
-        .explore-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 10px; }
-        .grid-img { aspect-ratio: 1/1; background: #111; overflow: hidden; }
-        .grid-img img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* NAV BAR UNIFIÉE */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 65px; background: black; border-top: 1px solid var(--bordure); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-link { color: white; opacity: 0.6; text-decoration: none; transition: 0.3s; }
-        .nav-link.active { opacity: 1; color: var(--orange); }
-        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid transparent; }
-        .active .nav-avatar { border-color: var(--orange); }
+        .explore-header {
+            position: sticky;
+            top: 0;
+            background: #000000;
+            border-bottom: 1px solid #262626;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+        }
+        .explore-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            padding: 4px;
+        }
+        .explore-item {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .explore-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .explore-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 60px;
+            color: #8e8e8e;
+        }
     </style>
 </head>
 <body>
-
-    <div class="search-header">
-        <div class="search-box">
-            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="search-field" class="search-input" placeholder="Rechercher sur Floy...">
-        </div>
+    <div class="explore-header">
+        <button class="back-btn" onclick="window.location.href='index.html'">
+            <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+        </button>
+        <h3>Explorer</h3>
     </div>
 
-    <div id="results-container"></div>
+    <div class="explore-grid" id="exploreGrid">
+        <div class="loader">🔍 Chargement...</div>
+    </div>
 
-    <div class="explore-grid" id="main-grid"></div>
-
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-link">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        </a>
-        <a href="explore.html" class="nav-link active">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </a>
-        <a href="post.html" class="nav-link">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"></svg>
-        </a>
-        <a href="messages.html" class="nav-link">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-        </a>
-        <a href="profil.html" class="nav-link">
-            <img id="nav-profile-pic" class="nav-avatar" src="https://via.placeholder.com/30">
-        </a>
-    </nav>
-
-    <script type="module">
-        import { db } from './firebase-config.js';
-        import { collection, query, where, getDocs, onSnapshot, limit, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const searchField = document.getElementById('search-field');
-        const resultsArea = document.getElementById('results-container');
-        const MY_ID = "User_Floy_Account"; // Ton ID permanent
-
-        // 1. SYNCHRONISATION DE TA PHOTO DANS LA NAV BAR
-        onSnapshot(doc(db, "users", MY_ID), (s) => {
-            if(s.exists() && s.data().avatarUrl) {
-                document.getElementById('nav-profile-pic').src = s.data().avatarUrl;
-            }
-        });
-
-        // 2. RECHERCHE D'UTILISATEURS (CORRECTION DU LIEN 404)
-        searchField.oninput = async () => {
-            const text = searchField.value.toLowerCase().trim();
-            if(text.length < 1) { resultsArea.innerHTML = ""; return; }
-
-            const q = query(collection(db, "users"), where("username", ">=", text), where("username", "<=", text + '\uf8ff'));
-            const snap = await getDocs(q);
+    <script>
+        function loadExplore() {
+            const posts = JSON.parse(localStorage.getItem('floy_posts') || '[]');
+            const grid = document.getElementById('exploreGrid');
             
-            resultsArea.innerHTML = "";
-            snap.forEach((userDoc) => {
-                const u = userDoc.data();
-                const card = document.createElement('a');
-                card.className = `user-card ${u.isVerified ? 'is-verified' : ''}`;
-                
-                // CORRECTION ICI : On utilise bien profil.html (vérifie que ton fichier n'a pas de Majuscule)
-                card.href = `profil.html?id=${userDoc.id}`; 
-
-                card.innerHTML = `
-                    <img src="${u.avatarUrl || 'https://via.placeholder.com/50'}">
-                    <div class="u-info">
-                        <div class="u-name">
-                            ${u.name || u.username}
-                            <svg class="badge-orange" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6.4 13l1.5-1.5 2.2 2.2 4.8-4.8 1.5 1.5-6.3 6.3z"/></svg>
-                        </div>
-                        <div class="u-handle">@${u.username}</div>
-                    </div>
-                `;
-                resultsArea.appendChild(card);
-            });
-        };
-
-        // 3. CHARGEMENT DE LA GRILLE D'EXPLORATION
-        onSnapshot(query(collection(db, "posts"), limit(21)), (snaps) => {
-            const grid = document.getElementById('main-grid');
-            grid.innerHTML = "";
-            snaps.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'grid-img';
-                div.innerHTML = `<img src="${p.data().imageUrl}">`;
-                grid.appendChild(div);
-            });
-        });
+            if (posts.length === 0) {
+                grid.innerHTML = '<div class="loader" style="grid-column:span 3">📸 Aucune publication à explorer</div>';
+                return;
+            }
+            
+            // Mélanger les posts
+            const shuffled = [...posts].sort(() => Math.random() - 0.5);
+            
+            grid.innerHTML = shuffled.map(post => `
+                <div class="explore-item" onclick="viewPost(${post.id})">
+                    <img src="${post.mediaUrl}" alt="Post">
+                </div>
+            `).join('');
+        }
+        
+        function viewPost(postId) {
+            alert(`📸 Voir le post #${postId}`);
+        }
+        
+        loadExplore();
     </script>
 </body>
 </html>
