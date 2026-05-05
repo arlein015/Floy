@@ -5,8 +5,521 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Floy - Partagez vos moments</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Styles spécifiques aux modules (chargés automatiquement par chaque module) -->
+    <style>
+        /* Styles supplémentaires pour la navigation entre pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 244px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            background: #000000;
+            border-right: 1px solid #262626;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 25px 12px 16px;
+            margin-bottom: 20px;
+        }
+
+        .logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B35, #FF9F5C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #f5f5f5;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: #1a1a1a;
+        }
+
+        .nav-item.active {
+            font-weight: 600;
+            color: #FF6B35;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        .nav-item.active svg {
+            stroke: #FF6B35;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #262626;
+        }
+
+        /* Badge notifications */
+        .notif-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF6B35;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 244px;
+            flex: 1;
+            max-width: 630px;
+            padding: 0 20px;
+        }
+
+        /* Stories */
+        .stories-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 16px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #262626;
+            scrollbar-width: none;
+        }
+
+        .stories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .story-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .story-avatar.has-story {
+            background: linear-gradient(45deg, #FF6B35, #FF9F5C, #FF6B35);
+            padding: 2px;
+        }
+
+        .story-avatar-inner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            overflow: hidden;
+        }
+
+        .story-avatar-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-avatar.create-story {
+            background: #1a1a1a;
+            border: 2px solid #262626;
+        }
+
+        .story-plus {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 22px;
+            height: 22px;
+            background: #FF6B35;
+            border-radius: 50%;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        /* Post */
+        .post {
+            margin-bottom: 20px;
+            background: #000000;
+            border: 1px solid #262626;
+            border-radius: 8px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-more {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .post-more svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #f5f5f5;
+        }
+
+        .post-image-container {
+            width: 100%;
+            background: #1a1a1a;
+            cursor: pointer;
+        }
+
+        .post-image {
+            width: 100%;
+            display: block;
+        }
+
+        .post-video {
+            width: 100%;
+            max-height: 500px;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #f5f5f5;
+            stroke-width: 1.5;
+        }
+
+        .action-btn.liked svg {
+            fill: #FF6B35;
+            stroke: #FF6B35;
+        }
+
+        .save-btn {
+            margin-left: auto;
+        }
+
+        .post-likes {
+            font-weight: 600;
+            font-size: 14px;
+            padding: 0 16px 8px;
+            cursor: pointer;
+        }
+
+        .post-caption {
+            padding: 0 16px 8px;
+            font-size: 14px;
+        }
+
+        .post-caption strong {
+            font-weight: 600;
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        .post-comments {
+            padding: 0 16px 4px;
+            font-size: 14px;
+            color: #8e8e8e;
+            cursor: pointer;
+        }
+
+        .post-time {
+            padding: 4px 16px 12px;
+            font-size: 10px;
+            color: #8e8e8e;
+        }
+
+        .comment-form {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-top: 1px solid #262626;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #f5f5f5;
+            padding: 12px 0;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .comment-input::placeholder {
+            color: #8e8e8e;
+        }
+
+        .comment-post-btn {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .comment-post-btn:hover {
+            opacity: 1;
+        }
+
+        /* Right sidebar */
+        .right-sidebar {
+            width: 320px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            padding: 30px 20px;
+            display: block;
+        }
+
+        .current-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info .username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info .name {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            color: #8e8e8e;
+            font-size: 14px;
+        }
+
+        .see-all {
+            background: none;
+            border: none;
+            color: #f5f5f5;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .suggestion-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .suggestion-info .username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .suggestion-info .followers {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .follow-btn {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 60px;
+            color: #8e8e8e;
+        }
+
+        @media (max-width: 1260px) {
+            .right-sidebar { display: none; }
+            .main-content { max-width: 100%; }
+        }
+
+        @media (max-width: 1000px) {
+            .sidebar { width: 72px; }
+            .sidebar .logo-text, .sidebar .nav-item span { display: none; }
+            .main-content { margin-left: 72px; }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 0 12px; }
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -21,30 +534,43 @@
             </div>
 
             <nav class="sidebar-nav">
+                <!-- Accueil -->
                 <div class="nav-item active" data-page="feed">
                     <svg viewBox="0 0 24 24"><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/></svg>
                     <span>Accueil</span>
                 </div>
+
+                <!-- Explorer -->
                 <div class="nav-item" data-page="explore">
                     <svg viewBox="0 0 24 24"><path d="M10.25 3.75a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm-8.5 6.5a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0Z"/><path d="M19.53 19.53l-4.16-4.16a.75.75 0 0 1 1.06-1.06l4.16 4.16a.75.75 0 0 1-1.06 1.06Z"/></svg>
                     <span>Explorer</span>
                 </div>
+
+                <!-- Reels -->
                 <div class="nav-item" data-page="reels">
                     <svg viewBox="0 0 24 24"><path d="M2.5 5.5h19v13h-19z"/><path d="M9.5 8.5l6 3.5-6 3.5z"/></svg>
                     <span>Reels</span>
                 </div>
+
+                <!-- Créer -->
                 <div class="nav-item" data-page="create">
                     <svg viewBox="0 0 24 24"><path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/></svg>
                     <span>Créer</span>
                 </div>
+
+                <!-- Notifications -->
                 <div class="nav-item" data-page="notifications">
                     <svg viewBox="0 0 24 24"><path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/><path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/><path d="M9 20.5h6"/></svg>
                     <span>Notifications</span>
                 </div>
+
+                <!-- Messages -->
                 <div class="nav-item" data-page="messages">
                     <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
                     <span>Messages</span>
                 </div>
+
+                <!-- Profil -->
                 <div class="nav-item" data-page="profile">
                     <svg viewBox="0 0 24 24"><path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/></svg>
                     <span>Profil</span>
@@ -52,6 +578,7 @@
             </nav>
 
             <div class="sidebar-footer">
+                <!-- Paramètres -->
                 <div class="nav-item" data-page="settings">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/></svg>
                     <span>Paramètres</span>
@@ -61,16 +588,16 @@
 
         <!-- ========== CONTENU PRINCIPAL ========== -->
         <main class="main-content">
-            <!-- Stories container -->
+            <!-- Stories -->
             <div class="stories-container" id="stories"></div>
             
-            <!-- Feed container -->
+            <!-- Feed -->
             <div id="feed-container"></div>
         </main>
 
         <!-- ========== SIDEBAR DROITE ========== -->
         <aside class="right-sidebar">
-            <div class="current-user" id="currentUserSidebar">
+            <div class="current-user" id="currentUserSidebar" onclick="goToProfile()">
                 <div class="user-avatar" id="sidebarAvatar">F</div>
                 <div class="user-info">
                     <div class="username" id="sidebarUsername">floy_user</div>
@@ -85,8 +612,7 @@
         </aside>
     </div>
 
-    <!-- ========== CHARGEMENT DES MODULES ========== -->
-    <!-- Ordre important : les modules sont chargés séquentiellement -->
+    <!-- ========== CHARGEMENT DE TOUS LES MODULES ========== -->
     <script src="modules/like.js"></script>
     <script src="modules/commentaire.js"></script>
     <script src="modules/partage.js"></script>
@@ -95,7 +621,7 @@
     <script src="modules/carrousel.js"></script>
     <script src="modules/notifications.js"></script>
     <script src="modules/messages.js"></script>
-    
+
     <!-- ========== SCRIPT PRINCIPAL ========== -->
     <script>
         // ========== DONNÉES GLOBALES ==========
@@ -104,7 +630,9 @@
             username: "floy_user",
             fullname: "Floy Creator",
             avatar: "F",
-            avatarUrl: null
+            avatarUrl: null,
+            followers: 128,
+            following: 94
         };
         
         let posts = [];
@@ -132,9 +660,41 @@
 
         function updateSidebar() {
             const avatarEl = document.getElementById('sidebarAvatar');
-            avatarEl.innerHTML = currentUser.avatarUrl ? `<img src="${currentUser.avatarUrl}">` : currentUser.avatar;
-            document.getElementById('sidebarUsername').innerHTML = currentUser.username;
-            document.getElementById('sidebarName').innerHTML = currentUser.fullname;
+            if (currentUser.avatarUrl) {
+                avatarEl.innerHTML = `<img src="${currentUser.avatarUrl}">`;
+            } else {
+                avatarEl.textContent = currentUser.avatar || "F";
+            }
+            document.getElementById('sidebarUsername').textContent = currentUser.username;
+            document.getElementById('sidebarName').textContent = currentUser.fullname;
+        }
+
+        // ========== RENDU DES STORIES ==========
+        function renderStories() {
+            if (typeof storiesModule !== 'undefined' && storiesModule.renderStories) {
+                storiesModule.renderStories('stories');
+            } else {
+                const container = document.getElementById('stories');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="story-item" onclick="openCreateStory()">
+                            <div class="story-avatar create-story">
+                                <div class="story-avatar-inner">📸</div>
+                                <div class="story-plus">+</div>
+                            </div>
+                            <div class="story-username">Votre story</div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function openCreateStory() {
+            if (typeof storiesModule !== 'undefined' && storiesModule.openCreateStoryModal) {
+                storiesModule.openCreateStoryModal();
+            } else {
+                alert("📸 Module Stories - Bientôt disponible");
+            }
         }
 
         // ========== RENDU DU FEED ==========
@@ -143,7 +703,7 @@
             if (!container) return;
             
             if (posts.length === 0) {
-                container.innerHTML = '<div class="loader">📸 Aucune publication</div>';
+                container.innerHTML = '<div class="loader">📸 Aucune publication<br><small>Soyez le premier à partager !</small></div>';
                 return;
             }
             
@@ -162,15 +722,19 @@
                     </div>
                     
                     <div class="post-image-container" onclick="viewMedia('${post.mediaUrl}')">
-                        ${post.type === 'video' ? `<video class="post-video" src="${post.mediaUrl}" controls></video>` : `<img class="post-image" src="${post.mediaUrl}">`}
+                        ${post.type === 'video' ? `<video class="post-video" src="${post.mediaUrl}" controls></video>` : `<img class="post-image" src="${post.mediaUrl}" alt="Post">`}
                     </div>
                     
                     <div class="post-actions">
-                        ${typeof likeModule !== 'undefined' ? likeModule.renderLikeButton(post.id, post.liked) : '<button>❤️</button>'}
-                        <button class="action-btn" onclick="commentaireModule.showAllCommentaires(${post.id})">
+                        <button class="action-btn like-btn" onclick="handleLike(event, ${post.id})">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" onclick="openComments(${post.id})">
                             <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
                         </button>
-                        <button class="action-btn" onclick="partageModule.showShareModal(${post.id}, '${post.mediaUrl}', '${post.caption}')">
+                        <button class="action-btn" onclick="sharePost(${post.id}, '${post.mediaUrl}', '${post.caption}')">
                             <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
                         </button>
                         <button class="action-btn save-btn" onclick="savePost(${post.id})">
@@ -179,8 +743,8 @@
                     </div>
                     
                     <div class="post-likes" id="likes-${post.id}">${formatLikes(post.likes)}</div>
-                    <div class="post-caption"><strong>${post.username}</strong> ${post.caption}</div>
-                    <div class="post-comments" onclick="commentaireModule.showAllCommentaires(${post.id})">Voir les ${post.comments?.length || 0} commentaires</div>
+                    <div class="post-caption"><strong>${post.username}</strong> ${escapeHtml(post.caption)}</div>
+                    <div class="post-comments" onclick="openComments(${post.id})">${post.comments?.length === 0 ? "Soyez le premier à commenter" : `Voir les ${post.comments?.length || 0} commentaires`}</div>
                     <div class="post-time">il y a ${getTimeAgo(post.timestamp)}</div>
                     
                     <div class="comment-form">
@@ -191,16 +755,117 @@
             `).join('');
         }
 
+        // ========== GESTION DES LIKES ==========
+        function handleLike(event, postId) {
+            event.stopPropagation();
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const btn = event.currentTarget;
+            
+            if (post.liked) {
+                post.likes--;
+                post.liked = false;
+                btn.classList.remove('liked');
+            } else {
+                post.likes++;
+                post.liked = true;
+                btn.classList.add('liked');
+                btn.style.transform = 'scale(1.2)';
+                setTimeout(() => { btn.style.transform = ''; }, 200);
+            }
+            
+            const likesSpan = document.getElementById(`likes-${postId}`);
+            if (likesSpan) {
+                likesSpan.textContent = formatLikes(post.likes);
+            }
+            
+            localStorage.setItem('floy_posts', JSON.stringify(posts));
+        }
+
+        // ========== GESTION DES COMMENTAIRES ==========
         function addQuickComment(postId) {
             const input = document.getElementById(`comment-input-${postId}`);
             const text = input.value.trim();
-            if (text && typeof commentaireModule !== 'undefined') {
-                commentaireModule.addCommentaire(postId, text);
+            if (!text) return;
+            
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                if (!post.comments) post.comments = [];
+                post.comments.push({
+                    username: currentUser.username,
+                    text: text,
+                    avatar: currentUser.avatar
+                });
                 input.value = '';
+                
+                const commentsDiv = document.querySelector(`.post[data-post-id="${postId}"] .post-comments`);
+                if (commentsDiv) {
+                    commentsDiv.textContent = `Voir les ${post.comments.length} commentaires`;
+                }
+                localStorage.setItem('floy_posts', JSON.stringify(posts));
+            }
+        }
+
+        function openComments(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            let modalHtml = `
+                <div id="commentsModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:3000;display:flex;align-items:center;justify-content:center;">
+                    <div style="background:#000;border-radius:16px;width:400px;max-width:90%;max-height:80%;display:flex;flex-direction:column;border:1px solid #262626;">
+                        <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
+                            <h3 style="color:#fff;">Commentaires (${post.comments?.length || 0})</h3>
+                            <button onclick="this.closest('#commentsModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">&times;</button>
+                        </div>
+                        <div style="flex:1;overflow-y:auto;padding:16px;">
+                            ${post.comments?.map(c => `
+                                <div style="display:flex;gap:12px;margin-bottom:16px;">
+                                    <div style="width:32px;height:32px;border-radius:50%;background:#FF6B35;display:flex;align-items:center;justify-content:center;">${c.avatar || c.username.charAt(0)}</div>
+                                    <div><strong>${c.username}</strong><div style="font-size:13px;margin-top:4px;">${escapeHtml(c.text)}</div></div>
+                                </div>
+                            `).join('') || '<div style="text-align:center;padding:40px;color:#8e8e8e;">Aucun commentaire</div>'}
+                        </div>
+                        <div style="padding:16px;border-top:1px solid #262626;display:flex;gap:12px;">
+                            <input type="text" id="modalCommentInput" placeholder="Ajouter un commentaire..." style="flex:1;background:#1a1a1a;border:1px solid #262626;border-radius:20px;padding:10px 16px;color:#fff;outline:none;">
+                            <button onclick="addModalComment(${postId})" style="background:none;border:none;color:#FF6B35;font-weight:600;cursor:pointer;">Publier</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function addModalComment(postId) {
+            const input = document.getElementById('modalCommentInput');
+            const text = input?.value.trim();
+            if (!text) return;
+            
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                if (!post.comments) post.comments = [];
+                post.comments.push({
+                    username: currentUser.username,
+                    text: text,
+                    avatar: currentUser.avatar
+                });
+                localStorage.setItem('floy_posts', JSON.stringify(posts));
+                document.getElementById('commentsModal')?.remove();
+                openComments(postId);
                 renderFeed();
             }
         }
 
+        // ========== PARTAGE ==========
+        function sharePost(postId, mediaUrl, caption) {
+            if (typeof partageModule !== 'undefined' && partageModule.showShareModal) {
+                partageModule.showShareModal(postId, mediaUrl, caption);
+            } else {
+                alert("📤 Module Partage - Bientôt disponible");
+            }
+        }
+
+        // ========== AUTRES FONCTIONS ==========
         function formatLikes(count) {
             if (count === 0) return "0 like";
             if (count === 1) return "1 like";
@@ -218,43 +883,86 @@
 
         function viewMedia(url) { window.open(url, '_blank'); }
         function savePost(id) { alert(`🔖 Post ${id} sauvegardé`); }
-        function showPostOptions(id) { if(confirm('Supprimer ?')) { posts = posts.filter(p=>p.id!==id); localStorage.setItem('floy_posts',JSON.stringify(posts)); renderFeed(); } }
-        function goToUserProfile(id) { if(id===currentUser.id) window.location.href='profil.html'; else alert(`Profil utilisateur #${id}`); }
-
-        // ========== RENDU DES STORIES ==========
-        function renderStories() {
-            if (typeof storiesModule !== 'undefined') {
-                storiesModule.renderStories('stories');
-            } else {
-                document.getElementById('stories').innerHTML = '<div class="loader">📸 Stories</div>';
+        
+        function showPostOptions(id) {
+            if (confirm('Supprimer cette publication ?')) {
+                posts = posts.filter(p => p.id !== id);
+                localStorage.setItem('floy_posts', JSON.stringify(posts));
+                renderFeed();
             }
+        }
+
+        function goToProfile() { window.location.href = 'profil.html'; }
+        function goToUserProfile(id) { if(id === currentUser.id) goToProfile(); else alert(`👤 Profil utilisateur #${id}`); }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
         }
 
         // ========== SUGGESTIONS ==========
         function setupSuggestions() {
-            document.getElementById('suggestionsList').innerHTML = `
-                <div class="suggestion-item"><div class="suggestion-avatar">A</div><div class="suggestion-info"><div class="username">artiste_orange</div><div class="followers">12k abonnés</div></div><button class="follow-btn">Suivre</button></div>
-                <div class="suggestion-item"><div class="suggestion-avatar">P</div><div class="suggestion-info"><div class="username">photographe</div><div class="followers">8.5k abonnés</div></div><button class="follow-btn">Suivre</button></div>
-            `;
+            const suggestions = [
+                { username: "artiste_orange", avatar: "A", followers: "12k" },
+                { username: "photographe", avatar: "P", followers: "8.5k" }
+            ];
+            const container = document.getElementById('suggestionsList');
+            if (container) {
+                container.innerHTML = suggestions.map(s => `
+                    <div class="suggestion-item" onclick="alert('Profil de ${s.username}')">
+                        <div class="suggestion-avatar">${s.avatar}</div>
+                        <div class="suggestion-info">
+                            <div class="username">${s.username}</div>
+                            <div class="followers">${s.followers} abonnés</div>
+                        </div>
+                        <button class="follow-btn">Suivre</button>
+                    </div>
+                `).join('');
+            }
         }
 
-        // ========== NAVIGATION ==========
+        // ========== NAVIGATION ENTRE PAGES ==========
         function setupNavigation() {
-            document.querySelectorAll('.nav-item').forEach(item => {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
-                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
                     
-                    if (page === 'create' && typeof uploadModule !== 'undefined') {
-                        uploadModule.openUploadModal();
+                    if (page === 'profile') {
+                        window.location.href = 'profil.html';
+                    } else if (page === 'settings') {
+                        window.location.href = 'settings.html';
+                    } else if (page === 'explore') {
+                        window.location.href = 'explore.html';
+                    } else if (page === 'reels') {
+                        window.location.href = 'reels.html';
+                    } else if (page === 'create') {
+                        if (typeof uploadModule !== 'undefined' && uploadModule.openUploadModal) {
+                            uploadModule.openUploadModal();
+                        } else {
+                            alert("📸 Module Upload - Bientôt disponible");
+                        }
                         item.classList.remove('active');
                         document.querySelector('.nav-item[data-page="feed"]').classList.add('active');
-                    } else if (page === 'notifications' && typeof notificationsModule !== 'undefined') {
-                        notificationsModule.showNotificationsModal();
-                    } else if (page === 'messages' && typeof messagesModule !== 'undefined') {
-                        messagesModule.openMessagesModal();
-                    } else if (page !== 'feed') {
+                    } else if (page === 'notifications') {
+                        if (typeof notificationsModule !== 'undefined' && notificationsModule.showNotificationsModal) {
+                            notificationsModule.showNotificationsModal();
+                        } else {
+                            alert("🔔 Module Notifications - Bientôt disponible");
+                        }
+                    } else if (page === 'messages') {
+                        if (typeof messagesModule !== 'undefined' && messagesModule.openMessagesModal) {
+                            messagesModule.openMessagesModal();
+                        } else {
+                            alert("💬 Module Messages - Bientôt disponible");
+                        }
+                    } else if (page === 'feed') {
+                        renderFeed();
+                        renderStories();
+                    } else {
                         alert(`📱 Page ${page} - Bientôt disponible`);
                     }
                 });
