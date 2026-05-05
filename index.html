@@ -2,132 +2,852 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <title>Floy | Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Floy - Partagez vos moments uniques">
+    <title>Floy - Réseau social photo</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .orange-text { color: #FF6B00; }
-        .bg-orange { background-color: #FF6B00; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Animation du cercle de story lors de l'ajout */
-        .story-ring { padding: 2px; background: linear-gradient(45deg, #FF6B00, #FF3D00, #f62d14); border-radius: 9999px; }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-    </style>
-</head>
-<body class="antialiased">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <nav class="sticky top-0 z-50 bg-black/90 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-white/5">
-        <h1 class="font-black text-2xl italic tracking-tighter">Floy<span class="orange-text">.</span></h1>
-        <div class="flex items-center space-x-5">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-            <div class="relative">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                <span class="absolute -top-1 -right-1 bg-orange text-black text-[10px] font-black px-1 rounded-full">3</span>
-            </div>
-        </div>
-    </nav>
+        :root {
+            --floy-primary: #7C3AED;
+            --floy-primary-dark: #6D28D9;
+            --floy-secondary: #F59E0B;
+            --floy-dark: #111827;
+            --floy-gray: #6B7280;
+            --floy-light: #F9FAFB;
+            --floy-white: #FFFFFF;
+            --floy-danger: #EF4444;
+            --floy-success: #10B981;
+        }
 
-    <main class="max-w-2xl mx-auto">
-        
-        <section class="py-6 border-b border-white/5 overflow-hidden">
-            <div id="home-stories" class="flex space-x-5 overflow-x-auto no-scrollbar px-6 items-center">
-                
-                <div onclick="document.getElementById('home-gallery').click()" class="flex flex-col items-center space-y-2 flex-shrink-0 cursor-pointer">
-                    <div class="relative w-16 h-16">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100" class="w-full h-full rounded-full border-2 border-gray-800 object-cover">
-                        <div class="absolute bottom-0 right-0 bg-orange rounded-full p-1 border-2 border-black">
-                            <svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="4" d="M12 5v14M5 12h14"/></svg>
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-500 uppercase">Ma Story</span>
-                    <input type="file" id="home-gallery" accept="image/*" class="hidden" onchange="uploadStory(event)">
-                </div>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--floy-dark);
+        }
 
-                <div class="flex flex-col items-center space-y-2 flex-shrink-0">
-                    <div class="story-ring w-16 h-16">
-                        <div class="w-full h-full rounded-full border-2 border-black overflow-hidden">
-                            <img src="https://picsum.photos/200/200?random=50" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-400">zoeyiso</span>
-                </div>
+        /* Navigation */
+        .floy-nav {
+            background: var(--floy-white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+        }
 
-                <div class="flex flex-col items-center space-y-2 flex-shrink-0">
-                    <div class="story-ring w-16 h-16">
-                        <div class="w-full h-full rounded-full border-2 border-black overflow-hidden">
-                            <img src="https://picsum.photos/200/200?random=51" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-400">dev_king</span>
-                </div>
-            </div>
-        </section>
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-        <section class="pb-24">
-            <div class="p-4 border-b border-white/5">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-orange"></div>
-                        <span class="font-bold text-sm">Floy_official</span>
-                    </div>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                </div>
-                <div class="aspect-video bg-gray-900 rounded-2xl overflow-hidden mb-4">
-                    <img src="https://picsum.photos/800/450?random=99" class="w-full h-full object-cover">
-                </div>
-                <div class="flex space-x-4 mb-2">
-                    <svg class="w-6 h-6 orange-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863-9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                </div>
-                <p class="text-xs text-gray-400 font-bold uppercase">85,230 Likes</p>
-            </div>
-        </section>
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--floy-primary), var(--floy-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
 
-    </main>
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
 
-    <nav class="fixed bottom-0 inset-x-0 bg-black/95 backdrop-blur-xl border-t border-white/5 px-8 py-5 flex justify-between items-center z-50">
-        <svg class="w-7 h-7 orange-text" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <div class="w-8 h-8 rounded-full border border-white/20 overflow-hidden" onclick="window.location.href='profile.html'">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100" class="w-full h-full object-cover">
-        </div>
-    </nav>
+        .nav-links a {
+            text-decoration: none;
+            color: var(--floy-gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-    <script>
-        // FONCTION D'UPLOAD ET AFFICHAGE IMMÉDIAT
-        function uploadStory(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const container = document.getElementById('home-stories');
-                    
-                    // Création de la nouvelle story HTML
-                    const newStory = document.createElement('div');
-                    newStory.className = "flex flex-col items-center space-y-2 flex-shrink-0 fade-in";
-                    newStory.innerHTML = `
-                        <div class="story-ring w-16 h-16">
-                            <div class="w-full h-full rounded-full border-2 border-black overflow-hidden">
-                                <img src="${e.target.result}" class="w-full h-full object-cover">
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-black text-white uppercase tracking-tighter">Maintenant</span>
-                    `;
-                    
-                    // Insérer après le bouton "Ma Story"
-                    container.insertBefore(newStory, container.children[1]);
+        .nav-links a:hover {
+            color: var(--floy-primary);
+        }
 
-                    // LOGIQUE : Ici, tu appelles ton module story.js pour sauvegarder en DB
-                    console.log("Envoi du fichier vers le serveur via AJAX...");
-                    // fetch('/api/upload_story', { method: 'POST', body: formData });
-                };
-                reader.readAsDataURL(file);
+        /* Container principal */
+        .floy-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Feed */
+        .feed {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cartes des posts */
+        .post-card {
+            background: var(--floy-white);
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* En-tête du post */
+        .post-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-username {
+            font-weight: 700;
+            color: var(--floy-dark);
+            text-decoration: none;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--floy-gray);
+            margin-left: auto;
+        }
+
+        /* Image du post */
+        .post-image {
+            width: 100%;
+            max-height: 600px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* Actions du post */
+        .post-actions {
+            padding: 12px 16px;
+            display: flex;
+            gap: 16px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: var(--floy-gray);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.liked {
+            color: var(--floy-danger);
+            animation: likeAnimation 0.4s ease;
+        }
+
+        @keyframes likeAnimation {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Likes & caption */
+        .post-likes {
+            padding: 0 16px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .post-caption {
+            padding: 0 16px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .post-caption strong {
+            margin-right: 8px;
+        }
+
+        /* Commentaires */
+        .post-comments {
+            padding: 0 16px;
+            margin-bottom: 12px;
+        }
+
+        .comment {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .comment strong {
+            margin-right: 8px;
+        }
+
+        .view-comments {
+            color: var(--floy-gray);
+            font-size: 13px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        /* Ajouter commentaire */
+        .add-comment {
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .comment-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            padding: 8px 0;
+        }
+
+        .comment-submit {
+            background: none;
+            border: none;
+            color: var(--floy-primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Modal pour les images */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        /* Formulaire upload */
+        .upload-modal {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, var(--floy-primary), var(--floy-secondary));
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Loader */
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 12px 16px;
+            }
+            
+            .floy-container {
+                padding: 16px;
+            }
+            
+            .logo {
+                font-size: 22px;
             }
         }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="floy-nav">
+        <div class="nav-container">
+            <a href="#" class="logo">✨ FLOY</a>
+            <div class="nav-links">
+                <a href="#" id="homeLink"><i class="fas fa-home"></i></a>
+                <a href="#" id="exploreLink"><i class="fas fa-compass"></i></a>
+                <a href="#" id="profileLink"><i class="fas fa-user"></i></a>
+                <a href="#" id="logoutLink" style="display: none;"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Container principal -->
+    <div class="floy-container">
+        <!-- Feed -->
+        <div id="feed" class="feed">
+            <div class="loader">
+                <div class="spinner"></div>
+                <p style="margin-top: 16px;">Chargement de Floy...</p>
+            </div>
+        </div>
+
+        <!-- Profil (caché par défaut) -->
+        <div id="profile" style="display: none;">
+            <div class="loader">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Explore (caché par défaut) -->
+        <div id="explore" style="display: none;">
+            <div class="loader">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Auth (caché par défaut) -->
+        <div id="auth" style="display: none; max-width: 400px; margin: 50px auto;">
+            <div class="post-card" style="padding: 32px;">
+                <h2 style="text-align: center; margin-bottom: 24px;">✨ Floy</h2>
+                
+                <div id="loginForm">
+                    <input type="text" id="loginUsername" placeholder="Nom d'utilisateur" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <input type="password" id="loginPassword" placeholder="Mot de passe" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <button id="doLogin" style="width: 100%; padding: 12px; background: var(--floy-primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Se connecter</button>
+                    <p style="text-align: center; margin-top: 16px;">Pas de compte ? <a href="#" id="showRegister">S'inscrire</a></p>
+                </div>
+                
+                <div id="registerForm" style="display: none;">
+                    <input type="text" id="regUsername" placeholder="Nom d'utilisateur" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <input type="email" id="regEmail" placeholder="Email" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <input type="password" id="regPassword" placeholder="Mot de passe" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <button id="doRegister" style="width: 100%; padding: 12px; background: var(--floy-primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">S'inscrire</button>
+                    <p style="text-align: center; margin-top: 16px;">Déjà un compte ? <a href="#" id="showLogin">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bouton upload -->
+    <div class="upload-modal">
+        <div class="upload-btn" id="uploadBtn">
+            <i class="fas fa-plus"></i>
+        </div>
+    </div>
+
+    <!-- Modal image -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-image" id="modalImage" src="">
+    </div>
+
+    <!-- Input file caché -->
+    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+
+    <script>
+        // ============ VARIABLES GLOBALES ============
+        let currentUser = null;
+        let currentView = 'feed';
+        let posts = [];
+        
+        // API simulée (backend à connecter)
+        const API = {
+            async getPosts() {
+                // TODO: Connecter à votre backend
+                return [
+                    {
+                        id: 1,
+                        userId: 1,
+                        username: "floy_official",
+                        avatar: "https://via.placeholder.com/40",
+                        image: "https://picsum.photos/600/400?random=1",
+                        caption: "Bienvenue sur Floy ! Partagez vos moments ✨",
+                        likes: 42,
+                        userLiked: false,
+                        comments: [
+                            { username: "alpha", text: "Superbe plateforme !" },
+                            { username: "beta", text: "J'adore le design" }
+                        ],
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        userId: 2,
+                        username: "photographe_fr",
+                        avatar: "https://via.placeholder.com/40",
+                        image: "https://picsum.photos/600/400?random=2",
+                        caption: "Magnifique coucher de soleil aujourd'hui 🌅",
+                        likes: 128,
+                        userLiked: false,
+                        comments: [
+                            { username: "artiste", text: "Wouah incroyable !" }
+                        ],
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+            },
+            
+            async likePost(postId) {
+                // TODO: Appel API réel
+                console.log(`Like du post ${postId}`);
+                return { success: true };
+            },
+            
+            async unlikePost(postId) {
+                console.log(`Unlike du post ${postId}`);
+                return { success: true };
+            },
+            
+            async addComment(postId, text) {
+                console.log(`Commentaire sur ${postId}: ${text}`);
+                return { success: true, comment: { username: currentUser?.username, text } };
+            },
+            
+            async login(username, password) {
+                // TODO: Authentification réelle
+                if (username && password) {
+                    return { success: true, user: { id: 1, username, email: "user@floy.com" } };
+                }
+                return { success: false };
+            },
+            
+            async register(username, email, password) {
+                if (username && email && password) {
+                    return { success: true, user: { id: 1, username, email } };
+                }
+                return { success: false };
+            },
+            
+            async uploadPost(imageFile, caption) {
+                console.log(`Upload: ${imageFile.name}, caption: ${caption}`);
+                // Simuler un nouveau post
+                const newPost = {
+                    id: Date.now(),
+                    userId: currentUser?.id || 1,
+                    username: currentUser?.username || "moi",
+                    avatar: "https://via.placeholder.com/40",
+                    image: URL.createObjectURL(imageFile),
+                    caption: caption,
+                    likes: 0,
+                    userLiked: false,
+                    comments: [],
+                    createdAt: new Date().toISOString()
+                };
+                return { success: true, post: newPost };
+            }
+        };
+        
+        // ============ FONCTIONS PRINCIPALES ============
+        
+        // Rendu du feed
+        async function renderFeed() {
+            const feedEl = document.getElementById('feed');
+            feedEl.innerHTML = '<div class="loader"><div class="spinner"></div><p>Chargement...</p></div>';
+            
+            try {
+                posts = await API.getPosts();
+                
+                if (posts.length === 0) {
+                    feedEl.innerHTML = '<div class="post-card" style="text-align: center; padding: 40px;">Aucun post pour le moment. Soyez le premier à partager ! 📸</div>';
+                    return;
+                }
+                
+                feedEl.innerHTML = posts.map(post => `
+                    <div class="post-card" data-post-id="${post.id}">
+                        <div class="post-header">
+                            <img src="${post.avatar}" class="post-avatar" alt="avatar">
+                            <a href="#" class="post-username">${post.username}</a>
+                            <span class="post-time">${formatTime(post.createdAt)}</span>
+                        </div>
+                        <img src="${post.image}" class="post-image" alt="post" onclick="openImageModal('${post.image}')">
+                        <div class="post-actions">
+                            <button class="action-btn like-btn ${post.userLiked ? 'liked' : ''}" data-id="${post.id}">
+                                <i class="${post.userLiked ? 'fas' : 'far'} fa-heart"></i>
+                            </button>
+                            <button class="action-btn comment-btn" data-id="${post.id}">
+                                <i class="far fa-comment"></i>
+                            </button>
+                            <button class="action-btn share-btn">
+                                <i class="far fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="post-likes">
+                            ${post.likes} ${post.likes === 1 ? 'like' : 'likes'}
+                        </div>
+                        <div class="post-caption">
+                            <strong>${post.username}</strong> ${escapeHtml(post.caption)}
+                        </div>
+                        <div class="post-comments">
+                            ${post.comments.slice(0, 2).map(c => `
+                                <div class="comment">
+                                    <strong>${escapeHtml(c.username)}</strong> ${escapeHtml(c.text)}
+                                </div>
+                            `).join('')}
+                            ${post.comments.length > 2 ? `<div class="view-comments" data-id="${post.id}">Voir les ${post.comments.length} commentaires</div>` : ''}
+                        </div>
+                        <div class="add-comment">
+                            <input type="text" class="comment-input" placeholder="Ajouter un commentaire..." data-id="${post.id}">
+                            <button class="comment-submit" data-id="${post.id}">Publier</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Attacher les événements
+                attachPostEvents();
+                
+            } catch (error) {
+                console.error('Erreur feed:', error);
+                feedEl.innerHTML = '<div class="post-card" style="text-align: center; padding: 40px; color: red;">Erreur de chargement. Réessayez plus tard.</div>';
+            }
+        }
+        
+        // Attacher les événements aux posts
+        function attachPostEvents() {
+            // Likes
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.removeEventListener('click', handleLike);
+                btn.addEventListener('click', handleLike);
+            });
+            
+            // Commentaires
+            document.querySelectorAll('.comment-submit').forEach(btn => {
+                btn.removeEventListener('click', handleComment);
+                btn.addEventListener('click', handleComment);
+            });
+            
+            // Input commentaires (enter)
+            document.querySelectorAll('.comment-input').forEach(input => {
+                input.removeEventListener('keypress', handleCommentEnter);
+                input.addEventListener('keypress', handleCommentEnter);
+            });
+        }
+        
+        // Gestionnaire like
+        async function handleLike(e) {
+            const btn = e.currentTarget;
+            const postId = parseInt(btn.dataset.id);
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            btn.classList.toggle('liked');
+            const icon = btn.querySelector('i');
+            
+            if (btn.classList.contains('liked')) {
+                icon.className = 'fas fa-heart';
+                post.likes++;
+                post.userLiked = true;
+                await API.likePost(postId);
+                icon.style.animation = 'likeAnimation 0.4s ease';
+                setTimeout(() => { icon.style.animation = ''; }, 400);
+            } else {
+                icon.className = 'far fa-heart';
+                post.likes--;
+                post.userLiked = false;
+                await API.unlikePost(postId);
+            }
+            
+            // Mettre à jour l'affichage des likes
+            const likesDiv = btn.closest('.post-card').querySelector('.post-likes');
+            likesDiv.textContent = `${post.likes} ${post.likes === 1 ? 'like' : 'likes'}`;
+        }
+        
+        // Gestionnaire commentaire
+        async function handleComment(e) {
+            const btn = e.currentTarget;
+            const postId = parseInt(btn.dataset.id);
+            const input = btn.closest('.add-comment').querySelector('.comment-input');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const result = await API.addComment(postId, text);
+            if (result.success) {
+                const post = posts.find(p => p.id === postId);
+                post.comments.push(result.comment);
+                
+                // Rafraîchir l'affichage des commentaires
+                const commentsDiv = btn.closest('.post-card').querySelector('.post-comments');
+                const comments = post.comments;
+                commentsDiv.innerHTML = `
+                    ${comments.slice(0, 2).map(c => `
+                        <div class="comment">
+                            <strong>${escapeHtml(c.username)}</strong> ${escapeHtml(c.text)}
+                        </div>
+                    `).join('')}
+                    ${comments.length > 2 ? `<div class="view-comments" data-id="${postId}">Voir les ${comments.length} commentaires</div>` : ''}
+                `;
+                input.value = '';
+            }
+        }
+        
+        function handleCommentEnter(e) {
+            if (e.key === 'Enter') {
+                const submitBtn = e.target.closest('.add-comment').querySelector('.comment-submit');
+                submitBtn.click();
+            }
+        }
+        
+        // Upload de photo
+        function setupUpload() {
+            const uploadBtn = document.getElementById('uploadBtn');
+            const fileInput = document.getElementById('fileInput');
+            
+            uploadBtn.addEventListener('click', () => {
+                if (!currentUser) {
+                    alert('Connectez-vous pour publier !');
+                    return;
+                }
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const caption = prompt("Légende de votre photo :", "");
+                if (caption === null) return;
+                
+                const result = await API.uploadPost(file, caption);
+                if (result.success) {
+                    posts.unshift(result.post);
+                    if (currentView === 'feed') renderFeed();
+                    alert('Photo publiée ! ✨');
+                }
+                fileInput.value = '';
+            });
+        }
+        
+        // Modal image
+        window.openImageModal = (src) => {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = src;
+        };
+        
+        document.querySelector('.modal-close').addEventListener('click', () => {
+            document.getElementById('imageModal').classList.remove('active');
+        });
+        
+        // Navigation
+        function setupNavigation() {
+            document.getElementById('homeLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                currentView = 'feed';
+                document.getElementById('feed').style.display = 'block';
+                document.getElementById('profile').style.display = 'none';
+                document.getElementById('explore').style.display = 'none';
+                renderFeed();
+            });
+            
+            document.getElementById('exploreLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                currentView = 'explore';
+                document.getElementById('feed').style.display = 'none';
+                document.getElementById('profile').style.display = 'none';
+                document.getElementById('explore').style.display = 'block';
+                document.getElementById('explore').innerHTML = '<div class="post-card" style="text-align: center; padding: 40px;">🔍 Explore - Découvrez de nouveaux contenus (bientôt disponible)</div>';
+            });
+            
+            document.getElementById('profileLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!currentUser) {
+                    showAuth();
+                    return;
+                }
+                currentView = 'profile';
+                document.getElementById('feed').style.display = 'none';
+                document.getElementById('explore').style.display = 'none';
+                document.getElementById('profile').style.display = 'block';
+                document.getElementById('profile').innerHTML = `
+                    <div class="post-card" style="text-align: center; padding: 40px;">
+                        <h3>👤 ${currentUser.username}</h3>
+                        <p>${currentUser.email || ''}</p>
+                        <p style="margin-top: 16px;">📸 ${posts.filter(p => p.userId === currentUser.id).length} publications</p>
+                        <button id="logoutProfileBtn" style="margin-top: 20px; padding: 10px 20px; background: var(--floy-danger); color: white; border: none; border-radius: 8px; cursor: pointer;">Déconnexion</button>
+                    </div>
+                `;
+                document.getElementById('logoutProfileBtn')?.addEventListener('click', logout);
+            });
+            
+            document.getElementById('logoutLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        }
+        
+        // Auth
+        function showAuth() {
+            document.getElementById('feed').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
+            document.getElementById('explore').style.display = 'none';
+            document.getElementById('auth').style.display = 'block';
+        }
+        
+        function setupAuth() {
+            document.getElementById('doLogin').addEventListener('click', async () => {
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                const result = await API.login(username, password);
+                if (result.success) {
+                    currentUser = result.user;
+                    localStorage.setItem('floy_user', JSON.stringify(currentUser));
+                    document.getElementById('auth').style.display = 'none';
+                    document.getElementById('logoutLink').style.display = 'inline';
+                    renderFeed();
+                    document.getElementById('feed').style.display = 'block';
+                } else {
+                    alert('Login échoué');
+                }
+            });
+            
+            document.getElementById('doRegister').addEventListener('click', async () => {
+                const username = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const result = await API.register(username, email, password);
+                if (result.success) {
+                    currentUser = result.user;
+                    localStorage.setItem('floy_user', JSON.stringify(currentUser));
+                    document.getElementById('auth').style.display = 'none';
+                    document.getElementById('logoutLink').style.display = 'inline';
+                    renderFeed();
+                    document.getElementById('feed').style.display = 'block';
+                } else {
+                    alert('Inscription échouée');
+                }
+            });
+            
+            document.getElementById('showRegister').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+            });
+            
+            document.getElementById('showLogin').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+            });
+        }
+        
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('floy_user');
+            document.getElementById('logoutLink').style.display = 'none';
+            showAuth();
+        }
+        
+        // Utilitaires
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            if (diff < 60) return 'à l\'instant';
+            if (diff < 3600) return `${Math.floor(diff / 60)} min`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} h`;
+            return `${Math.floor(diff / 86400)} j`;
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Initialisation
+        async function init() {
+            const savedUser = localStorage.getItem('floy_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('logoutLink').style.display = 'inline';
+                await renderFeed();
+            } else {
+                showAuth();
+            }
+            setupNavigation();
+            setupAuth();
+            setupUpload();
+        }
+        
+        init();
     </script>
 </body>
 </html>
