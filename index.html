@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Floy - Partagez vos moments</title>
     <style>
-        /* ==================== RESET & BASE ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -16,10 +15,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #000000;
             color: #ffffff;
-            overflow-x: hidden;
         }
 
-        /* ==================== LAYOUT PRINCIPAL ==================== */
         .layout {
             display: flex;
             min-height: 100vh;
@@ -27,7 +24,7 @@
             margin: 0 auto;
         }
 
-        /* ==================== SIDEBAR GAUCHE (INSTAGRAM STYLE) ==================== */
+        /* Sidebar */
         .sidebar {
             width: 244px;
             position: fixed;
@@ -98,17 +95,12 @@
             stroke-width: 1.5;
         }
 
-        .nav-item.active svg {
-            stroke: #FF6B35;
-        }
-
         .sidebar-footer {
             margin-top: auto;
             padding-top: 20px;
             border-top: 1px solid #262626;
         }
 
-        /* Badges pour notifications et messages */
         .notif-badge, .msg-badge {
             position: absolute;
             top: -5px;
@@ -123,7 +115,6 @@
             text-align: center;
         }
 
-        /* ==================== MAIN CONTENT ==================== */
         .main-content {
             margin-left: 244px;
             flex: 1;
@@ -131,7 +122,7 @@
             padding: 0 20px;
         }
 
-        /* ==================== STORIES (Ronds Instagram) ==================== */
+        /* Stories */
         .stories-container {
             display: flex;
             gap: 16px;
@@ -215,7 +206,7 @@
             text-overflow: ellipsis;
         }
 
-        /* ==================== POST CARD ==================== */
+        /* Post */
         .post {
             margin-bottom: 20px;
             background: #000000;
@@ -248,12 +239,6 @@
             font-weight: bold;
             font-size: 14px;
             overflow: hidden;
-        }
-
-        .post-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .post-username {
@@ -395,7 +380,7 @@
             opacity: 1;
         }
 
-        /* ==================== SIDEBAR DROITE (Suggestions) ==================== */
+        /* Right sidebar */
         .right-sidebar {
             width: 320px;
             position: fixed;
@@ -425,12 +410,6 @@
             font-weight: bold;
             font-size: 18px;
             overflow: hidden;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .user-info .username {
@@ -499,7 +478,7 @@
             margin-left: auto;
         }
 
-        /* ==================== MODAL UPLOAD ==================== */
+        /* Modal Upload */
         .modal-upload {
             position: fixed;
             top: 0;
@@ -538,27 +517,6 @@
 
         .modal-upload-body {
             padding: 20px;
-        }
-
-        .upload-type-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .upload-type-btn {
-            flex: 1;
-            background: #1a1a1a;
-            border: 1px solid #262626;
-            padding: 10px;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .upload-type-btn.active {
-            background: #FF6B35;
-            border-color: #FF6B35;
         }
 
         .upload-area {
@@ -616,7 +574,7 @@
             cursor: pointer;
         }
 
-        /* ==================== MODAL COMMENTAIRES ==================== */
+        /* Modal Commentaires */
         .comments-modal {
             position: fixed;
             top: 0;
@@ -718,95 +676,12 @@
             cursor: pointer;
         }
 
-        /* ==================== MODAL NOTIFICATIONS ==================== */
-        .notifications-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 3500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notifications-modal-content {
-            background: #000;
-            border-radius: 16px;
-            width: 450px;
-            max-width: 90%;
-            max-height: 80%;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #262626;
-        }
-
-        .notifications-modal-header {
-            padding: 16px;
-            border-bottom: 1px solid #262626;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .notifications-modal-header button {
-            background: none;
-            border: none;
-            color: #FF6B35;
-            cursor: pointer;
-        }
-
-        .notifications-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .notification-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid #1a1a1a;
-        }
-
-        .notification-item.unread {
-            background: rgba(255,107,53,0.1);
-        }
-
-        .notif-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #FF6B35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notif-content {
-            flex: 1;
-        }
-
-        .notif-message {
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .notif-time {
-            font-size: 11px;
-            color: #8e8e8e;
-        }
-
-        /* ==================== LOADER ==================== */
         .loader {
             text-align: center;
             padding: 60px;
             color: #8e8e8e;
         }
 
-        /* ==================== RESPONSIVE ==================== */
         @media (max-width: 1260px) {
             .right-sidebar { display: none; }
             .main-content { max-width: 100%; }
@@ -823,23 +698,16 @@
             .main-content { margin-left: 0; padding: 0 12px; }
         }
 
-        /* ==================== ANIMATIONS ==================== */
         @keyframes heartExplode {
-            0% { transform: scale(0.5); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        @keyframes highlightPost {
-            0% { background: rgba(255,107,53,0.2); }
-            100% { background: transparent; }
+            0% { transform: scale(0.5) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(-15deg); opacity: 1; }
+            100% { transform: scale(2.5) rotate(15deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
     <div class="layout">
-        
-        <!-- ==================== SIDEBAR GAUCHE ==================== -->
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="logo">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.5">
@@ -847,7 +715,6 @@
                 </svg>
                 <span class="logo-text">Floy</span>
             </div>
-
             <nav class="sidebar-nav">
                 <div class="nav-item active" data-page="feed">
                     <svg viewBox="0 0 24 24"><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/></svg>
@@ -878,7 +745,6 @@
                     <span>Profil</span>
                 </div>
             </nav>
-
             <div class="sidebar-footer">
                 <div class="nav-item" data-page="settings">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/></svg>
@@ -887,13 +753,13 @@
             </div>
         </aside>
 
-        <!-- ==================== MAIN CONTENT ==================== -->
+        <!-- MAIN CONTENT -->
         <main class="main-content">
             <div class="stories-container" id="stories"></div>
             <div id="feed-container"></div>
         </main>
 
-        <!-- ==================== SIDEBAR DROITE ==================== -->
+        <!-- RIGHT SIDEBAR -->
         <aside class="right-sidebar">
             <div class="current-user" id="currentUserSidebar" onclick="goToProfile()">
                 <div class="user-avatar" id="sidebarAvatar">F</div>
@@ -910,24 +776,21 @@
         </aside>
     </div>
 
-    <!-- ==================== SCRIPT PRINCIPAL ==================== -->
     <script>
-        // ==================== DONNÉES GLOBALES ====================
+        // ==================== DONNÉES ====================
         let currentUser = {
             id: 1,
             username: "floy_user",
             fullname: "Floy Creator",
             avatar: "F",
-            avatarUrl: null,
             followers: 128,
             following: 94
         };
         
         let posts = [];
         let notifications = [];
-        let conversations = [];
 
-        // ==================== CHARGEMENT DONNÉES ====================
+        // ==================== CHARGEMENT ====================
         function loadData() {
             const savedUser = localStorage.getItem('floy_user');
             if (savedUser) {
@@ -939,127 +802,49 @@
                 posts = JSON.parse(savedPosts);
             } else {
                 posts = [
-                    { id: 1, userId: 1, username: "floy_user", avatar: "F", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=1", caption: "Bienvenue sur Floy ! 🔥", likes: 124, liked: false, comments: [{ username: "visiteur", text: "Super !", avatar: "V" }], timestamp: Date.now() - 3600000 },
+                    { id: 1, userId: 1, username: "floy_user", avatar: "F", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=1", caption: "Bienvenue sur Floy ! 🔥", likes: 124, liked: false, comments: [], timestamp: Date.now() - 3600000 },
                     { id: 2, userId: 2, username: "artiste_orange", avatar: "A", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=2", caption: "L'orange et le noir, un duo parfait !", likes: 89, liked: false, comments: [], timestamp: Date.now() - 7200000 }
                 ];
                 localStorage.setItem('floy_posts', JSON.stringify(posts));
-            }
-            
-            const savedNotifs = localStorage.getItem('floy_notifications');
-            if (savedNotifs) {
-                notifications = JSON.parse(savedNotifs);
             }
             
             updateSidebar();
         }
 
         function updateSidebar() {
-            const avatarEl = document.getElementById('sidebarAvatar');
-            if (currentUser.avatarUrl) {
-                avatarEl.innerHTML = `<img src="${currentUser.avatarUrl}">`;
-            } else {
-                avatarEl.textContent = currentUser.avatar || "F";
-            }
-            document.getElementById('sidebarUsername').textContent = currentUser.username;
-            document.getElementById('sidebarName').textContent = currentUser.fullname;
+            document.getElementById('sidebarAvatar').innerHTML = currentUser.avatar;
+            document.getElementById('sidebarUsername').innerHTML = currentUser.username;
+            document.getElementById('sidebarName').innerHTML = currentUser.fullname;
         }
 
         // ==================== STORIES ====================
         let stories = [];
 
-        function loadStories() {
-            const saved = localStorage.getItem('floy_stories');
-            if (saved) {
-                stories = JSON.parse(saved);
-                stories = stories.filter(s => Date.now() - s.timestamp < 24 * 60 * 60 * 1000);
-            }
-        }
-
         function renderStories() {
             const container = document.getElementById('stories');
             if (!container) return;
             
-            loadStories();
-            const userStories = stories.filter(s => s.userId === currentUser.id);
-            const otherUsers = getUniqueStoryUsers();
-            
-            let html = `
-                <div class="story-ring" onclick="openCreateStoryModal()">
-                    <div class="story-avatar ${userStories.length > 0 ? 'has-story' : ''}">
-                        <div class="story-avatar-inner">
-                            ${currentUser.avatarUrl ? `<img src="${currentUser.avatarUrl}">` : (currentUser.avatar || '📸')}
-                        </div>
+            container.innerHTML = `
+                <div class="story-ring" onclick="alert('📸 Créer une story - Bientôt disponible')">
+                    <div class="story-avatar">
+                        <div class="story-avatar-inner">📸</div>
                         <div class="story-plus-icon">+</div>
                     </div>
                     <div class="story-username">Votre story</div>
                 </div>
-            `;
-            
-            otherUsers.forEach(user => {
-                html += `
-                    <div class="story-ring" onclick="viewUserStories(${user.id})">
-                        <div class="story-avatar has-story">
-                            <div class="story-avatar-inner">
-                                ${user.avatarUrl ? `<img src="${user.avatarUrl}">` : (user.avatar || user.username.charAt(0))}
-                            </div>
-                        </div>
-                        <div class="story-username">${user.username}</div>
+                <div class="story-ring" onclick="alert('📖 Story de artiste_orange')">
+                    <div class="story-avatar has-story">
+                        <div class="story-avatar-inner">A</div>
                     </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function getUniqueStoryUsers() {
-            const users = new Map();
-            stories.forEach(story => {
-                if (story.userId !== currentUser.id && !users.has(story.userId)) {
-                    users.set(story.userId, {
-                        id: story.userId,
-                        username: story.username,
-                        avatar: story.avatar,
-                        avatarUrl: story.avatarUrl
-                    });
-                }
-            });
-            return Array.from(users.values());
-        }
-
-        function openCreateStoryModal() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*,video/*';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        const newStory = {
-                            id: Date.now(),
-                            userId: currentUser.id,
-                            username: currentUser.username,
-                            avatar: currentUser.avatar,
-                            avatarUrl: currentUser.avatarUrl,
-                            type: file.type.startsWith('image') ? 'photo' : 'video',
-                            mediaUrl: ev.target.result,
-                            timestamp: Date.now()
-                        };
-                        stories.push(newStory);
-                        localStorage.setItem('floy_stories', JSON.stringify(stories));
-                        renderStories();
-                        alert("📸 Story publiée !");
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        }
-
-        function viewUserStories(userId) {
-            const userStories = stories.filter(s => s.userId === userId);
-            if (userStories.length === 0) return;
-            alert(`📖 ${userStories.length} story(s) à voir (mode plein écran bientôt)`);
+                    <div class="story-username">artiste_orange</div>
+                </div>
+                <div class="story-ring" onclick="alert('📖 Story de photographe')">
+                    <div class="story-avatar has-story">
+                        <div class="story-avatar-inner">P</div>
+                    </div>
+                    <div class="story-username">photographe</div>
+                </div>
+            `;
         }
 
         // ==================== FEED ====================
@@ -1068,14 +853,14 @@
             if (!container) return;
             
             if (posts.length === 0) {
-                container.innerHTML = '<div class="loader">📸 Aucune publication<br><small>Soyez le premier à partager !</small></div>';
+                container.innerHTML = '<div class="loader">📸 Aucune publication</div>';
                 return;
             }
             
             const sorted = [...posts].sort((a,b) => b.timestamp - a.timestamp);
             
             container.innerHTML = sorted.map(post => `
-                <article class="post" data-post-id="${post.id}">
+                <div class="post" data-post-id="${post.id}">
                     <div class="post-header">
                         <div class="post-user" onclick="goToUserProfile(${post.userId})">
                             <div class="post-avatar">${post.avatar}</div>
@@ -1086,8 +871,8 @@
                         </button>
                     </div>
                     
-                    <div class="post-image-container" onclick="viewMedia('${post.mediaUrl}')">
-                        ${post.type === 'video' ? `<video class="post-video" src="${post.mediaUrl}" controls></video>` : `<img class="post-image" src="${post.mediaUrl}" alt="Post">`}
+                    <div class="post-image-container" onclick="window.open('${post.mediaUrl}', '_blank')">
+                        ${post.type === 'video' ? `<video class="post-video" src="${post.mediaUrl}" controls></video>` : `<img class="post-image" src="${post.mediaUrl}">`}
                     </div>
                     
                     <div class="post-actions">
@@ -1099,15 +884,15 @@
                         <button class="action-btn" onclick="openCommentsModal(${post.id})">
                             <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
                         </button>
-                        <button class="action-btn" onclick="sharePost(${post.id}, '${post.mediaUrl}', '${post.caption}')">
+                        <button class="action-btn" onclick="sharePost(${post.id})">
                             <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
                         </button>
-                        <button class="action-btn save-btn" onclick="savePost(${post.id})">
+                        <button class="action-btn save-btn" onclick="alert('🔖 Post sauvegardé')">
                             <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/></svg>
                         </button>
                     </div>
                     
-                    <div class="post-likes" id="likes-${post.id}">${formatLikes(post.likes)}</div>
+                    <div class="post-likes" id="likes-${post.id}">${post.likes} ${post.likes === 1 ? 'like' : 'likes'}</div>
                     <div class="post-caption"><strong>${post.username}</strong> ${escapeHtml(post.caption)}</div>
                     <div class="post-comments" onclick="openCommentsModal(${post.id})">${post.comments?.length === 0 ? "Soyez le premier à commenter" : `Voir les ${post.comments?.length || 0} commentaires`}</div>
                     <div class="post-time">il y a ${getTimeAgo(post.timestamp)}</div>
@@ -1116,7 +901,7 @@
                         <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Ajouter un commentaire..." onkeypress="if(event.key==='Enter') addQuickComment(${post.id})">
                         <button class="comment-post-btn" onclick="addQuickComment(${post.id})">Publier</button>
                     </div>
-                </article>
+                </div>
             `).join('');
         }
 
@@ -1146,22 +931,12 @@
                 heart.style.cssText = `position:fixed;left:${rect.left + rect.width/2 - 16}px;top:${rect.top + rect.height/2 - 16}px;font-size:32px;pointer-events:none;z-index:9999;animation:heartExplode 0.6s ease-out forwards;`;
                 document.body.appendChild(heart);
                 setTimeout(() => heart.remove(), 600);
-                
-                // Ajouter notification
-                addNotification('like', { userId: post.userId, username: post.username, postId: post.id });
             }
             
             const likesSpan = document.getElementById(`likes-${postId}`);
-            if (likesSpan) likesSpan.textContent = formatLikes(post.likes);
+            if (likesSpan) likesSpan.textContent = `${post.likes} ${post.likes === 1 ? 'like' : 'likes'}`;
             
             localStorage.setItem('floy_posts', JSON.stringify(posts));
-        }
-
-        function formatLikes(count) {
-            if (count === 0) return "0 like";
-            if (count === 1) return "1 like";
-            if (count < 1000) return `${count} likes`;
-            return `${(count/1000).toFixed(1)}k likes`;
         }
 
         // ==================== COMMENTAIRES ====================
@@ -1185,9 +960,6 @@
                     commentsDiv.textContent = `Voir les ${post.comments.length} commentaires`;
                 }
                 localStorage.setItem('floy_posts', JSON.stringify(posts));
-                
-                // Ajouter notification
-                addNotification('comment', { userId: post.userId, username: post.username, postId: post.id, commentPreview: text.substring(0, 50) });
             }
         }
 
@@ -1195,32 +967,32 @@
             const post = posts.find(p => p.id === postId);
             if (!post) return;
             
-            const modalHtml = `
-                <div id="commentsModal" class="comments-modal">
-                    <div class="comments-modal-content">
-                        <div class="comments-modal-header">
-                            <h3>Commentaires (${post.comments?.length || 0})</h3>
-                            <button onclick="this.closest('#commentsModal').remove()">&times;</button>
-                        </div>
-                        <div class="comments-list">
-                            ${post.comments?.map(c => `
-                                <div class="comment-item">
-                                    <div class="comment-avatar">${c.avatar || c.username.charAt(0)}</div>
-                                    <div class="comment-content">
-                                        <div class="comment-username">${c.username}</div>
-                                        <div class="comment-text">${escapeHtml(c.text)}</div>
-                                    </div>
+            const modal = document.createElement('div');
+            modal.className = 'comments-modal';
+            modal.innerHTML = `
+                <div class="comments-modal-content">
+                    <div class="comments-modal-header">
+                        <h3>Commentaires (${post.comments?.length || 0})</h3>
+                        <button onclick="this.closest('.comments-modal').remove()">&times;</button>
+                    </div>
+                    <div class="comments-list">
+                        ${post.comments?.map(c => `
+                            <div class="comment-item">
+                                <div class="comment-avatar">${c.avatar || c.username.charAt(0)}</div>
+                                <div class="comment-content">
+                                    <div class="comment-username">${c.username}</div>
+                                    <div class="comment-text">${escapeHtml(c.text)}</div>
                                 </div>
-                            `).join('') || '<div style="text-align:center;padding:40px;color:#8e8e8e;">Aucun commentaire</div>'}
-                        </div>
-                        <div class="comments-footer">
-                            <input type="text" id="modalCommentInput" placeholder="Ajouter un commentaire...">
-                            <button onclick="addModalComment(${postId})">Publier</button>
-                        </div>
+                            </div>
+                        `).join('') || '<div style="text-align:center;padding:40px;color:#8e8e8e;">Aucun commentaire</div>'}
+                    </div>
+                    <div class="comments-footer">
+                        <input type="text" id="modalCommentInput" placeholder="Ajouter un commentaire...">
+                        <button onclick="addModalComment(${postId})">Publier</button>
                     </div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.body.appendChild(modal);
         }
 
         function addModalComment(postId) {
@@ -1237,243 +1009,146 @@
                     avatar: currentUser.avatar
                 });
                 localStorage.setItem('floy_posts', JSON.stringify(posts));
-                document.getElementById('commentsModal')?.remove();
+                document.querySelector('.comments-modal')?.remove();
                 renderFeed();
             }
         }
 
         // ==================== PARTAGE ====================
-        function sharePost(postId, mediaUrl, caption) {
-            const modalHtml = `
-                <div id="shareModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:5000;display:flex;align-items:center;justify-content:center;">
-                    <div style="background:#000;border-radius:16px;width:350px;border:1px solid #262626;">
-                        <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
-                            <h3>Partager</h3>
-                            <button onclick="this.closest('#shareModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;">&times;</button>
-                        </div>
-                        <div style="padding:16px;">
-                            <button onclick="copyLink()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;margin-bottom:8px;cursor:pointer;">🔗 Copier le lien</button>
-                            <button onclick="shareWhatsApp()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;margin-bottom:8px;cursor:pointer;">💬 WhatsApp</button>
-                            <button onclick="shareTwitter()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;">🐦 X (Twitter)</button>
-                        </div>
+        function sharePost(postId) {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:5000;display:flex;align-items:center;justify-content:center;';
+            modal.innerHTML = `
+                <div style="background:#000;border-radius:16px;width:350px;border:1px solid #262626;">
+                    <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
+                        <h3>Partager</h3>
+                        <button onclick="this.closest('div').parentElement.remove()" style="background:none;border:none;color:#fff;font-size:24px;">&times;</button>
+                    </div>
+                    <div style="padding:16px;">
+                        <button onclick="navigator.clipboard.writeText(window.location.href); alert('Lien copié !'); this.closest('div').parentElement.remove()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;margin-bottom:8px;cursor:pointer;">🔗 Copier le lien</button>
+                        <button onclick="window.open('https://wa.me/?text='+encodeURIComponent('Regarde ce post sur Floy ! '+window.location.href),'_blank'); this.closest('div').parentElement.remove()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;margin-bottom:8px;cursor:pointer;">💬 WhatsApp</button>
+                        <button onclick="window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent('Regarde ce post sur Floy ! 🔥'),'_blank'); this.closest('div').parentElement.remove()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;">🐦 X (Twitter)</button>
                     </div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Lien copié !");
-            document.getElementById('shareModal')?.remove();
-        }
-
-        function shareWhatsApp() {
-            window.open(`https://wa.me/?text=${encodeURIComponent("Regarde ce post sur Floy ! " + window.location.href)}`, '_blank');
-            document.getElementById('shareModal')?.remove();
-        }
-
-        function shareTwitter() {
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent("Regarde ce post sur Floy ! 🔥")}`, '_blank');
-            document.getElementById('shareModal')?.remove();
+            document.body.appendChild(modal);
         }
 
         // ==================== UPLOAD ====================
-        let selectedFile = null;
-        let selectedType = 'photo';
-
         function openUploadModal() {
-            const modalHtml = `
-                <div id="uploadModal" class="modal-upload">
-                    <div class="modal-upload-content">
-                        <div class="modal-upload-header">
-                            <h3>Créer une publication</h3>
-                            <button onclick="this.closest('#uploadModal').remove()">&times;</button>
+            let selectedFile = null;
+            let selectedType = 'photo';
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-upload';
+            modal.innerHTML = `
+                <div class="modal-upload-content">
+                    <div class="modal-upload-header">
+                        <h3>Créer une publication</h3>
+                        <button onclick="this.closest('.modal-upload').remove()">&times;</button>
+                    </div>
+                    <div class="modal-upload-body">
+                        <div id="uploadArea" style="text-align:center;padding:40px;border:2px dashed #262626;border-radius:12px;cursor:pointer;" onclick="document.getElementById('uploadFileInput').click()">
+                            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
+                            </svg>
+                            <p>Sélectionnez une photo</p>
+                            <button>Parcourir</button>
                         </div>
-                        <div class="modal-upload-body">
-                            <div class="upload-type-selector">
-                                <button class="upload-type-btn active" onclick="selectUploadType('photo')">📷 Photo</button>
-                                <button class="upload-type-btn" onclick="selectUploadType('video')">🎬 Vidéo</button>
-                            </div>
-                            <div id="uploadArea" class="upload-area" onclick="document.getElementById('uploadFileInput').click()">
-                                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
-                                </svg>
-                                <p>Sélectionnez une ${selectedType === 'photo' ? 'photo' : 'vidéo'}</p>
-                                <button>Parcourir</button>
-                            </div>
-                            <div id="uploadPreview" style="display:none;">
-                                <img id="previewImage" style="max-width:100%;max-height:250px;border-radius:12px;margin-bottom:16px;">
-                                <video id="previewVideo" style="max-width:100%;max-height:250px;border-radius:12px;margin-bottom:16px;" controls></video>
-                                <textarea id="uploadCaption" placeholder="Écrivez une légende..." rows="3"></textarea>
-                                <button class="publish-btn" onclick="publishPost()">Publier</button>
-                            </div>
-                            <input type="file" id="uploadFileInput" accept="${selectedType === 'photo' ? 'image/*' : 'video/*'}" style="display:none;">
+                        <div id="uploadPreview" style="display:none;">
+                            <img id="previewImage" style="max-width:100%;max-height:250px;border-radius:12px;margin-bottom:16px;">
+                            <textarea id="uploadCaption" placeholder="Écrivez une légende..." rows="3" style="width:100%;background:#1a1a1a;border:1px solid #262626;border-radius:8px;padding:12px;color:#fff;margin-bottom:16px;resize:none;"></textarea>
+                            <button id="publishBtn" style="width:100%;background:#FF6B35;border:none;padding:12px;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;">Publier</button>
                         </div>
+                        <input type="file" id="uploadFileInput" accept="image/*" style="display:none;">
                     </div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.body.appendChild(modal);
             
             document.getElementById('uploadFileInput').onchange = (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = (ev) => {
-                        if (selectedType === 'photo') {
-                            document.getElementById('previewImage').src = ev.target.result;
-                            document.getElementById('previewImage').style.display = 'block';
-                            document.getElementById('previewVideo').style.display = 'none';
-                        } else {
-                            document.getElementById('previewVideo').src = ev.target.result;
-                            document.getElementById('previewVideo').style.display = 'block';
-                            document.getElementById('previewImage').style.display = 'none';
-                        }
+                        document.getElementById('previewImage').src = ev.target.result;
                         document.getElementById('uploadArea').style.display = 'none';
                         document.getElementById('uploadPreview').style.display = 'block';
-                        selectedFile = { file, dataUrl: ev.target.result, type: selectedType };
+                        selectedFile = { file, dataUrl: ev.target.result };
                     };
                     reader.readAsDataURL(file);
                 }
             };
-        }
-
-        function selectUploadType(type) {
-            selectedType = type;
-            document.querySelectorAll('.upload-type-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.upload-type-btn:contains(${type === 'photo' ? '📷' : '🎬'})`).classList.add('active');
-        }
-
-        function publishPost() {
-            if (!selectedFile) { alert("Sélectionnez un média"); return; }
             
-            const caption = document.getElementById('uploadCaption').value;
-            const newPost = {
-                id: Date.now(),
-                userId: currentUser.id,
-                username: currentUser.username,
-                avatar: currentUser.avatar,
-                type: selectedType,
-                mediaUrl: selectedFile.dataUrl,
-                caption: caption || '',
-                likes: 0,
-                liked: false,
-                comments: [],
-                timestamp: Date.now()
+            document.getElementById('publishBtn').onclick = () => {
+                if (!selectedFile) { alert("Sélectionnez un fichier"); return; }
+                const caption = document.getElementById('uploadCaption').value;
+                const newPost = {
+                    id: Date.now(),
+                    userId: currentUser.id,
+                    username: currentUser.username,
+                    avatar: currentUser.avatar,
+                    type: 'photo',
+                    mediaUrl: selectedFile.dataUrl,
+                    caption: caption || '',
+                    likes: 0,
+                    liked: false,
+                    comments: [],
+                    timestamp: Date.now()
+                };
+                posts.unshift(newPost);
+                localStorage.setItem('floy_posts', JSON.stringify(posts));
+                modal.remove();
+                renderFeed();
+                alert("✅ Publication envoyée !");
             };
-            
-            posts.unshift(newPost);
-            localStorage.setItem('floy_posts', JSON.stringify(posts));
-            document.getElementById('uploadModal')?.remove();
-            renderFeed();
-            alert("✅ Publication envoyée !");
         }
 
         // ==================== NOTIFICATIONS ====================
-        function addNotification(type, data) {
-            const newNotif = {
-                id: Date.now(),
-                type: type,
-                username: data.username,
-                message: type === 'like' ? `${data.username} a aimé votre publication` : `${data.username} a commenté : "${data.commentPreview || ''}"`,
-                timestamp: Date.now(),
-                read: false
-            };
-            notifications.unshift(newNotif);
-            localStorage.setItem('floy_notifications', JSON.stringify(notifications));
-            updateNotifBadge();
-        }
-
-        function updateNotifBadge() {
-            const unreadCount = notifications.filter(n => !n.read).length;
-            const notifIcon = document.querySelector('.nav-item[data-page="notifications"]');
-            if (notifIcon) {
-                let badge = notifIcon.querySelector('.notif-badge');
-                if (unreadCount > 0) {
-                    if (!badge) {
-                        badge = document.createElement('span');
-                        badge.className = 'notif-badge';
-                        notifIcon.appendChild(badge);
-                    }
-                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-                } else if (badge) {
-                    badge.remove();
-                }
-            }
-        }
-
         function openNotificationsModal() {
-            const modalHtml = `
-                <div id="notifModal" class="notifications-modal">
-                    <div class="notifications-modal-content">
-                        <div class="notifications-modal-header">
-                            <h3>Notifications</h3>
-                            <button onclick="markAllNotifsRead(); this.closest('#notifModal').remove()">Tout marquer lu</button>
-                        </div>
-                        <div class="notifications-list">
-                            ${notifications.length === 0 ? '<div style="text-align:center;padding:40px;color:#8e8e8e;">Aucune notification</div>' : 
-                                notifications.map(n => `
-                                    <div class="notification-item ${!n.read ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
-                                        <div class="notif-avatar">${n.username.charAt(0)}</div>
-                                        <div class="notif-content">
-                                            <div class="notif-message">${n.message}</div>
-                                            <div class="notif-time">${getTimeAgo(n.timestamp)}</div>
-                                        </div>
-                                    </div>
-                                `).join('')
-                            }
-                        </div>
+            const modal = document.createElement('div');
+            modal.className = 'comments-modal';
+            modal.innerHTML = `
+                <div class="comments-modal-content">
+                    <div class="comments-modal-header">
+                        <h3>Notifications</h3>
+                        <button onclick="this.closest('.comments-modal').remove()">&times;</button>
+                    </div>
+                    <div class="comments-list" style="text-align:center;padding:40px;color:#8e8e8e;">
+                        🔔 Aucune notification pour le moment
                     </div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        }
-
-        function markAllNotifsRead() {
-            notifications.forEach(n => n.read = true);
-            localStorage.setItem('floy_notifications', JSON.stringify(notifications));
-            updateNotifBadge();
-        }
-
-        function markNotifRead(id) {
-            const notif = notifications.find(n => n.id === id);
-            if (notif) notif.read = true;
-            localStorage.setItem('floy_notifications', JSON.stringify(notifications));
-            updateNotifBadge();
+            document.body.appendChild(modal);
         }
 
         // ==================== NAVIGATION ====================
         function goToProfile() { window.location.href = 'profil.html'; }
         function goToUserProfile(id) { if(id === currentUser.id) goToProfile(); else alert(`👤 Profil utilisateur #${id}`); }
-        function viewMedia(url) { window.open(url, '_blank'); }
-        function savePost(id) { alert(`🔖 Post ${id} sauvegardé`); }
-        
-        function showPostOptions(id) {
-            if (confirm('Supprimer cette publication ?')) {
-                posts = posts.filter(p => p.id !== id);
-                localStorage.setItem('floy_posts', JSON.stringify(posts));
-                renderFeed();
-            }
-        }
+        function showPostOptions(id) { if(confirm('Supprimer cette publication ?')) { posts = posts.filter(p => p.id !== id); localStorage.setItem('floy_posts', JSON.stringify(posts)); renderFeed(); } }
 
         // ==================== SUGGESTIONS ====================
         function setupSuggestions() {
-            const suggestions = [
-                { username: "artiste_orange", avatar: "A", followers: "12k" },
-                { username: "photographe", avatar: "P", followers: "8.5k" }
-            ];
             const container = document.getElementById('suggestionsList');
             if (container) {
-                container.innerHTML = suggestions.map(s => `
-                    <div class="suggestion-item" onclick="alert('Profil de ${s.username}')">
-                        <div class="suggestion-avatar">${s.avatar}</div>
+                container.innerHTML = `
+                    <div class="suggestion-item" onclick="alert('Profil de artiste_orange')">
+                        <div class="suggestion-avatar">A</div>
                         <div class="suggestion-info">
-                            <div class="username">${s.username}</div>
-                            <div class="followers">${s.followers} abonnés</div>
+                            <div class="username">artiste_orange</div>
+                            <div class="followers">12k abonnés</div>
                         </div>
                         <button class="follow-btn">Suivre</button>
                     </div>
-                `).join('');
+                    <div class="suggestion-item" onclick="alert('Profil de photographe')">
+                        <div class="suggestion-avatar">P</div>
+                        <div class="suggestion-info">
+                            <div class="username">photographe</div>
+                            <div class="followers">8.5k abonnés</div>
+                        </div>
+                        <button class="follow-btn">Suivre</button>
+                    </div>
+                `;
             }
         }
 
@@ -1487,28 +1162,15 @@
                     navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
                     
-                    if (page === 'profile') {
-                        window.location.href = 'profil.html';
-                    } else if (page === 'settings') {
-                        window.location.href = 'settings.html';
-                    } else if (page === 'explore') {
-                        window.location.href = 'explore.html';
-                    } else if (page === 'reels') {
-                        window.location.href = 'reels.html';
-                    } else if (page === 'messages') {
-                        window.location.href = 'messages.html';
-                    } else if (page === 'create') {
-                        openUploadModal();
-                        item.classList.remove('active');
-                        document.querySelector('.nav-item[data-page="feed"]').classList.add('active');
-                    } else if (page === 'notifications') {
-                        openNotificationsModal();
-                    } else if (page === 'feed') {
-                        renderFeed();
-                        renderStories();
-                    } else {
-                        alert(`📱 Page ${page} - Bientôt disponible`);
-                    }
+                    if (page === 'profile') window.location.href = 'profil.html';
+                    else if (page === 'settings') window.location.href = 'settings.html';
+                    else if (page === 'explore') window.location.href = 'explore.html';
+                    else if (page === 'reels') window.location.href = 'reels.html';
+                    else if (page === 'messages') window.location.href = 'messages.html';
+                    else if (page === 'create') { openUploadModal(); item.classList.remove('active'); document.querySelector('.nav-item[data-page="feed"]').classList.add('active'); }
+                    else if (page === 'notifications') openNotificationsModal();
+                    else if (page === 'feed') { renderFeed(); renderStories(); }
+                    else alert(`📱 Page ${page} - Bientôt disponible`);
                 });
             });
         }
@@ -1527,18 +1189,16 @@
             return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
         }
 
-        // ==================== INITIALISATION ====================
+        // ==================== INIT ====================
         function init() {
             loadData();
             renderFeed();
             renderStories();
             setupSuggestions();
             setupNavigation();
-            updateNotifBadge();
         }
         
         init();
-        window.renderFeed = renderFeed;
     </script>
 </body>
 </html>
