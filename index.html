@@ -18,7 +18,6 @@
             color: #FFFFFF;
         }
 
-        /* ===== THEME ORANGE & NOIR ===== */
         :root {
             --floy-orange: #FF6B35;
             --floy-orange-dark: #E55A2B;
@@ -27,7 +26,7 @@
             --floy-gray-light: #8e8e8e;
         }
 
-        /* ===== SIDEBAR GAUCHE ===== */
+        /* Sidebar */
         .sidebar {
             width: 244px;
             background: #000000;
@@ -36,13 +35,13 @@
             height: 100vh;
             left: 0;
             top: 0;
-            padding: 20px 12px 20px 12px;
+            padding: 20px 12px;
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
-            padding: 25px 12px 16px 12px;
+            padding: 25px 12px 16px;
             margin-bottom: 20px;
         }
 
@@ -63,7 +62,6 @@
             cursor: pointer;
             transition: all 0.2s;
             color: #f5f5f5;
-            font-size: 16px;
         }
 
         .nav-item:hover {
@@ -75,21 +73,26 @@
             color: #FF6B35;
         }
 
-        .nav-item i, .nav-item svg {
+        .nav-item svg {
             width: 24px;
             height: 24px;
-            font-size: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
         }
 
-        /* ===== CONTENU PRINCIPAL ===== */
+        .nav-item.active svg {
+            stroke: #FF6B35;
+        }
+
+        /* Main content */
         .main-content {
             margin-left: 244px;
             max-width: 630px;
             margin-right: auto;
-            padding: 20px 20px 0 20px;
+            padding: 20px;
         }
 
-        /* ===== HEADER (style Instagram) ===== */
         .header {
             position: sticky;
             top: 0;
@@ -103,10 +106,9 @@
         .header-title {
             font-size: 20px;
             font-weight: 600;
-            padding: 8px 0;
         }
 
-        /* ===== POST CARD (exactement comme Instagram) ===== */
+        /* Post card */
         .post {
             margin-bottom: 20px;
             background: #000000;
@@ -114,7 +116,6 @@
             border-radius: 8px;
         }
 
-        /* En-tête du post */
         .post-header {
             display: flex;
             align-items: center;
@@ -145,11 +146,14 @@
             font-size: 14px;
         }
 
-        .post-more {
+        .post-more svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #f5f5f5;
             cursor: pointer;
         }
 
-        /* Image du post */
         .post-image {
             width: 100%;
             background: #1a1a1a;
@@ -160,7 +164,7 @@
             color: #555;
         }
 
-        /* ===== ACTIONS DU POST (BOUTONS STYLE INSTAGRAM) ===== */
+        /* Actions */
         .post-actions {
             display: flex;
             align-items: center;
@@ -188,28 +192,24 @@
             height: 24px;
             fill: none;
             stroke: #f5f5f5;
-            stroke-width: 2;
+            stroke-width: 1.5;
         }
 
-        /* Like actif (rempli) */
         .action-icon.liked svg {
             fill: #FF6B35;
             stroke: #FF6B35;
         }
 
-        /* Bouton Save (à droite) */
         .post-actions-right {
             margin-left: auto;
         }
 
-        /* Compteur de likes */
         .post-likes {
             font-weight: 600;
             font-size: 14px;
             padding: 0 16px 8px;
         }
 
-        /* Légende */
         .post-caption {
             padding: 0 16px 8px;
             font-size: 14px;
@@ -220,22 +220,19 @@
             margin-right: 6px;
         }
 
-        /* Commentaires */
         .post-comments {
             padding: 0 16px 4px;
             font-size: 14px;
             color: #8e8e8e;
+            cursor: pointer;
         }
 
-        /* Timestamp */
         .post-time {
             padding: 4px 16px 12px;
             font-size: 10px;
             color: #8e8e8e;
-            letter-spacing: 0.2px;
         }
 
-        /* Formulaire commentaire */
         .comment-form {
             display: flex;
             align-items: center;
@@ -271,7 +268,7 @@
             opacity: 1;
         }
 
-        /* ===== SECTIONS ===== */
+        /* Sections */
         .section {
             display: none;
         }
@@ -280,14 +277,70 @@
             display: block;
         }
 
-        /* ===== PLACEHOLDER ===== */
-        .placeholder {
-            text-align: center;
-            padding: 60px 20px;
-            color: #8e8e8e;
+        /* Profil */
+        .profile-header {
+            background: #111;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #262626;
         }
 
-        /* ===== FLOATING UPLOAD ===== */
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 32px;
+            margin: 20px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .stat-label {
+            color: #8e8e8e;
+            font-size: 14px;
+        }
+
+        .profile-bio {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #262626;
+        }
+
+        .profile-posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .profile-post-item {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 12px;
+        }
+
+        /* Floating upload */
         .floating-upload {
             position: fixed;
             bottom: 30px;
@@ -304,11 +357,24 @@
             transition: 0.2s;
         }
 
+        .floating-upload svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #000;
+            stroke-width: 2;
+        }
+
         .floating-upload:hover {
             transform: scale(1.05);
         }
 
-        /* Responsive */
+        .placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8e8e8e;
+        }
+
         @media (max-width: 1000px) {
             .sidebar {
                 width: 72px;
@@ -328,27 +394,31 @@
         <div class="logo">
             <span class="floy-text">✨ FLOY</span>
         </div>
+        
         <div class="nav-item active" data-section="feed">
-            <svg aria-label="Accueil" fill="currentColor" viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24">
                 <path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/>
             </svg>
             <span>Accueil</span>
         </div>
+        
         <div class="nav-item" data-section="explore">
-            <svg aria-label="Explorer" fill="currentColor" viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24">
                 <path d="M10.25 3.75a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm-8.5 6.5a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0Z"/>
                 <path d="M19.53 19.53l-4.16-4.16a.75.75 0 0 1 1.06-1.06l4.16 4.16a.75.75 0 0 1-1.06 1.06Z"/>
             </svg>
             <span>Explorer</span>
         </div>
+        
         <div class="nav-item" data-section="profile">
-            <svg aria-label="Profil" fill="currentColor" viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24">
                 <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
             </svg>
             <span>Profil</span>
         </div>
+        
         <div class="nav-item" data-section="notifications">
-            <svg aria-label="Notifications" fill="currentColor" viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24">
                 <path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/>
                 <path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/>
                 <path d="M9 20.5h6"/>
@@ -362,76 +432,108 @@
             <div class="header-title">Floy</div>
         </div>
 
-        <!-- SECTION FEED -->
+        <!-- FEED -->
         <div id="feed-section" class="section active">
             <div id="feed-container"></div>
         </div>
 
-        <!-- AUTRES SECTIONS -->
+        <!-- EXPLORE -->
         <div id="explore-section" class="section">
-            <div class="placeholder">🔍 Explorez les tendances (bientôt)</div>
+            <div class="placeholder">🔍 Explorez les tendances</div>
         </div>
+
+        <!-- PROFIL (COMPLET AVEC CONFIGURATION) -->
         <div id="profile-section" class="section">
-            <div class="placeholder">👤 Votre profil (bientôt)</div>
+            <div id="profile-container"></div>
         </div>
+
+        <!-- NOTIFICATIONS -->
         <div id="notifications-section" class="section">
-            <div class="placeholder">❤️ Vos notifications (bientôt)</div>
+            <div class="placeholder">❤️ Vos notifications</div>
         </div>
     </div>
 
+    <!-- FLOATING UPLOAD -->
     <div class="floating-upload" id="uploadBtn">
-        <svg aria-label="Nouvelle publication" fill="currentColor" width="24" height="24" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24">
             <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
         </svg>
     </div>
 
     <script>
-        // ===== DONNÉES TEST =====
+        // ========== DONNÉES UTILISATEUR ==========
+        let currentUser = {
+            id: 1,
+            username: "floy_user",
+            fullName: "Floy Creator",
+            avatar: "F",
+            bio: "Créateur de Floy 🔥 Passionné de design orange et noir",
+            website: "floy.app",
+            postsCount: 3,
+            followers: 128,
+            following: 94
+        };
+
+        // ========== POSTS ==========
         let posts = [
             {
                 id: 1,
-                username: "floy_official",
+                userId: 1,
+                username: "floy_user",
                 avatar: "F",
-                imageUrl: "📷 Photo de test",
-                caption: "Bienvenue sur Floy 🔥 Le réseau social orange et noir",
+                imageUrl: "📷 Premier post sur Floy",
+                caption: "Bienvenue sur Floy ! Le réseau social orange et noir 🔥",
                 likes: 124,
                 liked: false,
-                comments: ["Superbe plateforme !", "J'adore le thème"],
+                comments: ["Superbe !", "J'adore le thème"],
                 timestamp: "2 HEURES"
             },
             {
                 id: 2,
+                userId: 2,
                 username: "artiste_orange",
                 avatar: "A",
                 imageUrl: "🎨 Création du jour",
                 caption: "L'orange et le noir, un duo parfait",
                 likes: 89,
                 liked: true,
-                comments: ["Magnifique !", "Très inspirant"],
+                comments: ["Magnifique !"],
                 timestamp: "5 HEURES"
             },
             {
                 id: 3,
+                userId: 3,
                 username: "photographe",
                 avatar: "P",
                 imageUrl: "🌅 Coucher de soleil",
                 caption: "Les couleurs chaudes",
                 likes: 234,
                 liked: false,
-                comments: ["Waouh incroyable", "Super composition"],
+                comments: ["Waouh incroyable"],
                 timestamp: "1 JOUR"
             }
         ];
 
-        // ===== SVG ICONS (style Instagram) =====
+        // ========== ICÔNES SVG POUR LES ACTIONS ==========
         const icons = {
-            like: `<svg aria-label="J'aime" fill="currentColor" viewBox="0 0 24 24"><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/></svg>`,
-            comment: `<svg aria-label="Commenter" fill="currentColor" viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>`,
-            share: `<svg aria-label="Partager" fill="currentColor" viewBox="0 0 24 24"><path d="M19.5 5.5v13a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1Z"/><path d="m16.5 7.5-5 5"/><path d="M9.5 11.5h5v5"/></svg>`,
-            save: `<svg aria-label="Enregistrer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/></svg>`
+            like: `<svg viewBox="0 0 24 24"><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/></svg>`,
+            
+            comment: `<svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>`,
+            
+            share: `<svg viewBox="0 0 24 24"><path d="M19.5 5.5v13a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1Z"/><path d="m16.5 7.5-5 5"/><path d="M9.5 11.5h5v5"/></svg>`,
+            
+            save: `<svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/></svg>`,
+            
+            more: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="5" cy="12" r="2.5"/></svg>`,
+            
+            editProfile: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.5 7.5L16.5 2.5M17 9L10 16H7V13L14 6L17 9Z"/><path d="M3 21H21M9 19L3 21L5 15"/></svg>`,
+            
+            settings: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/></svg>`,
+            
+            grid: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`
         };
 
-        // ===== RENDU D'UN POST =====
+        // ========== RENDU D'UN POST ==========
         function renderPost(post) {
             return `
                 <div class="post" data-post-id="${post.id}">
@@ -440,7 +542,7 @@
                             <div class="post-avatar">${post.avatar}</div>
                             <div class="post-username">${post.username}</div>
                         </div>
-                        <div class="post-more">•••</div>
+                        <div class="post-more">${icons.more}</div>
                     </div>
                     
                     <div class="post-image">${post.imageUrl}</div>
@@ -486,7 +588,118 @@
             `;
         }
 
-        // ===== AFFICHER LE FEED =====
+        // ========== RENDU DU PROFIL COMPLET AVEC CONFIGURATION ==========
+        function renderProfile() {
+            const userPosts = posts.filter(p => p.userId === currentUser.id);
+            
+            return `
+                <div class="profile-header">
+                    <div class="profile-avatar-large">${currentUser.avatar}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2>${currentUser.username}</h2>
+                        <button id="editProfileBtn" style="background: #1a1a1a; border: 1px solid #262626; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ${icons.editProfile} Modifier le profil
+                        </button>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <div class="stat-number">${userPosts.length}</div>
+                            <div class="stat-label">publications</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${currentUser.followers}</div>
+                            <div class="stat-label">abonnés</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${currentUser.following}</div>
+                            <div class="stat-label">abonnements</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-bio">
+                        <div style="font-weight: 600;">${currentUser.fullName}</div>
+                        <div style="font-size: 14px; margin-top: 4px;">${currentUser.bio}</div>
+                        ${currentUser.website ? `<div style="color: #FF6B35; font-size: 14px; margin-top: 4px;">🔗 ${currentUser.website}</div>` : ''}
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #262626; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 6px; padding: 12px 0; color: #FF6B35; border-bottom: 2px solid #FF6B35;">
+                        ${icons.grid}
+                        <span>Publications</span>
+                    </div>
+                </div>
+                
+                <div class="profile-posts-grid" id="profile-posts-grid">
+                    ${userPosts.length > 0 ? userPosts.map(post => `
+                        <div class="profile-post-item">📷</div>
+                    `).join('') : `
+                        <div class="placeholder" style="grid-column: span 3;">Aucune publication pour le moment</div>
+                    `}
+                </div>
+            `;
+        }
+
+        // ========== MODAL D'ÉDITION DE PROFIL ==========
+        function showEditProfileModal() {
+            const modalHtml = `
+                <div id="editModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: #111; border-radius: 16px; width: 400px; max-width: 90%; border: 1px solid #262626;">
+                        <div style="padding: 20px; border-bottom: 1px solid #262626;">
+                            <h3 style="font-size: 18px;">Modifier le profil</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Nom d'utilisateur</label>
+                            <input type="text" id="editUsername" value="${currentUser.username}" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 16px;">
+                            
+                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Nom complet</label>
+                            <input type="text" id="editFullName" value="${currentUser.fullName}" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 16px;">
+                            
+                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Bio</label>
+                            <textarea id="editBio" rows="3" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 16px;">${currentUser.bio}</textarea>
+                            
+                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Site web</label>
+                            <input type="text" id="editWebsite" value="${currentUser.website || ''}" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 24px;">
+                        </div>
+                        <div style="padding: 16px 20px; border-top: 1px solid #262626; display: flex; gap: 12px; justify-content: flex-end;">
+                            <button id="cancelEditBtn" style="background: none; border: 1px solid #262626; padding: 8px 20px; border-radius: 8px; color: white; cursor: pointer;">Annuler</button>
+                            <button id="saveEditBtn" style="background: #FF6B35; border: none; padding: 8px 20px; border-radius: 8px; color: black; font-weight: 600; cursor: pointer;">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            document.getElementById('cancelEditBtn').addEventListener('click', () => {
+                document.getElementById('editModal').remove();
+            });
+            
+            document.getElementById('saveEditBtn').addEventListener('click', () => {
+                currentUser.username = document.getElementById('editUsername').value;
+                currentUser.fullName = document.getElementById('editFullName').value;
+                currentUser.bio = document.getElementById('editBio').value;
+                currentUser.website = document.getElementById('editWebsite').value;
+                
+                document.getElementById('editModal').remove();
+                renderProfilePage();
+                renderFeed(); // Met à jour les posts avec le nouveau username
+            });
+        }
+
+        function renderProfilePage() {
+            const profileContainer = document.getElementById('profile-container');
+            if (profileContainer) {
+                profileContainer.innerHTML = renderProfile();
+                const editBtn = document.getElementById('editProfileBtn');
+                if (editBtn) {
+                    editBtn.addEventListener('click', showEditProfileModal);
+                }
+            }
+        }
+
+        // ========== FEED ==========
         function renderFeed() {
             const container = document.getElementById('feed-container');
             if (!container) return;
@@ -494,7 +707,6 @@
             attachEvents();
         }
 
-        // ===== GESTION LIKE =====
         function handleLike(postId, btn) {
             const post = posts.find(p => p.id === postId);
             if (!post) return;
@@ -507,21 +719,17 @@
                 post.likes++;
                 post.liked = true;
                 btn.classList.add('liked');
-                
-                // Animation (effet coeur qui apparaît)
                 btn.style.transform = 'scale(1.2)';
                 setTimeout(() => { btn.style.transform = ''; }, 200);
             }
             
-            // Mettre à jour l'affichage
             const likesSpan = document.getElementById(`likes-${postId}`);
             if (likesSpan) {
                 likesSpan.textContent = `${post.likes} ${post.likes === 1 ? 'like' : 'likes'}`;
             }
         }
 
-        // ===== GESTION COMMENTAIRE =====
-        function addComment(postId, input, btn) {
+        function addComment(postId, input) {
             const text = input.value.trim();
             if (!text) return;
             
@@ -536,11 +744,8 @@
             }
         }
 
-        // ===== ATTACHER LES ÉVÉNEMENTS =====
         function attachEvents() {
-            // Likes
             document.querySelectorAll('.like-btn').forEach(btn => {
-                btn.removeEventListener('click', (e) => {});
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const postId = parseInt(btn.dataset.id);
@@ -548,28 +753,25 @@
                 });
             });
             
-            // Commentaires (bouton Publier)
             document.querySelectorAll('.comment-post-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+                btn.addEventListener('click', () => {
                     const postId = parseInt(btn.dataset.id);
                     const input = document.querySelector(`.comment-input[data-id="${postId}"]`);
-                    if (input) addComment(postId, input, btn);
+                    if (input) addComment(postId, input);
                 });
             });
             
-            // Input commentaire (touche Entrée)
             document.querySelectorAll('.comment-input').forEach(input => {
                 input.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         const postId = parseInt(input.dataset.id);
-                        const btn = document.querySelector(`.comment-post-btn[data-id="${postId}"]`);
-                        if (btn) addComment(postId, input, btn);
+                        addComment(postId, input);
                     }
                 });
             });
         }
 
-        // ===== NAVIGATION =====
+        // ========== NAVIGATION ==========
         function setupNavigation() {
             const navItems = document.querySelectorAll('.nav-item');
             const sections = ['feed', 'explore', 'profile', 'notifications'];
@@ -585,22 +787,25 @@
                     });
                     const activeSection = document.getElementById(`${sectionName}-section`);
                     if (activeSection) activeSection.classList.add('active');
+                    
+                    if (sectionName === 'profile') {
+                        renderProfilePage();
+                    }
                 });
             });
         }
 
-        // ===== UPLOAD =====
         function setupUpload() {
             document.getElementById('uploadBtn').addEventListener('click', () => {
                 alert('📸 Module upload - bientôt disponible');
             });
         }
 
-        // ===== INIT =====
         function init() {
             renderFeed();
             setupNavigation();
             setupUpload();
+            renderProfilePage();
         }
         
         init();
