@@ -10,7 +10,7 @@ body {
     color: #ffffff;
 }
 
-/* ===== LAYOUT (comme Instagram) ===== */
+/* ===== LAYOUT ===== */
 .layout {
     display: flex;
     min-height: 100vh;
@@ -39,6 +39,11 @@ body {
     gap: 12px;
     padding: 25px 12px 16px;
     margin-bottom: 20px;
+}
+
+.logo svg {
+    width: 24px;
+    height: 24px;
 }
 
 .logo-text {
@@ -128,14 +133,17 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(45deg, #FF6B35, #FF9F5C);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2px;
 }
 
-.story-avatar img, .story-avatar div {
+.story-avatar.has-story {
+    background: linear-gradient(45deg, #FF6B35, #FF9F5C);
+}
+
+.story-avatar-inner {
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -143,6 +151,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 24px;
+    overflow: hidden;
+}
+
+.story-avatar-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .story-username {
@@ -150,7 +166,18 @@ body {
     color: #8e8e8e;
 }
 
-/* ===== POST (exactement Instagram) ===== */
+.create-story-btn {
+    background: #FF6B35;
+    border: none;
+    color: white;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+/* ===== POST ===== */
 .post {
     margin-bottom: 20px;
     background: #000000;
@@ -169,6 +196,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    cursor: pointer;
 }
 
 .post-avatar {
@@ -181,6 +209,13 @@ body {
     justify-content: center;
     font-weight: bold;
     font-size: 14px;
+    overflow: hidden;
+}
+
+.post-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .post-username {
@@ -205,11 +240,17 @@ body {
 .post-image-container {
     width: 100%;
     background: #1a1a1a;
+    cursor: pointer;
 }
 
 .post-image {
     width: 100%;
     display: block;
+}
+
+.post-video {
+    width: 100%;
+    max-height: 500px;
 }
 
 .post-actions {
@@ -255,6 +296,7 @@ body {
     font-weight: 600;
     font-size: 14px;
     padding: 0 16px 8px;
+    cursor: pointer;
 }
 
 .post-caption {
@@ -265,6 +307,7 @@ body {
 .post-caption strong {
     font-weight: 600;
     margin-right: 6px;
+    cursor: pointer;
 }
 
 .post-comments {
@@ -331,6 +374,7 @@ body {
     align-items: center;
     gap: 12px;
     margin-bottom: 24px;
+    cursor: pointer;
 }
 
 .user-avatar {
@@ -343,6 +387,13 @@ body {
     justify-content: center;
     font-weight: bold;
     font-size: 18px;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .user-info .username {
@@ -355,16 +406,6 @@ body {
     color: #8e8e8e;
 }
 
-.switch-btn, .see-all {
-    background: none;
-    border: none;
-    color: #FF6B35;
-    font-weight: 600;
-    font-size: 12px;
-    cursor: pointer;
-    margin-left: auto;
-}
-
 .suggestions-header {
     display: flex;
     justify-content: space-between;
@@ -373,11 +414,21 @@ body {
     font-size: 14px;
 }
 
+.see-all {
+    background: none;
+    border: none;
+    color: #f5f5f5;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 .suggestion-item {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
+    cursor: pointer;
 }
 
 .suggestion-avatar {
@@ -411,7 +462,7 @@ body {
     margin-left: auto;
 }
 
-/* ===== MODAL ===== */
+/* ===== MODAL CRÉATION ===== */
 .modal {
     display: none;
     position: fixed;
@@ -419,7 +470,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0,0,0,0.8);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -443,6 +494,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 18px;
 }
 
 .modal-close {
@@ -516,6 +571,99 @@ body {
     font-weight: 600;
     cursor: pointer;
     width: 100%;
+}
+
+/* ===== MODAL COMMENTAIRES ===== */
+.comments-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.comments-modal.active {
+    display: flex;
+}
+
+.comments-modal-content {
+    background: #000000;
+    border-radius: 16px;
+    width: 400px;
+    max-width: 90%;
+    max-height: 80%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #262626;
+}
+
+.comments-modal-header {
+    padding: 16px;
+    border-bottom: 1px solid #262626;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comments-modal-header h3 {
+    font-size: 16px;
+}
+
+.comments-modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.comments-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FF6B35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-username {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.comment-text {
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* ===== LOADER ===== */
+.loader {
+    text-align: center;
+    padding: 60px;
+    color: #8e8e8e;
 }
 
 /* ===== RESPONSIVE ===== */
