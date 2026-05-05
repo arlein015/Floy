@@ -1,132 +1,552 @@
-:root {
-    --bg-dark-purple: #1a0033; /* Le violet très sombre du fond */
-    --bg-deep: #120024;        /* Encore plus sombre pour le noir mélangé */
-    --floy-cyan: #00e5ff;      /* La couleur exacte de ton badge de certification */
-    --floy-orange: #ff8c00;    /* L'orange pour les boutons d'action */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-dark-purple);
-    background-image: linear-gradient(180deg, var(--bg-dark-purple) 0%, #000000 100%);
-    color: white;
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-}
-/* Effet "Brillant" (Glassmorphism) pour les éléments */
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-/* Couleur exacte du badge de ton image */
-.badge-verified, .fa-check-circle {
-    color: #00e5ff !important; /* Ce bleu cyan électrique et brillant */
-    margin-left: 5px;
-    filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.3)); /* Petit effet brillant */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #000000;
+    color: #ffffff;
 }
 
-/* --- Barre de navigation basse --- */
-.bottom-nav {
+/* ===== LAYOUT (comme Instagram) ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+/* ===== SIDEBAR GAUCHE ===== */
+.sidebar {
+    width: 244px;
     position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background: var(--bg-black);
-    border-top: 1px solid var(--gray-dark);
+    left: 0;
+    top: 0;
+    height: 100vh;
+    background: #000000;
+    border-right: 1px solid #262626;
+    padding: 20px 12px;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 1000;
+    flex-direction: column;
+    z-index: 100;
 }
 
-.nav-icon {
-    font-size: 22px;
-    color: var(--floy-dark-gray); /* Gris foncé par défaut */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 25px 12px 16px;
+    margin-bottom: 20px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #FF6B35, #FF9F5C);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.sidebar-nav {
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    margin: 4px 0;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s;
+    color: #f5f5f5;
 }
 
-/* Quand l'icône est active, elle devient orange */
-.nav-icon.active {
-    color: var(--floy-orange);
+.nav-item:hover {
+    background: #1a1a1a;
 }
 
-/* Bouton "+" central (blanc pour le contraste) */
-.plus-icon-central {
-    background: #ffffff;
-    color: #000000;
-    padding: 6px 15px;
-    border-radius: 10px;
-    font-size: 20px;
+.nav-item.active {
+    font-weight: 600;
+    color: #FF6B35;
+}
+
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+}
+
+.nav-item.active svg {
+    stroke: #FF6B35;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #262626;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    margin-left: 244px;
+    flex: 1;
+    max-width: 630px;
+    padding: 0 20px;
+}
+
+/* ===== STORIES ===== */
+.stories-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 16px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #262626;
+    scrollbar-width: none;
+}
+
+.stories-container::-webkit-scrollbar {
+    display: none;
+}
+
+.story {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
 }
 
-/* Remplace l'ancienne définition du bouton par celle-ci */
-.ton-bouton-classe { /* Remplace '.ton-bouton-classe' par le bon sélecteur CSS de ton bouton */
-  background: linear-gradient(135deg, #7F00FF 0%, #00FFFF 100%); /* Le cœur du changement : violet vers cyan/bleu */
-  border: none; /* Enlève la bordure par défaut si nécessaire */
-  color: white; /* Assure-toi que le texte reste lisible en blanc */
-  /* Ajoute un léger effet de lueur (glow) pour le thème néon (optionnel mais cool) */
-  box-shadow: 0 0 15px rgba(127, 0, 255, 0.5); 
-  transition: box-shadow 0.3s ease; /* Pour l'effet au survol */
-}
-
-/* Effet au survol pour plus d'interactivité */
-.ton-bouton-classe:hover {
-  box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); /* Lueur plus forte et bleutée au survol */
-}
-/* Le cadre blanc arrondi (le conteneur) */
-.logo-frame {
-    width: 60px;  /* Ajustez la taille selon vos besoins */
-    height: 60px; /* Doit être carré pour une icône parfaite */
-    background-color: #ffffff; /* Le fond blanc */
-    border-radius: 15px; /* Les coins arrondis style APK */
-    overflow: hidden; /* IMPORTANT : Empêche l'image de dépasser des coins arrondis */
+.story-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #FF6B35, #FF9F5C);
     display: flex;
-    justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ombre pour le relief */
+    justify-content: center;
+    padding: 2px;
 }
 
-/* Le conteneur (le petit cadre blanc arrondi) */
-.logo-frame {
-    width: 60px;  /* Ajustez la taille selon vos besoins */
-    height: 60px; /* Doit être carré pour une icône parfaite */
-    background-color: #ffffff; /* Le fond blanc */
-    border-radius: 15px; /* Les coins arrondis style APK */
-    overflow: hidden; /* IMPORTANT : Coupe tout ce qui dépasse des coins arrondis */
+.story-avatar img, .story-avatar div {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #000000;
     display: flex;
-    justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ombre pour le relief */
+    justify-content: center;
 }
 
-/* L'image du logo à l'intérieur (image_5.png) */
-.logo-frame img {
-    /* La solution magique pour le "plein cadre" */
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Remplit tout l'espace, sans déformer */
-    
-    /* Optionnel : Si votre logo a encore des bords invisibles */
-    /* Vous pouvez zoomer légèrement */
-    /* transform: scale(1.1); */ 
+.story-username {
+    font-size: 12px;
+    color: #8e8e8e;
 }
-.favicon-container {
-    width: 32px;  /* Taille standard d'un favicon */
+
+/* ===== POST (exactement Instagram) ===== */
+.post {
+    margin-bottom: 20px;
+    background: #000000;
+    border: 1px solid #262626;
+    border-radius: 8px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+}
+
+.post-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-avatar {
+    width: 32px;
     height: 32px;
-    background-color: #ffffff;
-    border-radius: 8px; /* Petit arrondi style APK */
-    overflow: hidden; /* Coupe les bords de l'image pour suivre l'arrondi */
+    border-radius: 50%;
+    background: #FF6B35;
     display: flex;
+    align-items: center;
     justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.post-username {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.post-more {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.post-more svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #f5f5f5;
+}
+
+.post-image-container {
+    width: 100%;
+    background: #1a1a1a;
+}
+
+.post-image {
+    width: 100%;
+    display: block;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 12px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.action-btn:hover {
+    transform: scale(1.05);
+}
+
+.action-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: #f5f5f5;
+    stroke-width: 1.5;
+}
+
+.action-btn.liked svg {
+    fill: #FF6B35;
+    stroke: #FF6B35;
+}
+
+.save-btn {
+    margin-left: auto;
+}
+
+.post-likes {
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 16px 8px;
+}
+
+.post-caption {
+    padding: 0 16px 8px;
+    font-size: 14px;
+}
+
+.post-caption strong {
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+.post-comments {
+    padding: 0 16px 4px;
+    font-size: 14px;
+    color: #8e8e8e;
+    cursor: pointer;
+}
+
+.post-time {
+    padding: 4px 16px 12px;
+    font-size: 10px;
+    color: #8e8e8e;
+}
+
+.comment-form {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-top: 1px solid #262626;
+}
+
+.comment-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #f5f5f5;
+    padding: 12px 0;
+    font-size: 14px;
+    outline: none;
+}
+
+.comment-input::placeholder {
+    color: #8e8e8e;
+}
+
+.comment-post-btn {
+    background: none;
+    border: none;
+    color: #FF6B35;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.comment-post-btn.active {
+    opacity: 1;
+}
+
+/* ===== SIDEBAR DROITE ===== */
+.right-sidebar {
+    width: 320px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    padding: 30px 20px;
+    display: block;
+}
+
+.current-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FF6B35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.user-info .username {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.user-info .name {
+    font-size: 12px;
+    color: #8e8e8e;
+}
+
+.switch-btn, .see-all {
+    background: none;
+    border: none;
+    color: #FF6B35;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.suggestions-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    color: #8e8e8e;
+    font-size: 14px;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.suggestion-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FF6B35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.suggestion-info .username {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.suggestion-info .followers {
+    font-size: 12px;
+    color: #8e8e8e;
+}
+
+.follow-btn {
+    background: none;
+    border: none;
+    color: #FF6B35;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+/* ===== MODAL ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #000000;
+    border-radius: 16px;
+    width: 500px;
+    max-width: 90%;
+    border: 1px solid #262626;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #262626;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
-.favicon-container img {
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.upload-area {
+    text-align: center;
+    padding: 40px;
+    border: 2px dashed #262626;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.upload-area svg {
+    color: #8e8e8e;
+    margin-bottom: 16px;
+}
+
+.upload-area p {
+    color: #8e8e8e;
+    margin-bottom: 16px;
+}
+
+.upload-area button {
+    background: #FF6B35;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#previewContainer {
+    text-align: center;
+}
+
+#previewImage {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+#postCaption {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* Magique : remplit tout le cadre blanc sans déformer */
+    background: #1a1a1a;
+    border: 1px solid #262626;
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    margin-bottom: 16px;
+    resize: none;
+}
+
+#publishBtn {
+    background: #FF6B35;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1260px) {
+    .right-sidebar {
+        display: none;
+    }
+    .main-content {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 1000px) {
+    .sidebar {
+        width: 72px;
+    }
+    .sidebar .logo-text,
+    .sidebar .nav-item span {
+        display: none;
+    }
+    .main-content {
+        margin-left: 72px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        display: none;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 0 12px;
+    }
 }
