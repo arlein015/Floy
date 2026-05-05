@@ -3,84 +3,397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Floy - Modifier le profil</title>
-    <link rel="stylesheet" href="edit-profil.css">
+    <title>Floy - Paramètres</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #262626;
+            background: #000000;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+        }
+        .settings-header h3 {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .settings-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .settings-section {
+            margin-bottom: 32px;
+        }
+        .section-title {
+            color: #8e8e8e;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-left: 12px;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #111111;
+            border-radius: 10px;
+            margin-bottom: 1px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .settings-item:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+        .settings-item:last-child {
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 0;
+        }
+        .settings-item:only-child {
+            border-radius: 10px;
+        }
+        .settings-item:hover {
+            background: #1a1a1a;
+        }
+        
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .item-left svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #ffffff;
+        }
+        .arrow {
+            width: 18px;
+            height: 18px;
+            stroke: #8e8e8e;
+        }
+        
+        .danger-item .item-left svg {
+            stroke: #ff4444;
+        }
+        .danger-item .item-left span {
+            color: #ff4444;
+        }
+        
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #262626;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        .toggle input:checked + .toggle-slider {
+            background-color: #FF6B35;
+        }
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .version {
+            text-align: center;
+            color: #8e8e8e;
+            font-size: 12px;
+            margin-top: 40px;
+            padding: 20px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #000000;
+            border-radius: 16px;
+            width: 320px;
+            max-width: 90%;
+            border: 1px solid #262626;
+        }
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-size: 18px;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+            text-align: center;
+        }
+        .modal-body p {
+            margin-bottom: 20px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .modal-cancel, .modal-confirm {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .modal-cancel {
+            background: #1a1a1a;
+            border: none;
+            color: white;
+        }
+        .modal-confirm {
+            background: #ff4444;
+            border: none;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="edit-header">
-        <button class="cancel-btn" onclick="goBack()">Annuler</button>
-        <h3>Modifier le profil</h3>
-        <button class="save-btn" onclick="saveProfile()">Enregistrer</button>
+    <div class="settings-header">
+        <button class="back-btn" onclick="window.location.href='profil.html'">
+            <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+        </button>
+        <h3>Paramètres</h3>
+        <div style="width: 40px;"></div>
     </div>
 
-    <div class="edit-container">
-        <div class="avatar-section" onclick="changeAvatar()">
-            <div class="edit-avatar" id="editAvatar">F</div>
-            <div class="avatar-overlay">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
+    <div class="settings-container">
+        <div class="settings-section">
+            <div class="section-title">Compte</div>
+            <div class="settings-item" onclick="window.location.href='edit-profil.html'">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+                    </svg>
+                    <span>Modifier le profil</span>
+                </div>
+                <svg viewBox="0 0 24 24" class="arrow">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/>
                 </svg>
-                <span>Changer la photo</span>
             </div>
         </div>
 
-        <div class="edit-field">
-            <label>Nom d'utilisateur</label>
-            <input type="text" id="editUsername" placeholder="username">
-            <p class="field-hint">Dans les 30 jours, vous pourrez demander un autre changement de nom d'utilisateur.</p>
+        <div class="settings-section">
+            <div class="section-title">Notifications</div>
+            <div class="settings-item">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/>
+                        <path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/>
+                        <path d="M9 20.5h6"/>
+                    </svg>
+                    <span>Notifications push</span>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="pushNotifications" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
         </div>
 
-        <div class="edit-field">
-            <label>Nom complet</label>
-            <input type="text" id="editFullname" placeholder="Nom complet">
+        <div class="settings-section">
+            <div class="section-title">Confidentialité</div>
+            <div class="settings-item">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+                    </svg>
+                    <span>Compte privé</span>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="privateAccount">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
         </div>
 
-        <div class="edit-field">
-            <label>Bio</label>
-            <textarea id="editBio" rows="4" placeholder="Votre bio..."></textarea>
-            <p class="field-hint" id="bioCounter">0/150</p>
+        <div class="settings-section">
+            <div class="section-title">Support</div>
+            <div class="settings-item" onclick="alert('❓ Aide - Bientôt disponible')">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <span>Aide</span>
+                </div>
+                <svg viewBox="0 0 24 24" class="arrow">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+            </div>
+            <div class="settings-item" onclick="alert('📧 Signaler un problème - Bientôt disponible')">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 8v4M12 16h.01"/>
+                        <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                    </svg>
+                    <span>Signaler un problème</span>
+                </div>
+                <svg viewBox="0 0 24 24" class="arrow">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+            </div>
+            <div class="settings-item" onclick="alert('✨ Floy - Version 1.0.0\nRéseau social orange et noir')">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+                    </svg>
+                    <span>À propos</span>
+                </div>
+                <svg viewBox="0 0 24 24" class="arrow">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+            </div>
         </div>
 
-        <div class="edit-field">
-            <label>Site web</label>
-            <input type="text" id="editWebsite" placeholder="https://...">
+        <div class="settings-section">
+            <div class="settings-item danger-item" onclick="confirmLogout()">
+                <div class="item-left">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+                    </svg>
+                    <span>Déconnexion</span>
+                </div>
+                <svg viewBox="0 0 24 24" class="arrow">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+            </div>
         </div>
 
-        <div class="edit-field">
-            <label>Email</label>
-            <input type="email" id="editEmail" placeholder="email@example.com">
-        </div>
-
-        <div class="edit-field">
-            <label>Téléphone</label>
-            <input type="tel" id="editPhone" placeholder="+33...">
-        </div>
-
-        <div class="edit-field">
-            <label>Genre</label>
-            <select id="editGender">
-                <option value="">Non précisé</option>
-                <option value="homme">Homme</option>
-                <option value="femme">Femme</option>
-                <option value="autre">Autre</option>
-            </select>
-        </div>
+        <div class="version">Version 1.0.0</div>
     </div>
 
-    <div id="avatarModal" class="modal">
+    <div id="logoutModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Modifier la photo</h3>
-                <button class="modal-close" onclick="closeAvatarModal()">&times;</button>
+                <h3>Déconnexion</h3>
+                <button class="modal-close" onclick="closeLogoutModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <button class="avatar-option" onclick="changeAvatarByEmoji()">😊 Changer avec un emoji</button>
-                <button class="avatar-option" onclick="changeAvatarByLetter()">🔤 Changer avec une lettre</button>
-                <button class="avatar-option avatar-remove" onclick="removeAvatar()">🗑️ Supprimer la photo</button>
+                <p>Voulez-vous vraiment vous déconnecter ?</p>
+                <div class="modal-buttons">
+                    <button class="modal-cancel" onclick="closeLogoutModal()">Annuler</button>
+                    <button class="modal-confirm" onclick="logout()">Déconnexion</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="edit-profil.js"></script>
+    <script>
+        function confirmLogout() {
+            document.getElementById('logoutModal').classList.add('active');
+        }
+        
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('active');
+        }
+        
+        function logout() {
+            localStorage.removeItem('floy_user');
+            localStorage.removeItem('floy_posts');
+            window.location.href = 'index.html';
+        }
+        
+        // Sauvegarder les préférences
+        document.getElementById('pushNotifications')?.addEventListener('change', (e) => {
+            localStorage.setItem('push_notifications', e.target.checked);
+        });
+        document.getElementById('privateAccount')?.addEventListener('change', (e) => {
+            localStorage.setItem('private_account', e.target.checked);
+        });
+        
+        // Charger les préférences
+        const pushNotif = localStorage.getItem('push_notifications');
+        if (pushNotif !== null) document.getElementById('pushNotifications').checked = pushNotif === 'true';
+        const privateAccount = localStorage.getItem('private_account');
+        if (privateAccount !== null) document.getElementById('privateAccount').checked = privateAccount === 'true';
+        
+        document.getElementById('logoutModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('logoutModal')) closeLogoutModal();
+        });
+    </script>
 </body>
 </html>
