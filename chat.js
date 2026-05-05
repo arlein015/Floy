@@ -8,7 +8,6 @@ class ChatModule {
         this.conversations = [];
         this.currentConversation = null;
         this.currentUser = null;
-        this.typingTimeout = null;
         this.loadFromStorage();
     }
 
@@ -35,34 +34,30 @@ class ChatModule {
     initMockConversations() {
         this.conversations = [
             {
-                id: "conv_1",
                 userId: 2,
                 username: "artiste_orange",
-                fullname: "Artiste Orange",
                 avatar: "A",
                 online: true,
                 lastMessage: "Super ton post ! 🔥",
                 lastTime: Date.now() - 3600000,
                 unreadCount: 2,
                 messages: [
-                    { id: 1, senderId: 2, text: "Salut ! Super ton post 🔥", timestamp: Date.now() - 3600000, read: false },
-                    { id: 2, senderId: 1, text: "Merci beaucoup ! 😊", timestamp: Date.now() - 3500000, read: true },
-                    { id: 3, senderId: 2, text: "Tu fais de superbes photos", timestamp: Date.now() - 3400000, read: false }
+                    { id: 1, senderId: 2, text: "Salut ! Super ton post 🔥", timestamp: Date.now() - 3600000 },
+                    { id: 2, senderId: 1, text: "Merci beaucoup ! 😊", timestamp: Date.now() - 3500000 },
+                    { id: 3, senderId: 2, text: "Tu fais de superbes photos", timestamp: Date.now() - 3400000 }
                 ]
             },
             {
-                id: "conv_2",
                 userId: 3,
                 username: "photographe",
-                fullname: "Le Photographe",
                 avatar: "P",
                 online: false,
                 lastMessage: "J'adore !",
                 lastTime: Date.now() - 86400000,
                 unreadCount: 0,
                 messages: [
-                    { id: 1, senderId: 1, text: "Salut !", timestamp: Date.now() - 86400000, read: true },
-                    { id: 2, senderId: 3, text: "J'adore tes photos !", timestamp: Date.now() - 86000000, read: true }
+                    { id: 1, senderId: 1, text: "Salut !", timestamp: Date.now() - 86400000 },
+                    { id: 2, senderId: 3, text: "J'adore tes photos !", timestamp: Date.now() - 86000000 }
                 ]
             }
         ];
@@ -81,10 +76,8 @@ class ChatModule {
         let conv = this.getConversation(userId);
         if (!conv) {
             conv = {
-                id: `conv_${Date.now()}`,
                 userId: userId,
                 username: username,
-                fullname: username,
                 avatar: avatar,
                 online: false,
                 lastMessage: null,
@@ -108,8 +101,7 @@ class ChatModule {
             id: Date.now(),
             senderId: this.currentUser.id,
             text: text.trim(),
-            timestamp: Date.now(),
-            read: false
+            timestamp: Date.now()
         };
         
         conv.messages.push(newMessage);
@@ -118,59 +110,6 @@ class ChatModule {
         
         this.saveToStorage();
         return newMessage;
-    }
-
-    markAsRead(userId) {
-        const conv = this.getConversation(userId);
-        if (conv) {
-            conv.unreadCount = 0;
-            conv.messages.forEach(msg => {
-                if (msg.senderId !== this.currentUser.id && !msg.read) {
-                    msg.read = true;
-                }
-            });
-            this.saveToStorage();
-        }
-    }
-
-    deleteMessage(userId, messageId) {
-        const conv = this.getConversation(userId);
-        if (conv) {
-            conv.messages = conv.messages.filter(m => m.id !== messageId);
-            if (conv.messages.length > 0) {
-                const lastMsg = conv.messages[conv.messages.length - 1];
-                conv.lastMessage = lastMsg.text;
-                conv.lastTime = lastMsg.timestamp;
-            }
-            this.saveToStorage();
-        }
-    }
-
-    deleteConversation(userId) {
-        this.conversations = this.conversations.filter(c => c.userId !== userId);
-        this.saveToStorage();
-    }
-
-    updateUnreadBadge() {
-        let totalUnread = 0;
-        this.conversations.forEach(conv => {
-            totalUnread += conv.unreadCount;
-        });
-        
-        const msgIcon = document.querySelector('.nav-item[data-page="messages"]');
-        if (msgIcon) {
-            let badge = msgIcon.querySelector('.msg-badge');
-            if (totalUnread > 0) {
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.className = 'msg-badge';
-                    msgIcon.appendChild(badge);
-                }
-                badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
-            } else if (badge) {
-                badge.remove();
-            }
-        }
     }
 
     getTimeAgo(timestamp) {
