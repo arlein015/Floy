@@ -2,813 +2,168 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floy - Partagez vos moments</title>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #000000;
-            color: #FFFFFF;
-        }
-
-        :root {
-            --floy-orange: #FF6B35;
-            --floy-orange-dark: #E55A2B;
-            --floy-black: #000000;
-            --floy-gray: #262626;
-            --floy-gray-light: #8e8e8e;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 244px;
-            background: #000000;
-            border-right: 1px solid #262626;
-            position: fixed;
-            height: 100vh;
-            left: 0;
-            top: 0;
-            padding: 20px 12px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            padding: 25px 12px 16px;
-            margin-bottom: 20px;
-        }
-
-        .logo .floy-text {
-            background: linear-gradient(135deg, #FF6B35, #FF9F5C);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 12px;
-            margin: 4px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #f5f5f5;
-        }
-
-        .nav-item:hover {
-            background: #1a1a1a;
-        }
-
-        .nav-item.active {
-            font-weight: 600;
-            color: #FF6B35;
-        }
-
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.5;
-        }
-
-        .nav-item.active svg {
-            stroke: #FF6B35;
-        }
-
-        /* Main content */
-        .main-content {
-            margin-left: 244px;
-            max-width: 630px;
-            margin-right: auto;
-            padding: 20px;
-        }
-
-        .header {
-            position: sticky;
-            top: 0;
-            background: #000000;
-            z-index: 10;
-            padding: 8px 0;
-            border-bottom: 1px solid #262626;
-            margin-bottom: 20px;
-        }
-
-        .header-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        /* Post card */
-        .post {
-            margin-bottom: 20px;
-            background: #000000;
-            border: 1px solid #262626;
-            border-radius: 8px;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-        }
-
-        .post-user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .post-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #FF6B35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .post-username {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .post-more svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: #f5f5f5;
-            cursor: pointer;
-        }
-
-        .post-image {
-            width: 100%;
-            background: #1a1a1a;
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-        }
-
-        /* Actions */
-        .post-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 8px 12px;
-        }
-
-        .action-icon {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-
-        .action-icon:hover {
-            transform: scale(1.05);
-        }
-
-        .action-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: #f5f5f5;
-            stroke-width: 1.5;
-        }
-
-        .action-icon.liked svg {
-            fill: #FF6B35;
-            stroke: #FF6B35;
-        }
-
-        .post-actions-right {
-            margin-left: auto;
-        }
-
-        .post-likes {
-            font-weight: 600;
-            font-size: 14px;
-            padding: 0 16px 8px;
-        }
-
-        .post-caption {
-            padding: 0 16px 8px;
-            font-size: 14px;
-        }
-
-        .post-caption strong {
-            font-weight: 600;
-            margin-right: 6px;
-        }
-
-        .post-comments {
-            padding: 0 16px 4px;
-            font-size: 14px;
-            color: #8e8e8e;
-            cursor: pointer;
-        }
-
-        .post-time {
-            padding: 4px 16px 12px;
-            font-size: 10px;
-            color: #8e8e8e;
-        }
-
-        .comment-form {
-            display: flex;
-            align-items: center;
-            padding: 8px 16px;
-            border-top: 1px solid #262626;
-        }
-
-        .comment-input {
-            flex: 1;
-            background: none;
-            border: none;
-            color: #f5f5f5;
-            padding: 12px 0;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .comment-input::placeholder {
-            color: #8e8e8e;
-        }
-
-        .comment-post-btn {
-            background: none;
-            border: none;
-            color: #FF6B35;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            opacity: 0.7;
-        }
-
-        .comment-post-btn.active {
-            opacity: 1;
-        }
-
-        /* Sections */
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Profil */
-        .profile-header {
-            background: #111;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid #262626;
-        }
-
-        .profile-avatar-large {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #FF6B35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin-bottom: 16px;
-        }
-
-        .profile-stats {
-            display: flex;
-            gap: 32px;
-            margin: 20px 0;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .stat-label {
-            color: #8e8e8e;
-            font-size: 14px;
-        }
-
-        .profile-bio {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #262626;
-        }
-
-        .profile-posts-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
-        }
-
-        .profile-post-item {
-            aspect-ratio: 1;
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-            font-size: 12px;
-        }
-
-        /* Floating upload */
-        .floating-upload {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background: #FF6B35;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255,107,53,0.4);
-            transition: 0.2s;
-        }
-
-        .floating-upload svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: #000;
-            stroke-width: 2;
-        }
-
-        .floating-upload:hover {
-            transform: scale(1.05);
-        }
-
-        .placeholder {
-            text-align: center;
-            padding: 60px 20px;
-            color: #8e8e8e;
-        }
-
-        @media (max-width: 1000px) {
-            .sidebar {
-                width: 72px;
-            }
-            .sidebar .logo,
-            .sidebar .nav-item span {
-                display: none;
-            }
-            .main-content {
-                margin-left: 72px;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Floy</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <span class="floy-text">✨ FLOY</span>
-        </div>
-        
-        <div class="nav-item active" data-section="feed">
-            <svg viewBox="0 0 24 24">
-                <path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/>
-            </svg>
-            <span>Accueil</span>
-        </div>
-        
-        <div class="nav-item" data-section="explore">
-            <svg viewBox="0 0 24 24">
-                <path d="M10.25 3.75a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm-8.5 6.5a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0Z"/>
-                <path d="M19.53 19.53l-4.16-4.16a.75.75 0 0 1 1.06-1.06l4.16 4.16a.75.75 0 0 1-1.06 1.06Z"/>
-            </svg>
-            <span>Explorer</span>
-        </div>
-        
-        <div class="nav-item" data-section="profile">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
-            </svg>
-            <span>Profil</span>
-        </div>
-        
-        <div class="nav-item" data-section="notifications">
-            <svg viewBox="0 0 24 24">
-                <path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/>
-                <path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/>
-                <path d="M9 20.5h6"/>
-            </svg>
-            <span>Notifications</span>
-        </div>
-    </div>
+    <div class="layout">
+        <!-- SIDEBAR GAUCHE (identique à Instagram) -->
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span class="logo-text">Floy</span>
+            </div>
 
-    <div class="main-content">
-        <div class="header">
-            <div class="header-title">Floy</div>
-        </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item active" data-page="feed">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/>
+                    </svg>
+                    <span>Accueil</span>
+                </div>
+                <div class="nav-item" data-page="search">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10.25 3.75a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm-8.5 6.5a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0Z"/>
+                        <path d="M19.53 19.53l-4.16-4.16a.75.75 0 0 1 1.06-1.06l4.16 4.16a.75.75 0 0 1-1.06 1.06Z"/>
+                    </svg>
+                    <span>Recherche</span>
+                </div>
+                <div class="nav-item" data-page="explore">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+                    </svg>
+                    <span>Explorer</span>
+                </div>
+                <div class="nav-item" data-page="reels">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.5 5.5h19v13h-19z"/>
+                        <path d="M9.5 8.5l6 3.5-6 3.5z"/>
+                    </svg>
+                    <span>Reels</span>
+                </div>
+                <div class="nav-item" data-page="messages">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+                    </svg>
+                    <span>Messages</span>
+                </div>
+                <div class="nav-item" data-page="notifications">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/>
+                        <path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/>
+                        <path d="M9 20.5h6"/>
+                    </svg>
+                    <span>Notifications</span>
+                </div>
+                <div class="nav-item" data-page="create">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
+                    </svg>
+                    <span>Créer</span>
+                </div>
+                <div class="nav-item" data-page="profile">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/>
+                    </svg>
+                    <span>Profil</span>
+                </div>
+            </nav>
 
-        <!-- FEED -->
-        <div id="feed-section" class="section active">
+            <div class="sidebar-footer">
+                <div class="nav-item" data-page="settings">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21.5 7.5L16.5 2.5M17 9L10 16H7V13L14 6L17 9Z"/>
+                        <path d="M3 21H21M9 19L3 21L5 15"/>
+                    </svg>
+                    <span>Plus</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENU PRINCIPAL -->
+        <main class="main-content">
+            <!-- Header (Stories) -->
+            <div class="stories-container" id="stories">
+                <!-- Stories chargées dynamiquement -->
+            </div>
+
+            <!-- Feed (chargé depuis feed.html) -->
             <div id="feed-container"></div>
-        </div>
 
-        <!-- EXPLORE -->
-        <div id="explore-section" class="section">
-            <div class="placeholder">🔍 Explorez les tendances</div>
-        </div>
+            <!-- Autres pages -->
+            <div id="profile-container" style="display: none;"></div>
+            <div id="explore-container" style="display: none;"></div>
+            <div id="search-container" style="display: none;"></div>
+            <div id="reels-container" style="display: none;"></div>
+            <div id="messages-container" style="display: none;"></div>
+            <div id="notifications-container" style="display: none;"></div>
+            <div id="create-container" style="display: none;"></div>
+            <div id="settings-container" style="display: none;"></div>
+        </main>
 
-        <!-- PROFIL (COMPLET AVEC CONFIGURATION) -->
-        <div id="profile-section" class="section">
-            <div id="profile-container"></div>
-        </div>
+        <!-- SIDEBAR DROITE (Suggestions) -->
+        <aside class="right-sidebar">
+            <div class="current-user">
+                <div class="user-avatar">F</div>
+                <div class="user-info">
+                    <div class="username">floy_user</div>
+                    <div class="name">Floy Creator</div>
+                </div>
+                <button class="switch-btn">Basculer</button>
+            </div>
+            <div class="suggestions-header">
+                <span>Suggestions</span>
+                <button class="see-all">Voir tout</button>
+            </div>
+            <div class="suggestions-list">
+                <div class="suggestion-item">
+                    <div class="suggestion-avatar">A</div>
+                    <div class="suggestion-info">
+                        <div class="username">artiste_orange</div>
+                        <div class="followers">Nouveau</div>
+                    </div>
+                    <button class="follow-btn">Suivre</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="suggestion-avatar">P</div>
+                    <div class="suggestion-info">
+                        <div class="username">photographe</div>
+                        <div class="followers">populaire</div>
+                    </div>
+                    <button class="follow-btn">Suivre</button>
+                </div>
+            </div>
+        </aside>
+    </div>
 
-        <!-- NOTIFICATIONS -->
-        <div id="notifications-section" class="section">
-            <div class="placeholder">❤️ Vos notifications</div>
+    <!-- MODAL CRÉATION -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Créer une nouvelle publication</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
+                    </svg>
+                    <p>Glissez une photo ou vidéo ici</p>
+                    <button id="selectFileBtn">Sélectionner depuis l'ordinateur</button>
+                    <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;">
+                </div>
+                <div id="previewContainer" style="display: none;">
+                    <img id="previewImage" src="">
+                    <textarea id="postCaption" placeholder="Écrivez une légende..."></textarea>
+                    <button id="publishBtn">Publier</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- FLOATING UPLOAD -->
-    <div class="floating-upload" id="uploadBtn">
-        <svg viewBox="0 0 24 24">
-            <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
-        </svg>
-    </div>
-
-    <script>
-        // ========== DONNÉES UTILISATEUR ==========
-        let currentUser = {
-            id: 1,
-            username: "floy_user",
-            fullName: "Floy Creator",
-            avatar: "F",
-            bio: "Créateur de Floy 🔥 Passionné de design orange et noir",
-            website: "floy.app",
-            postsCount: 3,
-            followers: 128,
-            following: 94
-        };
-
-        // ========== POSTS ==========
-        let posts = [
-            {
-                id: 1,
-                userId: 1,
-                username: "floy_user",
-                avatar: "F",
-                imageUrl: "📷 Premier post sur Floy",
-                caption: "Bienvenue sur Floy ! Le réseau social orange et noir 🔥",
-                likes: 124,
-                liked: false,
-                comments: ["Superbe !", "J'adore le thème"],
-                timestamp: "2 HEURES"
-            },
-            {
-                id: 2,
-                userId: 2,
-                username: "artiste_orange",
-                avatar: "A",
-                imageUrl: "🎨 Création du jour",
-                caption: "L'orange et le noir, un duo parfait",
-                likes: 89,
-                liked: true,
-                comments: ["Magnifique !"],
-                timestamp: "5 HEURES"
-            },
-            {
-                id: 3,
-                userId: 3,
-                username: "photographe",
-                avatar: "P",
-                imageUrl: "🌅 Coucher de soleil",
-                caption: "Les couleurs chaudes",
-                likes: 234,
-                liked: false,
-                comments: ["Waouh incroyable"],
-                timestamp: "1 JOUR"
-            }
-        ];
-
-        // ========== ICÔNES SVG POUR LES ACTIONS ==========
-        const icons = {
-            like: `<svg viewBox="0 0 24 24"><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/></svg>`,
-            
-            comment: `<svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>`,
-            
-            share: `<svg viewBox="0 0 24 24"><path d="M19.5 5.5v13a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1Z"/><path d="m16.5 7.5-5 5"/><path d="M9.5 11.5h5v5"/></svg>`,
-            
-            save: `<svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/></svg>`,
-            
-            more: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="5" cy="12" r="2.5"/></svg>`,
-            
-            editProfile: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M21.5 7.5L16.5 2.5M17 9L10 16H7V13L14 6L17 9Z"/><path d="M3 21H21M9 19L3 21L5 15"/></svg>`,
-            
-            settings: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/></svg>`,
-            
-            grid: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`
-        };
-
-        // ========== RENDU D'UN POST ==========
-        function renderPost(post) {
-            return `
-                <div class="post" data-post-id="${post.id}">
-                    <div class="post-header">
-                        <div class="post-user-info">
-                            <div class="post-avatar">${post.avatar}</div>
-                            <div class="post-username">${post.username}</div>
-                        </div>
-                        <div class="post-more">${icons.more}</div>
-                    </div>
-                    
-                    <div class="post-image">${post.imageUrl}</div>
-                    
-                    <div class="post-actions">
-                        <button class="action-icon like-btn ${post.liked ? 'liked' : ''}" data-id="${post.id}">
-                            ${icons.like}
-                        </button>
-                        <button class="action-icon comment-btn" data-id="${post.id}">
-                            ${icons.comment}
-                        </button>
-                        <button class="action-icon share-btn">
-                            ${icons.share}
-                        </button>
-                        <div class="post-actions-right">
-                            <button class="action-icon save-btn">
-                                ${icons.save}
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="post-likes" id="likes-${post.id}">
-                        ${post.likes} ${post.likes === 1 ? 'like' : 'likes'}
-                    </div>
-                    
-                    <div class="post-caption">
-                        <strong>${post.username}</strong> ${post.caption}
-                    </div>
-                    
-                    <div class="post-comments">
-                        ${post.comments.length > 0 ? `Voir les ${post.comments.length} commentaires` : 'Soyez le premier à commenter'}
-                    </div>
-                    
-                    <div class="post-time">
-                        il y a ${post.timestamp}
-                    </div>
-                    
-                    <div class="comment-form">
-                        <input type="text" class="comment-input" placeholder="Ajouter un commentaire..." data-id="${post.id}">
-                        <button class="comment-post-btn" data-id="${post.id}">Publier</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ========== RENDU DU PROFIL COMPLET AVEC CONFIGURATION ==========
-        function renderProfile() {
-            const userPosts = posts.filter(p => p.userId === currentUser.id);
-            
-            return `
-                <div class="profile-header">
-                    <div class="profile-avatar-large">${currentUser.avatar}</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h2>${currentUser.username}</h2>
-                        <button id="editProfileBtn" style="background: #1a1a1a; border: 1px solid #262626; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            ${icons.editProfile} Modifier le profil
-                        </button>
-                    </div>
-                    
-                    <div class="profile-stats">
-                        <div class="stat">
-                            <div class="stat-number">${userPosts.length}</div>
-                            <div class="stat-label">publications</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">${currentUser.followers}</div>
-                            <div class="stat-label">abonnés</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">${currentUser.following}</div>
-                            <div class="stat-label">abonnements</div>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-bio">
-                        <div style="font-weight: 600;">${currentUser.fullName}</div>
-                        <div style="font-size: 14px; margin-top: 4px;">${currentUser.bio}</div>
-                        ${currentUser.website ? `<div style="color: #FF6B35; font-size: 14px; margin-top: 4px;">🔗 ${currentUser.website}</div>` : ''}
-                    </div>
-                </div>
-                
-                <div style="display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #262626; margin-bottom: 16px;">
-                    <div style="display: flex; align-items: center; gap: 6px; padding: 12px 0; color: #FF6B35; border-bottom: 2px solid #FF6B35;">
-                        ${icons.grid}
-                        <span>Publications</span>
-                    </div>
-                </div>
-                
-                <div class="profile-posts-grid" id="profile-posts-grid">
-                    ${userPosts.length > 0 ? userPosts.map(post => `
-                        <div class="profile-post-item">📷</div>
-                    `).join('') : `
-                        <div class="placeholder" style="grid-column: span 3;">Aucune publication pour le moment</div>
-                    `}
-                </div>
-            `;
-        }
-
-        // ========== MODAL D'ÉDITION DE PROFIL ==========
-        function showEditProfileModal() {
-            const modalHtml = `
-                <div id="editModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center;">
-                    <div style="background: #111; border-radius: 16px; width: 400px; max-width: 90%; border: 1px solid #262626;">
-                        <div style="padding: 20px; border-bottom: 1px solid #262626;">
-                            <h3 style="font-size: 18px;">Modifier le profil</h3>
-                        </div>
-                        <div style="padding: 20px;">
-                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Nom d'utilisateur</label>
-                            <input type="text" id="editUsername" value="${currentUser.username}" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 16px;">
-                            
-                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Nom complet</label>
-                            <input type="text" id="editFullName" value="${currentUser.fullName}" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 16px;">
-                            
-                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Bio</label>
-                            <textarea id="editBio" rows="3" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 16px;">${currentUser.bio}</textarea>
-                            
-                            <label style="display: block; margin-bottom: 8px; color: #8e8e8e;">Site web</label>
-                            <input type="text" id="editWebsite" value="${currentUser.website || ''}" style="width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #262626; border-radius: 8px; color: white; margin-bottom: 24px;">
-                        </div>
-                        <div style="padding: 16px 20px; border-top: 1px solid #262626; display: flex; gap: 12px; justify-content: flex-end;">
-                            <button id="cancelEditBtn" style="background: none; border: 1px solid #262626; padding: 8px 20px; border-radius: 8px; color: white; cursor: pointer;">Annuler</button>
-                            <button id="saveEditBtn" style="background: #FF6B35; border: none; padding: 8px 20px; border-radius: 8px; color: black; font-weight: 600; cursor: pointer;">Enregistrer</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            
-            document.getElementById('cancelEditBtn').addEventListener('click', () => {
-                document.getElementById('editModal').remove();
-            });
-            
-            document.getElementById('saveEditBtn').addEventListener('click', () => {
-                currentUser.username = document.getElementById('editUsername').value;
-                currentUser.fullName = document.getElementById('editFullName').value;
-                currentUser.bio = document.getElementById('editBio').value;
-                currentUser.website = document.getElementById('editWebsite').value;
-                
-                document.getElementById('editModal').remove();
-                renderProfilePage();
-                renderFeed(); // Met à jour les posts avec le nouveau username
-            });
-        }
-
-        function renderProfilePage() {
-            const profileContainer = document.getElementById('profile-container');
-            if (profileContainer) {
-                profileContainer.innerHTML = renderProfile();
-                const editBtn = document.getElementById('editProfileBtn');
-                if (editBtn) {
-                    editBtn.addEventListener('click', showEditProfileModal);
-                }
-            }
-        }
-
-        // ========== FEED ==========
-        function renderFeed() {
-            const container = document.getElementById('feed-container');
-            if (!container) return;
-            container.innerHTML = posts.map(p => renderPost(p)).join('');
-            attachEvents();
-        }
-
-        function handleLike(postId, btn) {
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            if (post.liked) {
-                post.likes--;
-                post.liked = false;
-                btn.classList.remove('liked');
-            } else {
-                post.likes++;
-                post.liked = true;
-                btn.classList.add('liked');
-                btn.style.transform = 'scale(1.2)';
-                setTimeout(() => { btn.style.transform = ''; }, 200);
-            }
-            
-            const likesSpan = document.getElementById(`likes-${postId}`);
-            if (likesSpan) {
-                likesSpan.textContent = `${post.likes} ${post.likes === 1 ? 'like' : 'likes'}`;
-            }
-        }
-
-        function addComment(postId, input) {
-            const text = input.value.trim();
-            if (!text) return;
-            
-            const post = posts.find(p => p.id === postId);
-            if (post) {
-                post.comments.push(text);
-                const commentsDiv = input.closest('.post').querySelector('.post-comments');
-                if (commentsDiv) {
-                    commentsDiv.textContent = `Voir les ${post.comments.length} commentaires`;
-                }
-                input.value = '';
-            }
-        }
-
-        function attachEvents() {
-            document.querySelectorAll('.like-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const postId = parseInt(btn.dataset.id);
-                    handleLike(postId, btn);
-                });
-            });
-            
-            document.querySelectorAll('.comment-post-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const postId = parseInt(btn.dataset.id);
-                    const input = document.querySelector(`.comment-input[data-id="${postId}"]`);
-                    if (input) addComment(postId, input);
-                });
-            });
-            
-            document.querySelectorAll('.comment-input').forEach(input => {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        const postId = parseInt(input.dataset.id);
-                        addComment(postId, input);
-                    }
-                });
-            });
-        }
-
-        // ========== NAVIGATION ==========
-        function setupNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
-            const sections = ['feed', 'explore', 'profile', 'notifications'];
-            
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const sectionName = item.dataset.section;
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    item.classList.add('active');
-                    sections.forEach(sec => {
-                        const el = document.getElementById(`${sec}-section`);
-                        if (el) el.classList.remove('active');
-                    });
-                    const activeSection = document.getElementById(`${sectionName}-section`);
-                    if (activeSection) activeSection.classList.add('active');
-                    
-                    if (sectionName === 'profile') {
-                        renderProfilePage();
-                    }
-                });
-            });
-        }
-
-        function setupUpload() {
-            document.getElementById('uploadBtn').addEventListener('click', () => {
-                alert('📸 Module upload - bientôt disponible');
-            });
-        }
-
-        function init() {
-            renderFeed();
-            setupNavigation();
-            setupUpload();
-            renderProfilePage();
-        }
-        
-        init();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
