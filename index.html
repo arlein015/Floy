@@ -4,430 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Floy - Partagez vos moments</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #000000;
-            color: #ffffff;
-        }
-
-        /* Layout */
-        .layout {
-            display: flex;
-            min-height: 100vh;
-            max-width: 1440px;
-            margin: 0 auto;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 244px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100vh;
-            background: #000000;
-            border-right: 1px solid #262626;
-            padding: 20px 12px;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 25px 12px 16px;
-            margin-bottom: 20px;
-        }
-
-        .logo svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FF6B35, #FF9F5C);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 12px;
-            margin: 4px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #f5f5f5;
-        }
-
-        .nav-item:hover {
-            background: #1a1a1a;
-        }
-
-        .nav-item.active {
-            font-weight: 600;
-            color: #FF6B35;
-        }
-
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.5;
-        }
-
-        .nav-item.active svg {
-            stroke: #FF6B35;
-        }
-
-        .sidebar-footer {
-            margin-top: auto;
-            padding-top: 20px;
-            border-top: 1px solid #262626;
-        }
-
-        /* Main content */
-        .main-content {
-            margin-left: 244px;
-            flex: 1;
-            max-width: 630px;
-            padding: 0 20px;
-        }
-
-        /* Stories */
-        .stories-container {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 16px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #262626;
-            scrollbar-width: none;
-        }
-
-        .stories-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .story {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        .story-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2px;
-        }
-
-        .story-avatar.has-story {
-            background: linear-gradient(45deg, #FF6B35, #FF9F5C);
-        }
-
-        .story-avatar-inner {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #000000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            overflow: hidden;
-        }
-
-        .story-avatar-inner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .story-username {
-            font-size: 12px;
-            color: #8e8e8e;
-        }
-
-        .create-story-btn {
-            background: #FF6B35;
-            border: none;
-            color: white;
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-top: 4px;
-        }
-
-        /* Post */
-        .post {
-            margin-bottom: 20px;
-            background: #000000;
-            border: 1px solid #262626;
-            border-radius: 8px;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-        }
-
-        .post-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-
-        .post-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #FF6B35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            overflow: hidden;
-        }
-
-        .post-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .post-username {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .post-more {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .post-more svg {
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: #f5f5f5;
-        }
-
-        .post-image-container {
-            width: 100%;
-            background: #1a1a1a;
-            cursor: pointer;
-        }
-
-        .post-image {
-            width: 100%;
-            display: block;
-        }
-
-        .post-video {
-            width: 100%;
-            max-height: 500px;
-        }
-
-        .post-actions {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-
-        .action-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .action-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: #f5f5f5;
-            stroke-width: 1.5;
-        }
-
-        .action-btn.liked svg {
-            fill: #FF6B35;
-            stroke: #FF6B35;
-        }
-
-        .save-btn {
-            margin-left: auto;
-        }
-
-        /* Right sidebar */
-        .right-sidebar {
-            width: 320px;
-            position: fixed;
-            right: 0;
-            top: 0;
-            height: 100vh;
-            padding: 30px 20px;
-            display: block;
-        }
-
-        .current-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            cursor: pointer;
-        }
-
-        .user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #FF6B35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            overflow: hidden;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-info .username {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .user-info .name {
-            font-size: 12px;
-            color: #8e8e8e;
-        }
-
-        .suggestions-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            color: #8e8e8e;
-            font-size: 14px;
-        }
-
-        .see-all {
-            background: none;
-            border: none;
-            color: #f5f5f5;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .suggestion-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            cursor: pointer;
-        }
-
-        .suggestion-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #FF6B35;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .suggestion-info .username {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .suggestion-info .followers {
-            font-size: 12px;
-            color: #8e8e8e;
-        }
-
-        .follow-btn {
-            background: none;
-            border: none;
-            color: #FF6B35;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: auto;
-        }
-
-        .loader {
-            text-align: center;
-            padding: 60px;
-            color: #8e8e8e;
-        }
-
-        @media (max-width: 1260px) {
-            .right-sidebar { display: none; }
-            .main-content { max-width: 100%; }
-        }
-
-        @media (max-width: 1000px) {
-            .sidebar { width: 72px; }
-            .sidebar .logo-text, .sidebar .nav-item span { display: none; }
-            .main-content { margin-left: 72px; }
-        }
-
-        @media (max-width: 600px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 0 12px; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Styles spécifiques aux modules (chargés automatiquement par chaque module) -->
 </head>
 <body>
     <div class="layout">
-        <!-- SIDEBAR -->
+        
+        <!-- ========== SIDEBAR GAUCHE ========== -->
         <aside class="sidebar">
             <div class="logo">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.5">
@@ -435,6 +19,7 @@
                 </svg>
                 <span class="logo-text">Floy</span>
             </div>
+
             <nav class="sidebar-nav">
                 <div class="nav-item active" data-page="feed">
                     <svg viewBox="0 0 24 24"><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/></svg>
@@ -456,11 +41,16 @@
                     <svg viewBox="0 0 24 24"><path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/><path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/><path d="M9 20.5h6"/></svg>
                     <span>Notifications</span>
                 </div>
+                <div class="nav-item" data-page="messages">
+                    <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
+                    <span>Messages</span>
+                </div>
                 <div class="nav-item" data-page="profile">
                     <svg viewBox="0 0 24 24"><path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/></svg>
                     <span>Profil</span>
                 </div>
             </nav>
+
             <div class="sidebar-footer">
                 <div class="nav-item" data-page="settings">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/></svg>
@@ -469,15 +59,18 @@
             </div>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        <!-- ========== CONTENU PRINCIPAL ========== -->
         <main class="main-content">
+            <!-- Stories container -->
             <div class="stories-container" id="stories"></div>
+            
+            <!-- Feed container -->
             <div id="feed-container"></div>
         </main>
 
-        <!-- RIGHT SIDEBAR -->
+        <!-- ========== SIDEBAR DROITE ========== -->
         <aside class="right-sidebar">
-            <div class="current-user" id="currentUserSidebar" onclick="goToProfile()">
+            <div class="current-user" id="currentUserSidebar">
                 <div class="user-avatar" id="sidebarAvatar">F</div>
                 <div class="user-info">
                     <div class="username" id="sidebarUsername">floy_user</div>
@@ -492,390 +85,193 @@
         </aside>
     </div>
 
-    <!-- SCRIPTS DES MODULES -->
+    <!-- ========== CHARGEMENT DES MODULES ========== -->
+    <!-- Ordre important : les modules sont chargés séquentiellement -->
+    <script src="modules/like.js"></script>
+    <script src="modules/commentaire.js"></script>
+    <script src="modules/partage.js"></script>
+    <script src="modules/upload.js"></script>
+    <script src="modules/stories.js"></script>
+    <script src="modules/carrousel.js"></script>
+    <script src="modules/notifications.js"></script>
+    <script src="modules/messages.js"></script>
+    
+    <!-- ========== SCRIPT PRINCIPAL ========== -->
     <script>
-    // ======================== MODULE LIKE ========================
-    class LikeModule {
-        constructor() {
-            this.likesData = new Map();
-            this.loadFromStorage();
-        }
-        loadFromStorage() {
-            const saved = localStorage.getItem('floy_likes_data');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                for (let [key, value] of Object.entries(parsed)) {
-                    this.likesData.set(parseInt(key), value);
-                }
+        // ========== DONNÉES GLOBALES ==========
+        let currentUser = {
+            id: 1,
+            username: "floy_user",
+            fullname: "Floy Creator",
+            avatar: "F",
+            avatarUrl: null
+        };
+        
+        let posts = [];
+
+        // ========== CHARGEMENT DES DONNÉES ==========
+        function loadData() {
+            const savedUser = localStorage.getItem('floy_user');
+            if (savedUser) {
+                currentUser = { ...currentUser, ...JSON.parse(savedUser) };
             }
-        }
-        saveToStorage() {
-            const obj = {};
-            for (let [key, value] of this.likesData.entries()) {
-                obj[key] = value;
-            }
-            localStorage.setItem('floy_likes_data', JSON.stringify(obj));
-        }
-        getLikes(postId) {
-            const data = this.likesData.get(postId);
-            return data ? { count: data.count, liked: data.liked || false } : { count: 0, liked: false };
-        }
-        toggleLike(postId) {
-            const currentUserId = this.getCurrentUserId();
-            let data = this.likesData.get(postId) || { count: 0, liked: false, users: [] };
-            if (data.liked) {
-                data.count--;
-                data.liked = false;
-                data.users = data.users.filter(id => id !== currentUserId);
+            
+            const savedPosts = localStorage.getItem('floy_posts');
+            if (savedPosts) {
+                posts = JSON.parse(savedPosts);
             } else {
-                data.count++;
-                data.liked = true;
-                if (!data.users.includes(currentUserId)) data.users.push(currentUserId);
+                posts = [
+                    { id: 1, userId: 1, username: "floy_user", avatar: "F", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=1", caption: "Bienvenue sur Floy ! 🔥", likes: 124, liked: false, comments: [], timestamp: Date.now() - 3600000 },
+                    { id: 2, userId: 2, username: "artiste_orange", avatar: "A", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=2", caption: "L'orange et le noir, un duo parfait !", likes: 89, liked: false, comments: [], timestamp: Date.now() - 7200000 }
+                ];
+                localStorage.setItem('floy_posts', JSON.stringify(posts));
             }
-            this.likesData.set(postId, data);
-            this.saveToStorage();
-            return { success: true, count: data.count, liked: data.liked };
+            
+            updateSidebar();
         }
-        getFormattedLikes(postId) {
-            const { count } = this.getLikes(postId);
+
+        function updateSidebar() {
+            const avatarEl = document.getElementById('sidebarAvatar');
+            avatarEl.innerHTML = currentUser.avatarUrl ? `<img src="${currentUser.avatarUrl}">` : currentUser.avatar;
+            document.getElementById('sidebarUsername').innerHTML = currentUser.username;
+            document.getElementById('sidebarName').innerHTML = currentUser.fullname;
+        }
+
+        // ========== RENDU DU FEED ==========
+        function renderFeed() {
+            const container = document.getElementById('feed-container');
+            if (!container) return;
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="loader">📸 Aucune publication</div>';
+                return;
+            }
+            
+            const sorted = [...posts].sort((a,b) => b.timestamp - a.timestamp);
+            
+            container.innerHTML = sorted.map(post => `
+                <article class="post" data-post-id="${post.id}">
+                    <div class="post-header">
+                        <div class="post-user" onclick="goToUserProfile(${post.userId})">
+                            <div class="post-avatar">${post.avatar}</div>
+                            <div class="post-username">${post.username}</div>
+                        </div>
+                        <button class="post-more" onclick="showPostOptions(${post.id})">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="5" cy="12" r="2.5"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="post-image-container" onclick="viewMedia('${post.mediaUrl}')">
+                        ${post.type === 'video' ? `<video class="post-video" src="${post.mediaUrl}" controls></video>` : `<img class="post-image" src="${post.mediaUrl}">`}
+                    </div>
+                    
+                    <div class="post-actions">
+                        ${typeof likeModule !== 'undefined' ? likeModule.renderLikeButton(post.id, post.liked) : '<button>❤️</button>'}
+                        <button class="action-btn" onclick="commentaireModule.showAllCommentaires(${post.id})">
+                            <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
+                        </button>
+                        <button class="action-btn" onclick="partageModule.showShareModal(${post.id}, '${post.mediaUrl}', '${post.caption}')">
+                            <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
+                        </button>
+                        <button class="action-btn save-btn" onclick="savePost(${post.id})">
+                            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="post-likes" id="likes-${post.id}">${formatLikes(post.likes)}</div>
+                    <div class="post-caption"><strong>${post.username}</strong> ${post.caption}</div>
+                    <div class="post-comments" onclick="commentaireModule.showAllCommentaires(${post.id})">Voir les ${post.comments?.length || 0} commentaires</div>
+                    <div class="post-time">il y a ${getTimeAgo(post.timestamp)}</div>
+                    
+                    <div class="comment-form">
+                        <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Ajouter un commentaire..." onkeypress="if(event.key==='Enter') addQuickComment(${post.id})">
+                        <button class="comment-post-btn" onclick="addQuickComment(${post.id})">Publier</button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function addQuickComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            if (text && typeof commentaireModule !== 'undefined') {
+                commentaireModule.addCommentaire(postId, text);
+                input.value = '';
+                renderFeed();
+            }
+        }
+
+        function formatLikes(count) {
             if (count === 0) return "0 like";
             if (count === 1) return "1 like";
             if (count < 1000) return `${count} likes`;
-            if (count < 1000000) return `${(count / 1000).toFixed(1)}k likes`;
-            return `${(count / 1000000).toFixed(1)}M likes`;
+            return `${(count/1000).toFixed(1)}k likes`;
         }
-        renderLikeButton(postId, isLiked) {
-            return `
-                <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-post-id="${postId}" onclick="likeModule.handleLikeClick(event, ${postId})">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
-                    </svg>
-                </button>
-            `;
+
+        function getTimeAgo(timestamp) {
+            const diff = Math.floor((Date.now() - timestamp) / 1000);
+            if (diff < 60) return "à l'instant";
+            if (diff < 3600) return `${Math.floor(diff/60)} min`;
+            if (diff < 86400) return `${Math.floor(diff/3600)} h`;
+            return `${Math.floor(diff/86400)} j`;
         }
-        handleLikeClick(event, postId) {
-            event.stopPropagation();
-            const btn = event.currentTarget;
-            const result = this.toggleLike(postId);
-            if (result.liked) {
-                btn.classList.add('liked');
-                btn.style.transform = 'scale(1.2)';
-                setTimeout(() => { btn.style.transform = ''; }, 200);
+
+        function viewMedia(url) { window.open(url, '_blank'); }
+        function savePost(id) { alert(`🔖 Post ${id} sauvegardé`); }
+        function showPostOptions(id) { if(confirm('Supprimer ?')) { posts = posts.filter(p=>p.id!==id); localStorage.setItem('floy_posts',JSON.stringify(posts)); renderFeed(); } }
+        function goToUserProfile(id) { if(id===currentUser.id) window.location.href='profil.html'; else alert(`Profil utilisateur #${id}`); }
+
+        // ========== RENDU DES STORIES ==========
+        function renderStories() {
+            if (typeof storiesModule !== 'undefined') {
+                storiesModule.renderStories('stories');
             } else {
-                btn.classList.remove('liked');
+                document.getElementById('stories').innerHTML = '<div class="loader">📸 Stories</div>';
             }
-            const likesSpan = document.getElementById(`likes-${postId}`);
-            if (likesSpan) likesSpan.textContent = this.getFormattedLikes(postId);
-            const likeCountSpan = document.getElementById(`like-count-${postId}`);
-            if (likeCountSpan) likeCountSpan.textContent = this.getFormattedLikes(postId);
         }
-        getCurrentUserId() {
-            const saved = localStorage.getItem('floy_user');
-            if (saved) return JSON.parse(saved).id || 1;
-            return 1;
-        }
-    }
-    const likeModule = new LikeModule();
-    window.likeModule = likeModule;
-    </script>
 
-    <script>
-    // ======================== MODULE COMMENTAIRE ========================
-    class CommentaireModule {
-        constructor() {
-            this.commentairesData = new Map();
-            this.loadFromStorage();
-        }
-        loadFromStorage() {
-            const saved = localStorage.getItem('floy_commentaires_data');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                for (let [key, value] of Object.entries(parsed)) {
-                    this.commentairesData.set(parseInt(key), value);
-                }
-            }
-        }
-        saveToStorage() {
-            const obj = {};
-            for (let [key, value] of this.commentairesData.entries()) {
-                obj[key] = value;
-            }
-            localStorage.setItem('floy_commentaires_data', JSON.stringify(obj));
-        }
-        getCommentaires(postId) {
-            return this.commentairesData.get(postId) || [];
-        }
-        addCommentaire(postId, text) {
-            if (!text.trim()) return { success: false };
-            const currentUser = this.getCurrentUser();
-            const newComment = {
-                id: Date.now(),
-                username: currentUser.username,
-                avatar: currentUser.avatar,
-                text: text.trim(),
-                timestamp: Date.now()
-            };
-            let comments = this.getCommentaires(postId);
-            comments.push(newComment);
-            this.commentairesData.set(postId, comments);
-            this.saveToStorage();
-            return { success: true, count: comments.length };
-        }
-        getFormattedCommentCount(postId) {
-            const count = this.getCommentaires(postId).length;
-            if (count === 0) return "Soyez le premier à commenter";
-            if (count === 1) return "Voir 1 commentaire";
-            return `Voir les ${count} commentaires`;
-        }
-        showAllCommentaires(postId) {
-            const comments = this.getCommentaires(postId);
-            if (comments.length === 0) { alert("Aucun commentaire"); return; }
-            let modalHtml = `
-                <div id="commentsModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;display:flex;align-items:center;justify-content:center;">
-                    <div style="background:#000;border-radius:16px;width:400px;max-width:90%;max-height:80%;display:flex;flex-direction:column;border:1px solid #262626;">
-                        <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
-                            <h3 style="color:#fff;">Commentaires (${comments.length})</h3>
-                            <button onclick="this.closest('#commentsModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">&times;</button>
-                        </div>
-                        <div style="flex:1;overflow-y:auto;padding:16px;">
-                            ${comments.map(c => `
-                                <div style="display:flex;gap:12px;margin-bottom:16px;">
-                                    <div style="width:32px;height:32px;border-radius:50%;background:#FF6B35;display:flex;align-items:center;justify-content:center;font-size:12px;">${c.avatar || c.username.charAt(0)}</div>
-                                    <div><strong>${c.username}</strong><div style="font-size:13px;margin-top:4px;">${this.escapeHtml(c.text)}</div></div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div style="padding:16px;border-top:1px solid #262626;display:flex;gap:12px;">
-                            <input type="text" id="newCommentInput" placeholder="Ajouter un commentaire..." style="flex:1;background:#1a1a1a;border:1px solid #262626;border-radius:20px;padding:10px 16px;color:#fff;outline:none;">
-                            <button onclick="commentaireModule.addAndRefresh(${postId})" style="background:none;border:none;color:#FF6B35;font-weight:600;cursor:pointer;">Publier</button>
-                        </div>
-                    </div>
-                </div>
+        // ========== SUGGESTIONS ==========
+        function setupSuggestions() {
+            document.getElementById('suggestionsList').innerHTML = `
+                <div class="suggestion-item"><div class="suggestion-avatar">A</div><div class="suggestion-info"><div class="username">artiste_orange</div><div class="followers">12k abonnés</div></div><button class="follow-btn">Suivre</button></div>
+                <div class="suggestion-item"><div class="suggestion-avatar">P</div><div class="suggestion-info"><div class="username">photographe</div><div class="followers">8.5k abonnés</div></div><button class="follow-btn">Suivre</button></div>
             `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
-        addAndRefresh(postId) {
-            const input = document.getElementById('newCommentInput');
-            if (input && input.value.trim()) {
-                this.addCommentaire(postId, input.value);
-                document.getElementById('commentsModal')?.remove();
-                this.showAllCommentaires(postId);
-                this.updateCommentDisplay(postId);
-            }
-        }
-        updateCommentDisplay(postId) {
-            const commentsDiv = document.querySelector(`.post[data-post-id="${postId}"] .post-comments`);
-            if (commentsDiv) commentsDiv.textContent = this.getFormattedCommentCount(postId);
-        }
-        getCurrentUser() {
-            const saved = localStorage.getItem('floy_user');
-            if (saved) return JSON.parse(saved);
-            return { id: 1, username: "floy_user", avatar: "F" };
-        }
-        escapeHtml(str) { return str.replace(/[&<>]/g, function(m) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]; }); }
-    }
-    const commentaireModule = new CommentaireModule();
-    window.commentaireModule = commentaireModule;
-    </script>
 
-    <script>
-    // ======================== MODULE PARTAGE ========================
-    class PartageModule {
-        showShareModal(postId, imageUrl) {
-            const modalHtml = `
-                <div id="shareModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;display:flex;align-items:center;justify-content:center;">
-                    <div style="background:#000;border-radius:16px;width:400px;max-width:90%;border:1px solid #262626;">
-                        <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
-                            <h3 style="color:#fff;">Partager</h3>
-                            <button onclick="this.closest('#shareModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">&times;</button>
-                        </div>
-                        <div style="padding:16px;">
-                            ${imageUrl ? `<img src="${imageUrl}" style="width:100%;border-radius:12px;margin-bottom:16px;">` : ''}
-                            <div style="display:flex;flex-direction:column;gap:8px;">
-                                <button onclick="partageModule.copyLink()" style="background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;text-align:left;">🔗 Copier le lien</button>
-                                <button onclick="partageModule.shareWhatsApp()" style="background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;text-align:left;">💬 WhatsApp</button>
-                                <button onclick="partageModule.shareTwitter()" style="background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;text-align:left;">🐦 X (Twitter)</button>
-                                <button onclick="partageModule.shareFacebook()" style="background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;text-align:left;">📘 Facebook</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        }
-        copyLink() { navigator.clipboard.writeText(window.location.href); alert("Lien copié !"); document.getElementById('shareModal')?.remove(); }
-        shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Regarde ce post sur Floy ! " + window.location.href)}`, '_blank'); document.getElementById('shareModal')?.remove(); }
-        shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent("Regarde ce post sur Floy ! 🔥")}`, '_blank'); document.getElementById('shareModal')?.remove(); }
-        shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); document.getElementById('shareModal')?.remove(); }
-    }
-    const partageModule = new PartageModule();
-    window.partageModule = partageModule;
-    </script>
-
-    <script>
-    // ======================== MODULE UPLOAD ========================
-    class UploadModule {
-        openUploadModal() {
-            const modalHtml = `
-                <div id="uploadModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;display:flex;align-items:center;justify-content:center;">
-                    <div style="background:#000;border-radius:16px;width:500px;max-width:90%;border:1px solid #262626;">
-                        <div style="padding:16px 20px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
-                            <h3 style="color:#fff;">Créer une publication</h3>
-                            <button onclick="this.closest('#uploadModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">&times;</button>
-                        </div>
-                        <div style="padding:20px;">
-                            <div style="text-align:center;padding:40px;border:2px dashed #262626;border-radius:12px;cursor:pointer;" onclick="document.getElementById('uploadFileInput').click()">
-                                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:#8e8e8e;margin-bottom:16px;"><path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/></svg>
-                                <p style="color:#8e8e8e;margin-bottom:16px;">Sélectionnez une photo ou vidéo</p>
-                                <button style="background:#FF6B35;border:none;padding:8px 20px;border-radius:8px;color:#fff;cursor:pointer;">Parcourir</button>
-                            </div>
-                            <input type="file" id="uploadFileInput" accept="image/*,video/*" style="display:none;">
-                            <div id="uploadPreview" style="display:none;margin-top:20px;">
-                                <img id="uploadPreviewImg" style="max-width:100%;max-height:250px;border-radius:12px;">
-                                <textarea id="uploadCaption" placeholder="Écrivez une légende..." style="width:100%;background:#1a1a1a;border:1px solid #262626;border-radius:8px;padding:12px;color:#fff;margin-top:12px;resize:none;" rows="3"></textarea>
-                                <button onclick="uploadModule.publishPost()" style="width:100%;background:#FF6B35;border:none;padding:12px;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;margin-top:12px;">Publier</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            document.getElementById('uploadFileInput').onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        document.getElementById('uploadPreviewImg').src = ev.target.result;
-                        document.querySelector('#uploadPreview').style.display = 'block';
-                        document.querySelector('#uploadModal .upload-area-style').style.display = 'none';
-                    };
-                    reader.readAsDataURL(file);
-                    this.selectedFile = file;
-                }
-            };
-        }
-        publishPost() {
-            if (!this.selectedFile) { alert("Sélectionnez un fichier"); return; }
-            const caption = document.getElementById('uploadCaption').value;
-            const currentUser = JSON.parse(localStorage.getItem('floy_user') || '{"id":1,"username":"floy_user","avatar":"F"}');
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const newPost = {
-                    id: Date.now(),
-                    userId: currentUser.id,
-                    username: currentUser.username,
-                    avatar: currentUser.avatar,
-                    type: this.selectedFile.type.startsWith('video') ? 'video' : 'photo',
-                    mediaUrl: ev.target.result,
-                    caption: caption,
-                    likes: 0,
-                    comments: [],
-                    timestamp: Date.now()
-                };
-                const existing = JSON.parse(localStorage.getItem('floy_posts') || '[]');
-                existing.unshift(newPost);
-                localStorage.setItem('floy_posts', JSON.stringify(existing));
-                document.getElementById('uploadModal')?.remove();
-                if (typeof renderFeed === 'function') renderFeed();
-                alert("✅ Publication envoyée !");
-            };
-            reader.readAsDataURL(this.selectedFile);
-        }
-    }
-    const uploadModule = new UploadModule();
-    window.uploadModule = uploadModule;
-    </script>
-
-    <script>
-    // ======================== MAIN APP ========================
-    let currentUser = { id: 1, username: "floy_user", fullname: "Floy Creator", avatar: "F" };
-    let posts = [];
-
-    function loadData() {
-        const savedUser = localStorage.getItem('floy_user');
-        if (savedUser) currentUser = { ...currentUser, ...JSON.parse(savedUser) };
-        const savedPosts = localStorage.getItem('floy_posts');
-        if (savedPosts) posts = JSON.parse(savedPosts);
-        else {
-            posts = [
-                { id: 1, userId: 1, username: "floy_user", avatar: "F", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=1", caption: "Bienvenue sur Floy ! 🔥", likes: 124, comments: [], timestamp: Date.now() - 3600000 },
-                { id: 2, userId: 2, username: "artiste_orange", avatar: "A", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=2", caption: "L'orange et le noir, un duo parfait !", likes: 89, comments: [], timestamp: Date.now() - 7200000 }
-            ];
-            localStorage.setItem('floy_posts', JSON.stringify(posts));
-        }
-        updateSidebar();
-    }
-
-    function updateSidebar() {
-        document.getElementById('sidebarAvatar').innerHTML = currentUser.avatar;
-        document.getElementById('sidebarUsername').innerHTML = currentUser.username;
-        document.getElementById('sidebarName').innerHTML = currentUser.fullname;
-    }
-
-    function renderFeed() {
-        const container = document.getElementById('feed-container');
-        if (!container) return;
-        if (posts.length === 0) { container.innerHTML = '<div class="loader">📸 Aucune publication</div>'; return; }
-        const sorted = [...posts].sort((a,b) => b.timestamp - a.timestamp);
-        container.innerHTML = sorted.map(post => `
-            <article class="post" data-post-id="${post.id}">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-avatar">${post.avatar}</div>
-                        <div class="post-username">${post.username}</div>
-                    </div>
-                    <button class="post-more"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="5" cy="12" r="2.5"/></svg></button>
-                </div>
-                <div class="post-image-container">
-                    ${post.type === 'video' ? `<video class="post-video" src="${post.mediaUrl}" controls></video>` : `<img class="post-image" src="${post.mediaUrl}">`}
-                </div>
-                <div class="post-actions">
-                    ${likeModule.renderLikeButton(post.id, likeModule.getLikes(post.id).liked)}
-                    <button class="action-btn" onclick="commentaireModule.showAllCommentaires(${post.id})">
-                        <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
-                    </button>
-                    <button class="action-btn" onclick="partageModule.showShareModal(${post.id}, '${post.mediaUrl}')">
-                        <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
-                    </button>
-                    <button class="action-btn save-btn"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/></svg></button>
-                </div>
-                <div class="post-likes" id="likes-${post.id}" style="padding:0 16px 8px;font-weight:600;">${likeModule.getFormattedLikes(post.id)}</div>
-                <div class="post-caption" style="padding:0 16px 8px;"><strong>${post.username}</strong> ${post.caption}</div>
-                <div class="post-comments" style="padding:0 16px 4px;color:#8e8e8e;cursor:pointer;" onclick="commentaireModule.showAllCommentaires(${post.id})">${commentaireModule.getFormattedCommentCount(post.id)}</div>
-                <div class="post-time" style="padding:4px 16px 12px;font-size:10px;color:#8e8e8e;">il y a ${Math.floor((Date.now() - post.timestamp)/3600000)} heures</div>
-                <div class="comment-form" style="display:flex;padding:8px 16px;border-top:1px solid #262626;">
-                    <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Ajouter un commentaire..." style="flex:1;background:none;border:none;color:#fff;padding:12px 0;outline:none;">
-                    <button class="comment-post-btn" onclick="commentaireModule.addCommentaire(${post.id}, document.getElementById('comment-input-${post.id}').value); document.getElementById('comment-input-${post.id}').value=''; commentaireModule.updateCommentDisplay(${post.id});" style="background:none;border:none;color:#FF6B35;font-weight:600;cursor:pointer;">Publier</button>
-                </div>
-            </article>
-        `).join('');
-    }
-
-    function goToProfile() { window.location.href = 'profil.html'; }
-    function setupSuggestions() {
-        document.getElementById('suggestionsList').innerHTML = `
-            <div class="suggestion-item"><div class="suggestion-avatar">A</div><div class="suggestion-info"><div class="username">artiste_orange</div><div class="followers">12k abonnés</div></div><button class="follow-btn">Suivre</button></div>
-            <div class="suggestion-item"><div class="suggestion-avatar">P</div><div class="suggestion-info"><div class="username">photographe</div><div class="followers">8.5k abonnés</div></div><button class="follow-btn">Suivre</button></div>
-        `;
-    }
-
-    function setupNavigation() {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const page = item.dataset.page;
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                item.classList.add('active');
-                if (page === 'create') uploadModule.openUploadModal();
-                else if (page !== 'feed') alert(`📱 Page ${page} - Bientôt disponible`);
+        // ========== NAVIGATION ==========
+        function setupNavigation() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.dataset.page;
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    if (page === 'create' && typeof uploadModule !== 'undefined') {
+                        uploadModule.openUploadModal();
+                        item.classList.remove('active');
+                        document.querySelector('.nav-item[data-page="feed"]').classList.add('active');
+                    } else if (page === 'notifications' && typeof notificationsModule !== 'undefined') {
+                        notificationsModule.showNotificationsModal();
+                    } else if (page === 'messages' && typeof messagesModule !== 'undefined') {
+                        messagesModule.openMessagesModal();
+                    } else if (page !== 'feed') {
+                        alert(`📱 Page ${page} - Bientôt disponible`);
+                    }
+                });
             });
-        });
-    }
+        }
 
-    loadData();
-    renderFeed();
-    setupSuggestions();
-    setupNavigation();
-    window.renderFeed = renderFeed;
+        // ========== INITIALISATION ==========
+        function init() {
+            loadData();
+            renderFeed();
+            renderStories();
+            setupSuggestions();
+            setupNavigation();
+        }
+        
+        init();
+        window.renderFeed = renderFeed;
     </script>
 </body>
 </html>
