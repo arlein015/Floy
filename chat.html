@@ -210,7 +210,7 @@
             color: #8e8e8e;
         }
 
-        /* Messages */
+        /* Messages - LES BULLES */
         .messages-container {
             flex: 1;
             overflow-y: auto;
@@ -389,7 +389,6 @@
             font-size: 16px;
         }
 
-        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -428,9 +427,6 @@
             .conversations-panel.hide {
                 transform: translateX(-100%);
             }
-            .show-conversations-btn {
-                display: block !important;
-            }
             .message {
                 max-width: 85%;
             }
@@ -449,12 +445,9 @@
     </div>
 
     <div class="chat-layout">
-        <!-- Liste des conversations -->
         <div class="conversations-panel" id="conversationsPanel">
             <div id="conversationsList"></div>
         </div>
-
-        <!-- Zone de chat -->
         <div class="chat-panel" id="chatPanel">
             <div class="chat-empty">
                 <div class="chat-empty-icon">💬</div>
@@ -463,7 +456,6 @@
         </div>
     </div>
 
-    <!-- Modal nouveau message -->
     <div id="newChatModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -477,12 +469,10 @@
         </div>
     </div>
 
-    <!-- Emoji Picker (caché) -->
-    <div id="emojiPicker" style="position:fixed;bottom:80px;left:20px;background:#1a1a1a;border:1px solid #262626;border-radius:12px;padding:8px;display:none;grid-template-columns:repeat(6,1fr);gap:4px;z-index:300;"></div>
-
     <script src="modules/chat.js"></script>
     <script>
-        // ==================== RENDU DES CONVERSATIONS ====================
+        let currentConversation = null;
+
         function renderConversations() {
             const container = document.getElementById('conversationsList');
             const conversations = chatModule.getConversations();
@@ -501,7 +491,7 @@
             }
             
             container.innerHTML = conversations.map(conv => `
-                <div class="conversation-item ${chatModule.currentConversation?.userId === conv.userId ? 'active' : ''}" onclick="selectConversation(${conv.userId})">
+                <div class="conversation-item ${currentConversation?.userId === conv.userId ? 'active' : ''}" onclick="selectConversation(${conv.userId})">
                     <div class="conv-avatar">
                         ${conv.avatar}
                         ${conv.online ? '<div class="online-dot"></div>' : ''}
@@ -518,27 +508,22 @@
             `).join('');
         }
 
-        // ==================== SÉLECTIONNER UNE CONVERSATION ====================
         function selectConversation(userId) {
-            chatModule.currentConversation = chatModule.getConversation(userId);
-            if (!chatModule.currentConversation) return;
+            currentConversation = chatModule.getConversation(userId);
+            if (!currentConversation) return;
             
-            chatModule.markAsRead(userId);
             renderConversations();
             renderChatPanel();
             
-            // Sur mobile, cacher la liste
             if (window.innerWidth <= 700) {
                 document.getElementById('conversationsPanel').classList.add('hide');
             }
         }
 
-        // ==================== RENDU DU PANEL CHAT ====================
         function renderChatPanel() {
             const container = document.getElementById('chatPanel');
-            const conv = chatModule.currentConversation;
             
-            if (!conv) {
+            if (!currentConversation) {
                 container.innerHTML = `
                     <div class="chat-empty">
                         <div class="chat-empty-icon">💬</div>
@@ -550,18 +535,13 @@
             
             container.innerHTML = `
                 <div class="chat-panel-header">
-                    <button class="back-btn show-conversations-btn" onclick="showConversationsList()" style="display:none;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white">
-                            <path d="M15 18l-6-6 6-6" stroke-width="2"/>
-                        </svg>
-                    </button>
                     <div class="chat-panel-avatar">
-                        ${conv.avatar}
-                        ${conv.online ? '<div class="online-dot"></div>' : ''}
+                        ${currentConversation.avatar}
+                        ${currentConversation.online ? '<div class="online-dot"></div>' : ''}
                     </div>
                     <div class="chat-panel-info">
-                        <div class="chat-panel-name">${conv.username}</div>
-                        <div class="chat-panel-status">${conv.online ? 'En ligne' : 'Hors ligne'}</div>
+                        <div class="chat-panel-name">${currentConversation.username}</div>
+                        <div class="chat-panel-status">${currentConversation.online ? 'En ligne' : 'Hors ligne'}</div>
                     </div>
                 </div>
                 <div class="messages-container" id="messagesContainer">
@@ -581,16 +561,14 @@
             document.getElementById('messageInput')?.focus();
         }
 
-        // ==================== RENDU DES MESSAGES ====================
         function renderMessages() {
-            const conv = chatModule.currentConversation;
-            if (!conv || !conv.messages || conv.messages.length === 0) {
+            if (!currentConversation.messages || currentConversation.messages.length === 0) {
                 return '<div class="no-messages">Envoyez un premier message</div>';
             }
             
             let lastDate = null;
             
-            return conv.messages.map(msg => {
+            return currentConversation.messages.map(msg => {
                 const msgDate = new Date(msg.timestamp);
                 const showDate = !lastDate || lastDate.toDateString() !== msgDate.toDateString();
                 lastDate = msgDate;
@@ -611,19 +589,20 @@
             }).join('');
         }
 
-        // ==================== ENVOYER UN MESSAGE ====================
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input?.value.trim();
-            if (!text || !chatModule.currentConversation) return;
+            if (!text || !currentConversation) return;
             
-            chatModule.sendMessage(chatModule.currentConversation.userId, text);
+            chatModule.sendMessage(currentConversation.userId, text);
             input.value = '';
+            
+            // Mettre à jour currentConversation
+            currentConversation = chatModule.getConversation(currentConversation.userId);
             renderChatPanel();
             renderConversations();
         }
 
-        // ==================== NOUVEAU CHAT ====================
         function openNewChatModal() {
             document.getElementById('newChatModal').classList.add('active');
             document.getElementById('searchUserInput').value = '';
@@ -671,26 +650,25 @@
                 conv = chatModule.getOrCreateConversation(userId, username, avatar);
             }
             closeNewChatModal();
-            chatModule.currentConversation = conv;
+            currentConversation = conv;
             renderConversations();
             renderChatPanel();
             
-            // Sur mobile, cacher la liste
             if (window.innerWidth <= 700) {
                 document.getElementById('conversationsPanel').classList.add('hide');
             }
         }
 
-        // ==================== EMOJI PICKER ====================
         function toggleEmojiPicker() {
+            const emojis = ['😀', '😂', '❤️', '🔥', '👍', '😍', '🎉', '😢', '😎', '✨', '💯', '🔝', '🥰', '😘'];
             const picker = document.getElementById('emojiPicker');
-            if (picker.style.display === 'grid') {
-                picker.style.display = 'none';
-            } else {
-                const emojis = ['😀', '😂', '❤️', '🔥', '👍', '😍', '🎉', '😢', '😎', '✨', '💯', '🔝', '🥰', '😘', '🤣', '😱', '🥺', '👏', '🙏'];
-                picker.innerHTML = emojis.map(e => `<span style="cursor:pointer;font-size:24px;padding:8px;" onclick="addEmoji('${e}')">${e}</span>`).join('');
-                picker.style.display = 'grid';
-                setTimeout(() => { picker.style.display = 'none'; }, 3000);
+            if (!picker) {
+                const newPicker = document.createElement('div');
+                newPicker.id = 'emojiPicker';
+                newPicker.style.cssText = 'position:fixed;bottom:80px;left:20px;background:#1a1a1a;border:1px solid #262626;border-radius:12px;padding:8px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;z-index:300;';
+                newPicker.innerHTML = emojis.map(e => `<span style="cursor:pointer;font-size:24px;padding:8px;" onclick="addEmoji('${e}')">${e}</span>`).join('');
+                document.body.appendChild(newPicker);
+                setTimeout(() => newPicker.remove(), 3000);
             }
         }
 
@@ -700,23 +678,15 @@
                 input.value += emoji;
                 input.focus();
             }
-            document.getElementById('emojiPicker').style.display = 'none';
+            document.getElementById('emojiPicker')?.remove();
         }
 
-        // ==================== MOBILE ====================
-        function showConversationsList() {
-            document.getElementById('conversationsPanel').classList.remove('hide');
-        }
-
-        // ==================== INITIALISATION ====================
         function init() {
             renderConversations();
-            chatModule.updateUnreadBadge();
         }
         
         init();
         
-        // Fermer modal en cliquant dehors
         document.getElementById('newChatModal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('newChatModal')) closeNewChatModal();
         });
