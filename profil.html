@@ -2,76 +2,202 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floy - Profil</title>
-    <link rel="stylesheet" href="profil.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+        }
+        .profile-header {
+            position: sticky;
+            top: 0;
+            background: #000000;
+            border-bottom: 1px solid #262626;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+        }
+        .profile-username {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .profile-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .stat-label {
+            color: #8e8e8e;
+            font-size: 12px;
+        }
+        .profile-bio {
+            margin-top: 16px;
+        }
+        .edit-profile-btn {
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 16px;
+            width: 100%;
+        }
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-top: 20px;
+        }
+        .post-item {
+            aspect-ratio: 1;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .loader {
+            text-align: center;
+            padding: 60px;
+            color: #8e8e8e;
+        }
+        @media (max-width: 600px) {
+            .profile-container { padding: 12px; }
+            .profile-info { gap: 20px; }
+            .profile-avatar { width: 60px; height: 60px; font-size: 28px; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="profile-header">
-        <button class="back-btn" onclick="goBack()">
+        <button class="back-btn" onclick="window.location.href='index.html'">
             <svg viewBox="0 0 24 24">
                 <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
         </button>
-        <div class="profile-username" id="headerUsername">chargement...</div>
-        <button class="menu-btn" id="menuBtn">
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="2.5"/>
-                <circle cx="19" cy="12" r="2.5"/>
-                <circle cx="5" cy="12" r="2.5"/>
-            </svg>
-        </button>
+        <div class="profile-username" id="profileUsername">chargement...</div>
     </div>
 
-    <!-- Menu dropdown -->
-    <div class="dropdown-menu" id="dropdownMenu">
-        <div class="dropdown-item" onclick="goToSettings()">
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="2.5"/>
-                <path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/>
-            </svg>
-            <span>Paramètres</span>
-        </div>
-        <div class="dropdown-item" onclick="logout()">
-            <svg viewBox="0 0 24 24">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
-            </svg>
-            <span>Déconnexion</span>
-        </div>
-    </div>
-
-    <!-- Contenu principal -->
     <div class="profile-container">
         <div id="profileContent">
-            <div class="loader">
-                <div class="spinner"></div>
-                <p>Chargement du profil...</p>
-            </div>
+            <div class="loader">📱 Chargement du profil...</div>
         </div>
     </div>
 
-    <!-- MODAL CHANGER AVATAR -->
-    <div id="avatarModal" class="modal">
-        <div class="modal-content modal-small">
-            <div class="modal-header">
-                <h3>Modifier la photo</h3>
-                <button class="modal-close" onclick="closeAvatarModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <button class="avatar-option" onclick="changeAvatarByEmoji()">
-                    <span>😊</span> Changer avec un emoji
-                </button>
-                <button class="avatar-option" onclick="changeAvatarByLetter()">
-                    <span>🔤</span> Changer avec une lettre
-                </button>
-                <button class="avatar-option avatar-remove" onclick="removeAvatar()">
-                    <span>🗑️</span> Supprimer la photo
-                </button>
-            </div>
-        </div>
-    </div>
+    <script>
+        let currentUser = {
+            id: 1,
+            username: "floy_user",
+            fullname: "Floy Creator",
+            avatar: "F",
+            bio: "Créateur de Floy 🔥",
+            postsCount: 0,
+            followers: 128,
+            following: 94
+        };
 
-    <script src="profil.js"></script>
+        function loadProfile() {
+            const saved = localStorage.getItem('floy_user');
+            if (saved) {
+                currentUser = { ...currentUser, ...JSON.parse(saved) };
+            }
+            
+            const posts = JSON.parse(localStorage.getItem('floy_posts') || '[]');
+            const userPosts = posts.filter(p => p.userId === currentUser.id);
+            
+            document.getElementById('profileUsername').textContent = currentUser.username;
+            
+            document.getElementById('profileContent').innerHTML = `
+                <div class="profile-info">
+                    <div class="profile-avatar" onclick="changeAvatar()">${currentUser.avatar}</div>
+                    <div class="profile-details">
+                        <div class="profile-stats">
+                            <div class="stat"><div class="stat-number">${userPosts.length}</div><div class="stat-label">posts</div></div>
+                            <div class="stat"><div class="stat-number">${currentUser.followers}</div><div class="stat-label">abonnés</div></div>
+                            <div class="stat"><div class="stat-number">${currentUser.following}</div><div class="stat-label">abonnements</div></div>
+                        </div>
+                        <div class="profile-bio">
+                            <strong>${currentUser.fullname}</strong><br>
+                            ${currentUser.bio}
+                        </div>
+                        <button class="edit-profile-btn" onclick="editProfile()">Modifier le profil</button>
+                    </div>
+                </div>
+                <div class="posts-grid" id="postsGrid">
+                    ${userPosts.map(p => `<div class="post-item" onclick="alert('Post #${p.id}')">📷</div>`).join('') || '<div class="loader" style="grid-column:span 3">Aucune publication</div>'}
+                </div>
+            `;
+        }
+
+        function changeAvatar() {
+            const newAvatar = prompt("Nouvel avatar (1 lettre ou emoji):", currentUser.avatar);
+            if (newAvatar && newAvatar.length >= 1) {
+                currentUser.avatar = newAvatar;
+                localStorage.setItem('floy_user', JSON.stringify(currentUser));
+                loadProfile();
+            }
+        }
+
+        function editProfile() {
+            const newUsername = prompt("Nouveau nom d'utilisateur:", currentUser.username);
+            if (newUsername) currentUser.username = newUsername;
+            const newFullname = prompt("Nom complet:", currentUser.fullname);
+            if (newFullname) currentUser.fullname = newFullname;
+            const newBio = prompt("Bio:", currentUser.bio);
+            if (newBio) currentUser.bio = newBio;
+            localStorage.setItem('floy_user', JSON.stringify(currentUser));
+            loadProfile();
+        }
+
+        loadProfile();
+    </script>
 </body>
 </html>
