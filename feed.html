@@ -1,1 +1,70 @@
+<!-- Ce fichier est chargé dynamiquement par script.js -->
+<!-- Il contient uniquement les posts du feed -->
 
+<div class="feed">
+    <!-- Les posts seront générés par JavaScript -->
+</div>
+
+<!-- Template d'un post (structure exacte Instagram) -->
+<template id="postTemplate">
+    <article class="post">
+        <div class="post-header">
+            <div class="post-user">
+                <div class="post-avatar"></div>
+                <div class="post-username"></div>
+            </div>
+            <button class="post-more">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="2.5"/>
+                    <circle cx="19" cy="12" r="2.5"/>
+                    <circle cx="5" cy="12" r="2.5"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="post-image-container">
+            <img class="post-image" src="" alt="">
+        </div>
+
+        <div class="post-actions">
+            <button class="action-btn like-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+                </svg>
+            </button>
+            <button class="action-btn comment-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/>
+                </svg>
+            </button>
+            <button class="action-btn share-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.5 5.5v13a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1Z"/>
+                    <path d="m16.5 7.5-5 5"/>
+                    <path d="M9.5 11.5h5v5"/>
+                </svg>
+            </button>
+            <button class="action-btn save-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="post-likes"></div>
+
+        <div class="post-caption">
+            <strong class="caption-username"></strong>
+            <span class="caption-text"></span>
+        </div>
+
+        <div class="post-comments"></div>
+
+        <div class="post-time"></div>
+
+        <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="Ajouter un commentaire...">
+            <button class="comment-post-btn">Publier</button>
+        </div>
+    </article>
+</template>
