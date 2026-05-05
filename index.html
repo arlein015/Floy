@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Floy - Partagez vos moments</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* Styles supplémentaires pour la navigation entre pages */
+        /* ==================== RESET & BASE ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -17,9 +16,10 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #000000;
             color: #ffffff;
+            overflow-x: hidden;
         }
 
-        /* Layout */
+        /* ==================== LAYOUT PRINCIPAL ==================== */
         .layout {
             display: flex;
             min-height: 100vh;
@@ -27,7 +27,7 @@
             margin: 0 auto;
         }
 
-        /* Sidebar */
+        /* ==================== SIDEBAR GAUCHE (INSTAGRAM STYLE) ==================== */
         .sidebar {
             width: 244px;
             position: fixed;
@@ -108,8 +108,8 @@
             border-top: 1px solid #262626;
         }
 
-        /* Badge notifications */
-        .notif-badge {
+        /* Badges pour notifications et messages */
+        .notif-badge, .msg-badge {
             position: absolute;
             top: -5px;
             right: -5px;
@@ -123,7 +123,7 @@
             text-align: center;
         }
 
-        /* Main content */
+        /* ==================== MAIN CONTENT ==================== */
         .main-content {
             margin-left: 244px;
             flex: 1;
@@ -131,7 +131,7 @@
             padding: 0 20px;
         }
 
-        /* Stories */
+        /* ==================== STORIES (Ronds Instagram) ==================== */
         .stories-container {
             display: flex;
             gap: 16px;
@@ -146,23 +146,24 @@
             display: none;
         }
 
-        .story-item {
+        .story-ring {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
             cursor: pointer;
-            position: relative;
+            flex-shrink: 0;
         }
 
         .story-avatar {
-            width: 64px;
-            height: 64px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            background: #1a1a1a;
         }
 
         .story-avatar.has-story {
@@ -171,14 +172,14 @@
         }
 
         .story-avatar-inner {
-            width: 60px;
-            height: 60px;
+            width: 66px;
+            height: 66px;
             border-radius: 50%;
-            background: #000;
+            background: #000000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 32px;
             overflow: hidden;
         }
 
@@ -188,33 +189,33 @@
             object-fit: cover;
         }
 
-        .story-avatar.create-story {
-            background: #1a1a1a;
-            border: 2px solid #262626;
-        }
-
-        .story-plus {
+        .story-plus-icon {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 22px;
-            height: 22px;
+            bottom: 2px;
+            right: 2px;
+            width: 24px;
+            height: 24px;
             background: #FF6B35;
             border-radius: 50%;
-            color: white;
-            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #000;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border: 2px solid #000000;
         }
 
         .story-username {
             font-size: 12px;
             color: #8e8e8e;
+            max-width: 70px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Post */
+        /* ==================== POST CARD ==================== */
         .post {
             margin-bottom: 20px;
             background: #000000;
@@ -394,7 +395,7 @@
             opacity: 1;
         }
 
-        /* Right sidebar */
+        /* ==================== SIDEBAR DROITE (Suggestions) ==================== */
         .right-sidebar {
             width: 320px;
             position: fixed;
@@ -498,12 +499,314 @@
             margin-left: auto;
         }
 
+        /* ==================== MODAL UPLOAD ==================== */
+        .modal-upload {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-upload-content {
+            background: #000;
+            border-radius: 16px;
+            width: 500px;
+            max-width: 90%;
+            border: 1px solid #262626;
+        }
+
+        .modal-upload-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-upload-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-upload-body {
+            padding: 20px;
+        }
+
+        .upload-type-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .upload-type-btn {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .upload-type-btn.active {
+            background: #FF6B35;
+            border-color: #FF6B35;
+        }
+
+        .upload-area {
+            text-align: center;
+            padding: 40px;
+            border: 2px dashed #262626;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .upload-area svg {
+            color: #8e8e8e;
+            margin-bottom: 16px;
+        }
+
+        .upload-area button {
+            background: #FF6B35;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #uploadPreview {
+            text-align: center;
+        }
+
+        #previewImage, #previewVideo {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        #uploadCaption {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            margin-bottom: 16px;
+            resize: none;
+        }
+
+        .publish-btn {
+            width: 100%;
+            background: #FF6B35;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ==================== MODAL COMMENTAIRES ==================== */
+        .comments-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comments-modal-content {
+            background: #000;
+            border-radius: 16px;
+            width: 400px;
+            max-width: 90%;
+            max-height: 80%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #262626;
+        }
+
+        .comments-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .comments-modal-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-username {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .comment-text {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .comments-footer {
+            padding: 16px;
+            border-top: 1px solid #262626;
+            display: flex;
+            gap: 12px;
+        }
+
+        .comments-footer input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            border-radius: 20px;
+            padding: 10px 16px;
+            color: white;
+            outline: none;
+        }
+
+        .comments-footer button {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ==================== MODAL NOTIFICATIONS ==================== */
+        .notifications-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 3500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notifications-modal-content {
+            background: #000;
+            border-radius: 16px;
+            width: 450px;
+            max-width: 90%;
+            max-height: 80%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #262626;
+        }
+
+        .notifications-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .notifications-modal-header button {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            cursor: pointer;
+        }
+
+        .notifications-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .notification-item.unread {
+            background: rgba(255,107,53,0.1);
+        }
+
+        .notif-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notif-content {
+            flex: 1;
+        }
+
+        .notif-message {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .notif-time {
+            font-size: 11px;
+            color: #8e8e8e;
+        }
+
+        /* ==================== LOADER ==================== */
         .loader {
             text-align: center;
             padding: 60px;
             color: #8e8e8e;
         }
 
+        /* ==================== RESPONSIVE ==================== */
         @media (max-width: 1260px) {
             .right-sidebar { display: none; }
             .main-content { max-width: 100%; }
@@ -519,12 +822,24 @@
             .sidebar { display: none; }
             .main-content { margin-left: 0; padding: 0 12px; }
         }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes heartExplode {
+            0% { transform: scale(0.5); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        @keyframes highlightPost {
+            0% { background: rgba(255,107,53,0.2); }
+            100% { background: transparent; }
+        }
     </style>
 </head>
 <body>
     <div class="layout">
         
-        <!-- ========== SIDEBAR GAUCHE ========== -->
+        <!-- ==================== SIDEBAR GAUCHE ==================== -->
         <aside class="sidebar">
             <div class="logo">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.5">
@@ -534,43 +849,30 @@
             </div>
 
             <nav class="sidebar-nav">
-                <!-- Accueil -->
                 <div class="nav-item active" data-page="feed">
                     <svg viewBox="0 0 24 24"><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l8.122-7.351a2.999 2.999 0 0 1 4.09-.043L22.7 10.82a1 1 0 0 1 .3.724V22a1 1 0 0 1-1 1Z"/></svg>
                     <span>Accueil</span>
                 </div>
-
-                <!-- Explorer -->
                 <div class="nav-item" data-page="explore">
                     <svg viewBox="0 0 24 24"><path d="M10.25 3.75a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm-8.5 6.5a8.5 8.5 0 1 1 17 0 8.5 8.5 0 0 1-17 0Z"/><path d="M19.53 19.53l-4.16-4.16a.75.75 0 0 1 1.06-1.06l4.16 4.16a.75.75 0 0 1-1.06 1.06Z"/></svg>
                     <span>Explorer</span>
                 </div>
-
-                <!-- Reels -->
                 <div class="nav-item" data-page="reels">
                     <svg viewBox="0 0 24 24"><path d="M2.5 5.5h19v13h-19z"/><path d="M9.5 8.5l6 3.5-6 3.5z"/></svg>
                     <span>Reels</span>
                 </div>
-
-                <!-- Créer -->
                 <div class="nav-item" data-page="create">
                     <svg viewBox="0 0 24 24"><path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/></svg>
                     <span>Créer</span>
                 </div>
-
-                <!-- Notifications -->
                 <div class="nav-item" data-page="notifications">
                     <svg viewBox="0 0 24 24"><path d="M16.5 18.5v-5.5a4.5 4.5 0 0 0-9 0v5.5H5v-5.5a6 6 0 1 1 12 0v5.5h-2.5Z"/><path d="M8.5 18.5h-2v-5.5a4.5 4.5 0 0 1 9 0v5.5h-2"/><path d="M9 20.5h6"/></svg>
                     <span>Notifications</span>
                 </div>
-
-                <!-- Messages -->
                 <div class="nav-item" data-page="messages">
                     <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
                     <span>Messages</span>
                 </div>
-
-                <!-- Profil -->
                 <div class="nav-item" data-page="profile">
                     <svg viewBox="0 0 24 24"><path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.417 8.11.75.75 0 1 1-1.5.086 7.5 7.5 0 0 0-14.026 0 .75.75 0 1 1-1.5-.086 9.005 9.005 0 0 1 5.417-8.11A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"/></svg>
                     <span>Profil</span>
@@ -578,7 +880,6 @@
             </nav>
 
             <div class="sidebar-footer">
-                <!-- Paramètres -->
                 <div class="nav-item" data-page="settings">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/></svg>
                     <span>Paramètres</span>
@@ -586,16 +887,13 @@
             </div>
         </aside>
 
-        <!-- ========== CONTENU PRINCIPAL ========== -->
+        <!-- ==================== MAIN CONTENT ==================== -->
         <main class="main-content">
-            <!-- Stories -->
             <div class="stories-container" id="stories"></div>
-            
-            <!-- Feed -->
             <div id="feed-container"></div>
         </main>
 
-        <!-- ========== SIDEBAR DROITE ========== -->
+        <!-- ==================== SIDEBAR DROITE ==================== -->
         <aside class="right-sidebar">
             <div class="current-user" id="currentUserSidebar" onclick="goToProfile()">
                 <div class="user-avatar" id="sidebarAvatar">F</div>
@@ -612,19 +910,9 @@
         </aside>
     </div>
 
-    <!-- ========== CHARGEMENT DE TOUS LES MODULES ========== -->
-    <script src="modules/like.js"></script>
-    <script src="modules/commentaire.js"></script>
-    <script src="modules/partage.js"></script>
-    <script src="modules/upload.js"></script>
-    <script src="modules/stories.js"></script>
-    <script src="modules/carrousel.js"></script>
-    <script src="modules/notifications.js"></script>
-    <script src="modules/messages.js"></script>
-
-    <!-- ========== SCRIPT PRINCIPAL ========== -->
+    <!-- ==================== SCRIPT PRINCIPAL ==================== -->
     <script>
-        // ========== DONNÉES GLOBALES ==========
+        // ==================== DONNÉES GLOBALES ====================
         let currentUser = {
             id: 1,
             username: "floy_user",
@@ -636,8 +924,10 @@
         };
         
         let posts = [];
+        let notifications = [];
+        let conversations = [];
 
-        // ========== CHARGEMENT DES DONNÉES ==========
+        // ==================== CHARGEMENT DONNÉES ====================
         function loadData() {
             const savedUser = localStorage.getItem('floy_user');
             if (savedUser) {
@@ -649,10 +939,15 @@
                 posts = JSON.parse(savedPosts);
             } else {
                 posts = [
-                    { id: 1, userId: 1, username: "floy_user", avatar: "F", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=1", caption: "Bienvenue sur Floy ! 🔥", likes: 124, liked: false, comments: [], timestamp: Date.now() - 3600000 },
+                    { id: 1, userId: 1, username: "floy_user", avatar: "F", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=1", caption: "Bienvenue sur Floy ! 🔥", likes: 124, liked: false, comments: [{ username: "visiteur", text: "Super !", avatar: "V" }], timestamp: Date.now() - 3600000 },
                     { id: 2, userId: 2, username: "artiste_orange", avatar: "A", type: "photo", mediaUrl: "https://picsum.photos/600/500?random=2", caption: "L'orange et le noir, un duo parfait !", likes: 89, liked: false, comments: [], timestamp: Date.now() - 7200000 }
                 ];
                 localStorage.setItem('floy_posts', JSON.stringify(posts));
+            }
+            
+            const savedNotifs = localStorage.getItem('floy_notifications');
+            if (savedNotifs) {
+                notifications = JSON.parse(savedNotifs);
             }
             
             updateSidebar();
@@ -669,35 +964,105 @@
             document.getElementById('sidebarName').textContent = currentUser.fullname;
         }
 
-        // ========== RENDU DES STORIES ==========
+        // ==================== STORIES ====================
+        let stories = [];
+
+        function loadStories() {
+            const saved = localStorage.getItem('floy_stories');
+            if (saved) {
+                stories = JSON.parse(saved);
+                stories = stories.filter(s => Date.now() - s.timestamp < 24 * 60 * 60 * 1000);
+            }
+        }
+
         function renderStories() {
-            if (typeof storiesModule !== 'undefined' && storiesModule.renderStories) {
-                storiesModule.renderStories('stories');
-            } else {
-                const container = document.getElementById('stories');
-                if (container) {
-                    container.innerHTML = `
-                        <div class="story-item" onclick="openCreateStory()">
-                            <div class="story-avatar create-story">
-                                <div class="story-avatar-inner">📸</div>
-                                <div class="story-plus">+</div>
-                            </div>
-                            <div class="story-username">Votre story</div>
+            const container = document.getElementById('stories');
+            if (!container) return;
+            
+            loadStories();
+            const userStories = stories.filter(s => s.userId === currentUser.id);
+            const otherUsers = getUniqueStoryUsers();
+            
+            let html = `
+                <div class="story-ring" onclick="openCreateStoryModal()">
+                    <div class="story-avatar ${userStories.length > 0 ? 'has-story' : ''}">
+                        <div class="story-avatar-inner">
+                            ${currentUser.avatarUrl ? `<img src="${currentUser.avatarUrl}">` : (currentUser.avatar || '📸')}
                         </div>
-                    `;
+                        <div class="story-plus-icon">+</div>
+                    </div>
+                    <div class="story-username">Votre story</div>
+                </div>
+            `;
+            
+            otherUsers.forEach(user => {
+                html += `
+                    <div class="story-ring" onclick="viewUserStories(${user.id})">
+                        <div class="story-avatar has-story">
+                            <div class="story-avatar-inner">
+                                ${user.avatarUrl ? `<img src="${user.avatarUrl}">` : (user.avatar || user.username.charAt(0))}
+                            </div>
+                        </div>
+                        <div class="story-username">${user.username}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function getUniqueStoryUsers() {
+            const users = new Map();
+            stories.forEach(story => {
+                if (story.userId !== currentUser.id && !users.has(story.userId)) {
+                    users.set(story.userId, {
+                        id: story.userId,
+                        username: story.username,
+                        avatar: story.avatar,
+                        avatarUrl: story.avatarUrl
+                    });
                 }
-            }
+            });
+            return Array.from(users.values());
         }
 
-        function openCreateStory() {
-            if (typeof storiesModule !== 'undefined' && storiesModule.openCreateStoryModal) {
-                storiesModule.openCreateStoryModal();
-            } else {
-                alert("📸 Module Stories - Bientôt disponible");
-            }
+        function openCreateStoryModal() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,video/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const newStory = {
+                            id: Date.now(),
+                            userId: currentUser.id,
+                            username: currentUser.username,
+                            avatar: currentUser.avatar,
+                            avatarUrl: currentUser.avatarUrl,
+                            type: file.type.startsWith('image') ? 'photo' : 'video',
+                            mediaUrl: ev.target.result,
+                            timestamp: Date.now()
+                        };
+                        stories.push(newStory);
+                        localStorage.setItem('floy_stories', JSON.stringify(stories));
+                        renderStories();
+                        alert("📸 Story publiée !");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
         }
 
-        // ========== RENDU DU FEED ==========
+        function viewUserStories(userId) {
+            const userStories = stories.filter(s => s.userId === userId);
+            if (userStories.length === 0) return;
+            alert(`📖 ${userStories.length} story(s) à voir (mode plein écran bientôt)`);
+        }
+
+        // ==================== FEED ====================
         function renderFeed() {
             const container = document.getElementById('feed-container');
             if (!container) return;
@@ -726,12 +1091,12 @@
                     </div>
                     
                     <div class="post-actions">
-                        <button class="action-btn like-btn" onclick="handleLike(event, ${post.id})">
+                        <button class="action-btn like-btn ${post.liked ? 'liked' : ''}" onclick="handleLike(event, ${post.id})">
                             <svg viewBox="0 0 24 24">
                                 <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
                             </svg>
                         </button>
-                        <button class="action-btn" onclick="openComments(${post.id})">
+                        <button class="action-btn" onclick="openCommentsModal(${post.id})">
                             <svg viewBox="0 0 24 24"><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/></svg>
                         </button>
                         <button class="action-btn" onclick="sharePost(${post.id}, '${post.mediaUrl}', '${post.caption}')">
@@ -744,7 +1109,7 @@
                     
                     <div class="post-likes" id="likes-${post.id}">${formatLikes(post.likes)}</div>
                     <div class="post-caption"><strong>${post.username}</strong> ${escapeHtml(post.caption)}</div>
-                    <div class="post-comments" onclick="openComments(${post.id})">${post.comments?.length === 0 ? "Soyez le premier à commenter" : `Voir les ${post.comments?.length || 0} commentaires`}</div>
+                    <div class="post-comments" onclick="openCommentsModal(${post.id})">${post.comments?.length === 0 ? "Soyez le premier à commenter" : `Voir les ${post.comments?.length || 0} commentaires`}</div>
                     <div class="post-time">il y a ${getTimeAgo(post.timestamp)}</div>
                     
                     <div class="comment-form">
@@ -755,7 +1120,7 @@
             `).join('');
         }
 
-        // ========== GESTION DES LIKES ==========
+        // ==================== LIKES ====================
         function handleLike(event, postId) {
             event.stopPropagation();
             const post = posts.find(p => p.id === postId);
@@ -773,17 +1138,33 @@
                 btn.classList.add('liked');
                 btn.style.transform = 'scale(1.2)';
                 setTimeout(() => { btn.style.transform = ''; }, 200);
+                
+                // Animation cœur
+                const rect = btn.getBoundingClientRect();
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.cssText = `position:fixed;left:${rect.left + rect.width/2 - 16}px;top:${rect.top + rect.height/2 - 16}px;font-size:32px;pointer-events:none;z-index:9999;animation:heartExplode 0.6s ease-out forwards;`;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 600);
+                
+                // Ajouter notification
+                addNotification('like', { userId: post.userId, username: post.username, postId: post.id });
             }
             
             const likesSpan = document.getElementById(`likes-${postId}`);
-            if (likesSpan) {
-                likesSpan.textContent = formatLikes(post.likes);
-            }
+            if (likesSpan) likesSpan.textContent = formatLikes(post.likes);
             
             localStorage.setItem('floy_posts', JSON.stringify(posts));
         }
 
-        // ========== GESTION DES COMMENTAIRES ==========
+        function formatLikes(count) {
+            if (count === 0) return "0 like";
+            if (count === 1) return "1 like";
+            if (count < 1000) return `${count} likes`;
+            return `${(count/1000).toFixed(1)}k likes`;
+        }
+
+        // ==================== COMMENTAIRES ====================
         function addQuickComment(postId) {
             const input = document.getElementById(`comment-input-${postId}`);
             const text = input.value.trim();
@@ -804,31 +1185,37 @@
                     commentsDiv.textContent = `Voir les ${post.comments.length} commentaires`;
                 }
                 localStorage.setItem('floy_posts', JSON.stringify(posts));
+                
+                // Ajouter notification
+                addNotification('comment', { userId: post.userId, username: post.username, postId: post.id, commentPreview: text.substring(0, 50) });
             }
         }
 
-        function openComments(postId) {
+        function openCommentsModal(postId) {
             const post = posts.find(p => p.id === postId);
             if (!post) return;
             
-            let modalHtml = `
-                <div id="commentsModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:3000;display:flex;align-items:center;justify-content:center;">
-                    <div style="background:#000;border-radius:16px;width:400px;max-width:90%;max-height:80%;display:flex;flex-direction:column;border:1px solid #262626;">
-                        <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
-                            <h3 style="color:#fff;">Commentaires (${post.comments?.length || 0})</h3>
-                            <button onclick="this.closest('#commentsModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">&times;</button>
+            const modalHtml = `
+                <div id="commentsModal" class="comments-modal">
+                    <div class="comments-modal-content">
+                        <div class="comments-modal-header">
+                            <h3>Commentaires (${post.comments?.length || 0})</h3>
+                            <button onclick="this.closest('#commentsModal').remove()">&times;</button>
                         </div>
-                        <div style="flex:1;overflow-y:auto;padding:16px;">
+                        <div class="comments-list">
                             ${post.comments?.map(c => `
-                                <div style="display:flex;gap:12px;margin-bottom:16px;">
-                                    <div style="width:32px;height:32px;border-radius:50%;background:#FF6B35;display:flex;align-items:center;justify-content:center;">${c.avatar || c.username.charAt(0)}</div>
-                                    <div><strong>${c.username}</strong><div style="font-size:13px;margin-top:4px;">${escapeHtml(c.text)}</div></div>
+                                <div class="comment-item">
+                                    <div class="comment-avatar">${c.avatar || c.username.charAt(0)}</div>
+                                    <div class="comment-content">
+                                        <div class="comment-username">${c.username}</div>
+                                        <div class="comment-text">${escapeHtml(c.text)}</div>
+                                    </div>
                                 </div>
                             `).join('') || '<div style="text-align:center;padding:40px;color:#8e8e8e;">Aucun commentaire</div>'}
                         </div>
-                        <div style="padding:16px;border-top:1px solid #262626;display:flex;gap:12px;">
-                            <input type="text" id="modalCommentInput" placeholder="Ajouter un commentaire..." style="flex:1;background:#1a1a1a;border:1px solid #262626;border-radius:20px;padding:10px 16px;color:#fff;outline:none;">
-                            <button onclick="addModalComment(${postId})" style="background:none;border:none;color:#FF6B35;font-weight:600;cursor:pointer;">Publier</button>
+                        <div class="comments-footer">
+                            <input type="text" id="modalCommentInput" placeholder="Ajouter un commentaire...">
+                            <button onclick="addModalComment(${postId})">Publier</button>
                         </div>
                     </div>
                 </div>
@@ -851,36 +1238,213 @@
                 });
                 localStorage.setItem('floy_posts', JSON.stringify(posts));
                 document.getElementById('commentsModal')?.remove();
-                openComments(postId);
                 renderFeed();
             }
         }
 
-        // ========== PARTAGE ==========
+        // ==================== PARTAGE ====================
         function sharePost(postId, mediaUrl, caption) {
-            if (typeof partageModule !== 'undefined' && partageModule.showShareModal) {
-                partageModule.showShareModal(postId, mediaUrl, caption);
-            } else {
-                alert("📤 Module Partage - Bientôt disponible");
+            const modalHtml = `
+                <div id="shareModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:5000;display:flex;align-items:center;justify-content:center;">
+                    <div style="background:#000;border-radius:16px;width:350px;border:1px solid #262626;">
+                        <div style="padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;">
+                            <h3>Partager</h3>
+                            <button onclick="this.closest('#shareModal').remove()" style="background:none;border:none;color:#fff;font-size:24px;">&times;</button>
+                        </div>
+                        <div style="padding:16px;">
+                            <button onclick="copyLink()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;margin-bottom:8px;cursor:pointer;">🔗 Copier le lien</button>
+                            <button onclick="shareWhatsApp()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;margin-bottom:8px;cursor:pointer;">💬 WhatsApp</button>
+                            <button onclick="shareTwitter()" style="width:100%;background:#1a1a1a;border:none;padding:12px;border-radius:8px;color:#fff;cursor:pointer;">🐦 X (Twitter)</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Lien copié !");
+            document.getElementById('shareModal')?.remove();
+        }
+
+        function shareWhatsApp() {
+            window.open(`https://wa.me/?text=${encodeURIComponent("Regarde ce post sur Floy ! " + window.location.href)}`, '_blank');
+            document.getElementById('shareModal')?.remove();
+        }
+
+        function shareTwitter() {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent("Regarde ce post sur Floy ! 🔥")}`, '_blank');
+            document.getElementById('shareModal')?.remove();
+        }
+
+        // ==================== UPLOAD ====================
+        let selectedFile = null;
+        let selectedType = 'photo';
+
+        function openUploadModal() {
+            const modalHtml = `
+                <div id="uploadModal" class="modal-upload">
+                    <div class="modal-upload-content">
+                        <div class="modal-upload-header">
+                            <h3>Créer une publication</h3>
+                            <button onclick="this.closest('#uploadModal').remove()">&times;</button>
+                        </div>
+                        <div class="modal-upload-body">
+                            <div class="upload-type-selector">
+                                <button class="upload-type-btn active" onclick="selectUploadType('photo')">📷 Photo</button>
+                                <button class="upload-type-btn" onclick="selectUploadType('video')">🎬 Vidéo</button>
+                            </div>
+                            <div id="uploadArea" class="upload-area" onclick="document.getElementById('uploadFileInput').click()">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
+                                </svg>
+                                <p>Sélectionnez une ${selectedType === 'photo' ? 'photo' : 'vidéo'}</p>
+                                <button>Parcourir</button>
+                            </div>
+                            <div id="uploadPreview" style="display:none;">
+                                <img id="previewImage" style="max-width:100%;max-height:250px;border-radius:12px;margin-bottom:16px;">
+                                <video id="previewVideo" style="max-width:100%;max-height:250px;border-radius:12px;margin-bottom:16px;" controls></video>
+                                <textarea id="uploadCaption" placeholder="Écrivez une légende..." rows="3"></textarea>
+                                <button class="publish-btn" onclick="publishPost()">Publier</button>
+                            </div>
+                            <input type="file" id="uploadFileInput" accept="${selectedType === 'photo' ? 'image/*' : 'video/*'}" style="display:none;">
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            document.getElementById('uploadFileInput').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        if (selectedType === 'photo') {
+                            document.getElementById('previewImage').src = ev.target.result;
+                            document.getElementById('previewImage').style.display = 'block';
+                            document.getElementById('previewVideo').style.display = 'none';
+                        } else {
+                            document.getElementById('previewVideo').src = ev.target.result;
+                            document.getElementById('previewVideo').style.display = 'block';
+                            document.getElementById('previewImage').style.display = 'none';
+                        }
+                        document.getElementById('uploadArea').style.display = 'none';
+                        document.getElementById('uploadPreview').style.display = 'block';
+                        selectedFile = { file, dataUrl: ev.target.result, type: selectedType };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        }
+
+        function selectUploadType(type) {
+            selectedType = type;
+            document.querySelectorAll('.upload-type-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.upload-type-btn:contains(${type === 'photo' ? '📷' : '🎬'})`).classList.add('active');
+        }
+
+        function publishPost() {
+            if (!selectedFile) { alert("Sélectionnez un média"); return; }
+            
+            const caption = document.getElementById('uploadCaption').value;
+            const newPost = {
+                id: Date.now(),
+                userId: currentUser.id,
+                username: currentUser.username,
+                avatar: currentUser.avatar,
+                type: selectedType,
+                mediaUrl: selectedFile.dataUrl,
+                caption: caption || '',
+                likes: 0,
+                liked: false,
+                comments: [],
+                timestamp: Date.now()
+            };
+            
+            posts.unshift(newPost);
+            localStorage.setItem('floy_posts', JSON.stringify(posts));
+            document.getElementById('uploadModal')?.remove();
+            renderFeed();
+            alert("✅ Publication envoyée !");
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        function addNotification(type, data) {
+            const newNotif = {
+                id: Date.now(),
+                type: type,
+                username: data.username,
+                message: type === 'like' ? `${data.username} a aimé votre publication` : `${data.username} a commenté : "${data.commentPreview || ''}"`,
+                timestamp: Date.now(),
+                read: false
+            };
+            notifications.unshift(newNotif);
+            localStorage.setItem('floy_notifications', JSON.stringify(notifications));
+            updateNotifBadge();
+        }
+
+        function updateNotifBadge() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const notifIcon = document.querySelector('.nav-item[data-page="notifications"]');
+            if (notifIcon) {
+                let badge = notifIcon.querySelector('.notif-badge');
+                if (unreadCount > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'notif-badge';
+                        notifIcon.appendChild(badge);
+                    }
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                } else if (badge) {
+                    badge.remove();
+                }
             }
         }
 
-        // ========== AUTRES FONCTIONS ==========
-        function formatLikes(count) {
-            if (count === 0) return "0 like";
-            if (count === 1) return "1 like";
-            if (count < 1000) return `${count} likes`;
-            return `${(count/1000).toFixed(1)}k likes`;
+        function openNotificationsModal() {
+            const modalHtml = `
+                <div id="notifModal" class="notifications-modal">
+                    <div class="notifications-modal-content">
+                        <div class="notifications-modal-header">
+                            <h3>Notifications</h3>
+                            <button onclick="markAllNotifsRead(); this.closest('#notifModal').remove()">Tout marquer lu</button>
+                        </div>
+                        <div class="notifications-list">
+                            ${notifications.length === 0 ? '<div style="text-align:center;padding:40px;color:#8e8e8e;">Aucune notification</div>' : 
+                                notifications.map(n => `
+                                    <div class="notification-item ${!n.read ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
+                                        <div class="notif-avatar">${n.username.charAt(0)}</div>
+                                        <div class="notif-content">
+                                            <div class="notif-message">${n.message}</div>
+                                            <div class="notif-time">${getTimeAgo(n.timestamp)}</div>
+                                        </div>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
-        function getTimeAgo(timestamp) {
-            const diff = Math.floor((Date.now() - timestamp) / 1000);
-            if (diff < 60) return "à l'instant";
-            if (diff < 3600) return `${Math.floor(diff/60)} min`;
-            if (diff < 86400) return `${Math.floor(diff/3600)} h`;
-            return `${Math.floor(diff/86400)} j`;
+        function markAllNotifsRead() {
+            notifications.forEach(n => n.read = true);
+            localStorage.setItem('floy_notifications', JSON.stringify(notifications));
+            updateNotifBadge();
         }
 
+        function markNotifRead(id) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif) notif.read = true;
+            localStorage.setItem('floy_notifications', JSON.stringify(notifications));
+            updateNotifBadge();
+        }
+
+        // ==================== NAVIGATION ====================
+        function goToProfile() { window.location.href = 'profil.html'; }
+        function goToUserProfile(id) { if(id === currentUser.id) goToProfile(); else alert(`👤 Profil utilisateur #${id}`); }
         function viewMedia(url) { window.open(url, '_blank'); }
         function savePost(id) { alert(`🔖 Post ${id} sauvegardé`); }
         
@@ -892,15 +1456,7 @@
             }
         }
 
-        function goToProfile() { window.location.href = 'profil.html'; }
-        function goToUserProfile(id) { if(id === currentUser.id) goToProfile(); else alert(`👤 Profil utilisateur #${id}`); }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
-        }
-
-        // ========== SUGGESTIONS ==========
+        // ==================== SUGGESTIONS ====================
         function setupSuggestions() {
             const suggestions = [
                 { username: "artiste_orange", avatar: "A", followers: "12k" },
@@ -921,7 +1477,7 @@
             }
         }
 
-        // ========== NAVIGATION ENTRE PAGES ==========
+        // ==================== NAVIGATION SIDEBAR ====================
         function setupNavigation() {
             const navItems = document.querySelectorAll('.nav-item');
             
@@ -939,26 +1495,14 @@
                         window.location.href = 'explore.html';
                     } else if (page === 'reels') {
                         window.location.href = 'reels.html';
+                    } else if (page === 'messages') {
+                        window.location.href = 'messages.html';
                     } else if (page === 'create') {
-                        if (typeof uploadModule !== 'undefined' && uploadModule.openUploadModal) {
-                            uploadModule.openUploadModal();
-                        } else {
-                            alert("📸 Module Upload - Bientôt disponible");
-                        }
+                        openUploadModal();
                         item.classList.remove('active');
                         document.querySelector('.nav-item[data-page="feed"]').classList.add('active');
                     } else if (page === 'notifications') {
-                        if (typeof notificationsModule !== 'undefined' && notificationsModule.showNotificationsModal) {
-                            notificationsModule.showNotificationsModal();
-                        } else {
-                            alert("🔔 Module Notifications - Bientôt disponible");
-                        }
-                    } else if (page === 'messages') {
-                        if (typeof messagesModule !== 'undefined' && messagesModule.openMessagesModal) {
-                            messagesModule.openMessagesModal();
-                        } else {
-                            alert("💬 Module Messages - Bientôt disponible");
-                        }
+                        openNotificationsModal();
                     } else if (page === 'feed') {
                         renderFeed();
                         renderStories();
@@ -969,13 +1513,28 @@
             });
         }
 
-        // ========== INITIALISATION ==========
+        // ==================== UTILITAIRES ====================
+        function getTimeAgo(timestamp) {
+            const diff = Math.floor((Date.now() - timestamp) / 1000);
+            if (diff < 60) return "à l'instant";
+            if (diff < 3600) return `${Math.floor(diff/60)} min`;
+            if (diff < 86400) return `${Math.floor(diff/3600)} h`;
+            return `${Math.floor(diff/86400)} j`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+        }
+
+        // ==================== INITIALISATION ====================
         function init() {
             loadData();
             renderFeed();
             renderStories();
             setupSuggestions();
             setupNavigation();
+            updateNotifBadge();
         }
         
         init();
