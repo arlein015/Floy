@@ -2,64 +2,85 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier le Profil - Floy</title>
-    <style>
-        body { background: #000; color: white; font-family: sans-serif; padding: 20px; }
-        .input-group { margin-bottom: 20px; }
-        input, textarea { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-        .btn-save { width: 100%; padding: 15px; background: #FF7A1A; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Floy - Modifier le profil</title>
+    <link rel="stylesheet" href="edit-profil.css">
 </head>
 <body>
-
-    <h2>Modifier le profil</h2>
-    <div class="input-group">
-        <label>Nom d'utilisateur</label>
-        <input type="text" id="edit-username">
+    <div class="edit-header">
+        <button class="cancel-btn" onclick="goBack()">Annuler</button>
+        <h3>Modifier le profil</h3>
+        <button class="save-btn" onclick="saveProfile()">Enregistrer</button>
     </div>
-    <div class="input-group">
-        <label>Bio</label>
-        <textarea id="edit-bio" rows="4"></textarea>
+
+    <div class="edit-container">
+        <div class="avatar-section" onclick="changeAvatar()">
+            <div class="edit-avatar" id="editAvatar">F</div>
+            <div class="avatar-overlay">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
+                </svg>
+                <span>Changer la photo</span>
+            </div>
+        </div>
+
+        <div class="edit-field">
+            <label>Nom d'utilisateur</label>
+            <input type="text" id="editUsername" placeholder="username">
+            <p class="field-hint">Dans les 30 jours, vous pourrez demander un autre changement de nom d'utilisateur.</p>
+        </div>
+
+        <div class="edit-field">
+            <label>Nom complet</label>
+            <input type="text" id="editFullname" placeholder="Nom complet">
+        </div>
+
+        <div class="edit-field">
+            <label>Bio</label>
+            <textarea id="editBio" rows="4" placeholder="Votre bio..."></textarea>
+            <p class="field-hint" id="bioCounter">0/150</p>
+        </div>
+
+        <div class="edit-field">
+            <label>Site web</label>
+            <input type="text" id="editWebsite" placeholder="https://...">
+        </div>
+
+        <div class="edit-field">
+            <label>Email</label>
+            <input type="email" id="editEmail" placeholder="email@example.com">
+        </div>
+
+        <div class="edit-field">
+            <label>Téléphone</label>
+            <input type="tel" id="editPhone" placeholder="+33...">
+        </div>
+
+        <div class="edit-field">
+            <label>Genre</label>
+            <select id="editGender">
+                <option value="">Non précisé</option>
+                <option value="homme">Homme</option>
+                <option value="femme">Femme</option>
+                <option value="autre">Autre</option>
+            </select>
+        </div>
     </div>
-    <button class="btn-save" id="save-profile">Enregistrer les modifications</button>
 
-    <script type="module">
-        import { auth, db } from './firebase-config.js';
-        // CORRECTION : Ajout de setDoc et updateDoc dans les imports
-        import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <div id="avatarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Modifier la photo</h3>
+                <button class="modal-close" onclick="closeAvatarModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <button class="avatar-option" onclick="changeAvatarByEmoji()">😊 Changer avec un emoji</button>
+                <button class="avatar-option" onclick="changeAvatarByLetter()">🔤 Changer avec une lettre</button>
+                <button class="avatar-option avatar-remove" onclick="removeAvatar()">🗑️ Supprimer la photo</button>
+            </div>
+        </div>
+    </div>
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) return;
-            
-            // Charger les données actuelles
-            const userRef = doc(db, "users", user.uid);
-            const snap = await getDoc(userRef);
-            if (snap.exists()) {
-                document.getElementById('edit-username').value = snap.data().username || "";
-                document.getElementById('edit-bio').value = snap.data().bio || "";
-            }
-
-            // Bouton Enregistrer
-            document.getElementById('save-profile').onclick = async () => {
-                const newName = document.getElementById('edit-username').value;
-                const newBio = document.getElementById('edit-bio').value;
-
-                try {
-                    await setDoc(userRef, {
-                        username: newName,
-                        bio: newBio
-                    }, { merge: true });
-                    
-                    alert("Profil mis à jour !");
-                    window.location.href = "profil.html";
-                } catch (e) {
-                    console.error("Erreur de sauvegarde:", e);
-                    alert("Erreur lors de la sauvegarde.");
-                }
-            };
-        });
-    </script>
+    <script src="edit-profil.js"></script>
 </body>
 </html>
