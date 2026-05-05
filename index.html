@@ -3,12 +3,596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Floy</title>
+    <title>Floy - Partagez vos moments</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles supplémentaires pour la navigation entre pages */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+        }
+
+        /* Layout principal */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar gauche */
+        .sidebar {
+            width: 244px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            background: #000000;
+            border-right: 1px solid #262626;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 25px 12px 16px;
+            margin-bottom: 20px;
+        }
+
+        .logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B35, #FF9F5C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #f5f5f5;
+        }
+
+        .nav-item:hover {
+            background: #1a1a1a;
+        }
+
+        .nav-item.active {
+            font-weight: 600;
+            color: #FF6B35;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        .nav-item.active svg {
+            stroke: #FF6B35;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #262626;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 244px;
+            flex: 1;
+            max-width: 630px;
+            padding: 0 20px;
+        }
+
+        /* Stories */
+        .stories-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 16px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #262626;
+            scrollbar-width: none;
+        }
+
+        .stories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .story-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FF6B35, #FF9F5C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+        }
+
+        .story-avatar div {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        /* Post card */
+        .post {
+            margin-bottom: 20px;
+            background: #000000;
+            border: 1px solid #262626;
+            border-radius: 8px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-more {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .post-more svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #f5f5f5;
+        }
+
+        .post-image-container {
+            width: 100%;
+            background: #1a1a1a;
+        }
+
+        .post-image {
+            width: 100%;
+            display: block;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 12px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #f5f5f5;
+            stroke-width: 1.5;
+        }
+
+        .action-btn.liked svg {
+            fill: #FF6B35;
+            stroke: #FF6B35;
+        }
+
+        .save-btn {
+            margin-left: auto;
+        }
+
+        .post-likes {
+            font-weight: 600;
+            font-size: 14px;
+            padding: 0 16px 8px;
+        }
+
+        .post-caption {
+            padding: 0 16px 8px;
+            font-size: 14px;
+        }
+
+        .post-caption strong {
+            font-weight: 600;
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        .post-comments {
+            padding: 0 16px 4px;
+            font-size: 14px;
+            color: #8e8e8e;
+            cursor: pointer;
+        }
+
+        .post-time {
+            padding: 4px 16px 12px;
+            font-size: 10px;
+            color: #8e8e8e;
+        }
+
+        .comment-form {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-top: 1px solid #262626;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #f5f5f5;
+            padding: 12px 0;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .comment-input::placeholder {
+            color: #8e8e8e;
+        }
+
+        .comment-post-btn {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .comment-post-btn.active {
+            opacity: 1;
+        }
+
+        /* Right sidebar */
+        .right-sidebar {
+            width: 320px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            padding: 30px 20px;
+            display: block;
+        }
+
+        .current-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info .username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info .name {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .switch-btn {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            color: #8e8e8e;
+            font-size: 14px;
+        }
+
+        .see-all {
+            background: none;
+            border: none;
+            color: #f5f5f5;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .suggestion-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .suggestion-info .username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .suggestion-info .followers {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .follow-btn {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        /* Modal création */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #000000;
+            border-radius: 16px;
+            width: 500px;
+            max-width: 90%;
+            border: 1px solid #262626;
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .upload-area {
+            text-align: center;
+            padding: 40px;
+            border: 2px dashed #262626;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .upload-area svg {
+            color: #8e8e8e;
+            margin-bottom: 16px;
+        }
+
+        .upload-area p {
+            color: #8e8e8e;
+            margin-bottom: 16px;
+        }
+
+        .upload-area button {
+            background: #FF6B35;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #previewContainer {
+            text-align: center;
+        }
+
+        #previewImage {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        #postCaption {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            margin-bottom: 16px;
+            resize: none;
+        }
+
+        #publishBtn {
+            background: #FF6B35;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 60px;
+            color: #8e8e8e;
+        }
+
+        /* Responsive */
+        @media (max-width: 1260px) {
+            .right-sidebar {
+                display: none;
+            }
+            .main-content {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .sidebar {
+                width: 72px;
+            }
+            .sidebar .logo-text,
+            .sidebar .nav-item span {
+                display: none;
+            }
+            .main-content {
+                margin-left: 72px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 0 12px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
-        <!-- SIDEBAR GAUCHE (identique à Instagram) -->
+        <!-- SIDEBAR GAUCHE -->
         <aside class="sidebar">
             <div class="logo">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="1.5">
@@ -75,8 +659,8 @@
             <div class="sidebar-footer">
                 <div class="nav-item" data-page="settings">
                     <svg viewBox="0 0 24 24">
-                        <path d="M21.5 7.5L16.5 2.5M17 9L10 16H7V13L14 6L17 9Z"/>
-                        <path d="M3 21H21M9 19L3 21L5 15"/>
+                        <circle cx="12" cy="12" r="2.5"/>
+                        <path d="M18.37 7.29l1.06-1.06a1.5 1.5 0 0 0-2.12-2.12L15.7 6.12a7.5 7.5 0 0 0-7.4 0L6.69 4.11a1.5 1.5 0 1 0-2.12 2.12l1.06 1.06a7.5 7.5 0 0 0 0 7.4l-1.06 1.06a1.5 1.5 0 0 0 2.12 2.12l1.06-1.06a7.5 7.5 0 0 0 7.4 0l1.06 1.06a1.5 1.5 0 0 0 2.12-2.12l-1.06-1.06a7.5 7.5 0 0 0 0-7.4z"/>
                     </svg>
                     <span>Plus</span>
                 </div>
@@ -85,40 +669,25 @@
 
         <!-- CONTENU PRINCIPAL -->
         <main class="main-content">
-            <!-- Header (Stories) -->
-            <div class="stories-container" id="stories">
-                <!-- Stories chargées dynamiquement -->
-            </div>
-
-            <!-- Feed (chargé depuis feed.html) -->
+            <div class="stories-container" id="stories"></div>
             <div id="feed-container"></div>
-
-            <!-- Autres pages -->
-            <div id="profile-container" style="display: none;"></div>
-            <div id="explore-container" style="display: none;"></div>
-            <div id="search-container" style="display: none;"></div>
-            <div id="reels-container" style="display: none;"></div>
-            <div id="messages-container" style="display: none;"></div>
-            <div id="notifications-container" style="display: none;"></div>
-            <div id="create-container" style="display: none;"></div>
-            <div id="settings-container" style="display: none;"></div>
         </main>
 
-        <!-- SIDEBAR DROITE (Suggestions) -->
+        <!-- SIDEBAR DROITE -->
         <aside class="right-sidebar">
-            <div class="current-user">
-                <div class="user-avatar">F</div>
+            <div class="current-user" id="currentUserSidebar" onclick="goToProfile()">
+                <div class="user-avatar" id="sidebarAvatar">F</div>
                 <div class="user-info">
-                    <div class="username">floy_user</div>
-                    <div class="name">Floy Creator</div>
+                    <div class="username" id="sidebarUsername">floy_user</div>
+                    <div class="name" id="sidebarName">Floy Creator</div>
                 </div>
-                <button class="switch-btn">Basculer</button>
+                <button class="switch-btn" onclick="event.stopPropagation(); logout()">Basculer</button>
             </div>
             <div class="suggestions-header">
                 <span>Suggestions</span>
                 <button class="see-all">Voir tout</button>
             </div>
-            <div class="suggestions-list">
+            <div class="suggestions-list" id="suggestionsList">
                 <div class="suggestion-item">
                     <div class="suggestion-avatar">A</div>
                     <div class="suggestion-info">
@@ -144,26 +713,428 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Créer une nouvelle publication</h3>
-                <button class="modal-close">&times;</button>
+                <button class="modal-close" onclick="closeCreateModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="upload-area" id="uploadArea">
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
                     <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M12 2.5a.75.75 0 0 1 .75.75v8h8a.75.75 0 0 1 0 1.5h-8v8a.75.75 0 0 1-1.5 0v-8h-8a.75.75 0 0 1 0-1.5h8v-8A.75.75 0 0 1 12 2.5Z"/>
                     </svg>
                     <p>Glissez une photo ou vidéo ici</p>
-                    <button id="selectFileBtn">Sélectionner depuis l'ordinateur</button>
-                    <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;">
+                    <button type="button">Sélectionner depuis l'ordinateur</button>
                 </div>
                 <div id="previewContainer" style="display: none;">
                     <img id="previewImage" src="">
-                    <textarea id="postCaption" placeholder="Écrivez une légende..."></textarea>
-                    <button id="publishBtn">Publier</button>
+                    <textarea id="postCaption" placeholder="Écrivez une légende..." rows="3"></textarea>
+                    <button id="publishBtn" onclick="publishPost()">Publier</button>
                 </div>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // ========== DONNÉES ==========
+        let currentUser = {
+            id: 1,
+            username: "floy_user",
+            fullname: "Floy Creator",
+            avatar: "F",
+            bio: "Créateur de Floy 🔥 Passionné de design orange et noir",
+            website: "floy.app",
+            postsCount: 0,
+            followers: 128,
+            following: 94
+        };
+
+        let posts = [
+            {
+                id: 1,
+                userId: 1,
+                username: "floy_user",
+                avatar: "F",
+                imageUrl: "https://picsum.photos/600/500?random=1",
+                caption: "Bienvenue sur Floy ! Le réseau social orange et noir 🔥",
+                likes: 124,
+                liked: false,
+                comments: ["Superbe plateforme !", "J'adore le thème orange"],
+                timestamp: "2 HEURES",
+                timeValue: new Date(Date.now() - 2 * 60 * 60 * 1000)
+            },
+            {
+                id: 2,
+                userId: 2,
+                username: "artiste_orange",
+                avatar: "A",
+                imageUrl: "https://picsum.photos/600/500?random=2",
+                caption: "L'orange et le noir, un duo parfait pour l'art",
+                likes: 89,
+                liked: true,
+                comments: ["Magnifique !", "Très inspirant"],
+                timestamp: "5 HEURES",
+                timeValue: new Date(Date.now() - 5 * 60 * 60 * 1000)
+            },
+            {
+                id: 3,
+                userId: 3,
+                username: "photographe",
+                avatar: "P",
+                imageUrl: "https://picsum.photos/600/500?random=3",
+                caption: "Coucher de soleil sur Floy",
+                likes: 234,
+                liked: false,
+                comments: ["Waouh incroyable", "Super composition"],
+                timestamp: "1 JOUR",
+                timeValue: new Date(Date.now() - 24 * 60 * 60 * 1000)
+            }
+        ];
+
+        let stories = [
+            { userId: 1, username: "floy_user", avatar: "F", hasStory: true },
+            { userId: 2, username: "artiste_orange", avatar: "A", hasStory: true },
+            { userId: 3, username: "photographe", avatar: "P", hasStory: false }
+        ];
+
+        // ========== CHARGEMENT DONNÉES LOCALSTORAGE ==========
+        function loadUserData() {
+            const savedUser = localStorage.getItem('floy_user');
+            if (savedUser) {
+                const parsed = JSON.parse(savedUser);
+                currentUser = { ...currentUser, ...parsed };
+            }
+            
+            const savedPosts = localStorage.getItem('floy_user_posts');
+            if (savedPosts) {
+                const userPosts = JSON.parse(savedPosts);
+                posts = posts.filter(p => p.userId !== currentUser.id);
+                posts.unshift(...userPosts.map(p => ({ ...p, userId: currentUser.id, username: currentUser.username, avatar: currentUser.avatar })));
+            }
+            
+            updateSidebar();
+        }
+
+        function updateSidebar() {
+            document.getElementById('sidebarAvatar').textContent = currentUser.avatar;
+            document.getElementById('sidebarUsername').textContent = currentUser.username;
+            document.getElementById('sidebarName').textContent = currentUser.fullname;
+        }
+
+        // ========== RENDU STORIES ==========
+        function renderStories() {
+            const container = document.getElementById('stories');
+            if (!container) return;
+            
+            container.innerHTML = stories.map(story => `
+                <div class="story" onclick="viewStory('${story.username}')">
+                    <div class="story-avatar" style="${story.hasStory ? 'background: linear-gradient(45deg, #FF6B35, #FF9F5C);' : 'background: #262626;'}">
+                        <div>${story.avatar}</div>
+                    </div>
+                    <div class="story-username">${story.username}</div>
+                </div>
+            `).join('');
+        }
+
+        // ========== RENDU POST ==========
+        function renderPost(post) {
+            return `
+                <article class="post" data-post-id="${post.id}">
+                    <div class="post-header">
+                        <div class="post-user" onclick="goToUserProfile('${post.username}')">
+                            <div class="post-avatar">${post.avatar}</div>
+                            <div class="post-username">${post.username}</div>
+                        </div>
+                        <button class="post-more" onclick="showPostOptions(${post.id})">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="2.5"/>
+                                <circle cx="19" cy="12" r="2.5"/>
+                                <circle cx="5" cy="12" r="2.5"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="post-image-container" onclick="viewImage('${post.imageUrl}')">
+                        <img class="post-image" src="${post.imageUrl}" alt="Post">
+                    </div>
+
+                    <div class="post-actions">
+                        <button class="action-btn like-btn ${post.liked ? 'liked' : ''}" onclick="handleLike(event, ${post.id})">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn comment-btn" onclick="focusCommentInput(${post.id})">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn share-btn" onclick="sharePost(${post.id})">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19.5 5.5v13a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1Z"/>
+                                <path d="m16.5 7.5-5 5"/>
+                                <path d="M9.5 11.5h5v5"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn save-btn" onclick="savePost(${post.id})">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 21l-7-5-7 5V5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="post-likes" id="likes-${post.id}" onclick="showLikers(${post.id})">
+                        ${post.likes} ${post.likes === 1 ? 'like' : 'likes'}
+                    </div>
+
+                    <div class="post-caption">
+                        <strong onclick="goToUserProfile('${post.username}')">${post.username}</strong>
+                        <span>${escapeHtml(post.caption)}</span>
+                    </div>
+
+                    <div class="post-comments" onclick="viewComments(${post.id})">
+                        ${post.comments.length > 0 ? `Voir les ${post.comments.length} commentaires` : 'Soyez le premier à commenter'}
+                    </div>
+
+                    <div class="post-time">
+                        il y a ${post.timestamp}
+                    </div>
+
+                    <div class="comment-form">
+                        <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Ajouter un commentaire..." onkeypress="handleCommentKeypress(event, ${post.id})">
+                        <button class="comment-post-btn" onclick="addComment(${post.id})">Publier</button>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderFeed() {
+            const container = document.getElementById('feed-container');
+            if (!container) return;
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="loader">📸 Aucune publication pour le moment<br><small>Soyez le premier à partager !</small></div>';
+                return;
+            }
+            
+            container.innerHTML = posts.map(post => renderPost(post)).join('');
+        }
+
+        // ========== FONCTIONS ACTIONS ==========
+        function handleLike(event, postId) {
+            event.stopPropagation();
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const btn = event.currentTarget;
+            
+            if (post.liked) {
+                post.likes--;
+                post.liked = false;
+                btn.classList.remove('liked');
+            } else {
+                post.likes++;
+                post.liked = true;
+                btn.classList.add('liked');
+                btn.style.transform = 'scale(1.2)';
+                setTimeout(() => { btn.style.transform = ''; }, 200);
+            }
+            
+            const likesSpan = document.getElementById(`likes-${postId}`);
+            if (likesSpan) {
+                likesSpan.textContent = `${post.likes} ${post.likes === 1 ? 'like' : 'likes'}`;
+            }
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.comments.push(text);
+                const commentsDiv = document.querySelector(`.post[data-post-id="${postId}"] .post-comments`);
+                if (commentsDiv) {
+                    commentsDiv.textContent = `Voir les ${post.comments.length} commentaires`;
+                }
+                input.value = '';
+            }
+        }
+
+        function handleCommentKeypress(event, postId) {
+            if (event.key === 'Enter') {
+                addComment(postId);
+            }
+        }
+
+        function focusCommentInput(postId) {
+            document.getElementById(`comment-input-${postId}`).focus();
+        }
+
+        function viewComments(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post && post.comments.length > 0) {
+                alert(`Commentaires :\n${post.comments.map(c => `• ${c}`).join('\n')}`);
+            }
+        }
+
+        function viewImage(imageUrl) {
+            window.open(imageUrl, '_blank');
+        }
+
+        function sharePost(postId) {
+            alert(`📤 Partager le post #${postId} (bientôt disponible)`);
+        }
+
+        function savePost(postId) {
+            alert(`🔖 Post #${postId} sauvegardé !`);
+        }
+
+        function showLikers(postId) {
+            alert(`❤️ Voir les likes du post #${postId} (bientôt disponible)`);
+        }
+
+        function showPostOptions(postId) {
+            alert(`••• Options du post #${postId} (signaler, modifier, supprimer...)`);
+        }
+
+        function viewStory(username) {
+            alert(`📖 Story de ${username} (bientôt disponible)`);
+        }
+
+        // ========== NAVIGATION ==========
+        function goToProfile() {
+            window.location.href = 'profil.html';
+        }
+
+        function goToUserProfile(username) {
+            if (username === currentUser.username) {
+                goToProfile();
+            } else {
+                alert(`👤 Profil de ${username} (bientôt disponible)`);
+            }
+        }
+
+        function logout() {
+            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                localStorage.removeItem('floy_user');
+                window.location.reload();
+            }
+        }
+
+        // ========== MODAL CRÉATION ==========
+        function openCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('postCaption').value = '';
+        }
+
+        function publishPost() {
+            const previewImage = document.getElementById('previewImage');
+            const caption = document.getElementById('postCaption').value;
+            
+            if (!previewImage.src || previewImage.src === '') {
+                alert('Sélectionnez une photo d\'abord !');
+                return;
+            }
+            
+            const newPost = {
+                id: Date.now(),
+                userId: currentUser.id,
+                username: currentUser.username,
+                avatar: currentUser.avatar,
+                imageUrl: previewImage.src,
+                caption: caption || 'Nouvelle publication ! 🔥',
+                likes: 0,
+                liked: false,
+                comments: [],
+                timestamp: "À l'instant",
+                timeValue: new Date()
+            };
+            
+            posts.unshift(newPost);
+            renderFeed();
+            closeCreateModal();
+            
+            // Sauvegarder dans localStorage
+            const userPosts = posts.filter(p => p.userId === currentUser.id);
+            localStorage.setItem('floy_user_posts', JSON.stringify(userPosts));
+        }
+
+        // Setup upload
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById('previewImage').src = event.target.result;
+                    document.getElementById('uploadArea').style.display = 'none';
+                    document.getElementById('previewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ========== NAVIGATION SIDEBAR ==========
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.dataset.page;
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    if (page === 'profile') {
+                        window.location.href = 'profil.html';
+                    } else if (page === 'settings') {
+                        window.location.href = 'settings.html';
+                    } else if (page === 'create') {
+                        openCreateModal();
+                        item.classList.remove('active');
+                        document.querySelector('.nav-item[data-page="feed"]').classList.add('active');
+                    } else if (page === 'feed') {
+                        renderFeed();
+                        renderStories();
+                    } else {
+                        alert(`📱 Page ${page} - Bientôt disponible`);
+                    }
+                });
+            });
+        }
+
+        // ========== UTILITAIRES ==========
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Fermer modal en cliquant dehors
+        document.getElementById('createModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('createModal')) {
+                closeCreateModal();
+            }
+        });
+
+        // ========== INITIALISATION ==========
+        function init() {
+            loadUserData();
+            renderStories();
+            renderFeed();
+            setupNavigation();
+        }
+
+        init();
+    </script>
 </body>
 </html>
