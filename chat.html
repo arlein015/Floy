@@ -2,140 +2,723 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discussion - Floy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Floy - Messages</title>
     <style>
-        :root { --orange: #FF7A1A; --bg: #000; --dark-gray: #1a1a1a; }
-        body { background: var(--bg); color: white; font-family: -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* Header du Chat */
-        .chat-header { padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #222; background: #000; z-index: 10; }
-        .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
-        .recipient-img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 10px; background: #222; }
-        .recipient-name { font-weight: bold; font-size: 16px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+        }
 
-        /* Zone des messages (Bulles) */
-        #messages-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        
-        .message { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
-        .sent { align-self: flex-end; background: var(--orange); color: white; border-bottom-right-radius: 4px; }
-        .received { align-self: flex-start; background: var(--dark-gray); color: white; border-bottom-left-radius: 4px; }
-        .msg-time { font-size: 10px; opacity: 0.6; display: block; margin-top: 5px; text-align: right; }
+        /* Header */
+        .chat-header {
+            position: sticky;
+            top: 0;
+            background: #000000;
+            border-bottom: 1px solid #262626;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 100;
+        }
 
-        /* Barre d'envoi fixe en bas */
-        .input-area { padding: 10px 15px; background: #000; border-top: 1px solid #222; display: flex; align-items: center; gap: 10px; }
-        .chat-input { flex: 1; background: #121212; border: 1px solid #333; color: white; padding: 10px 15px; border-radius: 25px; outline: none; font-size: 14px; }
-        .send-btn { background: none; border: none; color: var(--orange); font-size: 20px; cursor: pointer; padding: 5px; }
-        .send-btn:disabled { color: #444; }
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+        }
+
+        .chat-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .new-chat-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Layout principal */
+        .chat-layout {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        /* Liste des conversations */
+        .conversations-panel {
+            width: 350px;
+            border-right: 1px solid #262626;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .conversation-item:hover {
+            background: #1a1a1a;
+        }
+
+        .conversation-item.active {
+            background: #1a1a1a;
+        }
+
+        .conv-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            background: #10B981;
+            border-radius: 50%;
+            border: 2px solid #000;
+        }
+
+        .conv-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conv-username {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .conv-last-message {
+            font-size: 13px;
+            color: #8e8e8e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conv-meta {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .conv-time {
+            font-size: 11px;
+            color: #8e8e8e;
+            margin-bottom: 4px;
+        }
+
+        .conv-unread {
+            background: #FF6B35;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 20px;
+            min-width: 22px;
+            text-align: center;
+        }
+
+        /* Panel de chat */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #000000;
+        }
+
+        .chat-empty {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            color: #8e8e8e;
+        }
+
+        .chat-empty-icon {
+            font-size: 64px;
+            opacity: 0.5;
+        }
+
+        .chat-panel-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-panel-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .chat-panel-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .chat-panel-status {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        /* Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #FF6B35;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: #1a1a1a;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .message-time {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .no-messages {
+            text-align: center;
+            color: #8e8e8e;
+            padding: 40px;
+        }
+
+        /* Input zone */
+        .message-input-area {
+            padding: 16px;
+            border-top: 1px solid #262626;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .emoji-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .message-input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            border-radius: 24px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .message-input:focus {
+            border-color: #FF6B35;
+        }
+
+        .send-btn {
+            background: none;
+            border: none;
+            color: #FF6B35;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Modal nouveau message */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #000;
+            border-radius: 16px;
+            width: 350px;
+            max-width: 90%;
+            border: 1px solid #262626;
+        }
+
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .modal-body input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #262626;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            margin-bottom: 16px;
+            outline: none;
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .search-result-item:hover {
+            background: #1a1a1a;
+        }
+
+        .result-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8e8e8e;
+        }
+
+        .empty-state svg {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 16px;
+            stroke: #8e8e8e;
+        }
+
+        .empty-state button {
+            background: #FF6B35;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            color: white;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .conversations-panel {
+                position: absolute;
+                left: 0;
+                top: 60px;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background: #000;
+                z-index: 200;
+                transition: transform 0.3s;
+            }
+            .conversations-panel.hide {
+                transform: translateX(-100%);
+            }
+            .show-conversations-btn {
+                display: block !important;
+            }
+            .message {
+                max-width: 85%;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="chat-header">
-        <i class="fas fa-arrow-left back-btn" onclick="location.href='message-list.html'"></i>
-        <img id="header-img" class="recipient-img" src="https://via.placeholder.com/50">
-        <span id="header-name" class="recipient-name">Chargement...</span>
+        <button class="back-btn" onclick="window.location.href='index.html'">
+            <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+        </button>
+        <h3>Messages</h3>
+        <button class="new-chat-btn" onclick="openNewChatModal()">✏️</button>
     </div>
 
-    <div id="messages-container">
+    <div class="chat-layout">
+        <!-- Liste des conversations -->
+        <div class="conversations-panel" id="conversationsPanel">
+            <div id="conversationsList"></div>
         </div>
 
-    <div class="input-area">
-        <input type="text" id="message-input" class="chat-input" placeholder="Écris un message..." autocomplete="off">
-        <button id="send-btn" class="send-btn" disabled><i class="fas fa-paper-plane"></i></button>
+        <!-- Zone de chat -->
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-empty">
+                <div class="chat-empty-icon">💬</div>
+                <p>Sélectionnez une conversation</p>
+            </div>
+        </div>
     </div>
 
-    <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <!-- Modal nouveau message -->
+    <div id="newChatModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nouveau message</h3>
+                <button class="modal-close" onclick="closeNewChatModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchUserInput" placeholder="Rechercher un utilisateur..." onkeyup="searchUsers()">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+    </div>
 
-        // 1. Récupérer l'ID de la discussion dans l'URL (?id=...)
-        const urlParams = new URLSearchParams(window.location.search);
-        const chatId = urlParams.get('id');
+    <!-- Emoji Picker (caché) -->
+    <div id="emojiPicker" style="position:fixed;bottom:80px;left:20px;background:#1a1a1a;border:1px solid #262626;border-radius:12px;padding:8px;display:none;grid-template-columns:repeat(6,1fr);gap:4px;z-index:300;"></div>
 
-        if (!chatId) {
-            location.href = 'message-list.html';
+    <script src="modules/chat.js"></script>
+    <script>
+        // ==================== RENDU DES CONVERSATIONS ====================
+        function renderConversations() {
+            const container = document.getElementById('conversationsList');
+            const conversations = chatModule.getConversations();
+            
+            if (conversations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"/>
+                        </svg>
+                        <p>Aucune conversation</p>
+                        <button onclick="openNewChatModal()">Nouveau message</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = conversations.map(conv => `
+                <div class="conversation-item ${chatModule.currentConversation?.userId === conv.userId ? 'active' : ''}" onclick="selectConversation(${conv.userId})">
+                    <div class="conv-avatar">
+                        ${conv.avatar}
+                        ${conv.online ? '<div class="online-dot"></div>' : ''}
+                    </div>
+                    <div class="conv-info">
+                        <div class="conv-username">${conv.username}</div>
+                        <div class="conv-last-message">${conv.lastMessage || ''}</div>
+                    </div>
+                    <div class="conv-meta">
+                        <div class="conv-time">${chatModule.getTimeAgo(conv.lastTime)}</div>
+                        ${conv.unreadCount > 0 ? `<div class="conv-unread">${conv.unreadCount}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // 2. Charger les infos de l'autre utilisateur (Header)
-                const chatRef = doc(db, "chats", chatId);
-                const chatSnap = await getDoc(chatRef);
-                
-                if (chatSnap.exists()) {
-                    const otherUserId = chatSnap.data().users.find(id => id !== user.uid);
-                    onSnapshot(doc(db, "users", otherUserId), (uSnap) => {
-                        if (uSnap.exists()) {
-                            document.getElementById('header-name').innerText = uSnap.data().username || "Utilisateur";
-                            if (uSnap.data().avatarUrl) document.getElementById('header-img').src = uSnap.data().avatarUrl;
-                        }
-                    });
-                }
-
-                // 3. Écouter les messages en TEMPS RÉEL
-                const msgsQuery = query(collection(db, "chats", chatId, "messages"), orderBy("createdAt", "asc"));
-                onSnapshot(msgsQuery, (snapshot) => {
-                    const container = document.getElementById('messages-container');
-                    container.innerHTML = "";
-                    
-                    snapshot.forEach((d) => {
-                        const msg = d.data();
-                        const isMine = msg.senderId === user.uid;
-                        
-                        const msgDiv = document.createElement('div');
-                        msgDiv.className = `message ${isMine ? 'sent' : 'received'}`;
-                        msgDiv.innerHTML = `
-                            ${msg.text}
-                            <span class="msg-time">${msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</span>
-                        `;
-                        container.appendChild(msgDiv);
-                    });
-                    
-                    // Scroller automatiquement vers le bas
-                    container.scrollTop = container.scrollHeight;
-                });
-
-                // 4. Gérer l'envoi de message
-                const input = document.getElementById('message-input');
-                const btn = document.getElementById('send-btn');
-
-                input.oninput = () => btn.disabled = !input.value.trim();
-
-                const sendMessage = async () => {
-                    const text = input.value.trim();
-                    if (!text) return;
-
-                    input.value = "";
-                    btn.disabled = true;
-
-                    try {
-                        // Ajouter le message dans la sous-collection
-                        await addDoc(collection(db, "chats", chatId, "messages"), {
-                            text: text,
-                            senderId: user.uid,
-                            createdAt: serverTimestamp()
-                        });
-
-                        // Mettre à jour le dernier message dans la liste (chats)
-                        await setDoc(doc(db, "chats", chatId), {
-                            lastMessage: text,
-                            lastUpdate: serverTimestamp()
-                        }, { merge: true });
-
-                    } catch (e) {
-                        console.error("Erreur d'envoi :", e);
-                    }
-                };
-
-                btn.onclick = sendMessage;
-                input.onkeydown = (e) => { if (e.key === 'Enter') sendMessage(); };
-
-            } else {
-                location.href = 'connexion.html';
+        // ==================== SÉLECTIONNER UNE CONVERSATION ====================
+        function selectConversation(userId) {
+            chatModule.currentConversation = chatModule.getConversation(userId);
+            if (!chatModule.currentConversation) return;
+            
+            chatModule.markAsRead(userId);
+            renderConversations();
+            renderChatPanel();
+            
+            // Sur mobile, cacher la liste
+            if (window.innerWidth <= 700) {
+                document.getElementById('conversationsPanel').classList.add('hide');
             }
+        }
+
+        // ==================== RENDU DU PANEL CHAT ====================
+        function renderChatPanel() {
+            const container = document.getElementById('chatPanel');
+            const conv = chatModule.currentConversation;
+            
+            if (!conv) {
+                container.innerHTML = `
+                    <div class="chat-empty">
+                        <div class="chat-empty-icon">💬</div>
+                        <p>Sélectionnez une conversation</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="chat-panel-header">
+                    <button class="back-btn show-conversations-btn" onclick="showConversationsList()" style="display:none;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white">
+                            <path d="M15 18l-6-6 6-6" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    <div class="chat-panel-avatar">
+                        ${conv.avatar}
+                        ${conv.online ? '<div class="online-dot"></div>' : ''}
+                    </div>
+                    <div class="chat-panel-info">
+                        <div class="chat-panel-name">${conv.username}</div>
+                        <div class="chat-panel-status">${conv.online ? 'En ligne' : 'Hors ligne'}</div>
+                    </div>
+                </div>
+                <div class="messages-container" id="messagesContainer">
+                    ${renderMessages()}
+                </div>
+                <div class="message-input-area">
+                    <button class="emoji-btn" onclick="toggleEmojiPicker()">😊</button>
+                    <input type="text" class="message-input" id="messageInput" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button class="send-btn" onclick="sendMessage()">📤</button>
+                </div>
+            `;
+            
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            document.getElementById('messageInput')?.focus();
+        }
+
+        // ==================== RENDU DES MESSAGES ====================
+        function renderMessages() {
+            const conv = chatModule.currentConversation;
+            if (!conv || !conv.messages || conv.messages.length === 0) {
+                return '<div class="no-messages">Envoyez un premier message</div>';
+            }
+            
+            let lastDate = null;
+            
+            return conv.messages.map(msg => {
+                const msgDate = new Date(msg.timestamp);
+                const showDate = !lastDate || lastDate.toDateString() !== msgDate.toDateString();
+                lastDate = msgDate;
+                
+                const isSent = msg.senderId === chatModule.currentUser.id;
+                const timeStr = chatModule.formatMessageTime(msg.timestamp);
+                const dateStr = msgDate.toDateString() === new Date().toDateString() ? "Aujourd'hui" : 
+                               (msgDate.toDateString() === new Date(Date.now() - 86400000).toDateString() ? "Hier" :
+                               `${msgDate.getDate()}/${msgDate.getMonth()+1}`);
+                
+                return `
+                    ${showDate ? `<div style="text-align:center;font-size:11px;color:#8e8e8e;margin:16px 0;">${dateStr}</div>` : ''}
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <div class="message-text">${chatModule.escapeHtml(msg.text)}</div>
+                        <div class="message-time">${timeStr}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==================== ENVOYER UN MESSAGE ====================
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input?.value.trim();
+            if (!text || !chatModule.currentConversation) return;
+            
+            chatModule.sendMessage(chatModule.currentConversation.userId, text);
+            input.value = '';
+            renderChatPanel();
+            renderConversations();
+        }
+
+        // ==================== NOUVEAU CHAT ====================
+        function openNewChatModal() {
+            document.getElementById('newChatModal').classList.add('active');
+            document.getElementById('searchUserInput').value = '';
+            searchUsers();
+        }
+
+        function closeNewChatModal() {
+            document.getElementById('newChatModal').classList.remove('active');
+        }
+
+        function searchUsers() {
+            const query = document.getElementById('searchUserInput')?.value.toLowerCase() || '';
+            const suggestedUsers = [
+                { id: 2, username: "artiste_orange", fullname: "Artiste Orange", avatar: "A" },
+                { id: 3, username: "photographe", fullname: "Le Photographe", avatar: "P" },
+                { id: 4, username: "design_noir", fullname: "Design Noir", avatar: "D" },
+                { id: 5, username: "voyageur", fullname: "Grand Voyageur", avatar: "V" }
+            ];
+            
+            const filtered = suggestedUsers.filter(u => 
+                u.username.toLowerCase().includes(query) && u.id !== chatModule.currentUser?.id
+            );
+            
+            const resultsDiv = document.getElementById('searchResults');
+            if (filtered.length === 0 && query.length > 0) {
+                resultsDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#8e8e8e;">Aucun utilisateur trouvé</div>';
+            } else if (filtered.length === 0) {
+                resultsDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#8e8e8e;">Recherchez un utilisateur</div>';
+            } else {
+                resultsDiv.innerHTML = filtered.map(user => `
+                    <div class="search-result-item" onclick="startNewConversation(${user.id}, '${user.username}', '${user.avatar}')">
+                        <div class="result-avatar">${user.avatar}</div>
+                        <div class="result-info">
+                            <div style="font-weight:600;">${user.username}</div>
+                            <div style="font-size:12px;color:#8e8e8e;">${user.fullname}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function startNewConversation(userId, username, avatar) {
+            let conv = chatModule.getConversation(userId);
+            if (!conv) {
+                conv = chatModule.getOrCreateConversation(userId, username, avatar);
+            }
+            closeNewChatModal();
+            chatModule.currentConversation = conv;
+            renderConversations();
+            renderChatPanel();
+            
+            // Sur mobile, cacher la liste
+            if (window.innerWidth <= 700) {
+                document.getElementById('conversationsPanel').classList.add('hide');
+            }
+        }
+
+        // ==================== EMOJI PICKER ====================
+        function toggleEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            if (picker.style.display === 'grid') {
+                picker.style.display = 'none';
+            } else {
+                const emojis = ['😀', '😂', '❤️', '🔥', '👍', '😍', '🎉', '😢', '😎', '✨', '💯', '🔝', '🥰', '😘', '🤣', '😱', '🥺', '👏', '🙏'];
+                picker.innerHTML = emojis.map(e => `<span style="cursor:pointer;font-size:24px;padding:8px;" onclick="addEmoji('${e}')">${e}</span>`).join('');
+                picker.style.display = 'grid';
+                setTimeout(() => { picker.style.display = 'none'; }, 3000);
+            }
+        }
+
+        function addEmoji(emoji) {
+            const input = document.getElementById('messageInput');
+            if (input) {
+                input.value += emoji;
+                input.focus();
+            }
+            document.getElementById('emojiPicker').style.display = 'none';
+        }
+
+        // ==================== MOBILE ====================
+        function showConversationsList() {
+            document.getElementById('conversationsPanel').classList.remove('hide');
+        }
+
+        // ==================== INITIALISATION ====================
+        function init() {
+            renderConversations();
+            chatModule.updateUnreadBadge();
+        }
+        
+        init();
+        
+        // Fermer modal en cliquant dehors
+        document.getElementById('newChatModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('newChatModal')) closeNewChatModal();
         });
     </script>
 </body>
